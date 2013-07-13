@@ -4,7 +4,7 @@
  * @author $Author: water $
  *
  * @par Copyright:
- * GIDS
+ * SET
  *
  * @date $Date: 2013-02-05 20:58:44 +0100 (Tue, 05 Feb 2013) $
  *
@@ -12,13 +12,11 @@
  */
 
 //----------------------------------------------------------------------------------------------------------------------
-// require_once( GIDS_HOME.'/include/etl/log.php' );
-
-require_once( GIDS_HOME.'/include/gids/miscellaneous.php' );
+require_once( SET_HOME.'/include/set/miscellaneous.php' );
 
 //----------------------------------------------------------------------------------------------------------------------
 /** Throws an execption. Thakes arguments similair to printf.
- */   
+ */
 function set_assert_failed()
 {
   $args    = func_get_args();
@@ -28,15 +26,15 @@ function set_assert_failed()
   throw new Exception( $message );
 }
 
-//---------------------------------------------------------------------------------------------------------------------- 
-/** @brief abstract supper class for generation stored routine wrapper methods based on the type of the stored routine. 
+//----------------------------------------------------------------------------------------------------------------------
+/** @brief abstract supper class for generation stored routine wrapper methods based on the type of the stored routine.
  */
 abstract class SET_RoutineWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /** The constant contain width page (in chars).
    */
-  const GIDS_PAGE_WIDTH = 120;
+  const PAGE_WIDTH = 120;
 
   /** The current level of indentation in the generated code.
    */
@@ -53,7 +51,7 @@ abstract class SET_RoutineWrapper
   {
     $this->myCode .= $theString;
   }
-   
+
   //--------------------------------------------------------------------------------------------------------------------
   /** Appends @a $theString and a LF to @c $myCode.
       - @a $theString must not contain a LF.
@@ -87,7 +85,7 @@ abstract class SET_RoutineWrapper
 
     $this->Write( '//' );
 
-    for( $i=0; $i<(self::GIDS_PAGE_WIDTH-2*$this->myIndentLevel-2-1); $i++ )
+    for( $i=0; $i<(self::PAGE_WIDTH-2*$this->myIndentLevel-2-1); $i++ )
     {
       $this->Write( '-' );
     }
@@ -96,7 +94,7 @@ abstract class SET_RoutineWrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /** Returns @a $theSqlFunctionName after the first underscore in camel case.
-      E.g. gids_foo_foo => FooFoo.
+      E.g. set_foo_foo => FooFoo.
    */
   private function GetWrapperRoutineName( $theSqlFunctionName )
   {
@@ -106,7 +104,7 @@ abstract class SET_RoutineWrapper
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Generates code for escaping the arguments of a stored routine. 
+  /** Generates code for escaping the arguments of a stored routine.
       @param $theArgsTypes An array with the arguments of a strored routine.
    */
   private function WriteEscapedArgs( $theArgsTypes )
@@ -138,7 +136,7 @@ abstract class SET_RoutineWrapper
         break;
 
       default:
-        gids_assert_failed( "Unknown arg type '$arg_type'." );
+        set_assert_failed( "Unknown arg type '$arg_type'." );
       }
     }
     if (sizeof($theArgsTypes)>0) $this->WriteLine();
@@ -235,7 +233,7 @@ abstract class SET_RoutineWrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /** Generates a complete wrapper method.
-      @param $theRoutine Metadata of the stored routine. 
+      @param $theRoutine Metadata of the stored routine.
    */
   public function WriteRoutineFunction( $theRoutine )
   {
@@ -254,10 +252,10 @@ abstract class SET_RoutineWrapper
     $this->WriteResultHandler( $theRoutine, $argument_types );
     $this->WriteLine( '}' );
     $this->WriteLine();
-    
+
     return $this->myCode;
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /** Generates code for calling the stored routine in the wrapper method.
       @param $theRoutine       An array with the metadata of the stored routine.
@@ -267,97 +265,97 @@ abstract class SET_RoutineWrapper
 
  //--------------------------------------------------------------------------------------------------------------------
  /** A factory for creating the appropiate object for generating code for the stored routine @a $theRoutine.
-  */  
+  */
   static public function CreateRoutineWrapper( $theRoutine )
-  {   
+  {
     switch ($theRoutine['type'])
     {
     case 'bulk':
       $class = 'SET_RoutineWrapperBulk';
       break;
-      
+
     case 'log':
       $class = 'SET_RoutineWrapperLog';
       break;
-      
+
     case 'none':
       $class = 'SET_RoutineWrapperNone';
       break;
 
     case 'row0':
       $class = 'SET_RoutineWrapperRow0';
-      break;       
+      break;
 
     case 'row1':
       $class = 'SET_RoutineWrapperRow1';
-      break; 
-      
+      break;
+
     case 'rows':
       $class = 'SET_RoutineWrapperRows';
       break;
-      
+
     case 'rows_with_key':
       $class = 'SET_RoutineWrapperRowsWithKey';
       break;
 
     case 'rows_with_index':
       $class = 'SET_RoutineWrapperRowsWithIndex';
-      break;      
-      
+      break;
+
     case 'singleton0':
       $class = 'SET_RoutineWrapperSingleton0';
       break;
-    
+
     case 'singleton1':
       $class = 'SET_RoutineWrapperSingleton1';
-      break;      
+      break;
 
     default:
-      gids_assert_failed( "Unknown routine type '%s'.", $theRoutine['columns'] );
+      set_assert_failed( "Unknown routine type '%s'.", $theRoutine['columns'] );
     }
 
     $wrapper = new $class();
-    
+
     return $wrapper;
-  } 
-    
+  }
+
   //--------------------------------------------------------------------------------------------------------------------
 }
 
-//----------------------------------------------------------------------------------------------------------------------  
+//----------------------------------------------------------------------------------------------------------------------
 /** @brief Class for generating a wrapper function around a stored procedure that uses for large volumes of data.
- */  
+ */
 class SET_RoutineWrapperBulk extends SET_RoutineWrapper
 {
-  //--------------------------------------------------------------------------------------------------------------------  
+  //--------------------------------------------------------------------------------------------------------------------
   protected function WriteResultHandler( $theRoutine, $theArgumentTypes )
   {
     $routine_args = $this->GetRoutineArgs( $theArgumentTypes );
     $this->WriteLine( 'self::ExecuteBulk( $theBulkHandler, "CALL '.$theRoutine['routine_name'].'('.$routine_args.')" );' );
-  } 
-  
+  }
+
   //--------------------------------------------------------------------------------------------------------------------
 }
 
-//----------------------------------------------------------------------------------------------------------------------  
+//----------------------------------------------------------------------------------------------------------------------
 /** @brief Class for generating a wrapper function around a stored procedure that returns nothing but writes the rows of
  *  the results sets to the standard out.
- */  
+ */
 class SET_RoutineWrapperLog extends SET_RoutineWrapper
 {
-  //--------------------------------------------------------------------------------------------------------------------  
+  //--------------------------------------------------------------------------------------------------------------------
   protected function WriteResultHandler( $theRoutine, $theArgumentTypes )
   {
     $routine_args = $this->GetRoutineArgs( $theArgumentTypes );
     $this->WriteLine( 'self::ExecuteEcho( "CALL '.$theRoutine['routine_name'].'('.$routine_args.')" );' );
-  } 
-  
+  }
+
   //--------------------------------------------------------------------------------------------------------------------
 }
 
-//----------------------------------------------------------------------------------------------------------------------  
+//----------------------------------------------------------------------------------------------------------------------
 /** @brief Class for generating a wrapper function around a stored procedure that doesn't return anything.
- */  
+ */
 class SET_RoutineWrapperNone extends SET_RoutineWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
@@ -366,13 +364,13 @@ class SET_RoutineWrapperNone extends SET_RoutineWrapper
     $routine_args = $this->GetRoutineArgs( $theArgumentTypes );
     $this->WriteLine( 'return self::ExecuteNone( "CALL '.$theRoutine['routine_name'].'('.$routine_args.')" );' );
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
 }
 
-//----------------------------------------------------------------------------------------------------------------------  
-/** @brief Class for generating a wrapper function around a stored procedure that selects 0 or 1 rows. 
- */  
+//----------------------------------------------------------------------------------------------------------------------
+/** @brief Class for generating a wrapper function around a stored procedure that selects 0 or 1 rows.
+ */
 class SET_RoutineWrapperRow0 extends SET_RoutineWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
@@ -381,13 +379,13 @@ class SET_RoutineWrapperRow0 extends SET_RoutineWrapper
     $routine_args = $this->GetRoutineArgs( $theArgumentTypes );
     $this->WriteLine( 'return self::ExecuteRow01( "CALL '.$theRoutine['routine_name'].'('.$routine_args.')" );' );
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
 }
 
-//----------------------------------------------------------------------------------------------------------------------  
-/** @brief Class for generating a wrapper function around a stored procedure that selects 1 and only 1 rows. 
- */  
+//----------------------------------------------------------------------------------------------------------------------
+/** @brief Class for generating a wrapper function around a stored procedure that selects 1 and only 1 rows.
+ */
 class SET_RoutineWrapperRow1 extends SET_RoutineWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
@@ -396,13 +394,13 @@ class SET_RoutineWrapperRow1 extends SET_RoutineWrapper
     $routine_args = $this->GetRoutineArgs( $theArgumentTypes );
     $this->WriteLine( 'return self::ExecuteRow1( "CALL '.$theRoutine['routine_name'].'('.$routine_args.')" );' );
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
 }
 
-//----------------------------------------------------------------------------------------------------------------------  
-/** @brief Class for generating a wrapper function around a stored procedure that selects 0 or more rows. 
- */  
+//----------------------------------------------------------------------------------------------------------------------
+/** @brief Class for generating a wrapper function around a stored procedure that selects 0 or more rows.
+ */
 class SET_RoutineWrapperRows extends SET_RoutineWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
@@ -411,14 +409,14 @@ class SET_RoutineWrapperRows extends SET_RoutineWrapper
     $routine_args = $this->GetRoutineArgs( $theArgumentTypes );
     $this->WriteLine( 'return self::ExecuteRows( "CALL '.$theRoutine['routine_name'].'('.$routine_args.')" );' );
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
 }
 
 
-//----------------------------------------------------------------------------------------------------------------------  
-/** @brief Class for generating a wrapper function around a stored procedure that selects rows on keys. 
- */  
+//----------------------------------------------------------------------------------------------------------------------
+/** @brief Class for generating a wrapper function around a stored procedure that selects rows on keys.
+ */
 class SET_RoutineWrapperRowsWithKey extends SET_RoutineWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
@@ -427,7 +425,7 @@ class SET_RoutineWrapperRowsWithKey extends SET_RoutineWrapper
     $routine_args = $this->GetRoutineArgs( $theArgumentTypes );
     $key = '';
     foreach( $theRoutine['columns'] as $column ) $key .= '[$row[\''.$column.'\']]';
-    
+
     $this->WriteLine( '$result = self::Query( "CALL '.$theRoutine['routine_name'].'('.$routine_args.')" );' );
     $this->WriteLine( '$ret = array();' );
     $this->WriteLine( 'while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret'.$key.' = $row;' );
@@ -435,13 +433,13 @@ class SET_RoutineWrapperRowsWithKey extends SET_RoutineWrapper
     $this->WriteLine( 'self::$ourMySql->next_result();' );
     $this->WriteLine( 'return  $ret' );
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
 }
 
-//----------------------------------------------------------------------------------------------------------------------  
+//----------------------------------------------------------------------------------------------------------------------
 /** @brief Class for generating a wrapper function around a stored procedure that selects rows on index.
- */  
+ */
 class SET_RoutineWrapperRowsWithIndex extends SET_RoutineWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
@@ -451,54 +449,54 @@ class SET_RoutineWrapperRowsWithIndex extends SET_RoutineWrapper
     $index = '';
     foreach( $theRoutine['columns'] as $column ) $index .= '[$row[\''.$column.'\']]';
 
-    $this->WriteLine( '$result = self::Query( "CALL '.$theRoutine['routine_name'].'('.$routine_args.')" );' ); 
+    $this->WriteLine( '$result = self::Query( "CALL '.$theRoutine['routine_name'].'('.$routine_args.')" );' );
     $this->WriteLine( '$ret = array();' );
     $this->WriteLine( 'while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret'.$index.'[] = $row;' );
     $this->WriteLine( '$result->close();' );
     $this->WriteLine( 'self::$ourMySql->next_result();' );
     $this->WriteLine( 'return $ret;' );
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
 }
 
-//----------------------------------------------------------------------------------------------------------------------  
+//----------------------------------------------------------------------------------------------------------------------
 /** @brief Class for generating a wrapper function around a stored procedure that returns a scalar or 0.
- */  
+ */
 class SET_RoutineWrapperSingleton0 extends SET_RoutineWrapper
-{   
+{
   //--------------------------------------------------------------------------------------------------------------------
   protected function WriteResultHandler( $theRoutine, $theArgumentTypes )
   {
     $routine_args = $this->GetRoutineArgs( $theArgumentTypes );
     $this->WriteLine( 'return self::ExecuteSingleton01( "CALL '.$theRoutine['routine_name'].'('.$routine_args.')" );' );
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
 }
 
-//----------------------------------------------------------------------------------------------------------------------  
+//----------------------------------------------------------------------------------------------------------------------
 /** @brief Class for generating a wrapper function around a stored procedure that returns a scalar.
- */  
+ */
 class SET_RoutineWrapperSingleton1 extends SET_RoutineWrapper
-{   
+{
   //--------------------------------------------------------------------------------------------------------------------
   protected function WriteResultHandler( $theRoutine, $theArgumentTypes )
   {
     $routine_args = $this->GetRoutineArgs( $theArgumentTypes );
     $this->WriteLine( 'return self::ExecuteSingleton( "CALL '.$theRoutine['routine_name'].'('.$routine_args.')" );' );
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-/** @class GIDS_ProgRoutineWrapper
+/** @class SET_ProgRoutineWrapper
  *  @brief Klasse voor een programma voor het aanmaken aan een klasse met wrappers functies voor Stored Routines in het
- *  GIDS schema.
+ *  SET schema.
  */
-class GIDS_ProgRoutineWrapper
-{ 
+class SET_ProgRoutineWrapper
+{
   /** Processed code function.
    */
   private $myCode = '' ;
@@ -518,7 +516,7 @@ class GIDS_ProgRoutineWrapper
   /** The filename of the configuration file.
    */
   private $myConfigurationFileName;
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /** Genereert een volledige wrapper methode voor een Stored Routine.
       @param $theRoutine Een rij uit tabel DEV_ROUTINE.
@@ -529,25 +527,25 @@ class GIDS_ProgRoutineWrapper
 
     $this->myCode .= $wrapper->WriteRoutineFunction( $theRoutine );
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /** Returns the meta data of stored routines stored in file.
    */
   private function ReadRoutineMetaData()
   {
     $theFileName = $this->myMetadataFilename;
-    
+
     $handle = fopen( $theFileName, 'r' );
     if ($handle===null) set_assert_failed( "Unable to open file '%s'.", $theFileName );
-     
+
     // Skip header row.
     fgetcsv( $handle, 1000, ',' );
     $line_number = 1;
-    
+
     while (($row = fgetcsv( $handle, 1000, ',' ))!==false)
-    {  
+    {
       $line_number++;
-      
+
       // Test the number of fields in the row.
       $n = sizeof( $row );
       if ($n!=4)
@@ -558,68 +556,68 @@ class GIDS_ProgRoutineWrapper
                            4,
                            $n );
       }
-        
+
       $routines[] = array( 'routine_name'   => $row[0],
                            'type'           => $row[1],
                            'argument_types' => $row[2],
                            'columns'        => explode( ',',$row[3] ) );
     }
-    
+
     $err = fclose( $handle );
     if ($err===false) set_assert_failed( "Error closing file '%s'.", $theFileName );
-      
-    return $routines;  
+
+    return $routines;
    }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
-  /** Getting parameters from a array @a $theSettings whit key @c $theSectionName and @c $theSettingName. 
+  /** Getting parameters from a array @a $theSettings whit key @c $theSectionName and @c $theSettingName.
    */
   private function GetSetting( $theSettings, $theSectionName, $theSettingName )
   {
     // Test if the section exists.
     if (!array_key_exists( $theSectionName, $theSettings ))
     {
-      set_assert_failed( "Section '%s' not found in configuration file '%s'.", 
-                         $theSectionName, 
+      set_assert_failed( "Section '%s' not found in configuration file '%s'.",
+                         $theSectionName,
                          $this->myConfigurationFileName );
     }
-  
+
     // Test if the setting in the section exists.
     if (!array_key_exists(  $theSettingName, $theSettings[$theSectionName] ))
     {
-      set_assert_failed( "Setting '%s' not found in section '%s' configuration file '%s'.", 
-                         $theSettingName, 
+      set_assert_failed( "Setting '%s' not found in section '%s' configuration file '%s'.",
+                         $theSettingName,
                          $theSectionName,
-                         $this->myConfigurationFileName ); 
+                         $this->myConfigurationFileName );
     }
-    
+
     return $theSettings[$theSectionName][$theSettingName];
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /** Read parameters from the configuration file @c $myConfigurationFileName.
    */
-  private function ReadConfigurationFile()  
+  private function ReadConfigurationFile()
   {
-    $settings = parse_ini_file( $this->myConfigurationFileName, true ); 
-    if ($settings===false) set_assert_failed( "Unable open configuration file" );  
-    
+    $settings = parse_ini_file( $this->myConfigurationFileName, true );
+    if ($settings===false) set_assert_failed( "Unable open configuration file" );
+
     $this->myTemplateFileName = $this->GetSetting( $settings, 'wrapper', 'template' );
     $this->myWrapperFileName  = $this->GetSetting( $settings, 'wrapper', 'wrapper' );
-    $this->myMetadataFilename = $this->GetSetting( $settings, 'wrapper', 'metadata');    
-   }  
-    
+    $this->myMetadataFilename = $this->GetSetting( $settings, 'wrapper', 'metadata');
+   }
+
   //--------------------------------------------------------------------------------------------------------------------
   /** Construction class for stored routine wrapper where @a $ConfigurationFileName is it path file configuration.
    */
   public function Run( $ConfigurationFileName )
-  { 
+  {
     $this->myConfigurationFileName = $ConfigurationFileName;
-    
-    $this->ReadConfigurationFile(); 
-    
-    $routines = $this->ReadRoutineMetaData();  
-        
+
+    $this->ReadConfigurationFile();
+
+    $routines = $this->ReadRoutineMetaData();
+
     foreach( $routines as $routine )
     {
       $this->WriteRoutineFunction( $routine );
@@ -640,7 +638,7 @@ class GIDS_ProgRoutineWrapper
     {
       set_assert_failed("Error writing file %s", $this->myWrapperFileName );
     }
-    
+
   }
 
   //--------------------------------------------------------------------------------------------------------------------
