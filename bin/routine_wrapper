@@ -16,7 +16,7 @@
 $set_home = realpath( dirname( $argv[0] ).'/..' );
 
 //----------------------------------------------------------------------------------------------------------------------
-require_once( "$set_home/etc/config.php" );
+define( 'SET_HOME', $set_home );
 
 require_once( SET_HOME.'/include/prog/routine_wrapper.php' );
 
