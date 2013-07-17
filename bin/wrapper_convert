@@ -1,0 +1,150 @@
+#!/usr/bin/php
+<?php
+//----------------------------------------------------------------------------------------------------------------------
+/** Throws an execption. Takes arguments similair to printf.
+ */   
+function set_assert_failed()
+{
+  $args    = func_get_args();
+  $format  = array_shift( $args );
+  $message = vsprintf( $format,  $args );
+
+  throw new Exception( $message );
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+function ReadMetadata( $theMatadataFile )
+{
+  $handle = fopen( $theMatadataFile, 'r' );
+	if ($handle===false) set_assert_failed( "Unable to open file '%s'.", $theMatadataFile );
+	
+	// Ignore the header row.
+	fgetcsv( $handle );
+	
+	while ($row = fgetcsv( $handle ))
+	{
+	  $metadata[$row[0]] = array( 'routine_name' => $row[0],
+	                              'type'         => $row[1],
+	                              'columns'      => $row[2] );
+	}
+
+	$err = fclose( $handle );
+	if ($err===false) set_assert_failed( "Error closing file '%s'.", $theMatadataFile );
+	
+	return $metadata;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+function GetPSQLList( $theSourceDir ) 
+{
+  $PSQLList = glob( "$theSourceDir/*.psql" );
+  $FileList = scandir( $theSourceDir );
+  
+  foreach( $FileList as $FilePath )
+  {   
+    if (is_dir( "$theSourceDir/$FilePath" ))
+    {      
+      if ($FilePath!="."&&$FilePath!="..")
+      {
+        $DirList[] = $theSourceDir."/".$FilePath;
+      }
+    }
+  }
+    
+  if (isset($DirList)) 
+  {
+    foreach ( $DirList as $DirPath ) 
+    {
+      $SubPSQLList = GetPSQLList( $DirPath );
+      $PSQLList = array_merge( $PSQLList,$SubPSQLList );
+    }
+  }
+  
+  return $PSQLList;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+function CreateDestinationDir( $theDirectoryName )
+{ 
+  if (!is_dir( $theDirectoryName ))
+  {
+    $err = mkdir( $theDirectoryName, 0775, true );
+    if ($err===false) set_assert_failed( "Ca not create directory '%s'.", $theDirectoryName );
+  }  
+
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+function ProcessSourcFile( $theSource, $theDestinationDir, $metadata, $theSourceDir ) 
+{
+  $routine_name = basename( $theSource, '.psql' );
+  
+  if (!isset( $metadata[$routine_name] ))
+  {
+    echo "Warning: routine \"$routine_name\" not found in metadata.\n"; 
+   
+    return;
+  }
+  
+  $output_file_name = str_replace( $theSourceDir, $theDestinationDir, $theSource );
+        
+  CreateDestinationDir( dirname( $output_file_name ) );
+        
+  $input_handle = fopen( $theSource, 'r' );
+  if ($input_handle===false) set_assert_failed( "Unable to open file '%s'.", $theSource );
+
+  $output_handle = fopen( $output_file_name, 'w' );
+  if ($output_handle===false) set_assert_failed( "Unable to open file '%s'.", $output_file_name );
+      
+  while ($line = fgets( $input_handle )) 
+  {
+    if ($line=="begin\n")
+    {
+      if (!empty( $metadata[$routine_name]['columns'] ))
+      {  
+        fwrite( $output_handle, "-- type: ".$metadata[$routine_name]['type']." ".$metadata[$routine_name]['columns']."\n" );//xxx
+      }
+      else
+      {
+        fwrite( $output_handle, "-- type: ".$metadata[$routine_name]['type']."\n" );
+      }
+    }    
+    fwrite( $output_handle, $line ); 
+  } 
+    
+  $err = fclose( $input_handle );
+  if ($err===false) set_assert_failed( "Error closing file '%s'.", $input_handle );
+    
+  $err = fclose( $output_handle ); 
+  if ($err===false) set_assert_failed( "Error closing file '%s'.", $output_handle );
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+function Synopsis()
+{
+ echo "Synopsis: wrapper_convert <metadata.cvs> <source dir> <destination dir>\n";
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+function WrapperConvert( $theMetadatFileName, $theSourceDir, $theDestinationDir )
+{ 
+  $theSources = GetPSQLList( $theSourceDir );
+ 
+  $metadata = ReadMetadata( $theMetadatFileName );
+ 
+  foreach( $theSources as $theSource )
+  {
+    ProcessSourcFile( $theSource, $theDestinationDir, $metadata, $theSourceDir );
+  }
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+if ($argc!=4) 
+{
+	Synopsis();
+	exit(1);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+WrapperConvert( $argv[1], $argv[2], $argv[3] );
+
