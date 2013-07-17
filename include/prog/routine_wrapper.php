@@ -258,7 +258,7 @@ abstract class SET_RoutineWrapper
  
   //--------------------------------------------------------------------------------------------------------------------
   /** Generates code for the arguments for calling the stored routine in a wrapper method.
-      @param $theArgsTypes array with the argument type of a Stored Routine.
+      @param $theType array with the argument type of a Stored Routine.
    */
   protected function GetTypeForLob( $theType )
   {
@@ -762,9 +762,6 @@ class SET_RoutineWrapperSingleton1 extends SET_RoutineWrapper
     $this->Writeline( '$b = $stmt->fetch();' );
     $this->Writeline( 'if ($b===false) self::ThrowSqlError( \'mysqli_stmt::fetch failed\' );' );
     $this->WriteLine(); 
-    
-    /** @todo Test only one row (and not more) in the result set. */ 
-    /** @todo Test row has only one column. */ 
   }
   
   //--------------------------------------------------------------------------------------------------------------------
