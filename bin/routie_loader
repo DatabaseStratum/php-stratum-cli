@@ -1,0 +1,451 @@
+#!/usr/bin/php
+<?php
+// ---------------------------------------------------------------------------------------------------------------------
+/*
+The program must do the following:
+  1 Read the config file. ++
+  
+  2 Run query for getting all column types. --
+  
+  3 Load PHP file with constants. --
+  
+  4 Search recursively for *.psql files. +-
+  
+    5 For each .psql file
+      5.1 Read the file.
+      
+      5.2 Search for placeholders (i.e. @@).
+        Error when a place holder is not defined.
+        
+      5.3 Get type designation type of the stored routine
+        Error when the desgination type is not found.
+        
+      5.4 Replace all placeholder with the actual value.
+      
+      5.5 Load the stored routine in the database.
+      
+   6  Write the routine type to a CSV file.
+*/
+//----------------------------------------------------------------------------------------------------------------------
+/** Throws an execption. Thakes arguments similair to printf.
+ */   
+function set_assert_failed()
+{
+  $args    = func_get_args();
+  $format  = array_shift( $args );
+  $message = vsprintf( $format,  $args );
+
+  throw new Exception( $message );
+}
+// ---------------------------------------------------------------------------------------------------------------------
+/** @brief Klasse met wrapper functies voor alle stored procedures die aangeroepen mogen worden door PHP-code.
+ */
+class SET_DL
+{
+  /** Referentie naar een mysqli object (zie Connect) dat gebruikt wordt voor het afvuren van alle SQL satements in
+   *  deze klasse.
+   */
+  private static $ourMySql;
+
+  // -------------------------------------------------------------------------------------------------------------------
+  /** Werpt een excptie met de huidige error code en beschrijving van $ourMySql.
+   */
+  private static function ThrowSqlError( $theText )
+  {
+    $message  = "MySQL Error no: ".self::$ourMySql->errno."\n";
+    $message .= self::$ourMySql->error;
+    $message .= "\n";
+    $message .= $theText."\n";
+
+    throw new Exception( $message );
+  }
+
+  // -------------------------------------------------------------------------------------------------------------------
+  /** Wrapper om mysqli::query. Indien de call naar mysqli::query mislukt wordt een een exceptie geworpen.
+   */
+  private static function Query( $theQuery )
+  {
+    $ret = self::$ourMySql->query( $theQuery );
+    if ($ret===false) self::ThrowSqlError( $theQuery );
+
+    return $ret;
+  }
+
+  // -------------------------------------------------------------------------------------------------------------------
+  /** Wrapper om mysqli::real_query. Indien de call naar mysqli::real_query mislukt wordt een een exceptie geworpen.
+   */
+  private static function RealQuery( $theQuery )
+  {
+    $tmp = self::$ourMySql->real_query( $theQuery );
+    if ($tmp===false) self::ThrowSqlError( $theQuery );
+  }
+
+  // -------------------------------------------------------------------------------------------------------------------
+  /** Start een transactie in MySQL.
+   */
+  public static function Begin()
+  {
+    $ret = self::$ourMySql->autocommit(false);
+    if (!$ret) self::ThrowSqlError( 'autocommit' );
+  }
+
+  // -------------------------------------------------------------------------------------------------------------------
+  /** Commit de huidige transactie in MySQL.
+   */
+  public static function Commit()
+  {
+    $ret = self::$ourMySql->commit();
+    if (!$ret) self::ThrowSqlError( 'commit' );
+  }
+
+  // -------------------------------------------------------------------------------------------------------------------
+  /** Connecteert naar de MySQL server (parameters @a $theHostName, @a $theUserName, @a $thePassWord en @a $theDatabase)
+   *  en voert een aantal initialisaties uit.
+   */
+  public static function Connect( $theHostName, $theUserName, $thePassWord, $theDatabase )
+  {
+    self::$ourMySql = new mysqli( $theHostName, $theUserName, $thePassWord, $theDatabase );
+    if (!self::$ourMySql) self::ThrowSqlError( 'init' );
+
+    $ret = self::$ourMySql->options(MYSQLI_OPT_CONNECT_TIMEOUT, 600);
+    if (!$ret) self::ThrowSqlError( 'options' );
+
+    $ret = self::$ourMySql->set_charset("utf8");
+    if (!$ret) self::ThrowSqlError( 'set_charset' );
+    /*
+    $ret = self::ExecuteNone( "set sql_mode = '".SET_SQL_MODE."'");
+
+    // The default transaction level is REPEATABLE-READ. Set transaction level to READ-COMMITED.
+    self::ExecuteNone( "SET tx_isolation = 'READ-COMMITTED'" );
+
+    // Disable query caching.
+    self::ExecuteNone( "set query_cache_type = 0" );*/
+  }
+
+  // -------------------------------------------------------------------------------------------------------------------
+  /** Indien er een verbinding is met een MySQL server, verbreekt de verbinding.
+   */
+  public static function Disconnect()
+  {
+    if (self::$ourMySql)
+    {
+      self::$ourMySql->close();
+      self::$ourMySql = null;
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /** Voert query @a $theQuery uit. @a $theQuery mag 0 of meer rijen teruggeven.
+   */
+  public function ExecuteRows( $theQuery )
+  {
+    $result = self::Query( $theQuery );
+    $ret = array();
+    while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret[] = $row;
+    $result->close();
+
+    self::$ourMySql->next_result();
+
+    return $ret;
+  }
+
+  // -------------------------------------------------------------------------------------------------------------------
+  /** Voert query @a $theQuery uit. De query mag een multi query zijn (b.v. een store procedure) en de output van de
+   *  query wordt gelogt.
+   */
+  public static function ExecuteEcho( $theQuery )
+  {
+    $ret = self::$ourMySql->multi_query( $theQuery );
+    if (!$ret) self::ThrowSqlError( $theQuery );
+    do
+    {
+      $result = self::$ourMySql->store_result();
+      if (self::$ourMySql->errno) self::ThrowSqlError( '$mysqli->store_result failed for \''.$theQuery.'\'' );
+      if ($result)
+      {
+        $fields = $result->fetch_fields();
+        while ($row = $result->fetch_row())
+        {
+          $line = '';
+          foreach( $row as $i => $field )
+          {
+            if ($i>0) $line .= ' ';
+            $line .= str_pad( $field, $fields[$i]->max_length );
+          }
+          etl_log( $line );
+        }
+        $result->free();
+      }
+    }
+    while (self::$ourMySql->next_result());
+    if (self::$ourMySql->errno) self::ThrowSqlError( '$mysqli->next_result failed for \''.$theQuery.'\'' );
+  }
+
+  // -------------------------------------------------------------------------------------------------------------------
+}
+
+//----------------------------------------------------------------------------------------------------------------------// ---------------------------------------------------------------------------------------------------------------------
+class SET_RoutineLoader
+{
+  /** Path where .psql files can be found.
+  */
+  private $myIncludePath;
+  
+  /** An array with all found .psql files.
+   */
+  private $myPsqlFileNames = array();
+  
+  /** The filename of the file with the metadata of all stored procedures.
+   */
+  private $myMetadataFilename;
+  
+  /** Array with the metadata of all stored procedures
+   */
+  private $myMetadate;  
+  
+  /** The filename of the file...
+   */  
+  private $mySQLFileName;
+  
+  /** A lookup table from placeholds to their actual values.
+   */
+  private $myReplacePairs = array();
+  
+  /** The exits status of this program.
+   */
+  private $myExitStatus = 0;
+  
+  /** The filename of the file...
+   */ 
+  private $myConstantsFileName;
+  
+  //--------------------------------------------------------------------------------------------------------------------
+  /** Getting parameters from a array @a $theSettings whit key @c $theSectionName and @c $theSettingName. 
+   */
+  private function GetSetting( $theSettings, $theSectionName, $theSettingName )
+  {
+    // Test if the section exists.
+    if (!array_key_exists( $theSectionName, $theSettings ))
+    {
+      set_assert_failed( "Section '%s' not found in configuration file.", $theSectionName );
+    }
+  
+    // Test if the setting in the section exists.
+    if (!array_key_exists(  $theSettingName, $theSettings[$theSectionName] ))
+    {
+      set_assert_failed( "Setting '%s' not found in section '%s' configuration file.", $theSettingName, $theSectionName ); 
+    }
+    
+    return $theSettings[$theSectionName][$theSettingName];
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /** Read parameters from the configuration file @c $myConfigurationFileName.
+   */
+  private function ReadCfgFile( $theCfgFileName )  
+  {
+    $settings = parse_ini_file( $theCfgFileName, true ); 
+    if ($settings===false) set_assert_failed( "Unable open configuration file" );  
+
+    $this->myIncludePath       = $this->GetSetting( $settings, 'loader', 'psql' );
+    $this->myMetadataFilename  = $this->GetSetting( $settings, 'wrapper', 'metadata');
+    $this->mySQLFileName       = $this->GetSetting( $settings, 'loader', 'column_types_sql');
+    $this->myConstantsFileName = $this->GetSetting( $settings, 'loader', 'config');
+  }  
+    
+  // -------------------------------------------------------------------------------------------------------------------
+  private function GetConstants()
+  {
+    /** @todo test $this->myConstantsFileName exits, is readable and a php file */
+    require_once( $this->myConstantsFileName );
+    $constants    = get_defined_constants(true);    
+    $user_defined = $constants['user'];
+        
+    foreach( $user_defined as $name => $value )
+    {
+      $this->myReplacePairs[$name] = $value;
+    }
+  } 
+    
+  // -------------------------------------------------------------------------------------------------------------------
+  private function FindPsqlFiles( $theSourceDir=null )
+  {
+    if($theSourceDir===null) $theSourceDir = $this->myIncludePath;
+       
+    $psql_file_names = glob( "$theSourceDir/*.psql" );       
+    $file_names      = scandir( $theSourceDir );
+    
+    $this->myPsqlFileNames = array_merge( $this->myPsqlFileNames, $psql_file_names );
+    
+    $dir_names = array();
+    foreach( $file_names as $file_name )
+    {   
+      if (is_dir( $theSourceDir.'/'.$file_name ))
+      {      
+        if ($file_name!='.' && $file_name!='..')
+        {
+          $dir_names[] = $theSourceDir.'/'.$file_name;
+        }
+      }
+    }
+      
+    foreach( $dir_names as $dir_name ) 
+    {
+      $this->FindPsqlFiles( $dir_name );
+    }
+  }    
+ 
+  //--------------------------------------------------------------------------------------------------------------------
+  /** Returns the metadata @a $routines of stored routines stored in file.
+   */
+  private function ReadRoutineMetaData()
+  {
+    $handle = fopen( $this->myMetadataFilename, 'r' );
+    if ($handle===null) set_assert_failed( "Unable to open file '%s'.", $this->myMetadataFilename );
+     
+    // Skip header row.
+    fgetcsv( $handle, 1000, ',' );
+   
+    while (($row = fgetcsv( $handle, 1000, ',' ))!==false)
+    {  
+      $metadata[$row[0]] = array( 'routine_name'   => $row[0],
+                                  'type'           => $row[1],
+                                  'argument_types' => $row[2]);
+      
+    }
+    
+    $err = fclose( $handle );
+    if ($err===false) set_assert_failed( "Error closing file '%s'.", $this->myMetadataFilename );
+      
+    $this->myMetadate = $metadata;  
+   }
+  
+   // -------------------------------------------------------------------------------------------------------------------
+   private function GetPlaceHolders( $theSourceCode, $theFileName )
+   {
+     $ereg = preg_match_all( "(@[A-Za-z0-9\_\.]+(\%type)?@)", $theSourceCode, $regs );   
+    
+     $ret = true;
+     if (!empty($regs[0]))
+     {
+       foreach( $regs[0] as $reg )
+       {     
+         if (!isset($this->myReplacePairs[strtoupper( $reg )]))
+         {
+           echo sprintf( "Error: Unknown placeholder '%s' in file '%s'.\n", $reg, $theFileName );
+         } 
+       }
+     }
+     
+     return $ret;
+   }
+   
+   // -------------------------------------------------------------------------------------------------------------------
+   private function GetType( $theSourceCode )
+   {       
+     $array = explode( "\n",  $theSourceCode );  
+     $key = array_search( 'begin', $array );
+     
+     if ($key===false) set_assert_failed( "Designation type not fund in '%s'.", $theSourceCode );
+      
+     preg_match_all( "/^\s*--\s+type:\s*(\w+)\s*(\w+)?\s*/", $array[$key-1], $regs );  
+
+     $type_columns['type']    = $regs[1][0];
+     $type_columns['columns'] = $regs[2][0];
+     
+     return $type_columns;
+   }
+  
+   // -------------------------------------------------------------------------------------------------------------------
+   private function LoadPsqlFile( $theFileName )
+   {
+     $source = file_get_contents( $theFileName );
+     if ($source===false) set_assert_failed( "Unable to open file '%s'.", $theFileName );
+    
+     $ok = $this->GetPlaceHolders( $source, $theFileName );
+     if ($ok===false)
+     {
+       $this->myExitStatus = -1;
+       return;
+     }
+    
+     $ok = $this->GetType( $source );
+     if ($ok===false)
+     {
+       $this->myExitStatus = -1;
+       return;
+     }
+     
+
+     //SET_DL::ExecuteEcho( $source );
+     
+     //  in source : replace al place holder look strtr
+     // Run  translate source with SET_DL::ExecuteEcho 
+     
+     
+     // later look -- type and merge with exiting routines.csv
+    
+     // read all replace string for place holders
+     // load store routine in database
+     
+     // get argument of stored procedure from database
+   }
+  
+   // -------------------------------------------------------------------------------------------------------------------
+   /** Add column types placeholders and actual values to @c myReplacePairs.
+    */
+   private function GetColumnTypes()
+   {
+     $query = file_get_contents( $this->mySQLFileName );
+     if ($query===false) set_assert_failed( "Unable to open file '%s'.", $this->mySQLFileName );
+     
+     $rows = SET_DL::ExecuteRows( $query );
+     
+     foreach( $rows as $row )
+     { 
+       $key = '@';
+       if (isset($row['table_schema'])) $key .= $row['table_schema'].'.';
+       $key .= $row['table_name'].'.'.$row['column_name'].'%type@';
+       $key = strtoupper( $key );
+       
+       $value = $row['column_type'];       
+       if (isset($row['character_set_name'])) $value .= ' '.$row['character_set_name'];
+      
+       $this->myReplacePairs[$key] = $value;
+     }
+   }
+    
+   // -------------------------------------------------------------------------------------------------------------------
+   public function Main( $theCfgFileName )
+   {  
+     SET_DL::Connect( 'localhost', 'nahouw', 'nahouw', 'nahouw' );
+     
+     $this->ReadCfgFile( $theCfgFileName );
+     $this->FindPsqlFiles();   
+     $this->GetColumnTypes();
+     $this->ReadRoutineMetaData();
+     $this->GetConstants();
+     
+     foreach( $this->myPsqlFileNames as $psql_file_name )
+     {
+       $this->LoadPsqlFile( $psql_file_name );
+     }
+     
+     SET_DL::Disconnect();
+   }
+  
+   // -------------------------------------------------------------------------------------------------------------------
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+function Synopsis()
+{
+  echo "routine_loader <configfile> [routine.psql]\n";
+  exit(1);
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+if($argc!=2) Synopsis();
+
+$loader = new SET_RoutineLoader;
+$loader->Main( $argv[1] );

@@ -93,7 +93,7 @@ function ProcessSourcFile( $theSource, $theDestinationDir, $metadata, $theSource
   $input_handle = fopen( $theSource, 'r' );
   if ($input_handle===false) set_assert_failed( "Unable to open file '%s'.", $theSource );
 
-  $output_handle = fopen( $output_file_name, 'w' );
+  $output_handle = fopen( $output_file_name.'.psql', 'w' );
   if ($output_handle===false) set_assert_failed( "Unable to open file '%s'.", $output_file_name );
       
   while ($line = fgets( $input_handle )) 
