@@ -1,34 +1,8 @@
 #!/usr/bin/php
 <?php
-// ---------------------------------------------------------------------------------------------------------------------
-/*
-The program must do the following:
-  1 Read the config file. ++
-  
-  2 Run query for getting all column types. --
-  
-  3 Load PHP file with constants. --
-  
-  4 Search recursively for *.psql files. +-
-  
-    5 For each .psql file
-      5.1 Read the file.
-      
-      5.2 Search for placeholders (i.e. @@).
-        Error when a place holder is not defined.
-        
-      5.3 Get type designation type of the stored routine
-        Error when the desgination type is not found.
-        
-      5.4 Replace all placeholder with the actual value.
-      
-      5.5 Load the stored routine in the database.
-      
-   6  Write the routine type to a CSV file.
-*/
 //----------------------------------------------------------------------------------------------------------------------
-/** Throws an execption. Thakes arguments similair to printf.
- */   
+/** Throws an execption. Arguments similair to printf.
+ */
 function set_assert_failed()
 {
   $args    = func_get_args();
@@ -37,6 +11,7 @@ function set_assert_failed()
 
   throw new Exception( $message );
 }
+
 // ---------------------------------------------------------------------------------------------------------------------
 /** @brief Klasse met wrapper functies voor alle stored procedures die aangeroepen mogen worden door PHP-code.
  */
@@ -184,257 +159,359 @@ class SET_DL
   // -------------------------------------------------------------------------------------------------------------------
 }
 
-//----------------------------------------------------------------------------------------------------------------------// ---------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------
+/** @brief Class for loading stored routine into a MySQL instance from pseudo SQL files (.psql).
+ */
 class SET_RoutineLoader
 {
+  /** @name Settings
+     @{
+     Properties for settings.
+  */
+
   /** Path where .psql files can be found.
   */
   private $myIncludePath;
-  
+
+  /** The name of the file with SQL statement to retreive table and column names, and column types.
+   */
+  private $mySqlColumnTypeFileName;
+
+
+  /** The name of the configuration file of the target porject
+   */
+  private $myTargetConfigFileName;
+  /** @} */
+
+
+
+  /** @name Overall
+     @{
+     Properties with data about all stored routines and .psql files.
+   */
+
   /** An array with all found .psql files.
    */
   private $myPsqlFileNames = array();
-  
-  /** The filename of the file with the metadata of all stored procedures.
+
+
+  /** The filename of the file with the metadata of all stored routines.
    */
   private $myMetadataFilename;
-  
-  /** Array with the metadata of all stored procedures
+
+
+  /** Array with the metadata of all stored routines.
    */
-  private $myMetadate;  
-  
-  /** The filename of the file...
-   */  
-  private $mySQLFileName;
-  
-  /** A lookup table from placeholds to their actual values.
+  private $myMetadata = array();
+
+
+  /** A map from placeholders to their actual values.
    */
   private $myReplacePairs = array();
-  
+
+
+  /** @name Current
+     @{
+     Properties with data about the current stored routine and/or .psql file.
+  */
+  /** The current .psql filename.
+   */
+  private $myCurentPsqlFileName;
+
+
+  /** The source code as a single string of the current .psql file.
+   */
+  private $myCurrentPsqlSourceCode;
+
+
+  /** The source code as an array of lines string of the current .psql file.
+   */
+  private $myCurrentPsqlSourceCodeLines;
+
+
+  /** The placeholders in the current .psql file.
+   */
+  private $myCurrentPlaceHolders;
+
+
+  /** The designation type of the stored routine in the current .psql file.
+   */
+  private $myCurrentType;
+
+
+  /** The key or index columns (depending on the designation type) of the stored routine in the current .psql file.
+   */
+  private $myCurrentColumns;
+
+  /** @} */
+
+
   /** The exits status of this program.
    */
   private $myExitStatus = 0;
-  
-  /** The filename of the file...
-   */ 
-  private $myConstantsFileName;
-  
+
+
+
   //--------------------------------------------------------------------------------------------------------------------
-  /** Getting parameters from a array @a $theSettings whit key @c $theSectionName and @c $theSettingName. 
+  /** Returns the value of a setting.
+      @param $theSettings      The settings as returned by @c parse_ini_file.
+      @param $theMandatoryFlag If set and setting @a $theSettingName is not found in section @a $theSectionName an
+                               execption will be trown.
+      @param $theSectionName   The name of the section of the requested setting.
+      @param $theSettingName   The name of the setting of the requested setting.
+      @todo Valery Implement $theMandatoryFlag (if not return null
    */
-  private function GetSetting( $theSettings, $theSectionName, $theSettingName )
+  private function GetSetting( $theSettings, $theMandatoryFlag, $theSectionName, $theSettingName )
   {
     // Test if the section exists.
     if (!array_key_exists( $theSectionName, $theSettings ))
     {
       set_assert_failed( "Section '%s' not found in configuration file.", $theSectionName );
     }
-  
+
     // Test if the setting in the section exists.
     if (!array_key_exists(  $theSettingName, $theSettings[$theSectionName] ))
     {
-      set_assert_failed( "Setting '%s' not found in section '%s' configuration file.", $theSettingName, $theSectionName ); 
+      set_assert_failed( "Setting '%s' not found in section '%s' configuration file.", $theSettingName, $theSectionName );
     }
-    
+
     return $theSettings[$theSectionName][$theSettingName];
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Read parameters from the configuration file @c $myConfigurationFileName.
+  /** Reads parameters from configuration @a $theConfigFileName
    */
-  private function ReadCfgFile( $theCfgFileName )  
+  private function ReadConfigFile( $theConfigFileName )
   {
-    $settings = parse_ini_file( $theCfgFileName, true ); 
-    if ($settings===false) set_assert_failed( "Unable open configuration file" );  
+    $settings = parse_ini_file( $theConfigFileName, true );
+    if ($settings===false) set_assert_failed( "Unable open configuration file" );
 
-    $this->myIncludePath       = $this->GetSetting( $settings, 'loader', 'psql' );
-    $this->myMetadataFilename  = $this->GetSetting( $settings, 'wrapper', 'metadata');
-    $this->mySQLFileName       = $this->GetSetting( $settings, 'loader', 'column_types_sql');
-    $this->myConstantsFileName = $this->GetSetting( $settings, 'loader', 'config');
-  }  
-    
+    $this->myIncludePath           = $this->GetSetting( $settings, true,  'loader',  'psql' );
+    $this->myMetadataFilename      = $this->GetSetting( $settings, true,  'wrapper', 'metadata');
+    $this->mySqlColumnTypeFileName = $this->GetSetting( $settings, true,  'loader',  'column_types_sql');
+    $this->myTargetConfigFileName  = $this->GetSetting( $settings, false, 'loader',  'config');
+  }
+
   // -------------------------------------------------------------------------------------------------------------------
+  /** Reads constants set in @c myTargetConfigFileName and adds them to @c myReplacePairs.
+      @todo Valery if myTargetConfigFileName is not set, don't read the config file
+   */
   private function GetConstants()
   {
-    /** @todo test $this->myConstantsFileName exits, is readable and a php file */
-    require_once( $this->myConstantsFileName );
-    $constants    = get_defined_constants(true);    
+    /** @todo test $this->myTargetConfigFileName exits, is readable and a php file */
+    require_once( $this->myTargetConfigFileName );
+    $constants    = get_defined_constants(true);
     $user_defined = $constants['user'];
-        
+
     foreach( $user_defined as $name => $value )
     {
       $this->myReplacePairs[$name] = $value;
     }
-  } 
-    
+  }
+
   // -------------------------------------------------------------------------------------------------------------------
   private function FindPsqlFiles( $theSourceDir=null )
   {
     if($theSourceDir===null) $theSourceDir = $this->myIncludePath;
-       
-    $psql_file_names = glob( "$theSourceDir/*.psql" );       
+
+    $psql_file_names = glob( "$theSourceDir/*.psql" );
     $file_names      = scandir( $theSourceDir );
-    
+
     $this->myPsqlFileNames = array_merge( $this->myPsqlFileNames, $psql_file_names );
-    
+
     $dir_names = array();
     foreach( $file_names as $file_name )
-    {   
+    {
       if (is_dir( $theSourceDir.'/'.$file_name ))
-      {      
+      {
         if ($file_name!='.' && $file_name!='..')
         {
           $dir_names[] = $theSourceDir.'/'.$file_name;
         }
       }
     }
-      
-    foreach( $dir_names as $dir_name ) 
+
+    foreach( $dir_names as $dir_name )
     {
       $this->FindPsqlFiles( $dir_name );
     }
-  }    
- 
+  }
+
   //--------------------------------------------------------------------------------------------------------------------
   /** Returns the metadata @a $routines of stored routines stored in file.
+      @todo Valery Improve comment of this method.
    */
   private function ReadRoutineMetaData()
   {
     $handle = fopen( $this->myMetadataFilename, 'r' );
     if ($handle===null) set_assert_failed( "Unable to open file '%s'.", $this->myMetadataFilename );
-     
+
     // Skip header row.
     fgetcsv( $handle, 1000, ',' );
-   
+
     while (($row = fgetcsv( $handle, 1000, ',' ))!==false)
-    {  
+    {
       $metadata[$row[0]] = array( 'routine_name'   => $row[0],
                                   'type'           => $row[1],
                                   'argument_types' => $row[2]);
-      
+
     }
-    
+
     $err = fclose( $handle );
     if ($err===false) set_assert_failed( "Error closing file '%s'.", $this->myMetadataFilename );
-      
-    $this->myMetadate = $metadata;  
+
+    $this->myMetadata = $metadata;
    }
-  
-   // -------------------------------------------------------------------------------------------------------------------
-   private function GetPlaceHolders( $theSourceCode, $theFileName )
+
+  // -------------------------------------------------------------------------------------------------------------------
+  /** @todo Valery
+      * Fix indentation
+      * Use myCurrent* properties instead arguments
+      * Store the the palceholders myCurrentPlaceHolders
+  */
+   private function GetCurrentPlaceholders( $theSourceCode, $theFileName )
    {
-     $ereg = preg_match_all( "(@[A-Za-z0-9\_\.]+(\%type)?@)", $theSourceCode, $regs );   
-    
+     $ereg = preg_match_all( "(@[A-Za-z0-9\_\.]+(\%type)?@)", $theSourceCode, $regs );
+
      $ret = true;
      if (!empty($regs[0]))
      {
        foreach( $regs[0] as $reg )
-       {     
+       {
          if (!isset($this->myReplacePairs[strtoupper( $reg )]))
          {
            echo sprintf( "Error: Unknown placeholder '%s' in file '%s'.\n", $reg, $theFileName );
-         } 
+         }
        }
      }
-     
+
      return $ret;
    }
-   
-   // -------------------------------------------------------------------------------------------------------------------
+
+  // -------------------------------------------------------------------------------------------------------------------
+  /** @todo Valery
+      * Fix indentation
+      * Use myCurrent* properties instead arguments
+      * set myCurrentType
+      * set myCurrentColumns
+  */
    private function GetType( $theSourceCode )
-   {       
-     $array = explode( "\n",  $theSourceCode );  
+   {
+     $array = explode( "\n",  $theSourceCode );
      $key = array_search( 'begin', $array );
-     
+
      if ($key===false) set_assert_failed( "Designation type not fund in '%s'.", $theSourceCode );
-      
-     preg_match_all( "/^\s*--\s+type:\s*(\w+)\s*(\w+)?\s*/", $array[$key-1], $regs );  
+
+     preg_match_all( "/^\s*--\s+type:\s*(\w+)\s*(\w+)?\s*/", $array[$key-1], $regs );
 
      $type_columns['type']    = $regs[1][0];
      $type_columns['columns'] = $regs[2][0];
-     
+
      return $type_columns;
    }
-  
-   // -------------------------------------------------------------------------------------------------------------------
+
+  // -------------------------------------------------------------------------------------------------------------------
+  /** @todo Valery
+      * Fix indentation
+      * Set myCurentPsqlFileName
+      * Use myCurrent* properties instead of passing arguments
+  */
    private function LoadPsqlFile( $theFileName )
    {
      $source = file_get_contents( $theFileName );
-     if ($source===false) set_assert_failed( "Unable to open file '%s'.", $theFileName );
-    
-     $ok = $this->GetPlaceHolders( $source, $theFileName );
+     if ($source===false) set_assert_failed( "Unable to read file '%s'.", $theFileName );
+
+     $ok = $this->GetCurrentPlaceholders( $source, $theFileName );
      if ($ok===false)
      {
        $this->myExitStatus = -1;
        return;
      }
-    
+
      $ok = $this->GetType( $source );
      if ($ok===false)
      {
        $this->myExitStatus = -1;
        return;
      }
-     
 
+
+     /** @todo Valery create an aary with replace for strtr using myCurrentPlaceholder (case sensitive), look for values
+         in myReplacePairs (case insensitive).
+     */
+
+     /** @todo Valery run sql using  ExecuteEcho */
      //SET_DL::ExecuteEcho( $source );
-     
-     //  in source : replace al place holder look strtr
-     // Run  translate source with SET_DL::ExecuteEcho 
-     
-     
-     // later look -- type and merge with exiting routines.csv
-    
-     // read all replace string for place holders
-     // load store routine in database
-     
-     // get argument of stored procedure from database
+
+
+     /* @todo Valery add try and catch block around ExecuteEcho
+        if exception: remove stored routine from myMetaData
+        otherwise update (or insert) type and columns in myMetadata
+     */
    }
-  
-   // -------------------------------------------------------------------------------------------------------------------
-   /** Add column types placeholders and actual values to @c myReplacePairs.
-    */
+
+  // -------------------------------------------------------------------------------------------------------------------
+  /** Selects schema, table, and colum names and the column type from the MySQL and the column type placeholders
+      to @c myReplacePairs.
+    @todo Valery
+    * Fix indentation
+   */
    private function GetColumnTypes()
    {
-     $query = file_get_contents( $this->mySQLFileName );
-     if ($query===false) set_assert_failed( "Unable to open file '%s'.", $this->mySQLFileName );
-     
+     $query = file_get_contents( $this->mySqlColumnTypeFileName );
+     if ($query===false) set_assert_failed( "Unable to read file '%s'.", $this->mySqlColumnTypeFileName );
+
      $rows = SET_DL::ExecuteRows( $query );
-     
+
      foreach( $rows as $row )
-     { 
+     {
        $key = '@';
        if (isset($row['table_schema'])) $key .= $row['table_schema'].'.';
        $key .= $row['table_name'].'.'.$row['column_name'].'%type@';
        $key = strtoupper( $key );
-       
-       $value = $row['column_type'];       
+
+       $value = $row['column_type'];
        if (isset($row['character_set_name'])) $value .= ' '.$row['character_set_name'];
-      
+
        $this->myReplacePairs[$key] = $value;
      }
    }
-    
-   // -------------------------------------------------------------------------------------------------------------------
-   public function Main( $theCfgFileName )
-   {  
+
+  // -------------------------------------------------------------------------------------------------------------------
+   /**
+    @todo Valery
+    * Fix indentation
+   */
+   public function Main( $theConfigFileName )
+   {
      SET_DL::Connect( 'localhost', 'nahouw', 'nahouw', 'nahouw' );
-     
-     $this->ReadCfgFile( $theCfgFileName );
-     $this->FindPsqlFiles();   
+
+     $this->ReadConfigFile( $theConfigFileName );
+     $this->FindPsqlFiles();
      $this->GetColumnTypes();
      $this->ReadRoutineMetaData();
      $this->GetConstants();
-     
+
      foreach( $this->myPsqlFileNames as $psql_file_name )
      {
        $this->LoadPsqlFile( $psql_file_name );
      }
-     
+
+     /* @todo
+        * Get all stored routines and argument list from MySQL
+        * update myMetadata (set arguments, remove from myMetadata stored routine not found in list
+        * save metadata
+      */
+
+     /** @todo
+         * add option drop routine if .psql file doesn't exists.
+         * drop obsolete routines
+       */
+
      SET_DL::Disconnect();
    }
-  
-   // -------------------------------------------------------------------------------------------------------------------
+
+  // -------------------------------------------------------------------------------------------------------------------
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -449,3 +526,11 @@ if($argc!=2) Synopsis();
 
 $loader = new SET_RoutineLoader;
 $loader->Main( $argv[1] );
+
+/** @todo
+   * Improve own DataLayer and add options
+   * Add file with dependencies per stored routine (i.e. source path, timestamp, placeholders)
+   * Only load if dependencies have changed or file is new.
+   * Implement 2 parameter for this program
+   * Implement locking
+   */
