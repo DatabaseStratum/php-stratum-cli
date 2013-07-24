@@ -86,37 +86,84 @@ function ProcessSourcFile( $theSource, $theDestinationDir, $metadata, $theSource
     return;
   }
   
-  $output_file_name = str_replace( $theSourceDir, $theDestinationDir, $theSource );
-        
+  $output_file_name = $theDestinationDir.substr( $theSource, strlen(  $theSourceDir ) );
+  
   CreateDestinationDir( dirname( $output_file_name ) );
         
-  $input_handle = fopen( $theSource, 'r' );
-  if ($input_handle===false) set_assert_failed( "Unable to open file '%s'.", $theSource );
+  $source = file_get_contents( $theSource );
+  if ($source===false) set_assert_failed( "Unable to read file '%s'.", $theSource );
 
-  $output_handle = fopen( $output_file_name.'.psql', 'w' );
-  if ($output_handle===false) set_assert_failed( "Unable to open file '%s'.", $output_file_name );
-      
-  while ($line = fgets( $input_handle )) 
-  {
-    if ($line=="begin\n")
+  $input_lines = explode( "\n", $source );
+  $output_lines = array();
+  
+  $mode_head  = true;
+  $mode_body  = false;
+  $mode_end   = false;
+  $empty_line = false;
+  foreach( $input_lines as $line )
+  { 
+    if (substr( $line, 0, 7 )=='create ')
     {
-      if (!empty( $metadata[$routine_name]['columns'] ))
-      {  
-        fwrite( $output_handle, "-- type: ".$metadata[$routine_name]['type']." ".$metadata[$routine_name]['columns']."\n" );//xxx
-      }
-      else
+      $mode_head = false;
+      $mode_body = true;
+    }
+    
+    if ($line=='end$$')
+    {
+      $mode_body = false;
+      $mode_end  = true;
+    }
+    
+    if ($mode_head)
+    {
+      $write_line = true; 
+      if (substr( $line, 0, 13 )=='set sql_mode ') $write_line = false;      
+      if (substr( $line, 0, 9 )=='set names')      $write_line = false;
+      if (substr( $line, 0, 9 )=='delimiter')      $write_line = false;
+      if (substr( $line, 0, 4 )=='drop')           $write_line = false;
+        
+      if (!$line)
       {
-        fwrite( $output_handle, "-- type: ".$metadata[$routine_name]['type']."\n" );
+        if ($empty_line) $write_line = false;
+        $empty_line = true;
       }
-    }    
-    fwrite( $output_handle, $line ); 
-  } 
+                 
+      if ($write_line)
+      {
+        $output_lines[] = $line; 
+        if ($line) $empty_line = false; 
+      }
+    }  
+       
+    if ($mode_body)
+    {
+      if ($line=="begin")
+      {
+        if (!empty( $metadata[$routine_name]['columns'] ))
+        {  
+          $output_lines[] = "-- type: ".$metadata[$routine_name]['type']." ".$metadata[$routine_name]['columns'];
+        }
+        else
+        {
+          $output_lines[] = "-- type: ".$metadata[$routine_name]['type'];
+        }
+      }
+      $output_lines[] = $line;
+    }
     
-  $err = fclose( $input_handle );
-  if ($err===false) set_assert_failed( "Error closing file '%s'.", $input_handle );
-    
-  $err = fclose( $output_handle ); 
-  if ($err===false) set_assert_failed( "Error closing file '%s'.", $output_handle );
+    if ($mode_end)
+    {
+      if ($line=='end$$')
+      {
+        $output_lines[] = 'end';
+      }
+    }
+  }
+
+  $output = ltrim( implode( "\n", $output_lines ) )."\n";
+  $err = file_put_contents( $output_file_name, $output );
+  if ($err===false) set_assert_failed( "Error writing file '%s'.", $output_file_name );
+  
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -145,6 +192,19 @@ if ($argc!=4)
 	exit(1);
 }
 
+
+
+
+/** @todo Valery
+    * Before line starting with "create procedure" or "create function"
+    * remove lines starting with "set sql_mode ="
+    * remove lines starting with "set names"
+    * remove lines starting with "delimiter"
+    * remove lines starting with "drop"
+    * remove double emtpy lines
+    * After line "end$$"
+    * Replace "end$$" with "end" (with lew line)
+    * remove all following lines
+    */
 //----------------------------------------------------------------------------------------------------------------------
 WrapperConvert( $argv[1], $argv[2], $argv[3] );
-
