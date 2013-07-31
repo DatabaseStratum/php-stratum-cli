@@ -177,22 +177,40 @@ class SET_DL
 /** @brief The class creates a file which contains all used constants with values.
  */
 class SET_AutoConsts
-{ 
+{  
   /** Filename with columnnames, theirs widths, and constant names.
    */
   private $myConstsFileName;
   
+  /** Template file name under which the file is generated with the constants.
+   */
+  private $myTemplateConfigFileName;
+  
+  /** Name of file that contains all constants.
+   */
+  private $myConfigFileName;
+  
   /** All columns in the MySQL schema.
    */
   private $myColumns = array();
-  
-  
+   
   /** Array with the previous columnnames,  widths, and constant names (i.e. the content of @c $myConstsFileName upon
-      starting this program).
+   *  starting this program).
    */
-  private $myOldColumns;
-  // xxx array, 2 dimensions, key1: tablename, key2, column name
-  // values: width en constant_name
+  private $myOldColumns = array();
+  
+  /** Array with all constants.
+   */
+  private $myConstants = array ();
+  
+  /** The prefix used  for designations a unknown constants.
+   */
+  private $myPrefix;
+  
+  /** 
+   */
+   private $myLabels = array();
+
  
   //--------------------------------------------------------------------------------------------------------------------
   /** Returns the value of a setting.
@@ -222,7 +240,8 @@ class SET_AutoConsts
     {
       if ($theMandatoryFlag)
       {
-        set_assert_failed( "Setting '%s' not found in section '%s' configuration file.", $theSettingName, $theSectionName );
+        set_assert_failed( "Setting '%s' not found in section '%s' configuration file.", $theSettingName,
+                                                                                         $theSectionName );
       }
       else
       {
@@ -241,11 +260,13 @@ class SET_AutoConsts
     $settings = parse_ini_file( $theConfigFileName, true );
     if ($settings===false) set_assert_failed( "Unable open configuration file" );
 
-    $this->myConstsFileName = $this->GetSetting( $settings, true,  'constants', 'columns');
-
+    $this->myConstsFileName       = $this->GetSetting( $settings, true,  'constants', 'columns');
+    $this->myPrefix               = $this->GetSetting( $settings, true,  'constants', 'prefix');
+    $this->myTemplateConfigFileName = $this->GetSetting( $settings, true,  'constants', 'config_template');
+    $this->myConfigFileName       = $this->GetSetting( $settings, true,  'constants', 'config');
   }
 
-  //--------------------------------------------------------------------------------------------------------------------  
+  //--------------------------------------------------------------------------------------------------------------------
   /** Get all columns with data from table in MySQL into @a myColumns.
    */  
   private function GetColumns()
@@ -264,12 +285,12 @@ order by table_name
     $rows = SET_DL::ExecuteRows( $query );    
     foreach( $rows as $row )
     {
-      $row['lenght'] = $this->DeriveFieldLength( $row );  
+      $row['length'] = $this->DeriveFieldLength( $row );  
       $this->myColumns[$row['table_name']][$row['column_name']] = $row;
     }
   }
   
-  //--------------------------------------------------------------------------------------------------------------------  
+  //--------------------------------------------------------------------------------------------------------------------
   /** Get the length of the field, depending on its type.
    */ 
   private function DeriveFieldLength( $theColumn )
@@ -316,22 +337,23 @@ order by table_name
       break;  
   
     case 'enum':
-        // Nothing to do. We don't assign a width to column of enum type.
-        break;
+      // Nothing to do. We don't assign a width to column of enum type.
+      break;
       
-      default:
-          set_assert_failed( "Unknown type '%s'.", $theColumn['data_type'] );
+    default:
+      set_assert_failed( "Unknown type '%s'.", $theColumn['data_type'] );
     }
     
     return $ret;
   }
   
-  //--------------------------------------------------------------------------------------------------------------------  
+  //--------------------------------------------------------------------------------------------------------------------
   /** Record constants and their values to the file @a myConstsFileName.
    */  
-  private function WriteConsts()
+  private function WriteColumns()
   {
-    $handle = fopen( $this->myConstsFileName, 'w+' );
+    $temp_filename = $this->myConstsFileName.'.tmp';
+    $handle = fopen( $temp_filename, 'w' );
     if ($handle===null) set_assert_failed( "Unable to open file '%s'.", $this->myConstsFileName );
   
     foreach( $this->myColumns as $table )
@@ -341,65 +363,219 @@ order by table_name
       foreach( $table as $column )
       {
         $width1 = max( strlen( $column['column_name'] ), $width1 ); 
-        $width2 = max( strlen( $column['lenght'] ),      $width2 ); 
+        $width2 = max( strlen( $column['length'] ),      $width2 ); 
       } 
             
       foreach( $table as $column )
       {
-       $line_format = sprintf( "%%s.%%-%ds %%%dd\n", $width1, $width2 );
-       $n = fprintf( $handle, $line_format, $column['table_name'], $column['column_name'], $column['lenght'] );
-       if ($n===false) set_assert_failed( "Error writing file '%s'.", $this->myConstsFileName );
+        if (isset($column['length'])) 
+        {
+          if (isset($column['constant_name']))
+          {                    
+            $line_format = sprintf( "%%s.%%-%ds %%%dd %%s\n", $width1, $width2 );           
+            $n = fprintf( $handle, $line_format, $column['table_name'],
+                                                 $column['column_name'],
+                                                 $column['length'],
+                                                 $column['constant_name'] );
+            if ($n===false) set_assert_failed( "Error writing file '%s'.", $this->myConstsFileName );
+          }     
+          else
+          {          
+            $line_format = sprintf( "%%s.%%-%ds %%%dd\n", $width1, $width2 ); 
+            $n = fprintf( $handle, $line_format, $column['table_name'], $column['column_name'], $column['length'] );
+            if ($n===false) set_assert_failed( "Error writing file '%s'.", $this->myConstsFileName );
+          }
+        }
       }  
       
-      fprintf( $handle, "\n" );
+      $n = fprintf( $handle, "\n" );
       if ($n===false) set_assert_failed( "Error writing file '%s'.", $this->myConstsFileName );
     } 
     
      $err = fclose( $handle );
      if ($err===false) set_assert_failed( "Error closing file '%s'.", $this->myConstsFileName );
+   
+     $err = rename( $this->myConstsFileName.'.tmp', $this->myConstsFileName );
+     if ($err===false) set_assert_failed( "Error: can't rename file '%s' to '%s'.", $temp_filename,
+                                                                                    $this->myConstsFileName );
   }
-  //--------------------------------------------------------------------------------------------------------------------  
+  
+  //--------------------------------------------------------------------------------------------------------------------
   /** Get old column with consatant from file @a myConstsFileName
    */
   private function GetOldColumns()
   {
-    $handle = fopen( $this->myConstsFileName, 'r' );
-    if ($handle===null) set_assert_failed( "Unable to open file '%s'.", $this->myConstsFileName );
-    
-    $line_number=0;
-    while( $line = fgets( $handle ) )
+    if (file_exists( $this->myConstsFileName ))
     {
-      $line_number++;
-      if ($line!="\n")
+      $handle = fopen( $this->myConstsFileName, 'r' );
+      if ($handle===null) set_assert_failed( "Unable to open file '%s'.", $this->myConstsFileName );
+      
+      $line_number = 0;
+      while( $line = fgets( $handle ) )
       {
-        $n = preg_match( "/^\s*([a-zA-Z0-9_]+).([a-zA-Z0-9_]+)\s+(\d+)\s*([a-zA-Z0-9_]+)?\s*$/", $line, $matches );
-        if ($n===false) set_assert_failed( 'Internal error.' );
-        
-        if ($n==0)
+        $line_number++;
+        if ($line!="\n")
         {
-          echo sprintf( "Undefined line, number '%s' in the file '%s'.\n", $line_number, $this->myConstsFileName );
-        }
-        
-        if (isset($matches[4]))
-        {
-          $table_name    = $matches[1];
-          $column_name   = $matches[2];
-          $length        = $matches[3];
-          $constant_name = $matches[4];
+          $n = preg_match( "/^\s*([a-zA-Z0-9_]+).([a-zA-Z0-9_]+)\s+(\d+)\s*(\*|[a-zA-Z0-9_]+)?\s*$/", $line, $matches );
+          if ($n===false) set_assert_failed( 'Internal error.' );
           
-          $this->myOldColumns[$table_name][$column_name] = array( 'table_name'    => $table_name,
-                                                                  'column_name'   => $column_name,
-                                                                  'length'        => $length,
-                                                                  'constant_name' => $constant_name );
+          if ($n==0)
+          {
+            echo $line;
+            echo sprintf( "Illegal format at line %d in the file '%s'.\n", $line_number, $this->myConstsFileName );
+          }
+          
+          if (isset($matches[4]))
+          {
+            $table_name    = $matches[1];
+            $column_name   = $matches[2];
+            $length        = $matches[3];
+            $constant_name = $matches[4];
+            
+            $this->myOldColumns[$table_name][$column_name] = array( 'table_name'    => $table_name,
+                                                                    'column_name'   => $column_name,
+                                                                    'length'        => $length,
+                                                                    'constant_name' => $constant_name );
+          }
         }
-      }
-    }     
-    print_r( $this->myOldColumns );
-    $err = fclose( $handle );
-    if ($err===false) set_assert_failed( "Error closing file '%s'.", $this->myConstsFileName );
+      }     
+      $err = fclose( $handle );
+      if ($err===false) set_assert_failed( "Error closing file '%s'.", $this->myConstsFileName );
+    }
   }
   
-  //--------------------------------------------------------------------------------------------------------------------  
+  //--------------------------------------------------------------------------------------------------------------------
+  /** Definition a unknown constants.
+   */  
+  private function EnhanceColumns()
+  {
+    foreach( $this->myOldColumns as $table )
+    { 
+      foreach( $table as $column ) 
+      {
+        $table_name  = $column['table_name'];
+        $column_name = $column['column_name'];
+  
+        if ($column['constant_name']=='*')
+        {
+          $constant_name = strtoupper( $this->myPrefix.$column['column_name'] ); 
+          $this->myOldColumns[$table_name][$column_name]['constant_name'] = $constant_name;
+        }
+        else
+        {
+          $constant_name = strtoupper( $this->myOldColumns[$table_name][$column_name]['constant_name']);
+          $this->myOldColumns[$table_name][$column_name]['constant_name'] = $constant_name;
+        }
+      }  
+    }
+  }
+   
+  //--------------------------------------------------------------------------------------------------------------------
+  /** Merges the columns with the old and new constants.
+   */  
+  private function MergeColumns()
+  {
+    foreach( $this->myOldColumns as $table_name => $table )
+    { 
+      foreach( $table as $column_name => $column ) 
+      {
+        if (isset( $this->myColumns[$table_name][$column_name] ))
+        {
+          $this->myColumns[$table_name][$column_name]['constant_name'] = $column['constant_name'];
+        }
+      }
+    }
+  }
+  
+  //--------------------------------------------------------------------------------------------------------------------
+  /** Get all lable from the MySQL.
+   */  
+  private function GetLabels()
+  {
+    $query_string = "
+select t1.table_name  `table_name`
+,      t1.column_name `id`
+,      t2.column_name `label`
+from       information_schema.columns t1
+inner join information_schema.columns t2 on t1.table_name = t2.table_name
+where t1.table_schema = database()
+and   t1.extra        = 'auto_increment'
+and   t2.table_schema = database()
+and   t2.column_name like '%%\_label'";
+
+    $tables = SET_DL::ExecuteRows( $query_string );
+    foreach( $tables as $table )
+    {
+      $query_string = "
+select `%s`  as `id`
+,      `%s`  as `label`
+from   `%s`
+where   nullif(`%s`,'') is not null";
+
+      $query_string = sprintf( $query_string, $table['id'], $table['label'], $table['table_name'], $table['label'] );
+      $rows = SET_DL::ExecuteRows( $query_string );   
+      foreach ( $rows as $row )
+      {
+        $this->myLabels[$row['label']] = $row['id'];        
+      }
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /** Get all known constants into the array myConstants.
+   */  
+  private function FillConstants()
+  {
+    foreach( $this->myColumns as $table_name => $table )
+    {
+      foreach( $table as $column_name => $column )
+      {
+        if (isset($this->myColumns[$table_name][$column_name]['constant_name']))
+        {
+          $this->myConstants[$column['constant_name']] = $column['length'];
+        }
+      }
+    }
+    
+    foreach( $this->myLabels as $label => $id )
+    {
+      $this->myConstants[$label] = $id;
+    } 
+    
+    $ok = ksort( $this->myConstants );
+    if ($ok===false) set_assert_failed( 'Internal error.' );   
+  }
+  
+  //--------------------------------------------------------------------------------------------------------------------
+  /** Automatic generation the constants.
+   */  
+  private function WriteTargetConfigFile()
+  {
+    $source = file_get_contents( $this->myTemplateConfigFileName );
+    if ($source===false) set_assert_failed( "Unable to open file '%s'.", $this->myTemplateConfigFileName );
+    
+    $width1 = 0;     
+    $width2 = 0;
+    $constants = ''; 
+    foreach( $this->myConstants as $constant => $value )
+    {
+      $width1 = max( strlen( $constant ), $width1 ); 
+      $width2 = max( strlen( $value ),    $width2 ); 
+    } 
+    
+    $line_format = sprintf( "const %%-%ds = %%%dd; \n", $width1, $width2 );
+    foreach( $this->myConstants as $constant => $value )
+    {
+      $constants .= sprintf( $line_format, $constant, $value );
+    }
+
+    $source = str_replace( '/* AUTO_GENERATED_CONSTS */', $constants, $source );
+
+    $ok = file_put_contents( $this->myConfigFileName,  $source ); 
+    if ($ok===false) set_assert_failed( "Unable to write to file '%s'.", $this->myTemplateConfigFileName );
+  }
+    
+  //--------------------------------------------------------------------------------------------------------------------
   public function Main( $theConfigFileName )
   {
     SET_DL::Connect( 'localhost', 'nahouw', 'nahouw', 'nahouw' );
@@ -410,16 +586,22 @@ order by table_name
     
     $this->GetColumns();
     
-    // $this->EnhanceColumns();
+    $this->EnhanceColumns();
     
-    // $this->MergeColumns();
+    $this->MergeColumns();
     
-    //$this->WriteConsts();
+    $this->WriteColumns(); 
+    
+    $this->GetLabels();
+    
+    $this->FillConstants();
+    
+    $this->WriteTargetConfigFile();
     
     SET_DL::Disconnect();
   }
     
-  //--------------------------------------------------------------------------------------------------------------------  
+  //--------------------------------------------------------------------------------------------------------------------
 }
 
 //----------------------------------------------------------------------------------------------------------------------
