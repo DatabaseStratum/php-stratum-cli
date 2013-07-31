@@ -1,0 +1,619 @@
+#!/usr/bin/php
+<?php
+//----------------------------------------------------------------------------------------------------------------------
+/** Throws an execption. Arguments similair to printf.
+ */
+function set_assert_failed()
+{
+  $args    = func_get_args();
+  $format  = array_shift( $args );                              
+  $message = vsprintf( $format,  $args );
+
+  throw new Exception( $message );
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+/** @brief Klasse met wrapper functies voor alle stored procedures die aangeroepen mogen worden door PHP-code.
+ */
+class SET_DL
+{
+  /** Referentie naar een mysqli object (zie Connect) dat gebruikt wordt voor het afvuren van alle SQL satements in
+   *  deze klasse.
+   */
+  private static $ourMySql;
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /** Werpt een excptie met de huidige error code en beschrijving van $ourMySql.
+   */
+  private static function ThrowSqlError( $theText )
+  {
+    $message  = "MySQL Error no: ".self::$ourMySql->errno."\n";
+    $message .= self::$ourMySql->error;
+    $message .= "\n";
+    $message .= $theText."\n";
+
+    throw new Exception( $message );
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /** Wrapper om mysqli::query. Indien de call naar mysqli::query mislukt wordt een een exceptie geworpen.
+   */
+  private static function Query( $theQuery )
+  {
+    $ret = self::$ourMySql->query( $theQuery );
+    if ($ret===false) self::ThrowSqlError( $theQuery );
+
+    return $ret;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /** Wrapper om mysqli::real_query. Indien de call naar mysqli::real_query mislukt wordt een een exceptie geworpen.
+   */
+  private static function RealQuery( $theQuery )
+  {
+    $tmp = self::$ourMySql->real_query( $theQuery );
+    if ($tmp===false) self::ThrowSqlError( $theQuery );
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /** Start een transactie in MySQL.
+   */
+  public static function Begin()
+  {
+    $ret = self::$ourMySql->autocommit(false);
+    if (!$ret) self::ThrowSqlError( 'autocommit' );
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /** Commit de huidige transactie in MySQL.
+   */
+  public static function Commit()
+  {
+    $ret = self::$ourMySql->commit();
+    if (!$ret) self::ThrowSqlError( 'commit' );
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /** Connecteert naar de MySQL server (parameters @a $theHostName, @a $theUserName, @a $thePassWord en @a $theDatabase)
+   *  en voert een aantal initialisaties uit.
+   */
+  public static function Connect( $theHostName, $theUserName, $thePassWord, $theDatabase )
+  {
+    self::$ourMySql = new mysqli( $theHostName, $theUserName, $thePassWord, $theDatabase );
+    if (!self::$ourMySql) self::ThrowSqlError( 'init' );
+
+    $ret = self::$ourMySql->options(MYSQLI_OPT_CONNECT_TIMEOUT, 600);
+    if (!$ret) self::ThrowSqlError( 'options' );
+
+    $ret = self::$ourMySql->set_charset("utf8");
+    if (!$ret) self::ThrowSqlError( 'set_charset' );
+    /*
+    $ret = self::ExecuteNone( "set sql_mode = '".SET_SQL_MODE."'");
+
+    // The default transaction level is REPEATABLE-READ. Set transaction level to READ-COMMITED.
+    self::ExecuteNone( "SET tx_isolation = 'READ-COMMITTED'" );
+
+    // Disable query caching.
+    self::ExecuteNone( "set query_cache_type = 0" );*/
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /** Indien er een verbinding is met een MySQL server, verbreekt de verbinding.
+   */
+  public static function Disconnect()
+  {
+    if (self::$ourMySql)
+    {
+      self::$ourMySql->close();
+      self::$ourMySql = null;
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /** Voert query @a $theQuery uit. @a $theQuery mag 0 of meer rijen teruggeven.
+   */
+  public function ExecuteRows( $theQuery )
+  {
+    $result = self::Query( $theQuery );
+    $ret = array();
+    while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret[] = $row;
+    $result->close();
+
+    self::$ourMySql->next_result();
+
+    return $ret;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /** Voert query @a $theQuery uit een geeft het aantal "affected rows" terug. @a $theQuery mag geen rijen teruggeven.
+   */
+  public function ExecuteNone( $theQuery )
+  {
+    self::Query( $theQuery );
+
+    $n = self::$ourMySql->affected_rows;
+
+    self::$ourMySql->next_result();
+
+    return $n;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /** Voert query @a $theQuery uit. De query mag een multi query zijn (b.v. een store procedure) en de output van de
+   *  query wordt gelogt.
+   */
+  public static function ExecuteEcho( $theQuery )
+  {
+    $ret = self::$ourMySql->multi_query( $theQuery );
+    if (!$ret) self::ThrowSqlError( $theQuery );
+    do
+    {
+      $result = self::$ourMySql->store_result();
+      if (self::$ourMySql->errno) self::ThrowSqlError( '$mysqli->store_result failed for \''.$theQuery.'\'' );
+      if ($result)
+      {
+        $fields = $result->fetch_fields();
+        while ($row = $result->fetch_row())
+        {
+          $line = '';
+          foreach( $row as $i => $field )
+          {
+            if ($i>0) $line .= ' ';
+            $line .= str_pad( $field, $fields[$i]->max_length );
+          }
+          etl_log( $line );
+        }
+        $result->free();
+      }
+    }
+    while (self::$ourMySql->next_result());
+    if (self::$ourMySql->errno) self::ThrowSqlError( '$mysqli->next_result failed for \''.$theQuery.'\'' );
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+/** @brief The class creates a file which contains all used constants with values.
+ */
+class SET_AutoConsts
+{  
+  /** Filename with columnnames, theirs widths, and constant names.
+   */
+  private $myConstsFileName;
+  
+  /** Template file name under which the file is generated with the constants.
+   */
+  private $myTemplateConfigFileName;
+  
+  /** Name of file that contains all constants.
+   */
+  private $myConfigFileName;
+  
+  /** All columns in the MySQL schema.
+   */
+  private $myColumns = array();
+   
+  /** Array with the previous columnnames,  widths, and constant names (i.e. the content of @c $myConstsFileName upon
+   *  starting this program).
+   */
+  private $myOldColumns = array();
+  
+  /** Array with all constants.
+   */
+  private $myConstants = array ();
+  
+  /** The prefix used  for designations a unknown constants.
+   */
+  private $myPrefix;
+  
+  /** 
+   */
+   private $myLabels = array();
+
+ 
+  //--------------------------------------------------------------------------------------------------------------------
+  /** Returns the value of a setting.
+      @param $theSettings      The settings as returned by @c parse_ini_file.
+      @param $theMandatoryFlag If set and setting @a $theSettingName is not found in section @a $theSectionName an
+                               exception will be thrown.
+      @param $theSectionName   The name of the section of the requested setting.
+      @param $theSettingName   The name of the setting of the requested setting.
+   */
+  private function GetSetting( $theSettings, $theMandatoryFlag, $theSectionName, $theSettingName )
+  {
+    // Test if the section exists.
+    if (!array_key_exists( $theSectionName, $theSettings ))
+    {
+      if ($theMandatoryFlag)
+      {
+        set_assert_failed( "Section '%s' not found in configuration file.", $theSectionName );
+      }
+      else
+      {
+        return null;
+      }
+    }
+
+    // Test if the setting in the section exists.
+    if (!array_key_exists( $theSettingName, $theSettings[$theSectionName] ))
+    {
+      if ($theMandatoryFlag)
+      {
+        set_assert_failed( "Setting '%s' not found in section '%s' configuration file.", $theSettingName,
+                                                                                         $theSectionName );
+      }
+      else
+      {
+        return null;
+      }
+    }
+
+    return $theSettings[$theSectionName][$theSettingName];
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /** Reads parameters from configuration @a $theConfigFileName
+   */
+  private function ReadConfigFile( $theConfigFileName )
+  {
+    $settings = parse_ini_file( $theConfigFileName, true );
+    if ($settings===false) set_assert_failed( "Unable open configuration file" );
+
+    $this->myConstsFileName       = $this->GetSetting( $settings, true,  'constants', 'columns');
+    $this->myPrefix               = $this->GetSetting( $settings, true,  'constants', 'prefix');
+    $this->myTemplateConfigFileName = $this->GetSetting( $settings, true,  'constants', 'config_template');
+    $this->myConfigFileName       = $this->GetSetting( $settings, true,  'constants', 'config');
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /** Get all columns with data from table in MySQL into @a myColumns.
+   */  
+  private function GetColumns()
+  {  
+    $query = "
+select table_name
+,      column_name
+,      data_type
+,      character_maximum_length 
+,      numeric_precision 
+from   information_schema.COLUMNS
+where  table_schema = database()
+order by table_name
+,        ordinal_position";
+
+    $rows = SET_DL::ExecuteRows( $query );    
+    foreach( $rows as $row )
+    {
+      $row['length'] = $this->DeriveFieldLength( $row );  
+      $this->myColumns[$row['table_name']][$row['column_name']] = $row;
+    }
+  }
+  
+  //--------------------------------------------------------------------------------------------------------------------
+  /** Get the length of the field, depending on its type.
+   */ 
+  private function DeriveFieldLength( $theColumn )
+  {
+    $ret = null;
+    switch ($theColumn['data_type'])
+    {
+    case 'tinyint':
+    case 'smallint':
+    case 'mediumint':
+    case 'int':
+    case 'bigint':     
+    
+    case 'decimal':
+    case 'float':
+    case 'double': 
+      $ret = $theColumn['numeric_precision'];
+      break;
+    
+    case 'char':
+    case 'varchar':
+      
+    case 'tinytext':
+    case 'text':
+    case 'mediumtext':
+    case 'longtext':        
+    case 'tinyblob':
+    case 'blob':
+    case 'mediumblob':
+    case 'longblob': 
+      $ret = $theColumn['character_maximum_length'];
+      break;
+     
+    case 'timestamp':   
+      $ret = 16;
+      break;         
+        
+    case 'date':    
+      $ret = 10;
+      break;  
+
+    case 'datetime':
+      $ret = 16;
+      break;  
+  
+    case 'enum':
+      // Nothing to do. We don't assign a width to column of enum type.
+      break;
+      
+    default:
+      set_assert_failed( "Unknown type '%s'.", $theColumn['data_type'] );
+    }
+    
+    return $ret;
+  }
+  
+  //--------------------------------------------------------------------------------------------------------------------
+  /** Record constants and their values to the file @a myConstsFileName.
+   */  
+  private function WriteColumns()
+  {
+    $temp_filename = $this->myConstsFileName.'.tmp';
+    $handle = fopen( $temp_filename, 'w' );
+    if ($handle===null) set_assert_failed( "Unable to open file '%s'.", $this->myConstsFileName );
+  
+    foreach( $this->myColumns as $table )
+    {     
+      $width1 = 0;     
+      $width2 = 0;       
+      foreach( $table as $column )
+      {
+        $width1 = max( strlen( $column['column_name'] ), $width1 ); 
+        $width2 = max( strlen( $column['length'] ),      $width2 ); 
+      } 
+            
+      foreach( $table as $column )
+      {
+        if (isset($column['length'])) 
+        {
+          if (isset($column['constant_name']))
+          {                    
+            $line_format = sprintf( "%%s.%%-%ds %%%dd %%s\n", $width1, $width2 );           
+            $n = fprintf( $handle, $line_format, $column['table_name'],
+                                                 $column['column_name'],
+                                                 $column['length'],
+                                                 $column['constant_name'] );
+            if ($n===false) set_assert_failed( "Error writing file '%s'.", $this->myConstsFileName );
+          }     
+          else
+          {          
+            $line_format = sprintf( "%%s.%%-%ds %%%dd\n", $width1, $width2 ); 
+            $n = fprintf( $handle, $line_format, $column['table_name'], $column['column_name'], $column['length'] );
+            if ($n===false) set_assert_failed( "Error writing file '%s'.", $this->myConstsFileName );
+          }
+        }
+      }  
+      
+      $n = fprintf( $handle, "\n" );
+      if ($n===false) set_assert_failed( "Error writing file '%s'.", $this->myConstsFileName );
+    } 
+    
+     $err = fclose( $handle );
+     if ($err===false) set_assert_failed( "Error closing file '%s'.", $this->myConstsFileName );
+   
+     $err = rename( $this->myConstsFileName.'.tmp', $this->myConstsFileName );
+     if ($err===false) set_assert_failed( "Error: can't rename file '%s' to '%s'.", $temp_filename,
+                                                                                    $this->myConstsFileName );
+  }
+  
+  //--------------------------------------------------------------------------------------------------------------------
+  /** Get old column with consatant from file @a myConstsFileName
+   */
+  private function GetOldColumns()
+  {
+    if (file_exists( $this->myConstsFileName ))
+    {
+      $handle = fopen( $this->myConstsFileName, 'r' );
+      if ($handle===null) set_assert_failed( "Unable to open file '%s'.", $this->myConstsFileName );
+      
+      $line_number = 0;
+      while( $line = fgets( $handle ) )
+      {
+        $line_number++;
+        if ($line!="\n")
+        {
+          $n = preg_match( "/^\s*([a-zA-Z0-9_]+).([a-zA-Z0-9_]+)\s+(\d+)\s*(\*|[a-zA-Z0-9_]+)?\s*$/", $line, $matches );
+          if ($n===false) set_assert_failed( 'Internal error.' );
+          
+          if ($n==0)
+          {
+            echo $line;
+            echo sprintf( "Illegal format at line %d in the file '%s'.\n", $line_number, $this->myConstsFileName );
+          }
+          
+          if (isset($matches[4]))
+          {
+            $table_name    = $matches[1];
+            $column_name   = $matches[2];
+            $length        = $matches[3];
+            $constant_name = $matches[4];
+            
+            $this->myOldColumns[$table_name][$column_name] = array( 'table_name'    => $table_name,
+                                                                    'column_name'   => $column_name,
+                                                                    'length'        => $length,
+                                                                    'constant_name' => $constant_name );
+          }
+        }
+      }     
+      $err = fclose( $handle );
+      if ($err===false) set_assert_failed( "Error closing file '%s'.", $this->myConstsFileName );
+    }
+  }
+  
+  //--------------------------------------------------------------------------------------------------------------------
+  /** Definition a unknown constants.
+   */  
+  private function EnhanceColumns()
+  {
+    foreach( $this->myOldColumns as $table )
+    { 
+      foreach( $table as $column ) 
+      {
+        $table_name  = $column['table_name'];
+        $column_name = $column['column_name'];
+  
+        if ($column['constant_name']=='*')
+        {
+          $constant_name = strtoupper( $this->myPrefix.$column['column_name'] ); 
+          $this->myOldColumns[$table_name][$column_name]['constant_name'] = $constant_name;
+        }
+        else
+        {
+          $constant_name = strtoupper( $this->myOldColumns[$table_name][$column_name]['constant_name']);
+          $this->myOldColumns[$table_name][$column_name]['constant_name'] = $constant_name;
+        }
+      }  
+    }
+  }
+   
+  //--------------------------------------------------------------------------------------------------------------------
+  /** Merges the columns with the old and new constants.
+   */  
+  private function MergeColumns()
+  {
+    foreach( $this->myOldColumns as $table_name => $table )
+    { 
+      foreach( $table as $column_name => $column ) 
+      {
+        if (isset( $this->myColumns[$table_name][$column_name] ))
+        {
+          $this->myColumns[$table_name][$column_name]['constant_name'] = $column['constant_name'];
+        }
+      }
+    }
+  }
+  
+  //--------------------------------------------------------------------------------------------------------------------
+  /** Get all lable from the MySQL.
+   */  
+  private function GetLabels()
+  {
+    $query_string = "
+select t1.table_name  `table_name`
+,      t1.column_name `id`
+,      t2.column_name `label`
+from       information_schema.columns t1
+inner join information_schema.columns t2 on t1.table_name = t2.table_name
+where t1.table_schema = database()
+and   t1.extra        = 'auto_increment'
+and   t2.table_schema = database()
+and   t2.column_name like '%%\_label'";
+
+    $tables = SET_DL::ExecuteRows( $query_string );
+    foreach( $tables as $table )
+    {
+      $query_string = "
+select `%s`  as `id`
+,      `%s`  as `label`
+from   `%s`
+where   nullif(`%s`,'') is not null";
+
+      $query_string = sprintf( $query_string, $table['id'], $table['label'], $table['table_name'], $table['label'] );
+      $rows = SET_DL::ExecuteRows( $query_string );   
+      foreach ( $rows as $row )
+      {
+        $this->myLabels[$row['label']] = $row['id'];        
+      }
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /** Get all known constants into the array myConstants.
+   */  
+  private function FillConstants()
+  {
+    foreach( $this->myColumns as $table_name => $table )
+    {
+      foreach( $table as $column_name => $column )
+      {
+        if (isset($this->myColumns[$table_name][$column_name]['constant_name']))
+        {
+          $this->myConstants[$column['constant_name']] = $column['length'];
+        }
+      }
+    }
+    
+    foreach( $this->myLabels as $label => $id )
+    {
+      $this->myConstants[$label] = $id;
+    } 
+    
+    $ok = ksort( $this->myConstants );
+    if ($ok===false) set_assert_failed( 'Internal error.' );   
+  }
+  
+  //--------------------------------------------------------------------------------------------------------------------
+  /** Automatic generation the constants.
+   */  
+  private function WriteTargetConfigFile()
+  {
+    $source = file_get_contents( $this->myTemplateConfigFileName );
+    if ($source===false) set_assert_failed( "Unable to open file '%s'.", $this->myTemplateConfigFileName );
+    
+    $width1 = 0;     
+    $width2 = 0;
+    $constants = ''; 
+    foreach( $this->myConstants as $constant => $value )
+    {
+      $width1 = max( strlen( $constant ), $width1 ); 
+      $width2 = max( strlen( $value ),    $width2 ); 
+    } 
+    
+    $line_format = sprintf( "const %%-%ds = %%%dd; \n", $width1, $width2 );
+    foreach( $this->myConstants as $constant => $value )
+    {
+      $constants .= sprintf( $line_format, $constant, $value );
+    }
+
+    $source = str_replace( '/* AUTO_GENERATED_CONSTS */', $constants, $source );
+
+    $ok = file_put_contents( $this->myConfigFileName,  $source ); 
+    if ($ok===false) set_assert_failed( "Unable to write to file '%s'.", $this->myTemplateConfigFileName );
+  }
+    
+  //--------------------------------------------------------------------------------------------------------------------
+  public function Main( $theConfigFileName )
+  {
+    SET_DL::Connect( 'localhost', 'nahouw', 'nahouw', 'nahouw' );
+    
+    $this->ReadConfigFile( $theConfigFileName );
+    
+    $this->GetOldColumns();
+    
+    $this->GetColumns();
+    
+    $this->EnhanceColumns();
+    
+    $this->MergeColumns();
+    
+    $this->WriteColumns(); 
+    
+    $this->GetLabels();
+    
+    $this->FillConstants();
+    
+    $this->WriteTargetConfigFile();
+    
+    SET_DL::Disconnect();
+  }
+    
+  //--------------------------------------------------------------------------------------------------------------------
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+function Synopsis()
+{
+  echo "wrapper_consts <configfile>\n";
+  exit(1);
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+if($argc!=2) Synopsis();
+
+$loader = new SET_AutoConsts;
+$loader->Main( $argv[1] );
+
