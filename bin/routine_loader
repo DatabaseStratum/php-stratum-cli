@@ -587,6 +587,20 @@ class SET_RoutineLoader
 
     return $ret;
   }
+  //--------------------------------------------------------------------------------------------------------------------
+  /** Drops the current routine if it exists.
+   */
+  private function DropCurrentRoutine()
+  {
+    if (isset($this->myOldRoutines[$this->myCurrentRoutineName]))
+    {
+      $sql = sprintf( "drop %s if exists %s",
+                      $this->myOldRoutines[$this->myCurrentRoutineName]['routine_type'],
+                      $this->myCurrentRoutineName );
+
+      SET_DL::ExecuteNone( $sql );
+    }
+  }
 
   //--------------------------------------------------------------------------------------------------------------------
   private function LoadCurrentPsqlFile()
@@ -813,6 +827,7 @@ order by routine_name";
       $this->myOldRoutines[$row['routine_name']] = $row;
     }
   }
+<<<<<<< HEAD
 
   //--------------------------------------------------------------------------------------------------------------------
   /** Drops the current routine if it exists.
@@ -828,6 +843,9 @@ order by routine_name";
      SET_DL::ExecuteNone( $sql );
     }
   }
+=======
+
+>>>>>>> 4438713654d42ff0b6e9e0825b38e824f7b9f005
 
   //--------------------------------------------------------------------------------------------------------------------
   /** Gets real sql mode.
