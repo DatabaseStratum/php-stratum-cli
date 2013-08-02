@@ -1,0 +1,7 @@
+/** Test for desgination type none.
+ */
+create procedure tst_test_none( p_param int )
+reads sql data
+-- type: none
+begin
+end
