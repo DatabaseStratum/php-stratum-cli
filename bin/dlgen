@@ -302,6 +302,8 @@ select table_name
 ,      numeric_precision 
 from   information_schema.COLUMNS
 where  table_schema = database()
+and    table_name  rlike '^[a-zA-Z0-9_]*$'
+and    column_name rlike '^[a-zA-Z0-9_]*$'
 order by table_name
 ,        ordinal_position";
 
@@ -336,6 +338,7 @@ order by table_name
     case 'char':
     case 'varchar':
     case 'binary':
+    case 'varbinary':  
       
     case 'tinytext':
     case 'text':
@@ -345,6 +348,7 @@ order by table_name
     case 'blob':
     case 'mediumblob':
     case 'longblob': 
+    case 'bit':
       $ret = $theColumn['character_maximum_length'];
       break;
       
@@ -369,7 +373,6 @@ order by table_name
       break;  
   
     case 'enum':
-    case 'bit':
     case 'set':
       // Nothing to do. We don't assign a width to column of enum type.
       break;
@@ -1576,7 +1579,8 @@ abstract class SET_RoutineWrapper_abstract
       case 'double':
         $this->WriteLine( '$arg'.$i.' = self::QuoteNum($theArg'.$i.');' );
         break;
-
+        
+      case 'varbinary':  
       case 'binary': 
       
       case 'char':
@@ -1593,9 +1597,12 @@ abstract class SET_RoutineWrapper_abstract
         break;
 
       case 'enum':
-      case 'bit':  
       case 'set':  
         $this->WriteLine( '$arg'.$i.' = self::QuoteString($theArg'.$i.');' );
+        break;
+        
+      case 'bit':   
+        $this->WriteLine( '$arg'.$i.' = self::QuoteBit($theArg'.$i.');' );
         break;
         
       default:
@@ -1636,6 +1643,7 @@ abstract class SET_RoutineWrapper_abstract
         $ret .= '$theArg'.$i;
         break;
 
+      case 'varbinary':  
       case 'binary':  
         
       case 'char':
@@ -1705,6 +1713,7 @@ abstract class SET_RoutineWrapper_abstract
         $ret .= '$arg'.$i;
         break;
     
+      case 'varbinary':  
       case 'binary':  
              
       case 'char':
@@ -1783,6 +1792,7 @@ abstract class SET_RoutineWrapper_abstract
     case 'varchar':
     case 'date':
     case 'datetime':
+    case 'varbinary':
       $ret = 's';
       break;
 
@@ -2125,6 +2135,8 @@ class SET_RoutineWrapperRow0 extends SET_RoutineWrapper_abstract
   {
     $routine_args = $this->GetRoutineArgs( $theArgumentTypes );
     $this->WriteLine( 'return self::ExecuteRow0( "CALL '.$theRoutine['routine_name'].'('.$routine_args.')" );' );
+   
+    /** @todo Test the actual number of rows and number  use result->num_rows*/
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -2255,7 +2267,7 @@ class SET_RoutineWrapperSingleton1 extends SET_RoutineWrapper_abstract
   protected function WriteResultHandler( $theRoutine, $theArgumentTypes )
   {
     $routine_args = $this->GetRoutineArgs( $theArgumentTypes );
-    $this->WriteLine( 'return self::ExecuteSingleton( "CALL '.$theRoutine['routine_name'].'('.$routine_args.')" );' );
+    $this->WriteLine( 'return self::ExecuteSingleton1( "CALL '.$theRoutine['routine_name'].'('.$routine_args.')" );' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

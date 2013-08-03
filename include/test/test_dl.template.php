@@ -49,6 +49,18 @@ class TST_DL
   }
 
   // -------------------------------------------------------------------------------------------------------------------
+  /** Werpt een excptie met de huidige error code en beschrijving van $ourMySql.
+   */
+  private static function AssertFailed()
+  {
+    $args    = func_get_args();
+    $format  = array_shift( $args );
+    $message = vsprintf( $format,  $args );
+
+    throw new Exception( $message );
+  }
+    
+  // -------------------------------------------------------------------------------------------------------------------
   /** Wrapper om mysqli::query. Indien de call naar mysqli::query mislukt wordt een een exceptie geworpen.
    */
   private static function Query( $theQuery )
@@ -182,9 +194,16 @@ class TST_DL
   public function ExecuteRow0( $theQuery )
   {
     $result = self::Query( $theQuery );
+    
+    if (!($result->num_rows==0 || $result->num_rows==1))
+    {
+      TST_DL::AssertFailed( "Number of rows selected by query below is %d expected 0 or 1.\n%s",
+                            $result->num_rows,
+                            $theQuery );
+    }
+     
     $row    = $result->fetch_array( MYSQLI_ASSOC );
     $result->close();
-    /** @todo Test the actual number of rows and number  use result->num_rows*/
 
     self::$ourMySql->next_result();
 
@@ -197,13 +216,17 @@ class TST_DL
   public function ExecuteRow1( $theQuery )
   {
     $result = self::Query( $theQuery );
-    $row    = $result->fetch_array( MYSQLI_ASSOC );
+    if ($result->num_rows!=1)
+    {
+      TST_DL::AssertFailed( "Number of rows selected by query below is %d expected 1.\n%s",
+                            $result->num_rows,
+                            $theQuery );
+    }
+
+    $row = $result->fetch_array( MYSQLI_ASSOC );
     $result->close();
 
     self::$ourMySql->next_result();
-
-    if (empty($row)) GIDS_DL::ThrowMissingDataException( $theQuery );
-    /** @todo Test uitvoeren op meer dan 1 rijen */
 
     return $row;
   }
@@ -230,9 +253,16 @@ class TST_DL
   public function ExecuteSingleton0( $theQuery )
   {
     $result = self::Query( $theQuery );
+    
+    if (!($result->num_rows==0 || $result->num_rows==1))
+    {
+      TST_DL::AssertFailed( "Number of rows selected by query below is %d expected 0 or 1.\n%s",
+                            $result->num_rows,
+                            $theQuery );
+    }
+    
     $row    = $result->fetch_array( MYSQL_NUM );
     $result->close();
-    /** @todo Test the actual number of rows and number of columns */
 
     self::$ourMySql->next_result();
 
@@ -246,13 +276,17 @@ class TST_DL
   public function ExecuteSingleton1( $theQuery )
   {
     $result = self::Query( $theQuery );
-    $row    = $result->fetch_array( MYSQL_NUM );
+    if ($result->num_rows!=1)
+    {
+      TST_DL::AssertFailed( "Number of rows selected by query below is %d expected 1.\n%s",
+                            $result->num_rows,
+                            $theQuery );
+    }
+
+    $row = $result->fetch_array( MYSQL_NUM );
     $result->close();
-    /** @todo Test uitvoeren op het daawerkelijke aantal rijen en kolomen */
 
     self::$ourMySql->next_result();
-
-    if (empty($row)) GIDS_DL::ThrowMissingDataException( $theQuery );
 
     return $row[0];
   }
@@ -309,43 +343,20 @@ class TST_DL
   }
 
   // -------------------------------------------------------------------------------------------------------------------
-  /** Slaat alle data uit tabel @$theTableName op in bestand @a $theFileName in CSV formaat.
+  /** Geeft een literal voor @a $theString terug die veilig gebruikt kan worden als string in SQL statements.
    */
-  public static function DumpTableCsv( $theTableName, $theFileName )
+  public static function QuoteBit( $theString )
   {
-   // $handle = ETL_System::FileOpen( $theFileName, 'w' );
-   $handle = fopen( $theFileName, 'w' );
-
-    $query = sprintf( "select * from %s", $theTableName );
-    $result = self::Query( $query );
-    if ($result)
+    if ($theString===null || $theString===false || $theString==='')
     {
-      while ($row = $result->fetch_row())
-      {
-        foreach( $row as $i => $field )
-        {
-          if ($field===null)
-          {
-           // Vervang NULL door \N (string literal voor NULL, zie mysqlimport).
-            $row[$i] = '\N';
-          }
-          else
-          {
-            $row[$i] = self::$ourMySql->real_escape_string( $row[$i] );
-          }
-        }
-        $err = fputcsv( $handle, $row, ",", '"' );
-        if ($err===false) throw new exception( sprintf( "Unable to write record to file '%s'", $theFileName ) );
-      }
+      return 'NULL';
     }
-    $result->close();
-
-    self::$ourMySql->next_result();
-
-  //  ETL_System::FileClose( $handle );
-  fclose( $handle );
+    else
+    {
+      return "b'".self::$ourMySql->real_escape_string( $theString )."'";
+    }
   }
-
+  
   /* AUTO_GENERATED_ROUINE_WRAPPERS */
   // -------------------------------------------------------------------------------------------------------------------
 }

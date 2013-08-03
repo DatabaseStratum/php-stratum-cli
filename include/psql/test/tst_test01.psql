@@ -23,4 +23,45 @@ create procedure tst_test01( p_param00 @tst_foo1.tst_c00%type@,
 reads sql data
 -- type: none
 begin
-end
+  insert into TST_FOO1( tst_c00
+  ,                     tst_c01
+  ,                     tst_c02
+  ,                     tst_c03
+  ,                     tst_c04
+  ,                     tst_c05
+  ,                     tst_c06
+  ,                     tst_c07
+  ,                     tst_c08
+  ,                     tst_c09
+  ,                     tst_c10
+  ,                     tst_c11
+  ,                     tst_c12
+  ,                     tst_c13
+  ,                     tst_c14
+  ,                     tst_c15
+  ,                     tst_c16
+  ,                     tst_c17
+  ,                     tst_c26
+  ,                     tst_c27 )
+  values( p_param00
+  ,       p_param01
+  ,       p_param02
+  ,       p_param03
+  ,       p_param04
+  ,       p_param05
+  ,       p_param06
+  ,       p_param07
+  ,       p_param08
+  ,       p_param09
+  ,       p_param10
+  ,       p_param11
+  ,       p_param12
+  ,       p_param13
+  ,       p_param14
+  ,       p_param15
+  ,       p_param16
+  ,       p_param17
+  ,       p_param26
+  ,       p_param27 )
+  ;
+end 

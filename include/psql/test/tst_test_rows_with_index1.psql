@@ -3,9 +3,10 @@
  */
 create procedure tst_test_rows_with_index1( p_count int )
 reads sql data
--- type: rows_with_key tst_c01,tst_c02
+-- type: rows_with_index tst_c01,tst_c02
 begin
   select *
   from   TST_FOO2
+  where  tst_c00 <= p_count
   ;
 end

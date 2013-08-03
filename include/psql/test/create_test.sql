@@ -6,10 +6,10 @@ create table TST_FOO1( tst_c00 int
 ,                      tst_c02 tinyint
 ,                      tst_c03 mediumint
 ,                      tst_c04 bigint
-,                      tst_c05 decimal(102)
+,                      tst_c05 decimal(10,2)     
 ,                      tst_c06 float
 ,                      tst_c07 double
-,                      tst_c08 bit
+,                      tst_c08 bit(8)
 ,                      tst_c09 date
 ,                      tst_c10 datetime
 ,                      tst_c11 timestamp
@@ -18,7 +18,7 @@ create table TST_FOO1( tst_c00 int
 ,                      tst_c14 char(10)
 ,                      tst_c15 varchar(10)
 ,                      tst_c16 binary(10)
-,                      tst_c17 varchar(10)
+,                      tst_c17 varbinary(10)
 ,                      tst_c18 tinyblob
 ,                      tst_c19 blob
 ,                      tst_c20 mediumblob

@@ -10,6 +10,6 @@ reads sql data
 begin
   select 1
   from   TST_FOO2
-  where  tst_id <= p_count
+  where  tst_c00 <= p_count
   ;
 end

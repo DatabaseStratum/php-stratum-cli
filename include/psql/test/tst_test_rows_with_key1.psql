@@ -7,5 +7,6 @@ reads sql data
 begin
   select *
   from   TST_FOO2
+  where  tst_c00 <= p_count
   ;
 end
