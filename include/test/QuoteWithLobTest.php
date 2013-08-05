@@ -1,6 +1,6 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-class QuoteTest extends PHPUnit_Framework_TestCase
+class QuoteWithLobTest extends PHPUnit_Framework_TestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
   /** Setups a form with a select form control.
@@ -13,7 +13,7 @@ class QuoteTest extends PHPUnit_Framework_TestCase
   //--------------------------------------------------------------------------------------------------------------------
   public function genericValid( $theColumn, $theValue )
   {
-    $n = TST_DL::Test01( ($theColumn=='int')           ? $theValue : null,        // tst_c00 int
+    $n = TST_DL::Test02( ($theColumn=='int')           ? $theValue : null,        // tst_c00 int
                          ($theColumn=='smallint')      ? $theValue : null,        // tst_c01 smallint
                          ($theColumn=='tinyint')       ? $theValue : null,        // tst_c02 tinyint
                          ($theColumn=='mediumint')     ? $theValue : null,        // tst_c03 mediumint
@@ -31,6 +31,14 @@ class QuoteTest extends PHPUnit_Framework_TestCase
                          ($theColumn=='varchar')       ? $theValue : null,        // tst_c15 varchar(10)
                          ($theColumn=='binary')        ? $theValue : null,        // tst_c16 binary(10)
                          ($theColumn=='varbinary')     ? $theValue : null,        // tst_c17 varbinary(10)
+                         ($theColumn=='tinyblob')      ? $theValue : null,        // tst_c18 tinyblob
+                         ($theColumn=='blob')          ? $theValue : null,        // tst_c19 blob
+                         ($theColumn=='mediumblob')    ? $theValue : null,        // tst_c20 mediumblob
+                         ($theColumn=='longblob')      ? $theValue : null,        // tst_c21 longblob
+                         ($theColumn=='tinytext')      ? $theValue : null,        // tst_c22 tinytext
+                         ($theColumn=='text')          ? $theValue : null,        // tst_c23 text
+                         ($theColumn=='mediumtext')    ? $theValue : null,        // tst_c24 mediumtext
+                         ($theColumn=='longtext')      ? $theValue : null,        // tst_c25 longtext
                          ($theColumn=='enum')          ? $theValue : null,        // tst_c26 enum('a','b')
                          ($theColumn=='set')           ? $theValue : null );      // tst_c27 set('a','b')
     $this->assertEquals( 1, $n );
@@ -41,26 +49,34 @@ class QuoteTest extends PHPUnit_Framework_TestCase
   {
     try
     {
-       $n = TST_DL::Test01( ($theColumn=='int')           ? $theValue : null,        // tst_c00 int
-                         ($theColumn=='smallint')      ? $theValue : null,        // tst_c01 smallint
-                         ($theColumn=='tinyint')       ? $theValue : null,        // tst_c02 tinyint
-                         ($theColumn=='mediumint')     ? $theValue : null,        // tst_c03 mediumint
-                         ($theColumn=='bigint')        ? $theValue : null,        // tst_c04 bigint
-                         ($theColumn=='decimal)')      ? $theValue : null,        // tst_c05 decimal(10,2)
-                         ($theColumn=='float')         ? $theValue : null,        // tst_c06 float
-                         ($theColumn=='double')        ? $theValue : null,        // tst_c07 double
-                         ($theColumn=='bit')           ? $theValue : null,        // tst_c08 bit
-                         ($theColumn=='date')          ? $theValue : null,        // tst_c09 date
-                         ($theColumn=='datetime')      ? $theValue : null,        // tst_c10 datetime
-                         ($theColumn=='timestamp')     ? $theValue : null,        // tst_c11 timestamp
-                         ($theColumn=='time')          ? $theValue : null,        // tst_c12 time
-                         ($theColumn=='year')          ? $theValue : null,        // tst_c13 year
-                         ($theColumn=='char')          ? $theValue : null,        // tst_c14 char(10)
-                         ($theColumn=='varchar')       ? $theValue : null,        // tst_c15 varchar(10)
-                         ($theColumn=='binary')        ? $theValue : null,        // tst_c16 binary(10)
-                         ($theColumn=='varbinary')     ? $theValue : null,        // tst_c17 varbinary(10)
-                         ($theColumn=='enum')          ? $theValue : null,        // tst_c26 enum('a','b')
-                         ($theColumn=='set')           ? $theValue : null );      // tst_c27 set('a','b')
+      $n = TST_DL::Test02( ($theColumn=='int')           ? $theValue : null,        // tst_c00 int
+                           ($theColumn=='smallint')      ? $theValue : null,        // tst_c01 smallint
+                           ($theColumn=='tinyint')       ? $theValue : null,        // tst_c02 tinyint
+                           ($theColumn=='mediumint')     ? $theValue : null,        // tst_c03 mediumint
+                           ($theColumn=='bigint')        ? $theValue : null,        // tst_c04 bigint
+                           ($theColumn=='decimal)')      ? $theValue : null,        // tst_c05 decimal(10,2)
+                           ($theColumn=='float')         ? $theValue : null,        // tst_c06 float
+                           ($theColumn=='double')        ? $theValue : null,        // tst_c07 double
+                           ($theColumn=='bit')           ? $theValue : null,        // tst_c08 bit
+                           ($theColumn=='date')          ? $theValue : null,        // tst_c09 date
+                           ($theColumn=='datetime')      ? $theValue : null,        // tst_c10 datetime
+                           ($theColumn=='timestamp')     ? $theValue : null,        // tst_c11 timestamp
+                           ($theColumn=='time')          ? $theValue : null,        // tst_c12 time
+                           ($theColumn=='year')          ? $theValue : null,        // tst_c13 year
+                           ($theColumn=='char')          ? $theValue : null,        // tst_c14 char(10)
+                           ($theColumn=='varchar')       ? $theValue : null,        // tst_c15 varchar(10)
+                           ($theColumn=='binary')        ? $theValue : null,        // tst_c16 binary(10)
+                           ($theColumn=='varbinary')     ? $theValue : null,        // tst_c17 varbinary(10)
+                           ($theColumn=='tinyblob')      ? $theValue : null,        // tst_c18 tinyblob
+                           ($theColumn=='blob')          ? $theValue : null,        // tst_c19 blob
+                           ($theColumn=='mediumblob')    ? $theValue : null,        // tst_c20 mediumblob
+                           ($theColumn=='longblob')      ? $theValue : null,        // tst_c21 longblob
+                           ($theColumn=='tinytext')      ? $theValue : null,        // tst_c22 tinytext
+                           ($theColumn=='text')          ? $theValue : null,        // tst_c23 text
+                           ($theColumn=='mediumtext')    ? $theValue : null,        // tst_c24 mediumtext
+                           ($theColumn=='longtext')      ? $theValue : null,        // tst_c25 longtext
+                           ($theColumn=='enum')          ? $theValue : null,        // tst_c26 enum('a','b')
+                           ($theColumn=='set')           ? $theValue : null );      // tst_c27 set('a','b')
       $this->assertTrue( false );
     }
     catch( Exception $e )
@@ -116,6 +132,24 @@ class QuoteTest extends PHPUnit_Framework_TestCase
     $tests[] = array( 'column' => 'varbinary',  'value'  =>   1010  );
     $tests[] = array( 'column' => 'varbinary',  'value'  =>  '1010' );
     $tests[] = array( 'column' => 'varbinary',  'value'  =>  "\xFF\x7F\x80\x5c\x00\x10" );
+
+    $tests[] = array( 'column' => 'tinyblob',   'value'  =>   100  );
+    $tests[] = array( 'column' => 'tinyblob',   'value'  =>  'abc' );
+    $tests[] = array( 'column' => 'blob',       'value'  =>   200  );
+    $tests[] = array( 'column' => 'blob',       'value'  =>  'abc' );
+    $tests[] = array( 'column' => 'mediumblob', 'value'  =>   300  );
+    $tests[] = array( 'column' => 'mediumblob', 'value'  =>  'abc' );
+    $tests[] = array( 'column' => 'longblob',   'value'  =>   400  );
+    $tests[] = array( 'column' => 'longblob',   'value'  =>  'abc' );
+
+    $tests[] = array( 'column' => 'tinytext',   'value'  =>   100  );
+    $tests[] = array( 'column' => 'tinytext',   'value'  =>  'abc' );
+    $tests[] = array( 'column' => 'text',       'value'  =>   200  );
+    $tests[] = array( 'column' => 'text',       'value'  =>  'abc' );
+    $tests[] = array( 'column' => 'mediumtext', 'value'  =>   300  );
+    $tests[] = array( 'column' => 'mediumtext', 'value'  =>  'abc' );
+    $tests[] = array( 'column' => 'longtext',   'value'  =>   400  );
+    $tests[] = array( 'column' => 'longtext',   'value'  =>  'abc' );
 
     $tests[] = array( 'column' => 'enum',       'value'  =>  'a' );
     $tests[] = array( 'column' => 'enum',       'value'  =>  'b' );

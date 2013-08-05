@@ -1,6 +1,6 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-class Singleton1Test extends PHPUnit_Framework_TestCase
+class Row0WithLobTest extends PHPUnit_Framework_TestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
   /** Setups a form with a select form control.
@@ -11,30 +11,30 @@ class Singleton1Test extends PHPUnit_Framework_TestCase
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Stored routine with designation type singleton1 must return 1 value and 1 value only.
+  /** Stored routine with designation type row0 must return null or 1 row.
    */
-  public function testSelect1Singletons()
+  public function testSelect0Rows()
   {
-    $ret = TST_DL::TestSingleton1a( 1 );
-    $this->assertInternalType( 'string', $ret );
+    $ret = TST_DL::TestRow0a( 0, 'blob' );
+    $this->assertInternalType( 'null', $ret );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** An exception must be thrown when a stored routine with designation type singleton1 returns 0 values.
-   *  @expectedException Exception
+  /** Stored routine with designation type row0 must return null or 1 row.
    */
-  public function testSelect0Singletons()
+  public function testSelect1Rows()
   {
-    TST_DL::TestSingleton1a( 0 );
+    $ret = TST_DL::TestRow0a( 1, 'blob' );
+    $this->assertInternalType( 'array', $ret );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** An exception must be thrown when a stored routine with designation type singleton1 returns more than 1 values.
+  /** An exception must be thrown when a stored routine with designation type row0 returns more than 1 rows.
    *  @expectedException Exception
    */
-  public function testSelect2Singletons()
+  public function testSelect2Rows()
   {
-    TST_DL::TestSingleton1a( 2 );
+    TST_DL::TestRow0a( 2, 'blob' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

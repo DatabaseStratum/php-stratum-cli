@@ -1,6 +1,6 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-class Singleton1Test extends PHPUnit_Framework_TestCase
+class NoneWithLobTest extends PHPUnit_Framework_TestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
   /** Setups a form with a select form control.
@@ -11,34 +11,33 @@ class Singleton1Test extends PHPUnit_Framework_TestCase
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Stored routine with designation type singleton1 must return 1 value and 1 value only.
+  /** Stored routine with designation type none must return the nummber of rows affected.
    */
-  public function testSelect1Singletons()
+  public function testTestNoneWithLob1()
   {
-    $ret = TST_DL::TestSingleton1a( 1 );
-    $this->assertInternalType( 'string', $ret );
+    $ret = TST_DL::TestNoneWithLob( 0, 'blob' );
+    $this->assertEquals( 0, $ret );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** An exception must be thrown when a stored routine with designation type singleton1 returns 0 values.
-   *  @expectedException Exception
+  /** Stored routine with designation type none must return the nummber of rows affected.
    */
-  public function testSelect0Singletons()
+  public function testTestNoneWithLob2()
   {
-    TST_DL::TestSingleton1a( 0 );
+    $ret = TST_DL::TestNoneWithLob( 1, 'blob' );
+    $this->assertEquals( 1, $ret );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** An exception must be thrown when a stored routine with designation type singleton1 returns more than 1 values.
-   *  @expectedException Exception
+  /** Stored routine with designation type none must return the nummber of rows affected.
    */
-  public function testSelect2Singletons()
+  public function testTestNoneWithLob3()
   {
-    TST_DL::TestSingleton1a( 2 );
+    $ret = TST_DL::TestNoneWithLob( 20, 'blob' );
+    $this->assertEquals( 20, $ret );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-

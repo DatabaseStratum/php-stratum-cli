@@ -35,6 +35,8 @@ class TST_DL
    */
   private static $ourMySql;
 
+  const MAX_ALLOWED_PACKET = 1000000;
+
   // -------------------------------------------------------------------------------------------------------------------
   /** Werpt een excptie met de huidige error code en beschrijving van $ourMySql.
    */
@@ -59,7 +61,31 @@ class TST_DL
 
     throw new Exception( $message );
   }
-    
+
+  //------------------------------------------------------------------------------------------------------------------
+  public static function stmt_bind_assoc( &$stmt, &$out )
+  {
+    $data = $stmt->result_metadata();
+    if (!$data) self::ThrowSqlError( 'mysqli_stmt::result_metadata failed' );
+
+    $fields = array();
+    $out    = array();
+
+    $fields[0] = $stmt;
+    $count = 1;
+
+    while($field = $data->fetch_field())
+    {
+      $fields[$count] = &$out[$field->name];
+      $count++;
+    }
+
+    $b = call_user_func_array( 'mysqli_stmt_bind_result', $fields );
+    if ($b===false) self::ThrowSqlError( 'mysqli_stmt_bind_result failed' );
+
+    $data->free();
+  }
+
   // -------------------------------------------------------------------------------------------------------------------
   /** Wrapper om mysqli::query. Indien de call naar mysqli::query mislukt wordt een een exceptie geworpen.
    */
@@ -194,14 +220,14 @@ class TST_DL
   public function ExecuteRow0( $theQuery )
   {
     $result = self::Query( $theQuery );
-    
+
     if (!($result->num_rows==0 || $result->num_rows==1))
     {
       TST_DL::AssertFailed( "Number of rows selected by query below is %d expected 0 or 1.\n%s",
                             $result->num_rows,
                             $theQuery );
     }
-     
+
     $row    = $result->fetch_array( MYSQLI_ASSOC );
     $result->close();
 
@@ -253,14 +279,14 @@ class TST_DL
   public function ExecuteSingleton0( $theQuery )
   {
     $result = self::Query( $theQuery );
-    
+
     if (!($result->num_rows==0 || $result->num_rows==1))
     {
       TST_DL::AssertFailed( "Number of rows selected by query below is %d expected 0 or 1.\n%s",
                             $result->num_rows,
                             $theQuery );
     }
-    
+
     $row    = $result->fetch_array( MYSQL_NUM );
     $result->close();
 
@@ -356,7 +382,7 @@ class TST_DL
       return "b'".self::$ourMySql->real_escape_string( $theString )."'";
     }
   }
-  
+
   /* AUTO_GENERATED_ROUINE_WRAPPERS */
   // -------------------------------------------------------------------------------------------------------------------
 }

@@ -1,4 +1,4 @@
-TST_FOO1.tst_c00         10 TST_TST_C00
+TST_FOO1.tst_c00         10
 TST_FOO1.tst_c01          5
 TST_FOO1.tst_c02          3
 TST_FOO1.tst_c03          7
@@ -7,14 +7,14 @@ TST_FOO1.tst_c05         10
 TST_FOO1.tst_c06         12
 TST_FOO1.tst_c07         22
 TST_FOO1.tst_c09         10
-TST_FOO1.tst_c10         16 TST_TST_C10
+TST_FOO1.tst_c10         16
 TST_FOO1.tst_c11         16
 TST_FOO1.tst_c12          8
 TST_FOO1.tst_c13          4
 TST_FOO1.tst_c14         10
 TST_FOO1.tst_c15         10
 TST_FOO1.tst_c16         10
-TST_FOO1.tst_c17         10 QWERTY
+TST_FOO1.tst_c17         10
 TST_FOO1.tst_c18        255
 TST_FOO1.tst_c19      65535
 TST_FOO1.tst_c20   16777215

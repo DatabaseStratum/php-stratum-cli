@@ -35,6 +35,8 @@ class TST_DL
    */
   private static $ourMySql;
 
+  const MAX_ALLOWED_PACKET = 1000000;
+
   // -------------------------------------------------------------------------------------------------------------------
   /** Werpt een excptie met de huidige error code en beschrijving van $ourMySql.
    */
@@ -59,7 +61,31 @@ class TST_DL
 
     throw new Exception( $message );
   }
-    
+
+  //------------------------------------------------------------------------------------------------------------------
+  public static function stmt_bind_assoc( &$stmt, &$out )
+  {
+    $data = $stmt->result_metadata();
+    if (!$data) self::ThrowSqlError( 'mysqli_stmt::result_metadata failed' );
+
+    $fields = array();
+    $out    = array();
+
+    $fields[0] = $stmt;
+    $count = 1;
+
+    while($field = $data->fetch_field())
+    {
+      $fields[$count] = &$out[$field->name];
+      $count++;
+    }
+
+    $b = call_user_func_array( 'mysqli_stmt_bind_result', $fields );
+    if ($b===false) self::ThrowSqlError( 'mysqli_stmt_bind_result failed' );
+
+    $data->free();
+  }
+
   // -------------------------------------------------------------------------------------------------------------------
   /** Wrapper om mysqli::query. Indien de call naar mysqli::query mislukt wordt een een exceptie geworpen.
    */
@@ -194,14 +220,14 @@ class TST_DL
   public function ExecuteRow0( $theQuery )
   {
     $result = self::Query( $theQuery );
-    
+
     if (!($result->num_rows==0 || $result->num_rows==1))
     {
       TST_DL::AssertFailed( "Number of rows selected by query below is %d expected 0 or 1.\n%s",
                             $result->num_rows,
                             $theQuery );
     }
-     
+
     $row    = $result->fetch_array( MYSQLI_ASSOC );
     $result->close();
 
@@ -253,14 +279,14 @@ class TST_DL
   public function ExecuteSingleton0( $theQuery )
   {
     $result = self::Query( $theQuery );
-    
+
     if (!($result->num_rows==0 || $result->num_rows==1))
     {
       TST_DL::AssertFailed( "Number of rows selected by query below is %d expected 0 or 1.\n%s",
                             $result->num_rows,
                             $theQuery );
     }
-    
+
     $row    = $result->fetch_array( MYSQL_NUM );
     $result->close();
 
@@ -356,7 +382,7 @@ class TST_DL
       return "b'".self::$ourMySql->real_escape_string( $theString )."'";
     }
   }
-  
+
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test01.
    */
@@ -391,99 +417,116 @@ class TST_DL
    */
   static function Test02($theArg0,$theArg1,$theArg2,$theArg3,$theArg4,$theArg5,$theArg6,$theArg7,$theArg8,$theArg9,$theArg10,$theArg11,$theArg12,$theArg13,$theArg14,$theArg15,$theArg16,$theArg17,$theArg18,$theArg19,$theArg20,$theArg21,$theArg22,$theArg23,$theArg24,$theArg25,$theArg26,$theArg27)
   {
-    $query = "CALL tst_test02( ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,? )";
+    $arg0 = self::QuoteNum($theArg0);
+    $arg1 = self::QuoteNum($theArg1);
+    $arg2 = self::QuoteNum($theArg2);
+    $arg3 = self::QuoteNum($theArg3);
+    $arg4 = self::QuoteNum($theArg4);
+    $arg5 = self::QuoteNum($theArg5);
+    $arg6 = self::QuoteNum($theArg6);
+    $arg7 = self::QuoteNum($theArg7);
+    $arg8 = self::QuoteBit($theArg8);
+    $arg9 = self::QuoteString($theArg9);
+    $arg10 = self::QuoteString($theArg10);
+    $arg11 = self::QuoteString($theArg11);
+    $arg12 = self::QuoteString($theArg12);
+    $arg13 = self::QuoteNum($theArg13);
+    $arg14 = self::QuoteString($theArg14);
+    $arg15 = self::QuoteString($theArg15);
+    $arg16 = self::QuoteString($theArg16);
+    $arg17 = self::QuoteString($theArg17);
+    $arg26 = self::QuoteString($theArg26);
+    $arg27 = self::QuoteString($theArg27);
+
+    $query = "CALL tst_test02( $arg0, $arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9, $arg10, $arg11, $arg12, $arg13, $arg14, $arg15, $arg16, $arg17, ?, ?, ?, ?, ?, ?, ?, ?, $arg26, $arg27 )";
     $stmt  = self::$ourMySql->prepare( $query );
     if (!$stmt) self::ThrowSqlError( 'prepare failed' );
 
     $null = null;
-    $b = $stmt->bind_param( 'iiiiidddsssssissssbbbbbbbbss', $theArg0, $theArg1, $theArg2, $theArg3, $theArg4, $theArg5, $theArg6, $theArg7, $theArg8, $theArg9, $theArg10, $theArg11, $theArg12, $theArg13, $theArg14, $theArg15, $theArg16, $theArg17, $null, $null, $null, $null, $null, $null, $null, $null, $theArg26, $theArg27 );
+    $b = $stmt->bind_param( 'bbbbbbbb', $null, $null, $null, $null, $null, $null, $null, $null );
     if (!$b) self::ThrowSqlError( 'bind_param failed' );
 
     $n = strlen( $theArg18 );
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 18, substr( $theArg18, $p, MMM_MYSQL_MAX_ALLOWED_PACKET ) );
+      $b = $stmt->send_long_data( 0, substr( $theArg18, $p, self::MAX_ALLOWED_PACKET ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
-      $p += MMM_MYSQL_MAX_ALLOWED_PACKET;
+      $p += self::MAX_ALLOWED_PACKET;
     }
 
     $n = strlen( $theArg19 );
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 19, substr( $theArg19, $p, MMM_MYSQL_MAX_ALLOWED_PACKET ) );
+      $b = $stmt->send_long_data( 1, substr( $theArg19, $p, self::MAX_ALLOWED_PACKET ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
-      $p += MMM_MYSQL_MAX_ALLOWED_PACKET;
+      $p += self::MAX_ALLOWED_PACKET;
     }
 
     $n = strlen( $theArg20 );
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 20, substr( $theArg20, $p, MMM_MYSQL_MAX_ALLOWED_PACKET ) );
+      $b = $stmt->send_long_data( 2, substr( $theArg20, $p, self::MAX_ALLOWED_PACKET ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
-      $p += MMM_MYSQL_MAX_ALLOWED_PACKET;
+      $p += self::MAX_ALLOWED_PACKET;
     }
 
     $n = strlen( $theArg21 );
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 21, substr( $theArg21, $p, MMM_MYSQL_MAX_ALLOWED_PACKET ) );
+      $b = $stmt->send_long_data( 3, substr( $theArg21, $p, self::MAX_ALLOWED_PACKET ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
-      $p += MMM_MYSQL_MAX_ALLOWED_PACKET;
+      $p += self::MAX_ALLOWED_PACKET;
     }
 
     $n = strlen( $theArg22 );
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 22, substr( $theArg22, $p, MMM_MYSQL_MAX_ALLOWED_PACKET ) );
+      $b = $stmt->send_long_data( 4, substr( $theArg22, $p, self::MAX_ALLOWED_PACKET ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
-      $p += MMM_MYSQL_MAX_ALLOWED_PACKET;
+      $p += self::MAX_ALLOWED_PACKET;
     }
 
     $n = strlen( $theArg23 );
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 23, substr( $theArg23, $p, MMM_MYSQL_MAX_ALLOWED_PACKET ) );
+      $b = $stmt->send_long_data( 5, substr( $theArg23, $p, self::MAX_ALLOWED_PACKET ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
-      $p += MMM_MYSQL_MAX_ALLOWED_PACKET;
+      $p += self::MAX_ALLOWED_PACKET;
     }
 
     $n = strlen( $theArg24 );
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 24, substr( $theArg24, $p, MMM_MYSQL_MAX_ALLOWED_PACKET ) );
+      $b = $stmt->send_long_data( 6, substr( $theArg24, $p, self::MAX_ALLOWED_PACKET ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
-      $p += MMM_MYSQL_MAX_ALLOWED_PACKET;
+      $p += self::MAX_ALLOWED_PACKET;
     }
 
     $n = strlen( $theArg25 );
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 25, substr( $theArg25, $p, MMM_MYSQL_MAX_ALLOWED_PACKET ) );
+      $b = $stmt->send_long_data( 7, substr( $theArg25, $p, self::MAX_ALLOWED_PACKET ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
-      $p += MMM_MYSQL_MAX_ALLOWED_PACKET;
+      $p += self::MAX_ALLOWED_PACKET;
     }
 
     $b = $stmt->execute();
     if (!$b) self::ThrowSqlError( 'execute failed' );
 
-    $row = array();
-    self::stmt_bind_assoc( $stmt, $row );
-
-    $b = $stmt->fetch();
-    if ($b===false) self::ThrowSqlError( 'mysqli_stmt::fetch failed' );
+    $ret = self::$ourMySql->affected_rows;
 
     $stmt->close();
     self::$ourMySql->next_result();
 
-    return $row[key($row)];
+    return $ret;
   }
 
   //-------------------------------------------------------------------------------------------------------------------
@@ -497,6 +540,41 @@ class TST_DL
   }
 
   //-------------------------------------------------------------------------------------------------------------------
+  /** @sa Stored Routine tst_test_none_with_lob.
+   */
+  static function TestNoneWithLob($theArg0,$theArg1)
+  {
+    $arg0 = self::QuoteNum($theArg0);
+
+    $query = "CALL tst_test_none_with_lob( $arg0, ? )";
+    $stmt  = self::$ourMySql->prepare( $query );
+    if (!$stmt) self::ThrowSqlError( 'prepare failed' );
+
+    $null = null;
+    $b = $stmt->bind_param( 'b', $null );
+    if (!$b) self::ThrowSqlError( 'bind_param failed' );
+
+    $n = strlen( $theArg1 );
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data( 0, substr( $theArg1, $p, self::MAX_ALLOWED_PACKET ) );
+      if (!$b) self::ThrowSqlError( 'send_long_data failed' );
+      $p += self::MAX_ALLOWED_PACKET;
+    }
+
+    $b = $stmt->execute();
+    if (!$b) self::ThrowSqlError( 'execute failed' );
+
+    $ret = self::$ourMySql->affected_rows;
+
+    $stmt->close();
+    self::$ourMySql->next_result();
+
+    return $ret;
+  }
+
+  //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_row0a.
    */
   static function TestRow0a($theArg0)
@@ -504,6 +582,38 @@ class TST_DL
     $arg0 = self::QuoteNum($theArg0);
 
     return self::ExecuteRow0( "CALL tst_test_row0a($arg0)" );
+  }
+
+  //-------------------------------------------------------------------------------------------------------------------
+  /** @sa Stored Routine tst_test_row0a_with_lob.
+   */
+  static function TestRow0aWithLob($theArg0,$theArg1)
+  {
+    $arg0 = self::QuoteNum($theArg0);
+
+    $query = "CALL tst_test_row0a_with_lob( $arg0, ? )";
+    $stmt  = self::$ourMySql->prepare( $query );
+    if (!$stmt) self::ThrowSqlError( 'prepare failed' );
+
+    $null = null;
+    $b = $stmt->bind_param( 'b', $null );
+    if (!$b) self::ThrowSqlError( 'bind_param failed' );
+
+    $n = strlen( $theArg1 );
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data( 0, substr( $theArg1, $p, self::MAX_ALLOWED_PACKET ) );
+      if (!$b) self::ThrowSqlError( 'send_long_data failed' );
+      $p += self::MAX_ALLOWED_PACKET;
+    }
+
+    $b = $stmt->execute();
+    if (!$b) self::ThrowSqlError( 'execute failed' );
+
+    $stmt->close();
+    self::$ourMySql->next_result();
+
   }
 
   //-------------------------------------------------------------------------------------------------------------------
@@ -517,6 +627,61 @@ class TST_DL
   }
 
   //-------------------------------------------------------------------------------------------------------------------
+  /** @sa Stored Routine tst_test_row1a_with_lob.
+   */
+  static function TestRow1aWithLob($theArg0,$theArg1)
+  {
+    $arg0 = self::QuoteNum($theArg0);
+
+    $query = "CALL tst_test_row1a_with_lob( $arg0, ? )";
+    $stmt  = self::$ourMySql->prepare( $query );
+    if (!$stmt) self::ThrowSqlError( 'prepare failed' );
+
+    $null = null;
+    $b = $stmt->bind_param( 'b', $null );
+    if (!$b) self::ThrowSqlError( 'bind_param failed' );
+
+    $n = strlen( $theArg1 );
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data( 0, substr( $theArg1, $p, self::MAX_ALLOWED_PACKET ) );
+      if (!$b) self::ThrowSqlError( 'send_long_data failed' );
+      $p += self::MAX_ALLOWED_PACKET;
+    }
+
+    $b = $stmt->execute();
+    if (!$b) self::ThrowSqlError( 'execute failed' );
+
+    $row = array();
+    self::stmt_bind_assoc( $stmt, $row );
+
+    $tmp = array();
+    while (($b = $stmt->fetch()))
+    {
+      // xxx one for rows (not row0 or row1)
+      $new = array();
+      foreach( $row as $key => $value )
+      {
+        $new[$key] = $value;
+      }
+      // xxx one for rows (not row0 or row1)
+
+      $tmp[] = $new;
+    }
+
+    if ($b===false) self::ThrowSqlError( 'mysqli_stmt::fetch failed' );
+
+    // xxx test number of rows
+    if (sizeof($tmp)!=1) self::ThrowSqlError( 'rows xxxx' );
+
+    $stmt->close();
+    self::$ourMySql->next_result();
+
+    return $row;
+  }
+
+  //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_rows1.
    */
   static function TestRows1($theArg0)
@@ -524,6 +689,38 @@ class TST_DL
     $arg0 = self::QuoteNum($theArg0);
 
     return self::ExecuteRows( "CALL tst_test_rows1($arg0)" );
+  }
+
+  //-------------------------------------------------------------------------------------------------------------------
+  /** @sa Stored Routine tst_test_rows1_with_lob.
+   */
+  static function TestRows1WithLob($theArg0,$theArg1)
+  {
+    $arg0 = self::QuoteNum($theArg0);
+
+    $query = "CALL tst_test_rows1_with_lob( $arg0, ? )";
+    $stmt  = self::$ourMySql->prepare( $query );
+    if (!$stmt) self::ThrowSqlError( 'prepare failed' );
+
+    $null = null;
+    $b = $stmt->bind_param( 'b', $null );
+    if (!$b) self::ThrowSqlError( 'bind_param failed' );
+
+    $n = strlen( $theArg1 );
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data( 0, substr( $theArg1, $p, self::MAX_ALLOWED_PACKET ) );
+      if (!$b) self::ThrowSqlError( 'send_long_data failed' );
+      $p += self::MAX_ALLOWED_PACKET;
+    }
+
+    $b = $stmt->execute();
+    if (!$b) self::ThrowSqlError( 'execute failed' );
+
+    $stmt->close();
+    self::$ourMySql->next_result();
+
   }
 
   //-------------------------------------------------------------------------------------------------------------------
@@ -542,6 +739,38 @@ class TST_DL
   }
 
   //-------------------------------------------------------------------------------------------------------------------
+  /** @sa Stored Routine tst_test_rows_with_index1_with_lob.
+   */
+  static function TestRowsWithIndex1WithLob($theArg0,$theArg1)
+  {
+    $arg0 = self::QuoteNum($theArg0);
+
+    $query = "CALL tst_test_rows_with_index1_with_lob( $arg0, ? )";
+    $stmt  = self::$ourMySql->prepare( $query );
+    if (!$stmt) self::ThrowSqlError( 'prepare failed' );
+
+    $null = null;
+    $b = $stmt->bind_param( 'b', $null );
+    if (!$b) self::ThrowSqlError( 'bind_param failed' );
+
+    $n = strlen( $theArg1 );
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data( 0, substr( $theArg1, $p, self::MAX_ALLOWED_PACKET ) );
+      if (!$b) self::ThrowSqlError( 'send_long_data failed' );
+      $p += self::MAX_ALLOWED_PACKET;
+    }
+
+    $b = $stmt->execute();
+    if (!$b) self::ThrowSqlError( 'execute failed' );
+
+    $stmt->close();
+    self::$ourMySql->next_result();
+
+  }
+
+  //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_rows_with_key1.
    */
   static function TestRowsWithKey1($theArg0)
@@ -557,6 +786,38 @@ class TST_DL
   }
 
   //-------------------------------------------------------------------------------------------------------------------
+  /** @sa Stored Routine tst_test_rows_with_key1_with_lob.
+   */
+  static function TestRowsWithKey1WithLob($theArg0,$theArg1)
+  {
+    $arg0 = self::QuoteNum($theArg0);
+
+    $query = "CALL tst_test_rows_with_key1_with_lob( $arg0, ? )";
+    $stmt  = self::$ourMySql->prepare( $query );
+    if (!$stmt) self::ThrowSqlError( 'prepare failed' );
+
+    $null = null;
+    $b = $stmt->bind_param( 'b', $null );
+    if (!$b) self::ThrowSqlError( 'bind_param failed' );
+
+    $n = strlen( $theArg1 );
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data( 0, substr( $theArg1, $p, self::MAX_ALLOWED_PACKET ) );
+      if (!$b) self::ThrowSqlError( 'send_long_data failed' );
+      $p += self::MAX_ALLOWED_PACKET;
+    }
+
+    $b = $stmt->execute();
+    if (!$b) self::ThrowSqlError( 'execute failed' );
+
+    $stmt->close();
+    self::$ourMySql->next_result();
+
+  }
+
+  //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_singleton0a.
    */
   static function TestSingleton0a($theArg0)
@@ -567,6 +828,38 @@ class TST_DL
   }
 
   //-------------------------------------------------------------------------------------------------------------------
+  /** @sa Stored Routine tst_test_singleton0a_with_lob.
+   */
+  static function TestSingleton0aWithLob($theArg0,$theArg1)
+  {
+    $arg0 = self::QuoteNum($theArg0);
+
+    $query = "CALL tst_test_singleton0a_with_lob( $arg0, ? )";
+    $stmt  = self::$ourMySql->prepare( $query );
+    if (!$stmt) self::ThrowSqlError( 'prepare failed' );
+
+    $null = null;
+    $b = $stmt->bind_param( 'b', $null );
+    if (!$b) self::ThrowSqlError( 'bind_param failed' );
+
+    $n = strlen( $theArg1 );
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data( 0, substr( $theArg1, $p, self::MAX_ALLOWED_PACKET ) );
+      if (!$b) self::ThrowSqlError( 'send_long_data failed' );
+      $p += self::MAX_ALLOWED_PACKET;
+    }
+
+    $b = $stmt->execute();
+    if (!$b) self::ThrowSqlError( 'execute failed' );
+
+    $stmt->close();
+    self::$ourMySql->next_result();
+
+  }
+
+  //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_singleton1a.
    */
   static function TestSingleton1a($theArg0)
@@ -574,6 +867,45 @@ class TST_DL
     $arg0 = self::QuoteNum($theArg0);
 
     return self::ExecuteSingleton1( "CALL tst_test_singleton1a($arg0)" );
+  }
+
+  //-------------------------------------------------------------------------------------------------------------------
+  /** @sa Stored Routine tst_test_singleton1a_with_lob.
+   */
+  static function TestSingleton1aWithLob($theArg0,$theArg1)
+  {
+    $arg0 = self::QuoteNum($theArg0);
+
+    $query = "CALL tst_test_singleton1a_with_lob( $arg0, ? )";
+    $stmt  = self::$ourMySql->prepare( $query );
+    if (!$stmt) self::ThrowSqlError( 'prepare failed' );
+
+    $null = null;
+    $b = $stmt->bind_param( 'b', $null );
+    if (!$b) self::ThrowSqlError( 'bind_param failed' );
+
+    $n = strlen( $theArg1 );
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data( 0, substr( $theArg1, $p, self::MAX_ALLOWED_PACKET ) );
+      if (!$b) self::ThrowSqlError( 'send_long_data failed' );
+      $p += self::MAX_ALLOWED_PACKET;
+    }
+
+    $b = $stmt->execute();
+    if (!$b) self::ThrowSqlError( 'execute failed' );
+
+    $row = array();
+    self::stmt_bind_assoc( $stmt, $row );
+
+    $b = $stmt->fetch();
+    if ($b===false) self::ThrowSqlError( 'mysqli_stmt::fetch failed' );
+
+    $stmt->close();
+    self::$ourMySql->next_result();
+
+    return $row[key($row)];
   }
 
 

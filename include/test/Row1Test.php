@@ -7,7 +7,7 @@ class Row1Test extends PHPUnit_Framework_TestCase
    */
   protected function setUp()
   {
-    TST_DL::Connect( 'localhost', 'test', 'test', 'test' );  
+    TST_DL::Connect( 'localhost', 'test', 'test', 'test' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -15,29 +15,30 @@ class Row1Test extends PHPUnit_Framework_TestCase
    */
   public function testSelect1Rows()
   {
-    $ret = TST_DL::TestRow1a( 1 );      
+    $ret = TST_DL::TestRow1a( 1 );
     $this->assertInternalType( 'array', $ret );
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /** An exception must be thrown when a stored routine with designation type row1 returns 0 rows.
    *  @expectedException Exception
-   */ 
+   */
   public function testSelect0Rows()
   {
-    TST_DL::TestRow1a( 0 ); 
+    TST_DL::TestRow1a( 0 );
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /** An exception must be thrown when a stored routine with designation type row1 returns more than 1 rows.
    *  @expectedException Exception
    */
   public function testSelect2Rows()
   {
-    TST_DL::TestRow1a( 2 ); 
+    TST_DL::TestRow1a( 2 );
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
 }
 
 //----------------------------------------------------------------------------------------------------------------------
+

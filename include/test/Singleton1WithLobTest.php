@@ -1,6 +1,6 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-class Singleton1Test extends PHPUnit_Framework_TestCase
+class Singleton1WithLobTest extends PHPUnit_Framework_TestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
   /** Setups a form with a select form control.
@@ -15,7 +15,7 @@ class Singleton1Test extends PHPUnit_Framework_TestCase
    */
   public function testSelect1Singletons()
   {
-    $ret = TST_DL::TestSingleton1a( 1 );
+    $ret = TST_DL::TestSingleton1a( 1, 'blob' );
     $this->assertInternalType( 'string', $ret );
   }
 
@@ -25,7 +25,7 @@ class Singleton1Test extends PHPUnit_Framework_TestCase
    */
   public function testSelect0Singletons()
   {
-    TST_DL::TestSingleton1a( 0 );
+    TST_DL::TestSingleton1a( 0, 'blob' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ class Singleton1Test extends PHPUnit_Framework_TestCase
    */
   public function testSelect2Singletons()
   {
-    TST_DL::TestSingleton1a( 2 );
+    TST_DL::TestSingleton1a( 2, 'blob' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-class Singleton1Test extends PHPUnit_Framework_TestCase
+class RowsWithKeyWithLobTest extends PHPUnit_Framework_TestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
   /** Setups a form with a select form control.
@@ -11,32 +11,34 @@ class Singleton1Test extends PHPUnit_Framework_TestCase
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Stored routine with designation type singleton1 must return 1 value and 1 value only.
+  /** Stored routine with designation type rows_with_key must return multi dimensional array.
    */
-  public function testSelect1Singletons()
+  public function testSelectKeyRows()
   {
-    $ret = TST_DL::TestSingleton1a( 1 );
-    $this->assertInternalType( 'string', $ret );
+    $rows = TST_DL::TestRowsWithKey1( 100, 'blob' );
+    $this->assertInternalType( 'array', $rows );
+    $this->assertCount( 1, $rows );
+
+    $this->assertArrayHasKey( 'a', $rows );
+    $this->assertArrayHasKey( 'b', $rows['a'] );
+
+    $this->assertNotCount( 0, $rows['a']['b'] );
+
+    $this->assertArrayHasKey( 'c1', $rows['a']['b'] );
+
+    $this->assertNotCount( 0, $rows['a']['b']['c1'] );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** An exception must be thrown when a stored routine with designation type singleton1 returns 0 values.
-   *  @expectedException Exception
+  /** Stored routine with designation type rows_with_key must return empty array when no rwos are selected.
    */
-  public function testSelect0Singletons()
+  public function testSelectKey0Rows()
   {
-    TST_DL::TestSingleton1a( 0 );
-  }
+    $rows = TST_DL::TestRowsWithKey1( 0, 'blob' );
+    $this->assertInternalType( 'array', $rows );
+    $this->assertCount( 0, $rows );
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /** An exception must be thrown when a stored routine with designation type singleton1 returns more than 1 values.
-   *  @expectedException Exception
-   */
-  public function testSelect2Singletons()
-  {
-    TST_DL::TestSingleton1a( 2 );
   }
-
   //--------------------------------------------------------------------------------------------------------------------
 }
 

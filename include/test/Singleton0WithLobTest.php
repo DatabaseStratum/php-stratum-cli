@@ -1,6 +1,6 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-class Singleton1Test extends PHPUnit_Framework_TestCase
+class Singleton0WithLobTest extends PHPUnit_Framework_TestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
   /** Setups a form with a select form control.
@@ -11,30 +11,30 @@ class Singleton1Test extends PHPUnit_Framework_TestCase
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Stored routine with designation type singleton1 must return 1 value and 1 value only.
+  /** Stored routine with designation type singleton0 must return null or 1 value.
+   */
+  public function testSelect0Singletons()
+  {
+    $ret = TST_DL::TestSingleton0a( 0, 'blob' );
+    $this->assertInternalType( 'null', $ret );
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /** Stored routine with designation type singleton0 must return null or 1 value.
    */
   public function testSelect1Singletons()
   {
-    $ret = TST_DL::TestSingleton1a( 1 );
+    $ret = TST_DL::TestSingleton0a( 1, 'blob' );
     $this->assertInternalType( 'string', $ret );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** An exception must be thrown when a stored routine with designation type singleton1 returns 0 values.
-   *  @expectedException Exception
-   */
-  public function testSelect0Singletons()
-  {
-    TST_DL::TestSingleton1a( 0 );
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /** An exception must be thrown when a stored routine with designation type singleton1 returns more than 1 values.
+  /** An exception must be thrown when a stored routine with designation type singleton0 returns more than 1 values.
    *  @expectedException Exception
    */
   public function testSelect2Singletons()
   {
-    TST_DL::TestSingleton1a( 2 );
+    TST_DL::TestSingleton0a( 2, 'blob' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

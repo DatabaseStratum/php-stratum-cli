@@ -1,0 +1,13 @@
+/** Test for desgination type row1.
+    @param p_count The number of rows selected.
+ */
+create procedure tst_test_rows1_with_lob( p_count int,
+                                          p_blob  blob )
+reads sql data
+-- type: rows
+begin
+  select *
+  from   TST_FOO2
+  where  tst_c00 <= p_count
+  ;
+end
