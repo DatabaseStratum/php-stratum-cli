@@ -388,28 +388,7 @@ class TST_DL
    */
   static function Test01($theArg0,$theArg1,$theArg2,$theArg3,$theArg4,$theArg5,$theArg6,$theArg7,$theArg8,$theArg9,$theArg10,$theArg11,$theArg12,$theArg13,$theArg14,$theArg15,$theArg16,$theArg17,$theArg18,$theArg19)
   {
-    $arg0 = self::QuoteNum($theArg0);
-    $arg1 = self::QuoteNum($theArg1);
-    $arg2 = self::QuoteNum($theArg2);
-    $arg3 = self::QuoteNum($theArg3);
-    $arg4 = self::QuoteNum($theArg4);
-    $arg5 = self::QuoteNum($theArg5);
-    $arg6 = self::QuoteNum($theArg6);
-    $arg7 = self::QuoteNum($theArg7);
-    $arg8 = self::QuoteBit($theArg8);
-    $arg9 = self::QuoteString($theArg9);
-    $arg10 = self::QuoteString($theArg10);
-    $arg11 = self::QuoteString($theArg11);
-    $arg12 = self::QuoteString($theArg12);
-    $arg13 = self::QuoteNum($theArg13);
-    $arg14 = self::QuoteString($theArg14);
-    $arg15 = self::QuoteString($theArg15);
-    $arg16 = self::QuoteString($theArg16);
-    $arg17 = self::QuoteString($theArg17);
-    $arg18 = self::QuoteString($theArg18);
-    $arg19 = self::QuoteString($theArg19);
-
-    return self::ExecuteNone( "CALL tst_test01($arg0,$arg1,$arg2,$arg3,$arg4,$arg5,$arg6,$arg7,$arg8,$arg9,$arg10,$arg11,$arg12,$arg13,$arg14,$arg15,$arg16,$arg17,$arg18,$arg19)" );
+    return self::ExecuteNone( 'CALL tst_test01('.self::QuoteNum($theArg0).','.self::QuoteNum($theArg1).','.self::QuoteNum($theArg2).','.self::QuoteNum($theArg3).','.self::QuoteNum($theArg4).','.self::QuoteNum($theArg5).','.self::QuoteNum($theArg6).','.self::QuoteNum($theArg7).','.self::QuoteBit($theArg8).','.self::QuoteString($theArg9).','.self::QuoteString($theArg10).','.self::QuoteString($theArg11).','.self::QuoteString($theArg12).','.self::QuoteNum($theArg13).','.self::QuoteString($theArg14).','.self::QuoteString($theArg15).','.self::QuoteString($theArg16).','.self::QuoteString($theArg17).','.self::QuoteString($theArg18).','.self::QuoteString($theArg19).')' );
   }
 
   //-------------------------------------------------------------------------------------------------------------------
@@ -417,33 +396,12 @@ class TST_DL
    */
   static function Test02($theArg0,$theArg1,$theArg2,$theArg3,$theArg4,$theArg5,$theArg6,$theArg7,$theArg8,$theArg9,$theArg10,$theArg11,$theArg12,$theArg13,$theArg14,$theArg15,$theArg16,$theArg17,$theArg18,$theArg19,$theArg20,$theArg21,$theArg22,$theArg23,$theArg24,$theArg25,$theArg26,$theArg27)
   {
-    $arg0 = self::QuoteNum($theArg0);
-    $arg1 = self::QuoteNum($theArg1);
-    $arg2 = self::QuoteNum($theArg2);
-    $arg3 = self::QuoteNum($theArg3);
-    $arg4 = self::QuoteNum($theArg4);
-    $arg5 = self::QuoteNum($theArg5);
-    $arg6 = self::QuoteNum($theArg6);
-    $arg7 = self::QuoteNum($theArg7);
-    $arg8 = self::QuoteBit($theArg8);
-    $arg9 = self::QuoteString($theArg9);
-    $arg10 = self::QuoteString($theArg10);
-    $arg11 = self::QuoteString($theArg11);
-    $arg12 = self::QuoteString($theArg12);
-    $arg13 = self::QuoteNum($theArg13);
-    $arg14 = self::QuoteString($theArg14);
-    $arg15 = self::QuoteString($theArg15);
-    $arg16 = self::QuoteString($theArg16);
-    $arg17 = self::QuoteString($theArg17);
-    $arg26 = self::QuoteString($theArg26);
-    $arg27 = self::QuoteString($theArg27);
-
-    $query = "CALL tst_test02( $arg0, $arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9, $arg10, $arg11, $arg12, $arg13, $arg14, $arg15, $arg16, $arg17, ?, ?, ?, ?, ?, ?, ?, ?, $arg26, $arg27 )";
+    $query = 'CALL tst_test02('.self::QuoteNum($theArg0).','.self::QuoteNum($theArg1).','.self::QuoteNum($theArg2).','.self::QuoteNum($theArg3).','.self::QuoteNum($theArg4).','.self::QuoteNum($theArg5).','.self::QuoteNum($theArg6).','.self::QuoteNum($theArg7).','.self::QuoteBit($theArg8).','.self::QuoteString($theArg9).','.self::QuoteString($theArg10).','.self::QuoteString($theArg11).','.self::QuoteString($theArg12).','.self::QuoteNum($theArg13).','.self::QuoteString($theArg14).','.self::QuoteString($theArg15).','.self::QuoteString($theArg16).','.self::QuoteString($theArg17).',?,?,?,?,?,?,?,?,'.self::QuoteString($theArg26).','.self::QuoteString($theArg27).')';
     $stmt  = self::$ourMySql->prepare( $query );
     if (!$stmt) self::ThrowSqlError( 'prepare failed' );
 
     $null = null;
-    $b = $stmt->bind_param( 'bbbbbbbb', $null, $null, $null, $null, $null, $null, $null, $null );
+    $b = $stmt->bind_param( 'bbbbbbbb', $null,$null,$null,$null,$null,$null,$null,$null );
     if (!$b) self::ThrowSqlError( 'bind_param failed' );
 
     $n = strlen( $theArg18 );
@@ -534,9 +492,7 @@ class TST_DL
    */
   static function TestNone($theArg0)
   {
-    $arg0 = self::QuoteNum($theArg0);
-
-    return self::ExecuteNone( "CALL tst_test_none($arg0)" );
+    return self::ExecuteNone( 'CALL tst_test_none('.self::QuoteNum($theArg0).')' );
   }
 
   //-------------------------------------------------------------------------------------------------------------------
@@ -544,9 +500,7 @@ class TST_DL
    */
   static function TestNoneWithLob($theArg0,$theArg1)
   {
-    $arg0 = self::QuoteNum($theArg0);
-
-    $query = "CALL tst_test_none_with_lob( $arg0, ? )";
+    $query = 'CALL tst_test_none_with_lob('.self::QuoteNum($theArg0).',?)';
     $stmt  = self::$ourMySql->prepare( $query );
     if (!$stmt) self::ThrowSqlError( 'prepare failed' );
 
@@ -579,9 +533,7 @@ class TST_DL
    */
   static function TestRow0a($theArg0)
   {
-    $arg0 = self::QuoteNum($theArg0);
-
-    return self::ExecuteRow0( "CALL tst_test_row0a($arg0)" );
+    return self::ExecuteRow0( 'CALL tst_test_row0a('.self::QuoteNum($theArg0).')');
   }
 
   //-------------------------------------------------------------------------------------------------------------------
@@ -589,9 +541,7 @@ class TST_DL
    */
   static function TestRow0aWithLob($theArg0,$theArg1)
   {
-    $arg0 = self::QuoteNum($theArg0);
-
-    $query = "CALL tst_test_row0a_with_lob( $arg0, ? )";
+    $query = 'CALL tst_test_row0a_with_lob('.self::QuoteNum($theArg0).',?)';
     $stmt  = self::$ourMySql->prepare( $query );
     if (!$stmt) self::ThrowSqlError( 'prepare failed' );
 
@@ -639,9 +589,7 @@ class TST_DL
    */
   static function TestRow1a($theArg0)
   {
-    $arg0 = self::QuoteNum($theArg0);
-
-    return self::ExecuteRow1( "CALL tst_test_row1a($arg0)" );
+    return self::ExecuteRow1( 'CALL tst_test_row1a('.self::QuoteNum($theArg0).')');
   }
 
   //-------------------------------------------------------------------------------------------------------------------
@@ -649,9 +597,7 @@ class TST_DL
    */
   static function TestRow1aWithLob($theArg0,$theArg1)
   {
-    $arg0 = self::QuoteNum($theArg0);
-
-    $query = "CALL tst_test_row1a_with_lob( $arg0, ? )";
+    $query = 'CALL tst_test_row1a_with_lob('.self::QuoteNum($theArg0).',?)';
     $stmt  = self::$ourMySql->prepare( $query );
     if (!$stmt) self::ThrowSqlError( 'prepare failed' );
 
@@ -699,9 +645,7 @@ class TST_DL
    */
   static function TestRows1($theArg0)
   {
-    $arg0 = self::QuoteNum($theArg0);
-
-    return self::ExecuteRows( "CALL tst_test_rows1($arg0)" );
+    return self::ExecuteRows( 'CALL tst_test_rows1('.self::QuoteNum($theArg0).')');
   }
 
   //-------------------------------------------------------------------------------------------------------------------
@@ -709,9 +653,7 @@ class TST_DL
    */
   static function TestRows1WithLob($theArg0,$theArg1)
   {
-    $arg0 = self::QuoteNum($theArg0);
-
-    $query = "CALL tst_test_rows1_with_lob( $arg0, ? )";
+    $query = 'CALL tst_test_rows1_with_lob('.self::QuoteNum($theArg0).',?)';
     $stmt  = self::$ourMySql->prepare( $query );
     if (!$stmt) self::ThrowSqlError( 'prepare failed' );
 
@@ -758,9 +700,7 @@ class TST_DL
    */
   static function TestRowsWithIndex1($theArg0)
   {
-    $arg0 = self::QuoteNum($theArg0);
-
-    $result = self::Query( "CALL tst_test_rows_with_index1($arg0)" );
+    $result = self::Query( 'CALL tst_test_rows_with_index1('.self::QuoteNum($theArg0).')');
     $ret = array();
     while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret[$row['tst_c01']][$row['tst_c02']][] = $row;
     $result->close();
@@ -773,9 +713,7 @@ class TST_DL
    */
   static function TestRowsWithIndex1WithLob($theArg0,$theArg1)
   {
-    $arg0 = self::QuoteNum($theArg0);
-
-    $query = "CALL tst_test_rows_with_index1_with_lob( $arg0, ? )";
+    $query = 'CALL tst_test_rows_with_index1_with_lob('.self::QuoteNum($theArg0).',?)';
     $stmt  = self::$ourMySql->prepare( $query );
     if (!$stmt) self::ThrowSqlError( 'prepare failed' );
 
@@ -823,9 +761,7 @@ class TST_DL
    */
   static function TestRowsWithKey1($theArg0)
   {
-    $arg0 = self::QuoteNum($theArg0);
-
-    $result = self::Query( "CALL tst_test_rows_with_key1($arg0)" );
+    $result = self::Query( 'CALL tst_test_rows_with_key1('.self::QuoteNum($theArg0).')');
     $ret = array();
     while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret[$row['tst_c01']][$row['tst_c02']][$row['tst_c03']] = $row;
     $result->close();
@@ -838,9 +774,7 @@ class TST_DL
    */
   static function TestRowsWithKey1WithLob($theArg0,$theArg1)
   {
-    $arg0 = self::QuoteNum($theArg0);
-
-    $query = "CALL tst_test_rows_with_key1_with_lob( $arg0, ? )";
+    $query = 'CALL tst_test_rows_with_key1_with_lob('.self::QuoteNum($theArg0).',?)';
     $stmt  = self::$ourMySql->prepare( $query );
     if (!$stmt) self::ThrowSqlError( 'prepare failed' );
 
@@ -888,9 +822,7 @@ class TST_DL
    */
   static function TestSingleton0a($theArg0)
   {
-    $arg0 = self::QuoteNum($theArg0);
-
-    return self::ExecuteSingleton0( "CALL tst_test_singleton0a($arg0)" );
+    return self::ExecuteSingleton0( 'CALL tst_test_singleton0a('.self::QuoteNum($theArg0).')');
   }
 
   //-------------------------------------------------------------------------------------------------------------------
@@ -898,9 +830,7 @@ class TST_DL
    */
   static function TestSingleton0aWithLob($theArg0,$theArg1)
   {
-    $arg0 = self::QuoteNum($theArg0);
-
-    $query = "CALL tst_test_singleton0a_with_lob( $arg0, ? )";
+    $query = 'CALL tst_test_singleton0a_with_lob('.self::QuoteNum($theArg0).',?)';
     $stmt  = self::$ourMySql->prepare( $query );
     if (!$stmt) self::ThrowSqlError( 'prepare failed' );
 
@@ -949,9 +879,7 @@ class TST_DL
    */
   static function TestSingleton1a($theArg0)
   {
-    $arg0 = self::QuoteNum($theArg0);
-
-    return self::ExecuteSingleton1( "CALL tst_test_singleton1a($arg0)" );
+    return self::ExecuteSingleton1( 'CALL tst_test_singleton1a('.self::QuoteNum($theArg0).')');
   }
 
   //-------------------------------------------------------------------------------------------------------------------
@@ -959,9 +887,7 @@ class TST_DL
    */
   static function TestSingleton1aWithLob($theArg0,$theArg1)
   {
-    $arg0 = self::QuoteNum($theArg0);
-
-    $query = "CALL tst_test_singleton1a_with_lob( $arg0, ? )";
+    $query = 'CALL tst_test_singleton1a_with_lob('.self::QuoteNum($theArg0).',?)';
     $stmt  = self::$ourMySql->prepare( $query );
     if (!$stmt) self::ThrowSqlError( 'prepare failed' );
 

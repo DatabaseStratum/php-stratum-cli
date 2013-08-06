@@ -1560,75 +1560,73 @@ abstract class SET_RoutineWrapper_abstract
   /** Generates code for escaping the arguments of a stored routine.
       @param $theArgsTypes An array with the arguments of a strored routine.
    */
-  private function WriteEscapedArgs( $theArgsTypes )
+  private function WriteEscapedArgs( $theArgType, $numberArgType )
   {
-    foreach( $theArgsTypes as $i => $arg_type )
+    switch ($theArgType)
     {
-      switch ($arg_type)
-      {
-      case 'tinyint':
-      case 'smallint':
-      case 'mediumint':
-      case 'int':
-      case 'bigint':
+    case 'tinyint':
+    case 'smallint':
+    case 'mediumint':
+    case 'int':
+    case 'bigint':
 
-      case 'year':
+    case 'year':
 
-      case 'decimal':
-      case 'float':
-      case 'double':
-        $this->WriteLine( '$arg'.$i.' = self::QuoteNum($theArg'.$i.');' );
-        break;
+    case 'decimal':
+    case 'float':
+    case 'double':
+      $ret = '\'.self::QuoteNum($theArg'.$numberArgType.').\'';
+      break;
 
-      case 'varbinary':
-      case 'binary':
+    case 'varbinary':
+    case 'binary':
 
-      case 'char':
-      case 'varchar':
-        $this->WriteLine( '$arg'.$i.' = self::QuoteString($theArg'.$i.');' );
-        break;
+    case 'char':
+    case 'varchar':
+      $ret = '\'.self::QuoteString($theArg'.$numberArgType.').\'';
+      break;
 
-      case 'time':
-      case 'timestamp':
+    case 'time':
+    case 'timestamp':
 
-      case 'date':
-      case 'datetime':
-        $this->WriteLine( '$arg'.$i.' = self::QuoteString($theArg'.$i.');' );
-        break;
+    case 'date':
+    case 'datetime':
+      $ret = '\'.self::QuoteString($theArg'.$numberArgType.').\'';
+      break;
 
-      case 'enum':
-      case 'set':
-        $this->WriteLine( '$arg'.$i.' = self::QuoteString($theArg'.$i.');' );
-        break;
+    case 'enum':
+    case 'set':
+      $ret = '\'.self::QuoteString($theArg'.$numberArgType.').\'';
+      break;
 
-      case 'bit':
-        $this->WriteLine( '$arg'.$i.' = self::QuoteBit($theArg'.$i.');' );
-        break;
+    case 'bit':
+      $ret = '\'.self::QuoteBit($theArg'.$numberArgType.').\'';
+      break;
 
-      case 'tinytext':
-      case 'text':
-      case 'mediumtext':
-      case 'longtext':
+    case 'tinytext':
+    case 'text':
+    case 'mediumtext':
+    case 'longtext':
 
-      case 'tinyblob':
-      case 'blob':
-      case 'mediumblob':
-      case 'longblob':
-        // Nothing todo.
-        break;
+    case 'tinyblob':
+    case 'blob':
+    case 'mediumblob':
+    case 'longblob':
+      $ret = '?';
+      break;
 
-      default:
-        set_assert_failed( "Unknown arg type '%s'.", $arg_type );
-      }
+    default:
+      set_assert_failed( "Unknown arg type '%s'.", $theArgType );
     }
-    if (sizeof($theArgsTypes)>0) $this->WriteLine();
+
+    return $ret;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /** Generates code for the arguments of the wrapper method for @a $theRoutine.
       @param $theRoutine An arry with the argument types of the stored routine.
    */
-  private function GetWrapperArgs( $theRoutine ) // xxx
+  private function GetWrapperArgs( $theRoutine )
   {
     if ($theRoutine['argument_types']) $argument_types = explode( ',', $theRoutine['argument_types'] );
     else                               $argument_types = array();
@@ -1709,61 +1707,7 @@ abstract class SET_RoutineWrapper_abstract
     foreach( $theArgsTypes as $i => $arg_type )
     {
       if ($ret) $ret .= ',';
-      switch ($arg_type)
-      {
-      case 'tinyint':
-      case 'smallint':
-      case 'mediumint':
-      case 'int':
-      case 'bigint':
-
-      case 'year':
-
-      case 'decimal':
-      case 'float':
-      case 'double':
-        $ret .= '$arg'.$i;
-        break;
-
-      case 'varbinary':
-      case 'binary':
-
-      case 'char':
-      case 'varchar':
-        $ret .= '$arg'.$i;
-        break;
-
-      case 'time':
-      case 'timestamp':
-
-      case 'date':
-      case 'datetime':
-        $ret .= '$arg'.$i;
-        break;
-
-      case 'enum':
-      case 'bit':
-      case 'set':
-        $ret .= '$arg'.$i;
-        break;
-
-      case 'tinytext':
-      case 'text':
-      case 'mediumtext':
-      case 'longtext':
-        $ret .= '$arg'.$i;
-        break;
-
-      case 'tinyblob':
-      case 'blob':
-      case 'mediumblob':
-      case 'longblob':
-        $ret .= '$arg'.$i;
-        break;
-
-      default:
-        set_assert_failed( "Unknown arg type '$arg_type'." );
-      }
+      $ret .= $this->WriteEscapedArgs( $arg_type, $i );
     }
 
     return $ret;
@@ -1843,7 +1787,7 @@ abstract class SET_RoutineWrapper_abstract
     $this->WriteLine( ' */' );
     $this->WriteLine( 'static function '.$wrapper_function_name.'('.$wrapper_args.')' );
     $this->WriteLine( '{' );
-    $this->WriteEscapedArgs( $argument_types );
+
     $this->WriteResultHandler( $theRoutine, $argument_types );
     $this->WriteLine( '}' );
     $this->WriteLine();
@@ -1862,54 +1806,32 @@ abstract class SET_RoutineWrapper_abstract
 
     $wrapper_function_name = $this->GetWrapperRoutineName( $theRoutine['routine_name'] );
     $wrapper_args          = $this->GetWrapperArgs( $theRoutine );
+    $routine_args          = $this->GetRoutineArgs( $argument_types );
 
-    $this->WriteSeparator();
-    $this->WriteLine( '/** @sa Stored Routine '.$theRoutine['routine_name'].'.' );
-    $this->WriteLine( ' */' );
-    $this->WriteLine( 'static function '.$wrapper_function_name.'('.$wrapper_args.')' );
-    $this->WriteLine( '{' );
-
-
-
-    $i               = 0;
-    $types           = '';
-    $num_arg         = '';
-    $arguments_types = '';
-
+    $types = '';
+    $nulls = '';
     foreach( $argument_types as $theType )
     {
       $type = $this->GetTypeForLob( $theType );
       if ($type=='b')
       {
         $types .= 'b';
-        $num_arg .= '?';
-
-        if ($arguments_types=='') $arguments_types .= '$null';
-        else $arguments_types .= ', $null';
+        if ($nulls) $nulls .= ',';
+        $nulls .= '$null';
       }
-      else
-      {
-        $num_arg .= '$arg'.$i;
-      }
-
-      if ($i!=count($argument_types)-1)
-      {
-        $num_arg .= ', ';
-      }
-
-      $i++;
     }
 
-    $this->WriteEscapedArgs( $argument_types );
-    $this->Writeline( '$query = "CALL '.$theRoutine['routine_name'].'( '.$num_arg.' )";' );
+    $this->WriteSeparator();
+    $this->WriteLine( '/** @sa Stored Routine '.$theRoutine['routine_name'].'.' );
+    $this->WriteLine( ' */' );
+    $this->WriteLine( 'static function '.$wrapper_function_name.'('.$wrapper_args.')' );
+    $this->WriteLine( '{' );
+    $this->Writeline( '$query = \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\';' );
     $this->Writeline( '$stmt  = self::$ourMySql->prepare( $query );' );
     $this->Writeline( 'if (!$stmt) self::ThrowSqlError( \'prepare failed\' );' );
     $this->WriteLine();
-
     $this->WriteLine( '$null = null;' );
-
-
-    $this->Writeline( '$b = $stmt->bind_param( \''.$types.'\', '.$arguments_types.' );' );
+    $this->Writeline( '$b = $stmt->bind_param( \''.$types.'\', '.$nulls.' );' );
     $this->Writeline( 'if (!$b) self::ThrowSqlError( \'bind_param failed\' );' );
     $this->WriteLine();
 
@@ -2086,7 +2008,7 @@ class SET_RoutineWrapperBulk extends SET_RoutineWrapper_abstract
   protected function WriteResultHandler( $theRoutine, $theArgumentTypes )
   {
     $routine_args = $this->GetRoutineArgs( $theArgumentTypes );
-    $this->WriteLine( 'self::ExecuteBulk( $theBulkHandler, "CALL '.$theRoutine['routine_name'].'('.$routine_args.')" );' );
+    $this->WriteLine( 'self::ExecuteBulk( $theBulkHandler, \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -2118,7 +2040,7 @@ class SET_RoutineWrapperLog extends SET_RoutineWrapper_abstract
   protected function WriteResultHandler( $theRoutine, $theArgumentTypes )
   {
     $routine_args = $this->GetRoutineArgs( $theArgumentTypes );
-    $this->WriteLine( 'self::ExecuteEcho( "CALL '.$theRoutine['routine_name'].'('.$routine_args.')" );' );
+    $this->WriteLine( 'self::ExecuteEcho( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\' );' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -2150,7 +2072,7 @@ class SET_RoutineWrapperNone extends SET_RoutineWrapper_abstract
   protected function WriteResultHandler( $theRoutine, $theArgumentTypes )
   {
     $routine_args = $this->GetRoutineArgs( $theArgumentTypes );
-    $this->WriteLine( 'return self::ExecuteNone( "CALL '.$theRoutine['routine_name'].'('.$routine_args.')" );' );
+    $this->WriteLine( 'return self::ExecuteNone( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\' );' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -2182,7 +2104,7 @@ class SET_RoutineWrapperRow0 extends SET_RoutineWrapper_abstract
   protected function WriteResultHandler( $theRoutine, $theArgumentTypes )
   {
     $routine_args = $this->GetRoutineArgs( $theArgumentTypes );
-    $this->WriteLine( 'return self::ExecuteRow0( "CALL '.$theRoutine['routine_name'].'('.$routine_args.')" );' );
+    $this->WriteLine( 'return self::ExecuteRow0( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
 
     /** @todo Test the actual number of rows and number  use result->num_rows*/
   }
@@ -2231,7 +2153,7 @@ class SET_RoutineWrapperRow1 extends SET_RoutineWrapper_abstract
   protected function WriteResultHandler( $theRoutine, $theArgumentTypes )
   {
     $routine_args = $this->GetRoutineArgs( $theArgumentTypes );
-    $this->WriteLine( 'return self::ExecuteRow1( "CALL '.$theRoutine['routine_name'].'('.$routine_args.')" );' );
+    $this->WriteLine( 'return self::ExecuteRow1( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -2278,7 +2200,7 @@ class SET_RoutineWrapperRows extends SET_RoutineWrapper_abstract
   protected function WriteResultHandler( $theRoutine, $theArgumentTypes )
   {
     $routine_args = $this->GetRoutineArgs( $theArgumentTypes );
-    $this->WriteLine( 'return self::ExecuteRows( "CALL '.$theRoutine['routine_name'].'('.$routine_args.')" );' );
+    $this->WriteLine( 'return self::ExecuteRows( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -2328,7 +2250,7 @@ class SET_RoutineWrapperRowsWithKey extends SET_RoutineWrapper_abstract
     $key = '';
     foreach( $theRoutine['columns'] as $column ) $key .= '[$row[\''.$column.'\']]';
 
-    $this->WriteLine( '$result = self::Query( "CALL '.$theRoutine['routine_name'].'('.$routine_args.')" );' );
+    $this->WriteLine( '$result = self::Query( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
     $this->WriteLine( '$ret = array();' );
     $this->WriteLine( 'while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret'.$key.' = $row;' );
     $this->WriteLine( '$result->close();' );
@@ -2386,7 +2308,7 @@ class SET_RoutineWrapperRowsWithIndex extends SET_RoutineWrapper_abstract
     $index = '';
     foreach( $theRoutine['columns'] as $column ) $index .= '[$row[\''.$column.'\']]';
 
-    $this->WriteLine( '$result = self::Query( "CALL '.$theRoutine['routine_name'].'('.$routine_args.')" );' );
+    $this->WriteLine( '$result = self::Query( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
     $this->WriteLine( '$ret = array();' );
     $this->WriteLine( 'while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret'.$index.'[] = $row;' );
     $this->WriteLine( '$result->close();' );
@@ -2441,7 +2363,7 @@ class SET_RoutineWrapperSingleton0 extends SET_RoutineWrapper_abstract
   protected function WriteResultHandler( $theRoutine, $theArgumentTypes )
   {
     $routine_args = $this->GetRoutineArgs( $theArgumentTypes );
-    $this->WriteLine( 'return self::ExecuteSingleton0( "CALL '.$theRoutine['routine_name'].'('.$routine_args.')" );' );
+    $this->WriteLine( 'return self::ExecuteSingleton0( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -2490,7 +2412,7 @@ class SET_RoutineWrapperSingleton1 extends SET_RoutineWrapper_abstract
   protected function WriteResultHandler( $theRoutine, $theArgumentTypes )
   {
     $routine_args = $this->GetRoutineArgs( $theArgumentTypes );
-    $this->WriteLine( 'return self::ExecuteSingleton1( "CALL '.$theRoutine['routine_name'].'('.$routine_args.')" );' );
+    $this->WriteLine( 'return self::ExecuteSingleton1( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
