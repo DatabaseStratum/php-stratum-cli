@@ -2,7 +2,7 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
 /** Throws an execption. Takes arguments similair to printf.
- */   
+ */
 function set_assert_failed()
 {
   $args    = func_get_args();
@@ -16,131 +16,131 @@ function set_assert_failed()
 function ReadMetadata( $theMatadataFile )
 {
   $handle = fopen( $theMatadataFile, 'r' );
-	if ($handle===false) set_assert_failed( "Unable to open file '%s'.", $theMatadataFile );
-	
-	// Ignore the header row.
-	fgetcsv( $handle );
-	
-	while ($row = fgetcsv( $handle ))
-	{
-	  $metadata[$row[0]] = array( 'routine_name' => $row[0],
-	                              'type'         => $row[1],
-	                              'columns'      => $row[2] );
-	}
+  if ($handle===false) set_assert_failed( "Unable to open file '%s'.", $theMatadataFile );
 
-	$err = fclose( $handle );
-	if ($err===false) set_assert_failed( "Error closing file '%s'.", $theMatadataFile );
-	
-	return $metadata;
+  // Ignore the header row.
+  fgetcsv( $handle );
+
+  while ($row = fgetcsv( $handle ))
+  {
+    $metadata[$row[0]] = array( 'routine_name' => $row[0],
+                                'type'         => $row[1],
+                                'columns'      => $row[2] );
+  }
+
+  $err = fclose( $handle );
+  if ($err===false) set_assert_failed( "Error closing file '%s'.", $theMatadataFile );
+
+  return $metadata;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-function GetPSQLList( $theSourceDir ) 
+function GetPSQLList( $theSourceDir )
 {
   $PSQLList = glob( "$theSourceDir/*.psql" );
   $FileList = scandir( $theSourceDir );
-  
+
   foreach( $FileList as $FilePath )
-  {   
+  {
     if (is_dir( "$theSourceDir/$FilePath" ))
-    {      
+    {
       if ($FilePath!="."&&$FilePath!="..")
       {
         $DirList[] = $theSourceDir."/".$FilePath;
       }
     }
   }
-    
-  if (isset($DirList)) 
+
+  if (isset($DirList))
   {
-    foreach ( $DirList as $DirPath ) 
+    foreach ( $DirList as $DirPath )
     {
       $SubPSQLList = GetPSQLList( $DirPath );
-      $PSQLList = array_merge( $PSQLList,$SubPSQLList );
+      $PSQLList = array_merge( $PSQLList, $SubPSQLList );
     }
   }
-  
+
   return $PSQLList;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 function CreateDestinationDir( $theDirectoryName )
-{ 
+{
   if (!is_dir( $theDirectoryName ))
   {
     $err = mkdir( $theDirectoryName, 0775, true );
     if ($err===false) set_assert_failed( "Ca not create directory '%s'.", $theDirectoryName );
-  }  
+  }
 
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-function ProcessSourcFile( $theSource, $theDestinationDir, $metadata, $theSourceDir ) 
+function ProcessSourcFile( $theSource, $theDestinationDir, $metadata, $theSourceDir )
 {
   $routine_name = basename( $theSource, '.psql' );
-  
+
   if (!isset( $metadata[$routine_name] ))
   {
-    echo "Warning: routine \"$routine_name\" not found in metadata.\n"; 
-   
+    echo "Warning: routine \"$routine_name\" not found in metadata.\n";
+
     return;
   }
-  
+
   $output_file_name = $theDestinationDir.substr( $theSource, strlen(  $theSourceDir ) );
-  
+
   CreateDestinationDir( dirname( $output_file_name ) );
-        
+
   $source = file_get_contents( $theSource );
   if ($source===false) set_assert_failed( "Unable to read file '%s'.", $theSource );
 
   $input_lines = explode( "\n", $source );
   $output_lines = array();
-  
+
   $mode_head  = true;
   $mode_body  = false;
   $mode_end   = false;
   $empty_line = false;
   foreach( $input_lines as $line )
-  { 
+  {
     if (substr( $line, 0, 7 )=='create ')
     {
       $mode_head = false;
       $mode_body = true;
     }
-    
+
     if ($line=='end$$')
     {
       $mode_body = false;
       $mode_end  = true;
     }
-    
+
     if ($mode_head)
     {
-      $write_line = true; 
-      if (substr( $line, 0, 13 )=='set sql_mode ') $write_line = false;      
+      $write_line = true;
+      if (substr( $line, 0, 13 )=='set sql_mode ') $write_line = false;
       if (substr( $line, 0, 9 )=='set names')      $write_line = false;
       if (substr( $line, 0, 9 )=='delimiter')      $write_line = false;
       if (substr( $line, 0, 4 )=='drop')           $write_line = false;
-        
+
       if (!$line)
       {
         if ($empty_line) $write_line = false;
         $empty_line = true;
       }
-                 
+
       if ($write_line)
       {
-        $output_lines[] = $line; 
-        if ($line) $empty_line = false; 
+        $output_lines[] = $line;
+        if ($line) $empty_line = false;
       }
-    }  
-       
+    }
+
     if ($mode_body)
     {
       if ($line=="begin")
       {
         if (!empty( $metadata[$routine_name]['columns'] ))
-        {  
+        {
           $output_lines[] = "-- type: ".$metadata[$routine_name]['type']." ".$metadata[$routine_name]['columns'];
         }
         else
@@ -150,7 +150,7 @@ function ProcessSourcFile( $theSource, $theDestinationDir, $metadata, $theSource
       }
       $output_lines[] = $line;
     }
-    
+
     if ($mode_end)
     {
       if ($line=='end$$')
@@ -163,22 +163,22 @@ function ProcessSourcFile( $theSource, $theDestinationDir, $metadata, $theSource
   $output = ltrim( implode( "\n", $output_lines ) )."\n";
   $err = file_put_contents( $output_file_name, $output );
   if ($err===false) set_assert_failed( "Error writing file '%s'.", $output_file_name );
-  
+
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 function Synopsis()
 {
- echo "Synopsis: wrapper_convert <metadata.cvs> <source dir> <destination dir>\n";
+  echo "Synopsis: wrapper_convert <metadata.cvs> <source dir> <destination dir>\n";
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 function WrapperConvert( $theMetadatFileName, $theSourceDir, $theDestinationDir )
-{ 
+{
   $theSources = GetPSQLList( $theSourceDir );
- 
+
   $metadata = ReadMetadata( $theMetadatFileName );
- 
+
   foreach( $theSources as $theSource )
   {
     ProcessSourcFile( $theSource, $theDestinationDir, $metadata, $theSourceDir );
@@ -186,14 +186,11 @@ function WrapperConvert( $theMetadatFileName, $theSourceDir, $theDestinationDir 
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-if ($argc!=4) 
+if ($argc!=4)
 {
-	Synopsis();
-	exit(1);
+  Synopsis();
+  exit(1);
 }
-
-
-
 
 /** @todo Valery
     * Before line starting with "create procedure" or "create function"
@@ -208,3 +205,4 @@ if ($argc!=4)
     */
 //----------------------------------------------------------------------------------------------------------------------
 WrapperConvert( $argv[1], $argv[2], $argv[3] );
+

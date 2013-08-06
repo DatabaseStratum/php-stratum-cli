@@ -1374,7 +1374,7 @@ order by routine_name";
         {
           $this->myPsqlFileNames[$base_name] = $psql_file_name;
         }
-         else
+        else
         {
           echo sprintf( "Error: Files '%s' and '%s' have the same basename.\n",
                         $this->myPsqlFileNames[$base_name],
@@ -1935,7 +1935,7 @@ abstract class SET_RoutineWrapper_abstract
     $this->Writeline( '$b = $stmt->execute();' );
     $this->Writeline( 'if (!$b) self::ThrowSqlError( \'execute failed\' );' );
     $this->WriteLine();
-    $this->WriteRoutineFunctionLobFetchData();
+    $this->WriteRoutineFunctionLobFetchData( $theRoutine );
     $this->Writeline( '$stmt->close();' );
     $this->Writeline( 'self::$ourMySql->next_result();' );
     $this->WriteLine();
@@ -2006,7 +2006,7 @@ abstract class SET_RoutineWrapper_abstract
   /** Generates code for fetching data of a stored routine with one or more LOB arguments.
       @todo Make abstract and implement for all child classes
    */
-  abstract protected function WriteRoutineFunctionLobFetchData();
+  abstract protected function WriteRoutineFunctionLobFetchData( $theRoutine );
 
   //--------------------------------------------------------------------------------------------------------------------
   /** Generates code for returing the data returend by a stored routine with one or more LOB arguments.
@@ -2096,7 +2096,7 @@ class SET_RoutineWrapperBulk extends SET_RoutineWrapper_abstract
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  protected function WriteRoutineFunctionLobFetchData()
+  protected function WriteRoutineFunctionLobFetchData( $theRoutine )
   {
     // Nothing todo.
   }
@@ -2128,7 +2128,7 @@ class SET_RoutineWrapperLog extends SET_RoutineWrapper_abstract
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  protected function WriteRoutineFunctionLobFetchData()
+  protected function WriteRoutineFunctionLobFetchData( $theRoutine )
   {
     // Nothing todo.
   }
@@ -2154,7 +2154,7 @@ class SET_RoutineWrapperNone extends SET_RoutineWrapper_abstract
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  protected function WriteRoutineFunctionLobFetchData()
+  protected function WriteRoutineFunctionLobFetchData( $theRoutine )
   {
     $this->WriteLine( '$ret = self::$ourMySql->affected_rows;' );
     $this->WriteLine();
@@ -2188,15 +2188,31 @@ class SET_RoutineWrapperRow0 extends SET_RoutineWrapper_abstract
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  protected function WriteRoutineFunctionLobReturnData()
+  protected function WriteRoutineFunctionLobFetchData( $theRoutine )
   {
-    // Nothing todo.
+    $this->WriteLine( '$row = array();' );
+    $this->WriteLine( 'self::stmt_bind_assoc( $stmt, $row );' );
+    $this->WriteLine();
+    $this->WriteLine( '$tmp = array();' );
+    $this->WriteLine( 'while (($b = $stmt->fetch()))' );
+    $this->WriteLine( '{' );
+    $this->WriteLine( '$new = array();' );
+    $this->WriteLine( 'foreach( $row as $key => $value )' );
+    $this->WriteLine( '{' );
+    $this->WriteLine( '$new[$key] = $value;' );
+    $this->WriteLine( '}' );
+    $this->WriteLine( '$tmp[] = $new;' );
+    $this->WriteLine( '}' );
+    $this->WriteLine();
+    $this->WriteLine( 'if ($b===false) self::ThrowSqlError( \'mysqli_stmt::fetch failed\' );' );
+    $this->WriteLine( 'if (sizeof($tmp)>1) self::ThrowSqlError( \'The unexpected number of rows, expected 0 or 1 rows.\' );' );
+    $this->WriteLine();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  protected function WriteRoutineFunctionLobFetchData()
+  protected function WriteRoutineFunctionLobReturnData()
   {
-    // Nothing todo.
+    $this->WriteLine( 'return ($tmp) ? $tmp[0] : null;' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -2219,40 +2235,28 @@ class SET_RoutineWrapperRow1 extends SET_RoutineWrapper_abstract
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  protected function WriteRoutineFunctionLobFetchData() // to do xxx
+  protected function WriteRoutineFunctionLobFetchData( $theRoutine )
   {
     $this->WriteLine( '$row = array();' );
     $this->WriteLine( 'self::stmt_bind_assoc( $stmt, $row );' );
-    $this->WriteLine( '$b = $stmt->fetch();' );
+    $this->WriteLine();
+    $this->WriteLine( '$tmp = array();' );
+    $this->WriteLine( 'while (($b = $stmt->fetch()))' );
+    $this->WriteLine( '{' );
+    $this->WriteLine( '$new = array();' );
+    $this->WriteLine( 'foreach( $row as $key => $value )' );
+    $this->WriteLine( '{' );
+    $this->WriteLine( '$new[$key] = $value;' );
+    $this->WriteLine( '}' );
+    $this->WriteLine( '$tmp[] = $new;' );
+    $this->WriteLine( '}' );
     $this->WriteLine();
     $this->WriteLine( 'if ($b===false) self::ThrowSqlError( \'mysqli_stmt::fetch failed\' );' );
-    $this->WriteLine( 'if ($b===null)  TST_DL::AssertFailed( "Number of rows is 0.\n");' );
-
-    $tmp = array();
-    while (($b = $stmt->fetch()))
-    {
-      // xxx one for rows (not row0 or row1)
-      $new = array();
-      foreach( $row as $key => $value )
-      {
-        $new[$key] = $value;
-      }
-      // xxx one for rows (not row0 or row1)
-
-      $tmp[] = $new;
-    }
-
-    if ($b===false) self::ThrowSqlError( 'mysqli_stmt::fetch failed' );
-
-    // xxx test number of rows
-    if (sizeof($tmp)!=1) self::ThrowSqlError( 'rows xxxx' );
-
-
+    $this->WriteLine( 'if (sizeof($tmp)!=1) self::ThrowSqlError( \'The unexpected  number of rows,  expected 1 row.\' );' );
     $this->WriteLine();
-
   }
 
- //--------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   protected function WriteRoutineFunctionLobReturnData()
   {
       $this->WriteLine( 'return $row;' );
@@ -2278,15 +2282,30 @@ class SET_RoutineWrapperRows extends SET_RoutineWrapper_abstract
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  protected function WriteRoutineFunctionLobReturnData()
+  protected function WriteRoutineFunctionLobFetchData( $theRoutine )
   {
-    // Nothing todo.
+    $this->WriteLine( '$row = array();' );
+    $this->WriteLine( 'self::stmt_bind_assoc( $stmt, $row );' );
+    $this->WriteLine();
+    $this->WriteLine( '$tmp = array();' );
+    $this->WriteLine( 'while (($b = $stmt->fetch()))' );
+    $this->WriteLine( '{' );
+    $this->WriteLine( '$new = array();' );
+    $this->WriteLine( 'foreach( $row as $key => $value )' );
+    $this->WriteLine( '{' );
+    $this->WriteLine( '$new[$key] = $value;' );
+    $this->WriteLine( '}' );
+    $this->WriteLine( ' $tmp[] = $new;' );
+    $this->WriteLine( '}' );
+    $this->WriteLine();
+    $this->WriteLine( 'if ($b===false) self::ThrowSqlError( \'mysqli_stmt::fetch failed\' );' );
+    $this->WriteLine();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  protected function WriteRoutineFunctionLobFetchData()
+  protected function WriteRoutineFunctionLobReturnData()
   {
-    // Nothing todo.
+    $this->WriteLine( 'return $tmp;' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -2318,15 +2337,34 @@ class SET_RoutineWrapperRowsWithKey extends SET_RoutineWrapper_abstract
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  protected function WriteRoutineFunctionLobReturnData()
+  protected function WriteRoutineFunctionLobFetchData( $theRoutine )
   {
-    // Nothing todo.
+    $key = '';
+    foreach( $theRoutine['columns'] as $column ) $key .= '[$new[\''.$column.'\']]';
+
+    $this->Writeline( '$row = array();' );
+    $this->Writeline( 'self::stmt_bind_assoc( $stmt, $row );' );
+    $this->Writeline();
+    $this->Writeline( '$ret = array();' );
+    $this->Writeline( 'while (($b = $stmt->fetch()))' );
+    $this->Writeline( '{' );
+    $this->Writeline( '$new = array();' );
+    $this->Writeline( 'foreach( $row as $key => $value )' );
+    $this->Writeline( '{' );
+    $this->Writeline( '$new[$key] = $value;' );
+    $this->Writeline( '}' );
+    $this->Writeline( '$ret'.$key.' = $new;' );
+    $this->WriteLine( '}' );
+    $this->WriteLine();
+    $this->Writeline( '$b = $stmt->fetch();' );
+    $this->Writeline( 'if ($b===false) self::ThrowSqlError( \'mysqli_stmt::fetch failed\' );' );
+    $this->WriteLine();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  protected function WriteRoutineFunctionLobFetchData()
+  protected function WriteRoutineFunctionLobReturnData()
   {
-    // Nothing todo.
+      $this->WriteLine( 'return $ret;' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -2357,15 +2395,34 @@ class SET_RoutineWrapperRowsWithIndex extends SET_RoutineWrapper_abstract
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  protected function WriteRoutineFunctionLobReturnData()
+  protected function WriteRoutineFunctionLobFetchData( $theRoutine )
   {
-    // Nothing todo.
+    $index = '';
+    foreach( $theRoutine['columns'] as $column ) $index .= '[$new[\''.$column.'\']]';
+
+    $this->Writeline( '$row = array();' );
+    $this->Writeline( 'self::stmt_bind_assoc( $stmt, $row );' );
+    $this->Writeline();
+    $this->Writeline( '$ret = array();' );
+    $this->Writeline( 'while (($b = $stmt->fetch()))' );
+    $this->Writeline( '{' );
+    $this->Writeline( '$new = array();' );
+    $this->Writeline( 'foreach( $row as $key => $value )' );
+    $this->Writeline( '{' );
+    $this->Writeline( '$new[$key] = $value;' );
+    $this->Writeline( '}' );
+    $this->Writeline( '$ret'.$index.'[] = $new;' );
+    $this->WriteLine( '}' );
+    $this->WriteLine();
+    $this->Writeline( '$b = $stmt->fetch();' );
+    $this->Writeline( 'if ($b===false) self::ThrowSqlError( \'mysqli_stmt::fetch failed\' );' );
+    $this->WriteLine();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  protected function WriteRoutineFunctionLobFetchData()
+  protected function WriteRoutineFunctionLobReturnData()
   {
-    // Nothing todo.
+      $this->WriteLine( 'return $ret;' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -2388,19 +2445,37 @@ class SET_RoutineWrapperSingleton0 extends SET_RoutineWrapper_abstract
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  protected function WriteRoutineFunctionLobReturnData()
+  protected function WriteRoutineFunctionLobFetchData( $theRoutine )
   {
-    // Nothing todo.
+    $this->Writeline( '$row = array();' );
+    $this->Writeline( 'self::stmt_bind_assoc( $stmt, $row );' );
+    $this->WriteLine();
+    $this->WriteLine( '$tmp = array();' );
+    $this->WriteLine( 'while (($b = $stmt->fetch()))' );
+    $this->WriteLine( '{' );
+    $this->WriteLine( '$new = array();' );
+    $this->WriteLine( 'foreach( $row as $value )' );
+    $this->WriteLine( '{' );
+    $this->WriteLine( '$new[] = $value;' );
+    $this->WriteLine( '}' );
+    $this->WriteLine( '$tmp[] = $new;' );
+    $this->WriteLine( '}' );
+    $this->WriteLine();
+    $this->Writeline( '$b = $stmt->fetch();' );
+    $this->Writeline( 'if ($b===false) self::ThrowSqlError( \'mysqli_stmt::fetch failed\' );' );
+    $this->WriteLine( 'if (sizeof($tmp)>1) self::ThrowSqlError( \'The unexpected number of rows, expected 0 or 1 rows.\' );');
+    $this->WriteLine();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  protected function WriteRoutineFunctionLobFetchData()
+  protected function WriteRoutineFunctionLobReturnData()
   {
-    // Nothing todo.
+    $this->WriteLine( 'return ($tmp) ? $tmp[0][0] : null;' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
 }
+
 
 //----------------------------------------------------------------------------------------------------------------------
 /** @brief Class for generating a wrapper function around a stored procedure that returns a scalar.
@@ -2419,20 +2494,32 @@ class SET_RoutineWrapperSingleton1 extends SET_RoutineWrapper_abstract
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  protected function WriteRoutineFunctionLobFetchData()
+  protected function WriteRoutineFunctionLobFetchData( $theRoutine )
   {
     $this->Writeline( '$row = array();' );
     $this->Writeline( 'self::stmt_bind_assoc( $stmt, $row );' );
     $this->WriteLine();
+    $this->WriteLine( '$tmp = array();' );
+    $this->WriteLine( 'while (($b = $stmt->fetch()))' );
+    $this->WriteLine( '{' );
+    $this->WriteLine( '$new = array();' );
+    $this->WriteLine( 'foreach( $row as $value )' );
+    $this->WriteLine( '{' );
+    $this->WriteLine( '$new[] = $value;' );
+    $this->WriteLine( '}' );
+    $this->WriteLine( '$tmp[] = $new;' );
+    $this->WriteLine( '}' );
+    $this->WriteLine();
     $this->Writeline( '$b = $stmt->fetch();' );
     $this->Writeline( 'if ($b===false) self::ThrowSqlError( \'mysqli_stmt::fetch failed\' );' );
+    $this->WriteLine( 'if (sizeof($tmp)!=1) self::ThrowSqlError( \'The unexpected number of rows, expected 1 row.\' );' );
     $this->WriteLine();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   protected function WriteRoutineFunctionLobReturnData()
   {
-    $this->Writeline( 'return $row[key($row)];' );
+    $this->WriteLine( 'return $tmp[0][0];' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

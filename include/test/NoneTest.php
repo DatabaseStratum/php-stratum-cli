@@ -13,7 +13,7 @@ class NoneTest extends PHPUnit_Framework_TestCase
   //--------------------------------------------------------------------------------------------------------------------
   /** Stored routine with designation type none must return the nummber of rows affected.
    */
-  public function testTestNone1()
+  public function test1()
   {
     $ret = TST_DL::TestNone( 0 );
     $this->assertEquals( 0, $ret );
@@ -22,7 +22,7 @@ class NoneTest extends PHPUnit_Framework_TestCase
   //--------------------------------------------------------------------------------------------------------------------
   /** Stored routine with designation type none must return the nummber of rows affected.
    */
-  public function testTestNone2()
+  public function test2()
   {
     $ret = TST_DL::TestNone( 1 );
     $this->assertEquals( 1, $ret );
@@ -31,7 +31,7 @@ class NoneTest extends PHPUnit_Framework_TestCase
   //--------------------------------------------------------------------------------------------------------------------
   /** Stored routine with designation type none must return the nummber of rows affected.
    */
-  public function testTestNone3()
+  public function test3()
   {
     $ret = TST_DL::TestNone( 20 );
     $this->assertEquals( 20, $ret );

@@ -13,7 +13,7 @@ class RowsWithIndexTest extends PHPUnit_Framework_TestCase
   //--------------------------------------------------------------------------------------------------------------------
   /** Stored routine with designation type rows_with_index must return multi dimensional array.
    */
-  public function testSelectIndexRows()
+  public function test1()
   {
     $rows = TST_DL::TestRowsWithIndex1( 100 );
     $this->assertInternalType( 'array', $rows );
@@ -27,7 +27,7 @@ class RowsWithIndexTest extends PHPUnit_Framework_TestCase
   //--------------------------------------------------------------------------------------------------------------------
   /** Stored routine with designation type rows_with_index must return empty array when no rwos are selected.
    */
-  public function testSelectIndex0Rows()
+  public function test2()
   {
     $rows = TST_DL::TestRowsWithIndex1( 0 );
     $this->assertInternalType( 'array', $rows );

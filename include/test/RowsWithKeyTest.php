@@ -13,7 +13,7 @@ class RowsWithKeyTest extends PHPUnit_Framework_TestCase
   //--------------------------------------------------------------------------------------------------------------------
   /** Stored routine with designation type rows_with_key must return multi dimensional array.
    */
-  public function testSelectKeyRows()
+  public function test1()
   {
     $rows = TST_DL::TestRowsWithKey1( 100 );
     $this->assertInternalType( 'array', $rows );
@@ -32,7 +32,7 @@ class RowsWithKeyTest extends PHPUnit_Framework_TestCase
   //--------------------------------------------------------------------------------------------------------------------
   /** Stored routine with designation type rows_with_key must return empty array when no rwos are selected.
    */
-  public function testSelectKey0Rows()
+  public function test2()
   {
     $rows = TST_DL::TestRowsWithKey1( 0 );
     $this->assertInternalType( 'array', $rows );

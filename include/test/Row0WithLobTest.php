@@ -11,20 +11,21 @@ class Row0WithLobTest extends PHPUnit_Framework_TestCase
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Stored routine with designation type row0 must return null or 1 row.
+  /** Stored routine with designation type row0 must return null.
    */
-  public function testSelect0Rows()
+  public function test1()
   {
-    $ret = TST_DL::TestRow0a( 0, 'blob' );
+    $ret = TST_DL::TestRow0aWithLob( 0, 'blob' );
     $this->assertInternalType( 'null', $ret );
+
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Stored routine with designation type row0 must return null or 1 row.
+  /** Stored routine with designation type row0 must return 1 row.
    */
-  public function testSelect1Rows()
+  public function test2()
   {
-    $ret = TST_DL::TestRow0a( 1, 'blob' );
+    $ret = TST_DL::TestRow0aWithLob( 1, 'blob' );
     $this->assertInternalType( 'array', $ret );
   }
 
@@ -32,11 +33,10 @@ class Row0WithLobTest extends PHPUnit_Framework_TestCase
   /** An exception must be thrown when a stored routine with designation type row0 returns more than 1 rows.
    *  @expectedException Exception
    */
-  public function testSelect2Rows()
+  public function test3()
   {
-    TST_DL::TestRow0a( 2, 'blob' );
+    TST_DL::TestRow0aWithLob( 2, 'blob' );
   }
-
   //--------------------------------------------------------------------------------------------------------------------
 }
 

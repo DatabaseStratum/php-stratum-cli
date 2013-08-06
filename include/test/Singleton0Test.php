@@ -11,18 +11,18 @@ class Singleton0Test extends PHPUnit_Framework_TestCase
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Stored routine with designation type singleton0 must return null or 1 value.
+  /** Stored routine with designation type singleton0 must return null.
    */
-  public function testSelect0Singletons()
+  public function test1()
   {
     $ret = TST_DL::TestSingleton0a( 0 );
     $this->assertInternalType( 'null', $ret );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Stored routine with designation type singleton0 must return null or 1 value.
+  /** Stored routine with designation type singleton0 must return  1 value.
    */
-  public function testSelect1Singletons()
+  public function test2()
   {
     $ret = TST_DL::TestSingleton0a( 1 );
     $this->assertInternalType( 'string', $ret );
@@ -32,7 +32,7 @@ class Singleton0Test extends PHPUnit_Framework_TestCase
   /** An exception must be thrown when a stored routine with designation type singleton0 returns more than 1 values.
    *  @expectedException Exception
    */
-  public function testSelect2Singletons()
+  public function test3()
   {
     TST_DL::TestSingleton0a( 2 );
   }

@@ -63,7 +63,7 @@ class TST_DL
   }
 
   //------------------------------------------------------------------------------------------------------------------
-  public static function stmt_bind_assoc( &$stmt, &$out )
+  public static function stmt_bind_assoc( $stmt, &$out )
   {
     $data = $stmt->result_metadata();
     if (!$data) self::ThrowSqlError( 'mysqli_stmt::result_metadata failed' );
@@ -611,9 +611,27 @@ class TST_DL
     $b = $stmt->execute();
     if (!$b) self::ThrowSqlError( 'execute failed' );
 
+    $row = array();
+    self::stmt_bind_assoc( $stmt, $row );
+
+    $tmp = array();
+    while (($b = $stmt->fetch()))
+    {
+      $new = array();
+      foreach( $row as $key => $value )
+      {
+        $new[$key] = $value;
+      }
+      $tmp[] = $new;
+    }
+
+    if ($b===false) self::ThrowSqlError( 'mysqli_stmt::fetch failed' );
+    if (sizeof($tmp)>1) self::ThrowSqlError( 'The unexpected number of rows, expected 0 or 1 rows.' );
+
     $stmt->close();
     self::$ourMySql->next_result();
 
+    return ($tmp) ? $tmp[0] : null;
   }
 
   //-------------------------------------------------------------------------------------------------------------------
@@ -659,21 +677,16 @@ class TST_DL
     $tmp = array();
     while (($b = $stmt->fetch()))
     {
-      // xxx one for rows (not row0 or row1)
       $new = array();
       foreach( $row as $key => $value )
       {
         $new[$key] = $value;
       }
-      // xxx one for rows (not row0 or row1)
-
       $tmp[] = $new;
     }
 
     if ($b===false) self::ThrowSqlError( 'mysqli_stmt::fetch failed' );
-
-    // xxx test number of rows
-    if (sizeof($tmp)!=1) self::ThrowSqlError( 'rows xxxx' );
+    if (sizeof($tmp)!=1) self::ThrowSqlError( 'The unexpected  number of rows,  expected 1 row.' );
 
     $stmt->close();
     self::$ourMySql->next_result();
@@ -718,9 +731,26 @@ class TST_DL
     $b = $stmt->execute();
     if (!$b) self::ThrowSqlError( 'execute failed' );
 
+    $row = array();
+    self::stmt_bind_assoc( $stmt, $row );
+
+    $tmp = array();
+    while (($b = $stmt->fetch()))
+    {
+      $new = array();
+      foreach( $row as $key => $value )
+      {
+        $new[$key] = $value;
+      }
+       $tmp[] = $new;
+    }
+
+    if ($b===false) self::ThrowSqlError( 'mysqli_stmt::fetch failed' );
+
     $stmt->close();
     self::$ourMySql->next_result();
 
+    return $tmp;
   }
 
   //-------------------------------------------------------------------------------------------------------------------
@@ -765,9 +795,27 @@ class TST_DL
     $b = $stmt->execute();
     if (!$b) self::ThrowSqlError( 'execute failed' );
 
+    $row = array();
+    self::stmt_bind_assoc( $stmt, $row );
+
+    $ret = array();
+    while (($b = $stmt->fetch()))
+    {
+      $new = array();
+      foreach( $row as $key => $value )
+      {
+        $new[$key] = $value;
+      }
+      $ret[$new['tst_c01']][$new['tst_c02']][] = $new;
+    }
+
+    $b = $stmt->fetch();
+    if ($b===false) self::ThrowSqlError( 'mysqli_stmt::fetch failed' );
+
     $stmt->close();
     self::$ourMySql->next_result();
 
+    return $ret;
   }
 
   //-------------------------------------------------------------------------------------------------------------------
@@ -812,9 +860,27 @@ class TST_DL
     $b = $stmt->execute();
     if (!$b) self::ThrowSqlError( 'execute failed' );
 
+    $row = array();
+    self::stmt_bind_assoc( $stmt, $row );
+
+    $ret = array();
+    while (($b = $stmt->fetch()))
+    {
+      $new = array();
+      foreach( $row as $key => $value )
+      {
+        $new[$key] = $value;
+      }
+      $ret[$new['tst_c01']][$new['tst_c02']][$new['tst_c03']] = $new;
+    }
+
+    $b = $stmt->fetch();
+    if ($b===false) self::ThrowSqlError( 'mysqli_stmt::fetch failed' );
+
     $stmt->close();
     self::$ourMySql->next_result();
 
+    return $ret;
   }
 
   //-------------------------------------------------------------------------------------------------------------------
@@ -854,9 +920,28 @@ class TST_DL
     $b = $stmt->execute();
     if (!$b) self::ThrowSqlError( 'execute failed' );
 
+    $row = array();
+    self::stmt_bind_assoc( $stmt, $row );
+
+    $tmp = array();
+    while (($b = $stmt->fetch()))
+    {
+      $new = array();
+      foreach( $row as $value )
+      {
+        $new[] = $value;
+      }
+      $tmp[] = $new;
+    }
+
+    $b = $stmt->fetch();
+    if ($b===false) self::ThrowSqlError( 'mysqli_stmt::fetch failed' );
+    if (sizeof($tmp)>1) self::ThrowSqlError( 'The unexpected number of rows, expected 0 or 1 rows.' );
+
     $stmt->close();
     self::$ourMySql->next_result();
 
+    return ($tmp) ? $tmp[0][0] : null;
   }
 
   //-------------------------------------------------------------------------------------------------------------------
@@ -899,13 +984,25 @@ class TST_DL
     $row = array();
     self::stmt_bind_assoc( $stmt, $row );
 
+    $tmp = array();
+    while (($b = $stmt->fetch()))
+    {
+      $new = array();
+      foreach( $row as $value )
+      {
+        $new[] = $value;
+      }
+      $tmp[] = $new;
+    }
+
     $b = $stmt->fetch();
     if ($b===false) self::ThrowSqlError( 'mysqli_stmt::fetch failed' );
+    if (sizeof($tmp)!=1) self::ThrowSqlError( 'The unexpected number of rows, expected 1 row.' );
 
     $stmt->close();
     self::$ourMySql->next_result();
 
-    return $row[key($row)];
+    return $tmp[0][0];
   }
 
 

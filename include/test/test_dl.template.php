@@ -63,7 +63,7 @@ class TST_DL
   }
 
   //------------------------------------------------------------------------------------------------------------------
-  public static function stmt_bind_assoc( &$stmt, &$out )
+  public static function stmt_bind_assoc( $stmt, &$out )
   {
     $data = $stmt->result_metadata();
     if (!$data) self::ThrowSqlError( 'mysqli_stmt::result_metadata failed' );

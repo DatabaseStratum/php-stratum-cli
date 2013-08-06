@@ -13,7 +13,7 @@ class NoneWithLobTest extends PHPUnit_Framework_TestCase
   //--------------------------------------------------------------------------------------------------------------------
   /** Stored routine with designation type none must return the nummber of rows affected.
    */
-  public function testTestNoneWithLob1()
+  public function test1()
   {
     $ret = TST_DL::TestNoneWithLob( 0, 'blob' );
     $this->assertEquals( 0, $ret );
@@ -22,7 +22,7 @@ class NoneWithLobTest extends PHPUnit_Framework_TestCase
   //--------------------------------------------------------------------------------------------------------------------
   /** Stored routine with designation type none must return the nummber of rows affected.
    */
-  public function testTestNoneWithLob2()
+  public function test2()
   {
     $ret = TST_DL::TestNoneWithLob( 1, 'blob' );
     $this->assertEquals( 1, $ret );
@@ -31,7 +31,7 @@ class NoneWithLobTest extends PHPUnit_Framework_TestCase
   //--------------------------------------------------------------------------------------------------------------------
   /** Stored routine with designation type none must return the nummber of rows affected.
    */
-  public function testTestNoneWithLob3()
+  public function test3()
   {
     $ret = TST_DL::TestNoneWithLob( 20, 'blob' );
     $this->assertEquals( 20, $ret );
