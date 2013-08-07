@@ -35,7 +35,13 @@ class TST_DL
    */
   private static $ourMySql;
 
-  const MAX_ALLOWED_PACKET = 1000000;
+  /** Value of variable max_allowed_packet
+   */
+  private static $ourMaxAllowedPacket;
+
+  /** Number of bytes send with mysqli_stmt::send_long_data
+   */
+  private static $ourChunckSize = 1000000;
 
   // -------------------------------------------------------------------------------------------------------------------
   /** Werpt een excptie met de huidige error code en beschrijving van $ourMySql.
@@ -48,6 +54,22 @@ class TST_DL
     $message .= $theText."\n";
 
     throw new Exception( $message );
+  }
+
+  // -------------------------------------------------------------------------------------------------------------------
+  /** Get constant MAX_ALLOWED_PACKET.
+   */
+  public function getMaxAllowedPacket()
+  {
+    if (!isset(self::$ourMaxAllowedPacket))
+    {
+      $query = "show variables like 'max_allowed_packet'";
+      $max_allowed_packet = TST_DL::ExecuteRow1( $query );
+
+      self::$ourMaxAllowedPacket = $max_allowed_packet['Value'];
+    }
+
+    return self::$ourMaxAllowedPacket;
   }
 
   // -------------------------------------------------------------------------------------------------------------------
@@ -229,7 +251,7 @@ class TST_DL
     }
 
     $row    = $result->fetch_array( MYSQLI_ASSOC );
-    $result->close();
+    $result->free();
 
     self::$ourMySql->next_result();
 
@@ -250,7 +272,7 @@ class TST_DL
     }
 
     $row = $result->fetch_array( MYSQLI_ASSOC );
-    $result->close();
+    $result->free();
 
     self::$ourMySql->next_result();
 
@@ -265,7 +287,7 @@ class TST_DL
     $result = self::Query( $theQuery );
     $ret = array();
     while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret[] = $row;
-    $result->close();
+    $result->free();
 
     self::$ourMySql->next_result();
 
@@ -288,7 +310,7 @@ class TST_DL
     }
 
     $row    = $result->fetch_array( MYSQL_NUM );
-    $result->close();
+    $result->free();
 
     self::$ourMySql->next_result();
 
@@ -310,7 +332,7 @@ class TST_DL
     }
 
     $row = $result->fetch_array( MYSQL_NUM );
-    $result->close();
+    $result->free();
 
     self::$ourMySql->next_result();
 
@@ -331,7 +353,7 @@ class TST_DL
     {
       $theBulkHandler->Row( $row );
     }
-    $result->close();
+    $result->free();
 
     $theBulkHandler->Stop();
 

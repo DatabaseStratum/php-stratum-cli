@@ -35,7 +35,13 @@ class TST_DL
    */
   private static $ourMySql;
 
-  const MAX_ALLOWED_PACKET = 1000000;
+  /** Value of variable max_allowed_packet
+   */
+  private static $ourMaxAllowedPacket;
+
+  /** Number of bytes send with mysqli_stmt::send_long_data
+   */
+  private static $ourChunckSize = 1000000;
 
   // -------------------------------------------------------------------------------------------------------------------
   /** Werpt een excptie met de huidige error code en beschrijving van $ourMySql.
@@ -48,6 +54,22 @@ class TST_DL
     $message .= $theText."\n";
 
     throw new Exception( $message );
+  }
+
+  // -------------------------------------------------------------------------------------------------------------------
+  /** Get constant MAX_ALLOWED_PACKET.
+   */
+  public function getMaxAllowedPacket()
+  {
+    if (!isset(self::$ourMaxAllowedPacket))
+    {
+      $query = "show variables like 'max_allowed_packet'";
+      $max_allowed_packet = TST_DL::ExecuteRow1( $query );
+
+      self::$ourMaxAllowedPacket = $max_allowed_packet['Value'];
+    }
+
+    return self::$ourMaxAllowedPacket;
   }
 
   // -------------------------------------------------------------------------------------------------------------------
@@ -229,7 +251,7 @@ class TST_DL
     }
 
     $row    = $result->fetch_array( MYSQLI_ASSOC );
-    $result->close();
+    $result->free();
 
     self::$ourMySql->next_result();
 
@@ -250,7 +272,7 @@ class TST_DL
     }
 
     $row = $result->fetch_array( MYSQLI_ASSOC );
-    $result->close();
+    $result->free();
 
     self::$ourMySql->next_result();
 
@@ -265,7 +287,7 @@ class TST_DL
     $result = self::Query( $theQuery );
     $ret = array();
     while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret[] = $row;
-    $result->close();
+    $result->free();
 
     self::$ourMySql->next_result();
 
@@ -288,7 +310,7 @@ class TST_DL
     }
 
     $row    = $result->fetch_array( MYSQL_NUM );
-    $result->close();
+    $result->free();
 
     self::$ourMySql->next_result();
 
@@ -310,7 +332,7 @@ class TST_DL
     }
 
     $row = $result->fetch_array( MYSQL_NUM );
-    $result->close();
+    $result->free();
 
     self::$ourMySql->next_result();
 
@@ -331,7 +353,7 @@ class TST_DL
     {
       $theBulkHandler->Row( $row );
     }
-    $result->close();
+    $result->free();
 
     $theBulkHandler->Stop();
 
@@ -408,72 +430,72 @@ class TST_DL
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 0, substr( $theArg18, $p, self::MAX_ALLOWED_PACKET ) );
+      $b = $stmt->send_long_data( 0, substr( $theArg18, $p, self::$ourChunckSize ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
-      $p += self::MAX_ALLOWED_PACKET;
+      $p += self::$ourChunckSize;
     }
 
     $n = strlen( $theArg19 );
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 1, substr( $theArg19, $p, self::MAX_ALLOWED_PACKET ) );
+      $b = $stmt->send_long_data( 1, substr( $theArg19, $p, self::$ourChunckSize ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
-      $p += self::MAX_ALLOWED_PACKET;
+      $p += self::$ourChunckSize;
     }
 
     $n = strlen( $theArg20 );
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 2, substr( $theArg20, $p, self::MAX_ALLOWED_PACKET ) );
+      $b = $stmt->send_long_data( 2, substr( $theArg20, $p, self::$ourChunckSize ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
-      $p += self::MAX_ALLOWED_PACKET;
+      $p += self::$ourChunckSize;
     }
 
     $n = strlen( $theArg21 );
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 3, substr( $theArg21, $p, self::MAX_ALLOWED_PACKET ) );
+      $b = $stmt->send_long_data( 3, substr( $theArg21, $p, self::$ourChunckSize ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
-      $p += self::MAX_ALLOWED_PACKET;
+      $p += self::$ourChunckSize;
     }
 
     $n = strlen( $theArg22 );
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 4, substr( $theArg22, $p, self::MAX_ALLOWED_PACKET ) );
+      $b = $stmt->send_long_data( 4, substr( $theArg22, $p, self::$ourChunckSize ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
-      $p += self::MAX_ALLOWED_PACKET;
+      $p += self::$ourChunckSize;
     }
 
     $n = strlen( $theArg23 );
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 5, substr( $theArg23, $p, self::MAX_ALLOWED_PACKET ) );
+      $b = $stmt->send_long_data( 5, substr( $theArg23, $p, self::$ourChunckSize ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
-      $p += self::MAX_ALLOWED_PACKET;
+      $p += self::$ourChunckSize;
     }
 
     $n = strlen( $theArg24 );
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 6, substr( $theArg24, $p, self::MAX_ALLOWED_PACKET ) );
+      $b = $stmt->send_long_data( 6, substr( $theArg24, $p, self::$ourChunckSize ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
-      $p += self::MAX_ALLOWED_PACKET;
+      $p += self::$ourChunckSize;
     }
 
     $n = strlen( $theArg25 );
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 7, substr( $theArg25, $p, self::MAX_ALLOWED_PACKET ) );
+      $b = $stmt->send_long_data( 7, substr( $theArg25, $p, self::$ourChunckSize ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
-      $p += self::MAX_ALLOWED_PACKET;
+      $p += self::$ourChunckSize;
     }
 
     $b = $stmt->execute();
@@ -485,6 +507,56 @@ class TST_DL
     self::$ourMySql->next_result();
 
     return $ret;
+  }
+
+  //-------------------------------------------------------------------------------------------------------------------
+  /** @sa Stored Routine tst_test_max_alllowed_packet.
+   */
+  static function TestMaxAlllowedPacket($theArg0)
+  {
+    $query = 'CALL tst_test_max_alllowed_packet(?)';
+    $stmt  = self::$ourMySql->prepare( $query );
+    if (!$stmt) self::ThrowSqlError( 'prepare failed' );
+
+    $null = null;
+    $b = $stmt->bind_param( 'b', $null );
+    if (!$b) self::ThrowSqlError( 'bind_param failed' );
+
+    $n = strlen( $theArg0 );
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data( 0, substr( $theArg0, $p, self::$ourChunckSize ) );
+      if (!$b) self::ThrowSqlError( 'send_long_data failed' );
+      $p += self::$ourChunckSize;
+    }
+
+    $b = $stmt->execute();
+    if (!$b) self::ThrowSqlError( 'execute failed' );
+
+    $row = array();
+    self::stmt_bind_assoc( $stmt, $row );
+
+    $tmp = array();
+    while (($b = $stmt->fetch()))
+    {
+      $new = array();
+      foreach( $row as $value )
+      {
+        $new[] = $value;
+      }
+      $tmp[] = $new;
+    }
+
+    $b = $stmt->fetch();
+
+    $stmt->close();
+    self::$ourMySql->next_result();
+
+    if ($b===false) self::ThrowSqlError( 'mysqli_stmt::fetch failed' );
+    if (sizeof($tmp)!=1) self::ThrowSqlError( 'The unexpected number of rows, expected 1 row.' );
+
+    return $tmp[0][0];
   }
 
   //-------------------------------------------------------------------------------------------------------------------
@@ -512,9 +584,9 @@ class TST_DL
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 0, substr( $theArg1, $p, self::MAX_ALLOWED_PACKET ) );
+      $b = $stmt->send_long_data( 0, substr( $theArg1, $p, self::$ourChunckSize ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
-      $p += self::MAX_ALLOWED_PACKET;
+      $p += self::$ourChunckSize;
     }
 
     $b = $stmt->execute();
@@ -553,9 +625,9 @@ class TST_DL
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 0, substr( $theArg1, $p, self::MAX_ALLOWED_PACKET ) );
+      $b = $stmt->send_long_data( 0, substr( $theArg1, $p, self::$ourChunckSize ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
-      $p += self::MAX_ALLOWED_PACKET;
+      $p += self::$ourChunckSize;
     }
 
     $b = $stmt->execute();
@@ -575,11 +647,11 @@ class TST_DL
       $tmp[] = $new;
     }
 
-    if ($b===false) self::ThrowSqlError( 'mysqli_stmt::fetch failed' );
-    if (sizeof($tmp)>1) self::ThrowSqlError( 'The unexpected number of rows, expected 0 or 1 rows.' );
-
     $stmt->close();
     self::$ourMySql->next_result();
+
+    if ($b===false) self::ThrowSqlError( 'mysqli_stmt::fetch failed' );
+    if (sizeof($tmp)>1) self::ThrowSqlError( 'The unexpected number of rows, expected 0 or 1 rows.' );
 
     return ($tmp) ? $tmp[0] : null;
   }
@@ -609,9 +681,9 @@ class TST_DL
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 0, substr( $theArg1, $p, self::MAX_ALLOWED_PACKET ) );
+      $b = $stmt->send_long_data( 0, substr( $theArg1, $p, self::$ourChunckSize ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
-      $p += self::MAX_ALLOWED_PACKET;
+      $p += self::$ourChunckSize;
     }
 
     $b = $stmt->execute();
@@ -631,11 +703,11 @@ class TST_DL
       $tmp[] = $new;
     }
 
-    if ($b===false) self::ThrowSqlError( 'mysqli_stmt::fetch failed' );
-    if (sizeof($tmp)!=1) self::ThrowSqlError( 'The unexpected  number of rows,  expected 1 row.' );
-
     $stmt->close();
     self::$ourMySql->next_result();
+
+    if ($b===false) self::ThrowSqlError( 'mysqli_stmt::fetch failed' );
+    if (sizeof($tmp)!=1) self::ThrowSqlError( 'The unexpected  number of rows,  expected 1 row.' );
 
     return $row;
   }
@@ -665,9 +737,9 @@ class TST_DL
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 0, substr( $theArg1, $p, self::MAX_ALLOWED_PACKET ) );
+      $b = $stmt->send_long_data( 0, substr( $theArg1, $p, self::$ourChunckSize ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
-      $p += self::MAX_ALLOWED_PACKET;
+      $p += self::$ourChunckSize;
     }
 
     $b = $stmt->execute();
@@ -687,10 +759,10 @@ class TST_DL
        $tmp[] = $new;
     }
 
-    if ($b===false) self::ThrowSqlError( 'mysqli_stmt::fetch failed' );
-
     $stmt->close();
     self::$ourMySql->next_result();
+
+    if ($b===false) self::ThrowSqlError( 'mysqli_stmt::fetch failed' );
 
     return $tmp;
   }
@@ -725,9 +797,9 @@ class TST_DL
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 0, substr( $theArg1, $p, self::MAX_ALLOWED_PACKET ) );
+      $b = $stmt->send_long_data( 0, substr( $theArg1, $p, self::$ourChunckSize ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
-      $p += self::MAX_ALLOWED_PACKET;
+      $p += self::$ourChunckSize;
     }
 
     $b = $stmt->execute();
@@ -748,10 +820,11 @@ class TST_DL
     }
 
     $b = $stmt->fetch();
-    if ($b===false) self::ThrowSqlError( 'mysqli_stmt::fetch failed' );
 
     $stmt->close();
     self::$ourMySql->next_result();
+
+    if ($b===false) self::ThrowSqlError( 'mysqli_stmt::fetch failed' );
 
     return $ret;
   }
@@ -786,9 +859,9 @@ class TST_DL
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 0, substr( $theArg1, $p, self::MAX_ALLOWED_PACKET ) );
+      $b = $stmt->send_long_data( 0, substr( $theArg1, $p, self::$ourChunckSize ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
-      $p += self::MAX_ALLOWED_PACKET;
+      $p += self::$ourChunckSize;
     }
 
     $b = $stmt->execute();
@@ -809,10 +882,11 @@ class TST_DL
     }
 
     $b = $stmt->fetch();
-    if ($b===false) self::ThrowSqlError( 'mysqli_stmt::fetch failed' );
 
     $stmt->close();
     self::$ourMySql->next_result();
+
+    if ($b===false) self::ThrowSqlError( 'mysqli_stmt::fetch failed' );
 
     return $ret;
   }
@@ -842,9 +916,9 @@ class TST_DL
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 0, substr( $theArg1, $p, self::MAX_ALLOWED_PACKET ) );
+      $b = $stmt->send_long_data( 0, substr( $theArg1, $p, self::$ourChunckSize ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
-      $p += self::MAX_ALLOWED_PACKET;
+      $p += self::$ourChunckSize;
     }
 
     $b = $stmt->execute();
@@ -865,11 +939,12 @@ class TST_DL
     }
 
     $b = $stmt->fetch();
-    if ($b===false) self::ThrowSqlError( 'mysqli_stmt::fetch failed' );
-    if (sizeof($tmp)>1) self::ThrowSqlError( 'The unexpected number of rows, expected 0 or 1 rows.' );
 
     $stmt->close();
     self::$ourMySql->next_result();
+
+    if ($b===false) self::ThrowSqlError( 'mysqli_stmt::fetch failed' );
+    if (sizeof($tmp)>1) self::ThrowSqlError( 'The unexpected number of rows, expected 0 or 1 rows.' );
 
     return ($tmp) ? $tmp[0][0] : null;
   }
@@ -899,9 +974,9 @@ class TST_DL
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 0, substr( $theArg1, $p, self::MAX_ALLOWED_PACKET ) );
+      $b = $stmt->send_long_data( 0, substr( $theArg1, $p, self::$ourChunckSize ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
-      $p += self::MAX_ALLOWED_PACKET;
+      $p += self::$ourChunckSize;
     }
 
     $b = $stmt->execute();
@@ -922,11 +997,12 @@ class TST_DL
     }
 
     $b = $stmt->fetch();
-    if ($b===false) self::ThrowSqlError( 'mysqli_stmt::fetch failed' );
-    if (sizeof($tmp)!=1) self::ThrowSqlError( 'The unexpected number of rows, expected 1 row.' );
 
     $stmt->close();
     self::$ourMySql->next_result();
+
+    if ($b===false) self::ThrowSqlError( 'mysqli_stmt::fetch failed' );
+    if (sizeof($tmp)!=1) self::ThrowSqlError( 'The unexpected number of rows, expected 1 row.' );
 
     return $tmp[0][0];
   }

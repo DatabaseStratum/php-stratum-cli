@@ -36,6 +36,7 @@ class Row1WithLobTest extends PHPUnit_Framework_TestCase
   {
     TST_DL::TestRow1aWithLob( 2, 'blob' );
   }
+
   //--------------------------------------------------------------------------------------------------------------------
 }
 

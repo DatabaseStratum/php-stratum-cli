@@ -1844,9 +1844,9 @@ abstract class SET_RoutineWrapper_abstract
         $this->Writeline( '$p = 0;' );
         $this->Writeline( 'while ($p<$n)' );
         $this->Writeline( '{' );
-        $this->Writeline( '$b = $stmt->send_long_data( '.$blob_argument_index.', substr( $theArg'.$i.', $p, self::MAX_ALLOWED_PACKET ) );' );
+        $this->Writeline( '$b = $stmt->send_long_data( '.$blob_argument_index.', substr( $theArg'.$i.', $p, self::$ourChunckSize ) );' );
         $this->Writeline( 'if (!$b) self::ThrowSqlError( \'send_long_data failed\' );' );
-        $this->Writeline( '$p += self::MAX_ALLOWED_PACKET;' );
+        $this->Writeline( '$p += self::$ourChunckSize;' );
         $this->Writeline( '}' );
         $this->WriteLine();
 
@@ -2012,13 +2012,13 @@ class SET_RoutineWrapperBulk extends SET_RoutineWrapper_abstract
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  protected function WriteRoutineFunctionLobReturnData()
+  protected function WriteRoutineFunctionLobFetchData( $theRoutine )
   {
     // Nothing todo.
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  protected function WriteRoutineFunctionLobFetchData( $theRoutine )
+  protected function WriteRoutineFunctionLobReturnData()
   {
     // Nothing todo.
   }
@@ -2044,20 +2044,19 @@ class SET_RoutineWrapperLog extends SET_RoutineWrapper_abstract
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  protected function WriteRoutineFunctionLobReturnData()
-  {
-    // Nothing todo.
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
   protected function WriteRoutineFunctionLobFetchData( $theRoutine )
   {
     // Nothing todo.
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-}
+  protected function WriteRoutineFunctionLobReturnData()
+  {
+    // Nothing todo.
+  }
 
+  //--------------------------------------------------------------------------------------------------------------------
+}
 
 //----------------------------------------------------------------------------------------------------------------------
 /** @brief Class for generating a wrapper function around a stored procedure that doesn't return anything.
@@ -2126,14 +2125,14 @@ class SET_RoutineWrapperRow0 extends SET_RoutineWrapper_abstract
     $this->WriteLine( '$tmp[] = $new;' );
     $this->WriteLine( '}' );
     $this->WriteLine();
-    $this->WriteLine( 'if ($b===false) self::ThrowSqlError( \'mysqli_stmt::fetch failed\' );' );
-    $this->WriteLine( 'if (sizeof($tmp)>1) self::ThrowSqlError( \'The unexpected number of rows, expected 0 or 1 rows.\' );' );
-    $this->WriteLine();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   protected function WriteRoutineFunctionLobReturnData()
   {
+    $this->WriteLine( 'if ($b===false) self::ThrowSqlError( \'mysqli_stmt::fetch failed\' );' );
+    $this->WriteLine( 'if (sizeof($tmp)>1) self::ThrowSqlError( \'The unexpected number of rows, expected 0 or 1 rows.\' );' );
+    $this->WriteLine();
     $this->WriteLine( 'return ($tmp) ? $tmp[0] : null;' );
   }
 
@@ -2173,15 +2172,15 @@ class SET_RoutineWrapperRow1 extends SET_RoutineWrapper_abstract
     $this->WriteLine( '$tmp[] = $new;' );
     $this->WriteLine( '}' );
     $this->WriteLine();
-    $this->WriteLine( 'if ($b===false) self::ThrowSqlError( \'mysqli_stmt::fetch failed\' );' );
-    $this->WriteLine( 'if (sizeof($tmp)!=1) self::ThrowSqlError( \'The unexpected  number of rows,  expected 1 row.\' );' );
-    $this->WriteLine();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   protected function WriteRoutineFunctionLobReturnData()
   {
-      $this->WriteLine( 'return $row;' );
+    $this->WriteLine( 'if ($b===false) self::ThrowSqlError( \'mysqli_stmt::fetch failed\' );' );
+    $this->WriteLine( 'if (sizeof($tmp)!=1) self::ThrowSqlError( \'The unexpected  number of rows,  expected 1 row.\' );' );
+    $this->WriteLine();
+    $this->WriteLine( 'return $row;' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -2220,19 +2219,18 @@ class SET_RoutineWrapperRows extends SET_RoutineWrapper_abstract
     $this->WriteLine( ' $tmp[] = $new;' );
     $this->WriteLine( '}' );
     $this->WriteLine();
-    $this->WriteLine( 'if ($b===false) self::ThrowSqlError( \'mysqli_stmt::fetch failed\' );' );
-    $this->WriteLine();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   protected function WriteRoutineFunctionLobReturnData()
   {
+    $this->WriteLine( 'if ($b===false) self::ThrowSqlError( \'mysqli_stmt::fetch failed\' );' );
+    $this->WriteLine();
     $this->WriteLine( 'return $tmp;' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
 }
-
 
 //----------------------------------------------------------------------------------------------------------------------
 /** @brief Class for generating a wrapper function around a stored procedure that selects rows on keys.
@@ -2279,14 +2277,15 @@ class SET_RoutineWrapperRowsWithKey extends SET_RoutineWrapper_abstract
     $this->WriteLine( '}' );
     $this->WriteLine();
     $this->Writeline( '$b = $stmt->fetch();' );
-    $this->Writeline( 'if ($b===false) self::ThrowSqlError( \'mysqli_stmt::fetch failed\' );' );
     $this->WriteLine();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   protected function WriteRoutineFunctionLobReturnData()
   {
-      $this->WriteLine( 'return $ret;' );
+    $this->Writeline( 'if ($b===false) self::ThrowSqlError( \'mysqli_stmt::fetch failed\' );' );
+    $this->WriteLine();
+    $this->WriteLine( 'return $ret;' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -2337,14 +2336,16 @@ class SET_RoutineWrapperRowsWithIndex extends SET_RoutineWrapper_abstract
     $this->WriteLine( '}' );
     $this->WriteLine();
     $this->Writeline( '$b = $stmt->fetch();' );
-    $this->Writeline( 'if ($b===false) self::ThrowSqlError( \'mysqli_stmt::fetch failed\' );' );
     $this->WriteLine();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   protected function WriteRoutineFunctionLobReturnData()
   {
-      $this->WriteLine( 'return $ret;' );
+
+    $this->Writeline( 'if ($b===false) self::ThrowSqlError( \'mysqli_stmt::fetch failed\' );' );
+    $this->WriteLine();
+    $this->WriteLine( 'return $ret;' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -2384,14 +2385,15 @@ class SET_RoutineWrapperSingleton0 extends SET_RoutineWrapper_abstract
     $this->WriteLine( '}' );
     $this->WriteLine();
     $this->Writeline( '$b = $stmt->fetch();' );
-    $this->Writeline( 'if ($b===false) self::ThrowSqlError( \'mysqli_stmt::fetch failed\' );' );
-    $this->WriteLine( 'if (sizeof($tmp)>1) self::ThrowSqlError( \'The unexpected number of rows, expected 0 or 1 rows.\' );');
     $this->WriteLine();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   protected function WriteRoutineFunctionLobReturnData()
   {
+    $this->Writeline( 'if ($b===false) self::ThrowSqlError( \'mysqli_stmt::fetch failed\' );' );
+    $this->WriteLine( 'if (sizeof($tmp)>1) self::ThrowSqlError( \'The unexpected number of rows, expected 0 or 1 rows.\' );');
+    $this->WriteLine();
     $this->WriteLine( 'return ($tmp) ? $tmp[0][0] : null;' );
   }
 
@@ -2433,14 +2435,15 @@ class SET_RoutineWrapperSingleton1 extends SET_RoutineWrapper_abstract
     $this->WriteLine( '}' );
     $this->WriteLine();
     $this->Writeline( '$b = $stmt->fetch();' );
-    $this->Writeline( 'if ($b===false) self::ThrowSqlError( \'mysqli_stmt::fetch failed\' );' );
-    $this->WriteLine( 'if (sizeof($tmp)!=1) self::ThrowSqlError( \'The unexpected number of rows, expected 1 row.\' );' );
     $this->WriteLine();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   protected function WriteRoutineFunctionLobReturnData()
   {
+    $this->Writeline( 'if ($b===false) self::ThrowSqlError( \'mysqli_stmt::fetch failed\' );' );
+    $this->WriteLine( 'if (sizeof($tmp)!=1) self::ThrowSqlError( \'The unexpected number of rows, expected 1 row.\' );' );
+    $this->WriteLine();
     $this->WriteLine( 'return $tmp[0][0];' );
   }
 
