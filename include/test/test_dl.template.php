@@ -248,7 +248,7 @@ class TST_DL
       TST_DL::AssertFailed( "Number of rows selected by query below is %d expected 0 or 1.\n%s",
                             $result->num_rows,
                             $theQuery );
-    }
+    } // @codeCoverageIgnore
 
     $row    = $result->fetch_array( MYSQLI_ASSOC );
     $result->free();
@@ -269,7 +269,7 @@ class TST_DL
       TST_DL::AssertFailed( "Number of rows selected by query below is %d expected 1.\n%s",
                             $result->num_rows,
                             $theQuery );
-    }
+    } // @codeCoverageIgnore
 
     $row = $result->fetch_array( MYSQLI_ASSOC );
     $result->free();
@@ -307,7 +307,7 @@ class TST_DL
       TST_DL::AssertFailed( "Number of rows selected by query below is %d expected 0 or 1.\n%s",
                             $result->num_rows,
                             $theQuery );
-    }
+    } // @codeCoverageIgnore
 
     $row    = $result->fetch_array( MYSQL_NUM );
     $result->free();
@@ -329,7 +329,7 @@ class TST_DL
       TST_DL::AssertFailed( "Number of rows selected by query below is %d expected 1.\n%s",
                             $result->num_rows,
                             $theQuery );
-    }
+    } // @codeCoverageIgnore
 
     $row = $result->fetch_array( MYSQL_NUM );
     $result->free();
@@ -373,7 +373,7 @@ class TST_DL
     if ($theValue===true)        return 1;
 
     self::ThrowSqlError( "Value '$theValue' is not a number." );
-  }
+  } // @codeCoverageIgnore
 
   // -------------------------------------------------------------------------------------------------------------------
   /** Geeft een literal voor @a $theString terug die veilig gebruikt kan worden als string in SQL statements.

@@ -19,9 +19,9 @@ function ReadMetadata( $theMatadataFile )
   if ($handle===false) set_assert_failed( "Unable to open file '%s'.", $theMatadataFile );
 
   // Ignore the header row.
-  fgetcsv( $handle );
+  fgetcsv( $handle, 0, ',' );
 
-  while ($row = fgetcsv( $handle ))
+  while ($row = fgetcsv( $handle, 0, ',' ))
   {
     $metadata[$row[0]] = array( 'routine_name' => $row[0],
                                 'type'         => $row[1],
