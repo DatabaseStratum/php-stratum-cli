@@ -89,12 +89,7 @@ class SET_DL
     if (!$ret) self::ThrowSqlError( 'set_charset' );
     /*
     $ret = self::ExecuteNone( "set sql_mode = '".SET_SQL_MODE."'");
-
-    // The default transaction level is REPEATABLE-READ. Set transaction level to READ-COMMITED.
-    self::ExecuteNone( "SET tx_isolation = 'READ-COMMITTED'" );
-
-    // Disable query caching.
-    self::ExecuteNone( "set query_cache_type = 0" );*/
+    */
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -178,23 +173,23 @@ class SET_DL
  */
 class SET_ConfigConstants
 {
-  /** Filename with columnnames, theirs widths, and constant names.
+  /** Filename with columnnames, their widths, and constant names.
    */
-  private $myConstsFileName;
+  private $myConstsFilename;
 
-  /** Template file name under which the file is generated with the constants.
+  /** Template filename under which the file is generated with the constants.
    */
-  private $myTemplateConfigFileName;
+  private $myTemplateConfigFilename;
 
   /** Name of file that contains all constants.
    */
-  private $myConfigFileName;
+  private $myConfigFilename;
 
   /** All columns in the MySQL schema.
    */
   private $myColumns = array();
 
-  /** Array with the previous columnnames,  widths, and constant names (i.e. the content of @c $myConstsFileName upon
+  /** Array with the previous column names, widths, and constant names (i.e. the content of @c $myConstsFilename upon
    *  starting this program).
    */
   private $myOldColumns = array();
@@ -203,7 +198,7 @@ class SET_ConfigConstants
    */
   private $myConstants = array ();
 
-  /** The prefix used  for designations a unknown constants.
+  /** The prefix used for designations a unknown constants.
    */
   private $myPrefix;
 
@@ -224,7 +219,7 @@ class SET_ConfigConstants
   private $myUserName;
   /** Uesr password.
    */
-  private $myPassWord;
+  private $myPassword;
   /** Name used databae.
    */
   private $myDatabase;
@@ -271,22 +266,22 @@ class SET_ConfigConstants
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Reads parameters from configuration @a $theConfigFileName
+  /** Reads parameters from configuration @a $theConfigFilename
    */
-  private function ReadConfigFile( $theConfigFileName )
+  private function ReadConfigFile( $theConfigFilename )
   {
-    $settings = parse_ini_file( $theConfigFileName, true );
+    $settings = parse_ini_file( $theConfigFilename, true );
     if ($settings===false) set_assert_failed( "Unable open configuration file" );
 
-    $this->myHostName = $this->GetSetting( $settings, true,  'database', 'host_name');
-    $this->myUserName = $this->GetSetting( $settings, true,  'database', 'user_name');
-    $this->myPassWord = $this->GetSetting( $settings, true,  'database', 'password');
-    $this->myDatabase = $this->GetSetting( $settings, true,  'database', 'database_name');
+    $this->myHostName = $this->GetSetting( $settings, true,  'database', 'host_name' );
+    $this->myUserName = $this->GetSetting( $settings, true,  'database', 'user_name' );
+    $this->myPassword = $this->GetSetting( $settings, true,  'database', 'password' );
+    $this->myDatabase = $this->GetSetting( $settings, true,  'database', 'database_name' );
 
-    $this->myConstsFileName       = $this->GetSetting( $settings, true,  'constants', 'columns');
-    $this->myPrefix               = $this->GetSetting( $settings, true,  'constants', 'prefix');
-    $this->myTemplateConfigFileName = $this->GetSetting( $settings, true,  'constants', 'config_template');
-    $this->myConfigFileName       = $this->GetSetting( $settings, true,  'constants', 'config');
+    $this->myConstsFilename         = $this->GetSetting( $settings, true,  'constants', 'columns' );
+    $this->myPrefix                 = $this->GetSetting( $settings, true,  'constants', 'prefix' );
+    $this->myTemplateConfigFilename = $this->GetSetting( $settings, true,  'constants', 'config_template' );
+    $this->myConfigFilename         = $this->GetSetting( $settings, true,  'constants', 'config' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -385,13 +380,13 @@ order by table_name
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Record constants and their values to the file @a myConstsFileName.
+  /** Record constants and their values to the file @a myConstsFilename.
    */
   private function WriteColumns()
   {
-    $temp_filename = $this->myConstsFileName.'.tmp';
+    $temp_filename = $this->myConstsFilename.'.tmp';
     $handle = fopen( $temp_filename, 'w' );
-    if ($handle===null) set_assert_failed( "Unable to open file '%s'.", $this->myConstsFileName );
+    if ($handle===null) set_assert_failed( "Unable to open file '%s'.", $this->myConstsFilename );
 
     foreach( $this->myColumns as $table )
     {
@@ -414,41 +409,41 @@ order by table_name
                                                  $column['column_name'],
                                                  $column['length'],
                                                  $column['constant_name'] );
-            if ($n===false) set_assert_failed( "Error writing file '%s'.", $this->myConstsFileName );
+            if ($n===false) set_assert_failed( "Error writing file '%s'.", $this->myConstsFilename );
           }
           else
           {
             $line_format = sprintf( "%%s.%%-%ds %%%dd\n", $width1, $width2 );
             $n = fprintf( $handle, $line_format, $column['table_name'], $column['column_name'], $column['length'] );
-            if ($n===false) set_assert_failed( "Error writing file '%s'.", $this->myConstsFileName );
+            if ($n===false) set_assert_failed( "Error writing file '%s'.", $this->myConstsFilename );
           }
         }
       }
 
       $n = fprintf( $handle, "\n" );
-      if ($n===false) set_assert_failed( "Error writing file '%s'.", $this->myConstsFileName );
+      if ($n===false) set_assert_failed( "Error writing file '%s'.", $this->myConstsFilename );
     }
 
      $err = fclose( $handle );
-     if ($err===false) set_assert_failed( "Error closing file '%s'.", $this->myConstsFileName );
+     if ($err===false) set_assert_failed( "Error closing file '%s'.", $this->myConstsFilename );
 
-     $err = rename( $this->myConstsFileName.'.tmp', $this->myConstsFileName );
+     $err = rename( $this->myConstsFilename.'.tmp', $this->myConstsFilename );
      if ($err===false) set_assert_failed( "Error: can't rename file '%s' to '%s'.", $temp_filename,
-                                                                                    $this->myConstsFileName );
+                                                                                    $this->myConstsFilename );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Get old column with consatant from file @a myConstsFileName
+  /** Get old column with consatant from file @a myConstsFilename
    */
   private function GetOldColumns()
   {
-    if (file_exists( $this->myConstsFileName ))
+    if (file_exists( $this->myConstsFilename ))
     {
-      $handle = fopen( $this->myConstsFileName, 'r' );
-      if ($handle===null) set_assert_failed( "Unable to open file '%s'.", $this->myConstsFileName );
+      $handle = fopen( $this->myConstsFilename, 'r' );
+      if ($handle===null) set_assert_failed( "Unable to open file '%s'.", $this->myConstsFilename );
 
       $line_number = 0;
-      while( $line = fgets( $handle ) )
+      while ($line = fgets( $handle ))
       {
         $line_number++;
         if ($line!="\n")
@@ -458,8 +453,7 @@ order by table_name
 
           if ($n==0)
           {
-            echo $line;
-            echo sprintf( "Illegal format at line %d in the file '%s'.\n", $line_number, $this->myConstsFileName );
+            set_assert_failed( "Illegal format at line %d in file '%s'.", $line_number, $this->myConstsFilename );
           }
 
           if (isset($matches[4]))
@@ -476,8 +470,10 @@ order by table_name
           }
         }
       }
-      $err = fclose( $handle );
-      if ($err===false) set_assert_failed( "Error closing file '%s'.", $this->myConstsFileName );
+      if (!feof($handle)) set_assert_failed( "Error reading from file '%s'.", $this->myConstsFilename );
+
+      $ok = fclose( $handle );
+      if ($ok===false) set_assert_failed( "Error closing file '%s'.", $this->myConstsFilename );
     }
   }
 
@@ -587,8 +583,8 @@ where   nullif(`%s`,'') is not null";
    */
   private function WriteTargetConfigFile()
   {
-    $source = file_get_contents( $this->myTemplateConfigFileName );
-    if ($source===false) set_assert_failed( "Unable to open file '%s'.", $this->myTemplateConfigFileName );
+    $source = file_get_contents( $this->myTemplateConfigFilename );
+    if ($source===false) set_assert_failed( "Unable to open file '%s'.", $this->myTemplateConfigFilename );
 
     $width1 = 0;
     $width2 = 0;
@@ -607,17 +603,16 @@ where   nullif(`%s`,'') is not null";
 
     $source = str_replace( '/* AUTO_GENERATED_CONSTS */', $constants, $source );
 
-
-    $ok = file_put_contents( $this->myConfigFileName,  $source );
-    if ($ok===false) set_assert_failed( "Unable to write to file '%s'.", $this->myTemplateConfigFileName );
+    $ok = file_put_contents( $this->myConfigFilename,  $source );
+    if ($ok===false) set_assert_failed( "Unable to write to file '%s'.", $this->myTemplateConfigFilename );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  public function Run( $theConfigFileName )
+  public function Run( $theConfigFilename )
   {
-    $this->ReadConfigFile( $theConfigFileName );
+    $this->ReadConfigFile( $theConfigFilename );
 
-    SET_DL::Connect( $this->myHostName, $this->myUserName, $this->myPassWord, $this->myDatabase );
+    SET_DL::Connect( $this->myHostName, $this->myUserName, $this->myPassword, $this->myDatabase );
 
     $this->GetOldColumns();
 
@@ -659,7 +654,7 @@ class SET_RoutineLoader
 
   /** The name of the file with SQL statement to retreive table and column names, and column types.
    */
-  private $mySqlColumnTypeFileName;
+  private $mySqlColumnTypeFilename;
 
   /** The SQL mode under which the stored routine will be loaded and run.
    */
@@ -675,7 +670,7 @@ class SET_RoutineLoader
 
   /** The name of the configuration file of the target porject
    */
-  private $myTargetConfigFileName;
+  private $myTargetConfigFilename;
   /** @} */
 
 
@@ -686,7 +681,7 @@ class SET_RoutineLoader
 
   /** An array with all found .psql files.
    */
-  private $myPsqlFileNames = array();
+  private $myPsqlFilenames = array();
 
   /** The filename of the file with the metadata of all stored routines.
    */
@@ -702,7 +697,7 @@ class SET_RoutineLoader
 
   /** An array with psql filenames that are not loaded into MySQL.
    */
-  private $myErrorFileNames = array();
+  private $myErrorFilenames = array();
 
   /** Information about old routines.
    */
@@ -716,7 +711,7 @@ class SET_RoutineLoader
   */
   /** The current .psql filename.
    */
-  private $myCurrentPsqlFileName;
+  private $myCurrentPsqlFilename;
 
   /** The source code as a single string of the current .psql file.
    */
@@ -772,7 +767,7 @@ class SET_RoutineLoader
   private $myUserName;
   /** Uesr password.
    */
-  private $myPassWord;
+  private $myPassword;
   /** Name used databae.
    */
   private $myDatabase;
@@ -819,39 +814,39 @@ class SET_RoutineLoader
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Reads parameters from configuration @a $theConfigFileName
+  /** Reads parameters from configuration @a $theConfigFilename
    */
-  private function ReadConfigFile( $theConfigFileName )
+  private function ReadConfigFile( $theConfigFilename )
   {
-    $settings = parse_ini_file( $theConfigFileName, true );
+    $settings = parse_ini_file( $theConfigFilename, true );
     if ($settings===false) set_assert_failed( "Unable open configuration file" );
 
     $this->myHostName = $this->GetSetting( $settings, true,  'database', 'host_name');
     $this->myUserName = $this->GetSetting( $settings, true,  'database', 'user_name');
-    $this->myPassWord = $this->GetSetting( $settings, true,  'database', 'password');
+    $this->myPassword = $this->GetSetting( $settings, true,  'database', 'password');
     $this->myDatabase = $this->GetSetting( $settings, true,  'database', 'database_name');
 
     $this->myMetadataFilename      = $this->GetSetting( $settings, true,  'wrapper', 'metadata');
     $this->myIncludePath           = $this->GetSetting( $settings, true,  'loader',  'psql' );
-    $this->mySqlColumnTypeFileName = $this->GetSetting( $settings, true,  'loader',  'column_types_sql' );
-    $this->myTargetConfigFileName  = $this->GetSetting( $settings, false, 'loader',  'config' );
+    $this->mySqlColumnTypeFilename = $this->GetSetting( $settings, true,  'loader',  'column_types_sql' );
+    $this->myTargetConfigFilename  = $this->GetSetting( $settings, false, 'loader',  'config' );
     $this->mySqlMode               = $this->GetSetting( $settings, true,  'loader',  'sql_mode');
     $this->myCharacterSet          = $this->GetSetting( $settings, true,  'loader',  'character_set' );
     $this->myCollate               = $this->GetSetting( $settings, true,  'loader',  'collate' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Reads constants set in @c myTargetConfigFileName and adds them to @c myReplacePairs.
+  /** Reads constants set in @c myTargetConfigFilename and adds them to @c myReplacePairs.
    */
   private function GetConstants()
   {
-    // If myTargetConfigFileName is not set return immediatly.
-    if (!isset($this->myTargetConfigFileName)) return;
+    // If myTargetConfigFilename is not set return immediatly.
+    if (!isset($this->myTargetConfigFilename)) return;
 
-    if (!is_readable( $this->myTargetConfigFileName )) set_assert_failed( "Configuration file is not readable '%s'.",
-                                                                           $this->myTargetConfigFileName );
+    if (!is_readable( $this->myTargetConfigFilename )) set_assert_failed( "Configuration file is not readable '%s'.",
+                                                                           $this->myTargetConfigFilename );
 
-    require_once( $this->myTargetConfigFileName );
+    require_once( $this->myTargetConfigFilename );
     $constants    = get_defined_constants(true);
     $user_defined = (isset($constants['user'])) ? $constants['user'] : array();
 
@@ -870,32 +865,32 @@ class SET_RoutineLoader
   {
     if($theSourceDir===null) $theSourceDir = $this->myIncludePath;
 
-    $psql_file_names = glob( "$theSourceDir/*.psql" );
-    foreach( $psql_file_names as $psql_file_name )
+    $psql_filenames = glob( "$theSourceDir/*.psql" );
+    foreach( $psql_filenames as $psql_filename )
     {
-      $base_name = basename( $psql_file_name, '.psql' );
-      if (!isset($this->myPsqlFileNames[$base_name]))
+      $base_name = basename( $psql_filename, '.psql' );
+      if (!isset($this->myPsqlFilenames[$base_name]))
       {
-        $this->myPsqlFileNames[$base_name] = $psql_file_name;
+        $this->myPsqlFilenames[$base_name] = $psql_filename;
       }
       else
       {
         echo sprintf( "Error: Files '%s' and '%s' have the same basename.\n",
-                      $this->myPsqlFileNames[$base_name],
-                      $psql_file_name );
-        $this->myErrorFileNames[] = $psql_file_name;
+                      $this->myPsqlFilenames[$base_name],
+                      $psql_filename );
+        $this->myErrorFilenames[] = $psql_filename;
       }
     }
 
-    $file_names = scandir( $theSourceDir );
+    $filenames = scandir( $theSourceDir );
     $dir_names = array();
-    foreach( $file_names as $file_name )
+    foreach( $filenames as $filename )
     {
-      if (is_dir( $theSourceDir.'/'.$file_name ))
+      if (is_dir( $theSourceDir.'/'.$filename ))
       {
-        if ($file_name!='.' && $file_name!='..')
+        if ($filename!='.' && $filename!='..')
         {
-          $dir_names[] = $theSourceDir.'/'.$file_name;
+          $dir_names[] = $theSourceDir.'/'.$filename;
         }
       }
     }
@@ -951,9 +946,9 @@ class SET_RoutineLoader
     $ok = ksort( $this->myMetadata );
     if ($ok===false) set_assert_failed( 'Internal error.' );
 
-    foreach( $this->myMetadata as $routine_propertys )
+    foreach( $this->myMetadata as $routine_properties )
     {
-      $n = fputcsv( $handle, $routine_propertys );
+      $n = fputcsv( $handle, $routine_properties );
       if ($n===false) set_assert_failed( "Error writing file '%s'.", $this->myMetadataFilename );
     }
 
@@ -979,7 +974,7 @@ class SET_RoutineLoader
       {
         if (!isset($this->myReplacePairs[strtoupper( $placeholder )]))
         {
-          echo sprintf( "Error: Unknown placeholder '%s' in file '%s'.\n", $placeholder, $this->myCurrentPsqlFileName );
+          echo sprintf( "Error: Unknown placeholder '%s' in file '%s'.\n", $placeholder, $this->myCurrentPsqlFilename );
           $ret = false;
         }
 
@@ -1039,7 +1034,7 @@ class SET_RoutineLoader
     if ($ret===false)
     {
       echo sprintf( "Error: Unable to find the desgination type of the stored routine in file '%s'.",
-                    $this->myCurrentPsqlFileName );
+                    $this->myCurrentPsqlFilename );
     }
 
     return $ret;
@@ -1066,7 +1061,7 @@ class SET_RoutineLoader
       {
         echo sprintf( "Error: Stored routine name '%s' does not match filename in file '%s'.\n",
                       $this->myCurrentRoutineName,
-                      $this->myCurrentPsqlFileName );
+                      $this->myCurrentPsqlFilename );
         $ret = false;
       }
     }
@@ -1078,7 +1073,7 @@ class SET_RoutineLoader
     if (!isset($this->myCurrentRoutineType))
     {
       echo sprintf( "Error: Unable to find the stored routine name and type in file '%s'.\n",
-                    $this->myCurrentPsqlFileName );
+                    $this->myCurrentPsqlFilename );
     }
 
     return $ret;
@@ -1137,7 +1132,7 @@ class SET_RoutineLoader
     $old_replace_pairs = unserialize( $this->myCurrentOldMetadata['replace'] );
     if ($old_replace_pairs===false)
     {
-      set_assert_failed( "Unable to unserialize replcae pairs for stored routine '%s'.", $this->myCurrentRoutineName );
+      set_assert_failed( "Unable to unserialize replace pairs for stored routine '%s'.", $this->myCurrentRoutineName );
     }
 
     // If the value of placeholder has changed the current .psql file is must be loaded.
@@ -1159,12 +1154,11 @@ class SET_RoutineLoader
     // If current collation different to set in current routine, .psql file is must reload.
     if ($this->myOldRoutines[$this->myCurrentRoutineName]['collation_connection']!=$this->myCollate) return true;
 
-
     return false;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Loads the stored routine in file @c myCurrentPsqlFileName into MySQL.
+  /** Loads the stored routine in file @c myCurrentPsqlFilename into MySQL.
       Returns @c true on success, @c false otherwise.
    */
   private function LoadPsqlFile()
@@ -1183,42 +1177,41 @@ class SET_RoutineLoader
     try
     {
       // We assume that the basename of the .psql file and routine name are equal.
-      $this->myCurrentRoutineName = basename( $this->myCurrentPsqlFileName, '.psql' );
+      $this->myCurrentRoutineName = basename( $this->myCurrentPsqlFilename, '.psql' );
 
       // Save old metadata.
-      $this->myCurrentOldMetadata = (isset($this->myMetadata[$this->myCurrentRoutineName]))
-      ? $this->myMetadata[$this->myCurrentRoutineName]
-      : null;
+      $this->myCurrentOldMetadata = (isset($this->myMetadata[$this->myCurrentRoutineName])) ?
+                                    $this->myMetadata[$this->myCurrentRoutineName] : null;
 
       // Get mtime of the source file.
-      $this->myCurrentMtime = filemtime( $this->myCurrentPsqlFileName );
+      $this->myCurrentMtime = filemtime( $this->myCurrentPsqlFilename );
       if ($this->myCurrentMtime===false) set_assert_failed( "Unable to get mtime of file '%s'.",
-                                                            $this->myCurrentPsqlFileName );
+                                                            $this->myCurrentPsqlFilename );
 
       // Load the stored routine into MySQL only if the source has changed or the value of a placeholder.
       $load = $this->GetCurrentMustReload();
       if ($load)
       {
         // Read the psql source code.
-        $this->myCurrentPsqlSourceCode = file_get_contents( $this->myCurrentPsqlFileName );
+        $this->myCurrentPsqlSourceCode = file_get_contents( $this->myCurrentPsqlFilename );
         if ($this->myCurrentPsqlSourceCode===false)
         {
-          set_assert_failed( "Unable to read file '%s'.", $this->myCurrentPsqlFileName );
+          set_assert_failed( "Unable to read file '%s'.", $this->myCurrentPsqlFilename );
         }
 
         // Split the psql source code into lines.
-        $this->myCurrentPsqlSourceCodeLines =  explode( "\n", $this->myCurrentPsqlSourceCode );
+        $this->myCurrentPsqlSourceCodeLines = explode( "\n", $this->myCurrentPsqlSourceCode );
         if ($this->myCurrentPsqlSourceCodeLines===false) return false;
 
-        // Extract placeholders from the psql source code.
-        $ok = $this->GetCurrentPlaceholders( $this->myCurrentPsqlSourceCode, $this->myCurrentPsqlFileName );
+        // Extract placeholders from the .psql source code.
+        $ok = $this->GetCurrentPlaceholders( $this->myCurrentPsqlSourceCode, $this->myCurrentPsqlFilename );
         if ($ok===false) return false;
 
-        // Extract the designation type and key or index columns from the psql source code.
+        // Extract the designation type and key or index columns from the .psql source code.
         $ok = $this->GetCurrentType();
         if ($ok===false) return false;
 
-        // Extract the routine type (procedure or function) and routine name from the psql source code.
+        // Extract the routine type (procedure or function) and routine name from the .psql source code.
         $ok = $this->GetCurrentName();
         if ($ok===false) return false;
 
@@ -1235,7 +1228,7 @@ class SET_RoutineLoader
     {
       echo $e->getMessage();
 
-      $this->myErrorFileNames[] = $this->myCurrentPsqlFileName;
+      $this->myErrorFilenames[] = $this->myCurrentPsqlFilename;
 
       return false;
     }
@@ -1247,8 +1240,8 @@ class SET_RoutineLoader
    */
   private function GetColumnTypes()
   {
-    $query = file_get_contents( $this->mySqlColumnTypeFileName );
-    if ($query===false) set_assert_failed( "Unable to read file '%s'.", $this->mySqlColumnTypeFileName );
+    $query = file_get_contents( $this->mySqlColumnTypeFilename );
+    if ($query===false) set_assert_failed( "Unable to read file '%s'.", $this->mySqlColumnTypeFilename );
 
     $rows = SET_DL::ExecuteRows( $query );
 
@@ -1295,9 +1288,9 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
    */
   private function RemoveObsoleteMetadata()
   {
-    foreach ( $this->myPsqlFileNames as $myPsqlFileName )
+    foreach ( $this->myPsqlFilenames as $myPsqlFilename )
     {
-      $tmp = basename( $myPsqlFileName, '.psql' );
+      $tmp = basename( $myPsqlFilename, '.psql' );
       if (isset($this->myMetadata[$tmp])) $clen[$tmp] = $this->myMetadata[$tmp];
     }
     $this->myMetadata = $clen;
@@ -1347,7 +1340,7 @@ order by routine_name";
   {
     foreach( $this->myOldRoutines as $old_routine )
     {
-      if (!isset($this->myPsqlFileNames[$old_routine['routine_name']]))
+      if (!isset($this->myPsqlFilenames[$old_routine['routine_name']]))
       {
         echo sprintf( "Dropping %s %s\n",
                       strtolower( $old_routine['routine_type'] ),
@@ -1361,30 +1354,30 @@ order by routine_name";
 
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Get all .psql into $this->myPsqlFileNames file from list.
+  /** Get all .psql into $this->myPsqlFilenames file from list.
    */
-  private function GetPsqlFileName( $theFilenames )
+  private function GetPsqlFilename( $theFilenames )
   {
-    foreach( $theFilenames as $psql_file_name )
+    foreach( $theFilenames as $psql_filename )
     {
-      if (file_exists( $psql_file_name ))
+      if (file_exists( $psql_filename ))
       {
-        $base_name = basename( $psql_file_name, '.psql' );
-        if (!isset($this->myPsqlFileNames[$base_name]))
+        $base_name = basename( $psql_filename, '.psql' );
+        if (!isset($this->myPsqlFilenames[$base_name]))
         {
-          $this->myPsqlFileNames[$base_name] = $psql_file_name;
+          $this->myPsqlFilenames[$base_name] = $psql_filename;
         }
         else
         {
           echo sprintf( "Error: Files '%s' and '%s' have the same basename.\n",
-                        $this->myPsqlFileNames[$base_name],
-                        $psql_file_name );
-          $this->myErrorFileNames[] = $psql_file_name;
+                        $this->myPsqlFilenames[$base_name],
+                        $psql_filename );
+          $this->myErrorFilenames[] = $psql_filename;
         }
       }
       else
       {
-        echo sprintf( " Not correct set name file or file not exists: '%s'.\n", $psql_file_name);
+        echo sprintf( " Not correct set name file or file not exists: '%s'.\n", $psql_filename);
       }
     }
   }
@@ -1392,11 +1385,11 @@ order by routine_name";
   //--------------------------------------------------------------------------------------------------------------------
   /** Get all .psql file from source directory and processed their.
    */
-  private function LoadAll( $theConfigFileName )
+  private function LoadAll( $theConfigFilename )
   {
-    $this->ReadConfigFile( $theConfigFileName );
+    $this->ReadConfigFile( $theConfigFilename );
 
-    SET_DL::Connect( $this->myHostName, $this->myUserName, $this->myPassWord, $this->myDatabase );
+    SET_DL::Connect( $this->myHostName, $this->myUserName, $this->myPassword, $this->myDatabase );
 
     $this->FindPsqlFiles();
     $this->GetColumnTypes();
@@ -1405,12 +1398,12 @@ order by routine_name";
     $this->GetOldRoutines();
     $this->GetCorrectSqlMode();
 
-    foreach( $this->myPsqlFileNames as $this->myCurrentPsqlFileName )
+    foreach( $this->myPsqlFilenames as $this->myCurrentPsqlFilename )
     {
       $err = $this->LoadPsqlFile();
       if ($err===false)
       {
-        $this->myErrorFileNames = $this->myCurrentPsqlFileName;
+        $this->myErrorFilenames = $this->myCurrentPsqlFilename;
         unset($this->myMetadata[$this->myCurrentRoutineName]);
       }
     }
@@ -1421,7 +1414,7 @@ order by routine_name";
     // Remove metadata of store routines that have been removed.
     $this->RemoveObsoleteMetadata();
 
-    // Write the metadata to @c $myMetadataFileName.
+    // Write the metadata to @c $myMetadataFilename.
     $this->WriteRoutineMetadata();
 
     SET_DL::Disconnect();
@@ -1430,46 +1423,47 @@ order by routine_name";
   //--------------------------------------------------------------------------------------------------------------------
   /** Get all .psql file from list set in command line and processed their.
    */
-  private function LoadList( $theConfigFileName, $theFilenames )
+  private function LoadList( $theConfigFilename, $theFilenames )
   {
-    $this->ReadConfigFile( $theConfigFileName );
+    $this->ReadConfigFile( $theConfigFilename );
 
-    SET_DL::Connect( $this->myHostName, $this->myUserName, $this->myPassWord, $this->myDatabase );
+    SET_DL::Connect( $this->myHostName, $this->myUserName, $this->myPassword, $this->myDatabase );
 
-    $this->GetPsqlFileName( $theFilenames );
+    $this->GetPsqlFilename( $theFilenames );
     $this->GetColumnTypes();
     $this->ReadRoutineMetaData();
     $this->GetConstants();
     $this->GetOldRoutines();
     $this->GetCorrectSqlMode();
 
-    foreach( $this->myPsqlFileNames as $this->myCurrentPsqlFileName )
+    foreach( $this->myPsqlFilenames as $this->myCurrentPsqlFilename )
     {
       $err = $this->LoadPsqlFile();
       if ($err===false)
       {
-        $this->myErrorFileNames = $this->myCurrentPsqlFileName;
+        $this->myErrorFilenames = $this->myCurrentPsqlFilename;
         unset($this->myMetadata[$this->myCurrentRoutineName]);
       }
     }
 
-    // Write the metadata to @c $myMetadataFileName.
+    // Write the metadata to @c $myMetadataFilename.
     $this->WriteRoutineMetadata();
 
     SET_DL::Disconnect();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  public function Run( $theConfigFileName, $theFilenames )
+  public function Run( $theConfigFilename, $theFilenames )
   {
     if (empty($theFilenames))
     {
-      $this->LoadAll( $theConfigFileName );
+      $this->LoadAll( $theConfigFilename );
     }
     else
     {
-      $this->LoadList( $theConfigFileName, $theFilenames );
+      $this->LoadList( $theConfigFilename, $theFilenames );
     }
+
     return 0;
   }
 
@@ -1479,7 +1473,7 @@ order by routine_name";
 //----------------------------------------------------------------------------------------------------------------------
 /** @brief abstract supper class for generation stored routine wrapper methods based on the type of the stored routine.
  */
-abstract class SET_RoutineWrapper_abstract
+abstract class SET_RoutineWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /** The constant contain width page (in chars).
@@ -1690,7 +1684,7 @@ abstract class SET_RoutineWrapper_abstract
         break;
 
       default:
-        set_assert_failed( "Unknown arg type '$arg_type'." );
+        set_assert_failed( "Unknown argument type '%s'.", $arg_type );
       }
     }
 
@@ -1714,10 +1708,10 @@ abstract class SET_RoutineWrapper_abstract
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Generates code for the arguments for calling the stored routine in a wrapper method.
-      @param $theType array with the argument type of a Stored Routine.
+  /** Returns the type of the corresponding bind variable. @sa http://php.net/manual/en/mysqli-stmt.bind-param.php
+      @param $theType The argument type of on argument of a stored routine.
    */
-  protected function GetTypeForLob( $theType )
+  protected function GetBindVariableType( $theType )
   {
     $ret = '';
     switch ($theType)
@@ -1764,7 +1758,7 @@ abstract class SET_RoutineWrapper_abstract
       break;
 
     default:
-          set_assert_failed( "Unknown type '%s'.", $theType );
+      set_assert_failed( "Unknown argument type '%s'.", $theType );
     }
 
     return $ret;
@@ -1812,7 +1806,7 @@ abstract class SET_RoutineWrapper_abstract
     $nulls = '';
     foreach( $argument_types as $theType )
     {
-      $type = $this->GetTypeForLob( $theType );
+      $type = $this->GetBindVariableType( $theType );
       if ($type=='b')
       {
         $types .= 'b';
@@ -1838,7 +1832,7 @@ abstract class SET_RoutineWrapper_abstract
     $blob_argument_index = 0;
     foreach( $argument_types as $i => $argument )
     {
-      if ($this->GetTypeForLob( $argument )=='b')
+      if ($this->GetBindVariableType( $argument )=='b')
       {
         $this->Writeline( '$n = strlen( $theArg'.$i.' );' );
         $this->Writeline( '$p = 0;' );
@@ -1907,7 +1901,7 @@ abstract class SET_RoutineWrapper_abstract
 
     $has_blob = $this->IsBlobArgument( $theArgumentsType );
 
-    if ($has_blob==true)
+    if ($has_blob)
     {
       return $this->WriteRoutineFunctionWithLob( $theRoutine );
     }
@@ -1984,7 +1978,7 @@ abstract class SET_RoutineWrapper_abstract
       break;
 
     default:
-      set_assert_failed( "Unknown routine type '%s'.", $theRoutine['columns'] );
+      set_assert_failed( "Unknown routine type '%s'.", $theRoutine['type'] );
     }
 
     $wrapper = new $class();
@@ -1998,7 +1992,7 @@ abstract class SET_RoutineWrapper_abstract
 //----------------------------------------------------------------------------------------------------------------------
 /** @brief Class for generating a wrapper function around a stored procedure that uses for large volumes of data.
  */
-class SET_RoutineWrapperBulk extends SET_RoutineWrapper_abstract
+class SET_RoutineWrapperBulk extends SET_RoutineWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /** Generates code for calling the stored routine in the wrapper method.
@@ -2030,7 +2024,7 @@ class SET_RoutineWrapperBulk extends SET_RoutineWrapper_abstract
 /** @brief Class for generating a wrapper function around a stored procedure that returns nothing but writes the rows of
  *  the results sets to the standard out.
  */
-class SET_RoutineWrapperLog extends SET_RoutineWrapper_abstract
+class SET_RoutineWrapperLog extends SET_RoutineWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /** Generates code for calling the stored routine in the wrapper method.
@@ -2061,7 +2055,7 @@ class SET_RoutineWrapperLog extends SET_RoutineWrapper_abstract
 //----------------------------------------------------------------------------------------------------------------------
 /** @brief Class for generating a wrapper function around a stored procedure that doesn't return anything.
  */
-class SET_RoutineWrapperNone extends SET_RoutineWrapper_abstract
+class SET_RoutineWrapperNone extends SET_RoutineWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /** Generates code for calling the stored routine in the wrapper method.
@@ -2093,7 +2087,7 @@ class SET_RoutineWrapperNone extends SET_RoutineWrapper_abstract
 //----------------------------------------------------------------------------------------------------------------------
 /** @brief Class for generating a wrapper function around a stored procedure that selects 0 or 1 rows.
  */
-class SET_RoutineWrapperRow0 extends SET_RoutineWrapper_abstract
+class SET_RoutineWrapperRow0 extends SET_RoutineWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /** Generates code for calling the stored routine in the wrapper method.
@@ -2142,7 +2136,7 @@ class SET_RoutineWrapperRow0 extends SET_RoutineWrapper_abstract
 //----------------------------------------------------------------------------------------------------------------------
 /** @brief Class for generating a wrapper function around a stored procedure that selects 1 and only 1 rows.
  */
-class SET_RoutineWrapperRow1 extends SET_RoutineWrapper_abstract
+class SET_RoutineWrapperRow1 extends SET_RoutineWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /** Generates code for calling the stored routine in the wrapper method.
@@ -2189,7 +2183,7 @@ class SET_RoutineWrapperRow1 extends SET_RoutineWrapper_abstract
 //----------------------------------------------------------------------------------------------------------------------
 /** @brief Class for generating a wrapper function around a stored procedure that selects 0 or more rows.
  */
-class SET_RoutineWrapperRows extends SET_RoutineWrapper_abstract
+class SET_RoutineWrapperRows extends SET_RoutineWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /** Generates code for calling the stored routine in the wrapper method.
@@ -2235,7 +2229,7 @@ class SET_RoutineWrapperRows extends SET_RoutineWrapper_abstract
 //----------------------------------------------------------------------------------------------------------------------
 /** @brief Class for generating a wrapper function around a stored procedure that selects rows on keys.
  */
-class SET_RoutineWrapperRowsWithKey extends SET_RoutineWrapper_abstract
+class SET_RoutineWrapperRowsWithKey extends SET_RoutineWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /** Generates code for calling the stored routine in the wrapper method.
@@ -2294,7 +2288,7 @@ class SET_RoutineWrapperRowsWithKey extends SET_RoutineWrapper_abstract
 //----------------------------------------------------------------------------------------------------------------------
 /** @brief Class for generating a wrapper function around a stored procedure that selects rows on index.
  */
-class SET_RoutineWrapperRowsWithIndex extends SET_RoutineWrapper_abstract
+class SET_RoutineWrapperRowsWithIndex extends SET_RoutineWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /** Generates code for calling the stored routine in the wrapper method.
@@ -2354,7 +2348,7 @@ class SET_RoutineWrapperRowsWithIndex extends SET_RoutineWrapper_abstract
 //----------------------------------------------------------------------------------------------------------------------
 /** @brief Class for generating a wrapper function around a stored procedure that returns a scalar or 0.
  */
-class SET_RoutineWrapperSingleton0 extends SET_RoutineWrapper_abstract
+class SET_RoutineWrapperSingleton0 extends SET_RoutineWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /** Generates code for calling the stored routine in the wrapper method.
@@ -2404,7 +2398,7 @@ class SET_RoutineWrapperSingleton0 extends SET_RoutineWrapper_abstract
 //----------------------------------------------------------------------------------------------------------------------
 /** @brief Class for generating a wrapper function around a stored procedure that returns a scalar.
  */
-class SET_RoutineWrapperSingleton1 extends SET_RoutineWrapper_abstract
+class SET_RoutineWrapperSingleton1 extends SET_RoutineWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /** Generates code for calling the stored routine in the wrapper method.
@@ -2454,7 +2448,7 @@ class SET_RoutineWrapperSingleton1 extends SET_RoutineWrapper_abstract
 /** @brief Klasse voor een programma voor het aanmaken aan een klasse met wrappers functies voor Stored Routines in het
     SET schema.
  */
-class SET_RoutineWrapper
+class SET_RoutineWrapperGenerator
 {
   /** Processed code function.
    */
@@ -2462,11 +2456,11 @@ class SET_RoutineWrapper
 
   /** The filename of the template.
    */
-  private $myTemplateFileName;
+  private $myTemplateFilename;
 
   /** The filename where the generated wrapper class must be stored
    */
-  private $myWrapperFileName;
+  private $myWrapperFilename;
 
   /** The filename of the file with the metadata of all stored procedures.
    */
@@ -2474,7 +2468,7 @@ class SET_RoutineWrapper
 
   /** The filename of the configuration file.
    */
-  private $myConfigurationFileName;
+  private $myConfigurationFilename;
 
   //--------------------------------------------------------------------------------------------------------------------
   /** Generates a complete wrapper method for a Stored Routine.
@@ -2482,7 +2476,7 @@ class SET_RoutineWrapper
    */
   private function WriteRoutineFunction( $theRoutine )
   {
-    $wrapper = SET_RoutineWrapper_abstract::CreateRoutineWrapper( $theRoutine );
+    $wrapper = SET_RoutineWrapper::CreateRoutineWrapper( $theRoutine );
 
     $this->myCode .= $wrapper->WriteRoutineFunction( $theRoutine );
   }
@@ -2492,10 +2486,10 @@ class SET_RoutineWrapper
    */
   private function ReadRoutineMetaData()
   {
-    $theFileName = $this->myMetadataFilename;
+    $theFilename = $this->myMetadataFilename;
 
-    $handle = fopen( $theFileName, 'r' );
-    if ($handle===null) set_assert_failed( "Unable to open file '%s'.", $theFileName );
+    $handle = fopen( $theFilename, 'r' );
+    if ($handle===null) set_assert_failed( "Unable to open file '%s'.", $theFilename );
 
     // Skip header row.
     fgetcsv( $handle, 0, ',' );
@@ -2511,7 +2505,7 @@ class SET_RoutineWrapper
       {
         set_assert_failed( "Error at line %d in file '%s'. Expecting %d fields but found %d fields.",
                            $line_number,
-                           $theFileName,
+                           $theFilename,
                            6,
                            $n );
       }
@@ -2523,7 +2517,7 @@ class SET_RoutineWrapper
     }
 
     $err = fclose( $handle );
-    if ($err===false) set_assert_failed( "Error closing file '%s'.", $theFileName );
+    if ($err===false) set_assert_failed( "Error closing file '%s'.", $theFilename );
 
     return $routines;
   }
@@ -2538,7 +2532,7 @@ class SET_RoutineWrapper
     {
       set_assert_failed( "Section '%s' not found in configuration file '%s'.",
                          $theSectionName,
-                         $this->myConfigurationFileName );
+                         $this->myConfigurationFilename );
     }
 
     // Test if the setting in the section exists.
@@ -2547,32 +2541,32 @@ class SET_RoutineWrapper
       set_assert_failed( "Setting '%s' not found in section '%s' configuration file '%s'.",
                          $theSettingName,
                          $theSectionName,
-                         $this->myConfigurationFileName );
+                         $this->myConfigurationFilename );
     }
 
     return $theSettings[$theSectionName][$theSettingName];
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Read parameters from the configuration file @c $myConfigurationFileName.
+  /** Read parameters from the configuration file @c $myConfigurationFilename.
    */
   private function ReadConfigurationFile()
   {
-    $settings = parse_ini_file( $this->myConfigurationFileName, true );
-    if ($settings===false) set_assert_failed( "Unable open configuration file '%s'", $this->myConfigurationFileName );
+    $settings = parse_ini_file( $this->myConfigurationFilename, true );
+    if ($settings===false) set_assert_failed( "Unable open configuration file '%s'", $this->myConfigurationFilename );
 
-    $this->myTemplateFileName = $this->GetSetting( $settings, 'wrapper', 'template' );
-    $this->myWrapperFileName  = $this->GetSetting( $settings, 'wrapper', 'wrapper' );
-    $this->myMetadataFilename = $this->GetSetting( $settings, 'wrapper', 'metadata');
+    $this->myTemplateFilename = $this->GetSetting( $settings, 'wrapper', 'template' );
+    $this->myWrapperFilename  = $this->GetSetting( $settings, 'wrapper', 'wrapper'  );
+    $this->myMetadataFilename = $this->GetSetting( $settings, 'wrapper', 'metadata' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /** Construction class for stored routine wrapper.
-      @param $ConfigurationFileName The path file configuration.
+      @param $ConfigurationFilename The path file configuration.
    */
-  public function Run( $ConfigurationFileName )
+  public function Run( $theConfigurationFilename )
   {
-    $this->myConfigurationFileName = $ConfigurationFileName;
+    $this->myConfigurationFilename = $theConfigurationFilename;
 
     $this->ReadConfigurationFile();
 
@@ -2585,24 +2579,72 @@ class SET_RoutineWrapper
 
     $replace['  /* AUTO_GENERATED_ROUINE_WRAPPERS */'] =  $this->myCode;
 
-    $code = file_get_contents( $this->myTemplateFileName );
-    if ($code===false)
-    {
-      set_assert_failed("Error reading file %s", $this->myTemplateFileName );
-    }
+    $code = file_get_contents( $this->myTemplateFilename );
+    if ($code===false) set_assert_failed( "Error reading file %s", $this->myTemplateFilename );
 
     $code = strtr( $code, $replace );
 
-    $bytes = file_put_contents( $this->myWrapperFileName, $code );
-    if ($bytes===false)
-    {
-      set_assert_failed("Error writing file %s", $this->myWrapperFileName );
-    }
+    $bytes = file_put_contents( $this->myWrapperFilename, $code );
+    if ($bytes===false) set_assert_failed( "Error writing file %s", $this->myWrapperFilename );
 
     return 0;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+function Synopsis()
+{
+  echo "Synopsis: dlgen [-f] -c <configuration file> [routine.psql] ... \n";
+  echo "          dlgen -h\n";
+
+  exit( 1 );
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+function GetSetting( $options )
+{
+  // skip first key with current file name.
+  array_shift( $options );
+  $setting['psql_files'] = array();
+  while (($param = array_shift( $options ))!==null)
+  {
+    switch ($param)
+    {
+    case '-f':
+    case '--fast':
+      $setting['fast'] = true;
+      break;
+
+    case '-c':
+    case '--config':
+      $setting['config'] = array_shift( $options );
+      break;
+
+    case '-h':
+    case '--help':
+      Synopsis();
+      break;
+
+    default:
+      $n = preg_match( "([A-Za-z0-9\_/]+.psql)", $param, $regs );
+      if ($n===false) set_assert_failed( 'Internal error.' );
+      if ($n==1)
+      {
+        $setting['psql_files'][]= $regs[0];
+      }
+      else
+      {
+        Synopsis();
+      }
+      break;
+    }
+  }
+
+  if (!isset($setting['config'])) Synopsis();
+
+  return $setting;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -2612,7 +2654,7 @@ function Main( $options )
 
   if (isset($setting['fast']))
   {
-    // For mode: only load stored routines.
+    // Fast mode: only load stored routines.
     $loader = new SET_RoutineLoader;
     $ret = $loader->Run( $setting['config'], $setting['psql_files'] );
     if ($ret!=0) exit( $ret );
@@ -2628,56 +2670,13 @@ function Main( $options )
     $ret = $loader->Run( $setting['config'], $setting['psql_files'] );
     if ($ret!=0) exit( $ret );
 
-    $wrapper = new SET_RoutineWrapper;
+    $wrapper = new SET_RoutineWrapperGenerator;
     $ret = $wrapper->Run( $setting['config'] );
     if ($ret!=0) exit( $ret );
   }
+
+  exit( 0 );
 }
 
-function GetSetting( $options )
-{
-  // skip first key with current file name.
-  array_shift($options);
-  $setting['psql_files'] = array();
-  while(($param = array_shift($options))!==null )
-  {
-    switch ($param)
-    {
-    case '-f':
-    case '-fast':
-      $setting['fast'] = true;
-      break;
-
-    case '-c':
-    case '-config':
-      $setting['config'] = array_shift($options);
-      break;
-
-    case '-h':
-    case '-help':
-      Synopsis();
-      break;
-
-    default:
-      $n = preg_match( "([A-Za-z0-9\_/]+.psql)", $param, $regs );
-      if (!$n===false)
-      {
-        $setting['psql_files'][]= $regs[0];
-      }
-      else Synopsis();
-      break;
-    }
-  }
-
-  if (!isset($setting['config'])) Synopsis();
-  return $setting;
-}
-
-function Synopsis()
-{
-  echo "Synopsis: dlgen [-f] -c <configuration file> [routine.psql]... \n";
-  echo "          dlgen -h\n";
-  exit(1);
-}
-
-Main($argv);
+//----------------------------------------------------------------------------------------------------------------------
+Main( $argv );
