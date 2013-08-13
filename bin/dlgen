@@ -574,7 +574,6 @@ where   nullif(`%s`,'') is not null";
     {
       $this->myConstants[$label] = $id;
     }
-
     $ok = ksort( $this->myConstants );
     if ($ok===false) set_assert_failed( 'Internal error.' );
   }
@@ -915,9 +914,9 @@ class SET_RoutineLoader
       if ($handle===null) set_assert_failed( "Unable to open file '%s'.", $this->myMetadataFilename );
 
       // Skip header row.
-      fgetcsv( $handle );
+      fgetcsv( $handle, 0, ',' );
 
-      while (($row = fgetcsv( $handle ))!==false)
+      while (($row = fgetcsv( $handle, 0, ','  ))!==false)
       {
         $this->myMetadata[$row[0]] = array( 'routine_name'   => $row[0],
                                             'type'           => $row[1],
@@ -2493,10 +2492,10 @@ class SET_RoutineWrapperGenerator
     if ($handle===null) set_assert_failed( "Unable to open file '%s'.", $theFilename );
 
     // Skip header row.
-    fgetcsv( $handle, 1000, ',' );
+    fgetcsv( $handle, 0, ',' );
     $line_number = 1;
 
-    while (($row = fgetcsv( $handle, 1000, ',' ))!==false)
+    while (($row = fgetcsv( $handle, 0, ',' ))!==false)
     {
       $line_number++;
 

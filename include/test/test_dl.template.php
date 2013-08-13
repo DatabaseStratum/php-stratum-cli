@@ -242,18 +242,18 @@ class TST_DL
   public function ExecuteRow0( $theQuery )
   {
     $result = self::Query( $theQuery );
+    $row    = $result->fetch_array( MYSQLI_ASSOC );
+    $n      = $result->num_rows;
+    $result->free();
 
-    if (!($result->num_rows==0 || $result->num_rows==1))
+    self::$ourMySql->next_result();
+
+    if (!($n==0 || $n==1))
     {
       TST_DL::AssertFailed( "Number of rows selected by query below is %d expected 0 or 1.\n%s",
                             $result->num_rows,
                             $theQuery );
-    }
-
-    $row    = $result->fetch_array( MYSQLI_ASSOC );
-    $result->free();
-
-    self::$ourMySql->next_result();
+    } // @codeCoverageIgnore
 
     return $row;
   }
@@ -264,17 +264,18 @@ class TST_DL
   public function ExecuteRow1( $theQuery )
   {
     $result = self::Query( $theQuery );
-    if ($result->num_rows!=1)
+    $row = $result->fetch_array( MYSQLI_ASSOC );
+    $n = $result->num_rows;
+    $result->free();
+
+    self::$ourMySql->next_result();
+
+    if($n!=1)
     {
       TST_DL::AssertFailed( "Number of rows selected by query below is %d expected 1.\n%s",
                             $result->num_rows,
                             $theQuery );
-    }
-
-    $row = $result->fetch_array( MYSQLI_ASSOC );
-    $result->free();
-
-    self::$ourMySql->next_result();
+    } // @codeCoverageIgnore
 
     return $row;
   }
@@ -301,18 +302,18 @@ class TST_DL
   public function ExecuteSingleton0( $theQuery )
   {
     $result = self::Query( $theQuery );
+    $row    = $result->fetch_array( MYSQL_NUM );
+    $n = $result->num_rows;
+    $result->free();
 
-    if (!($result->num_rows==0 || $result->num_rows==1))
+    self::$ourMySql->next_result();
+
+    if (!($n==0 || $n==1))
     {
       TST_DL::AssertFailed( "Number of rows selected by query below is %d expected 0 or 1.\n%s",
                             $result->num_rows,
                             $theQuery );
-    }
-
-    $row    = $result->fetch_array( MYSQL_NUM );
-    $result->free();
-
-    self::$ourMySql->next_result();
+    } // @codeCoverageIgnore
 
     return $row[0];
   }
@@ -324,17 +325,18 @@ class TST_DL
   public function ExecuteSingleton1( $theQuery )
   {
     $result = self::Query( $theQuery );
-    if ($result->num_rows!=1)
+    $row = $result->fetch_array( MYSQL_NUM );
+    $n = $result->num_rows;
+    $result->free();
+
+    self::$ourMySql->next_result();
+
+    if ($n!=1)
     {
       TST_DL::AssertFailed( "Number of rows selected by query below is %d expected 1.\n%s",
                             $result->num_rows,
                             $theQuery );
-    }
-
-    $row = $result->fetch_array( MYSQL_NUM );
-    $result->free();
-
-    self::$ourMySql->next_result();
+    } // @codeCoverageIgnore
 
     return $row[0];
   }
@@ -373,7 +375,7 @@ class TST_DL
     if ($theValue===true)        return 1;
 
     self::ThrowSqlError( "Value '$theValue' is not a number." );
-  }
+  } // @codeCoverageIgnore
 
   // -------------------------------------------------------------------------------------------------------------------
   /** Geeft een literal voor @a $theString terug die veilig gebruikt kan worden als string in SQL statements.
