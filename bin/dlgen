@@ -108,6 +108,14 @@ class SET_DL
   }
 
   //--------------------------------------------------------------------------------------------------------------------
+  /** Escapes special characters in a string @a $theString. Returns the safe string.
+   */
+  public static function realEscapeString( $theString )
+  {
+    return self::$ourMySql->real_escape_string( $theString );
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
   /** Voert query @a $theQuery uit. @a $theQuery mag 0 of meer rijen teruggeven.
    */
   public function executeRows( $theQuery )

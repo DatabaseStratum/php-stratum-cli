@@ -408,6 +408,46 @@ class TST_DL
   }
 
   //-------------------------------------------------------------------------------------------------------------------
+  /** @sa Stored Routine tst_magic_constant01.
+   */
+  static function MagicConstant01()
+  {
+    return self::ExecuteSingleton1( 'CALL tst_magic_constant01()');
+  }
+
+  //-------------------------------------------------------------------------------------------------------------------
+  /** @sa Stored Routine tst_magic_constant02.
+   */
+  static function MagicConstant02()
+  {
+    return self::ExecuteSingleton1( 'CALL tst_magic_constant02()');
+  }
+
+  //-------------------------------------------------------------------------------------------------------------------
+  /** @sa Stored Routine tst_magic_constant03.
+   */
+  static function MagicConstant03()
+  {
+    return self::ExecuteSingleton1( 'CALL tst_magic_constant03()');
+  }
+
+  //-------------------------------------------------------------------------------------------------------------------
+  /** @sa Stored Routine tst_magic_constant04.
+   */
+  static function MagicConstant04()
+  {
+    return self::ExecuteSingleton1( 'CALL tst_magic_constant04()');
+  }
+
+  //-------------------------------------------------------------------------------------------------------------------
+  /** @sa Stored Routine tst_magic_constant05.
+   */
+  static function MagicConstant05()
+  {
+    return self::ExecuteSingleton1( 'CALL tst_magic_constant05()');
+  }
+
+  //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test01.
    */
   static function Test01($theArg0,$theArg1,$theArg2,$theArg3,$theArg4,$theArg5,$theArg6,$theArg7,$theArg8,$theArg9,$theArg10,$theArg11,$theArg12,$theArg13,$theArg14,$theArg15,$theArg16,$theArg17,$theArg18,$theArg19)

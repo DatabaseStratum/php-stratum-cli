@@ -461,13 +461,50 @@ class  MySqlRoutineLoader
   }
 
   //--------------------------------------------------------------------------------------------------------------------
+  /** Add magic constants to constant list.
+   */
+  private function setMagicConsatnt()
+  {
+    $real_path  = realpath( $this->myCurrentPsqlFilename );
+
+    $this->myCurrentReplace['__FILE__'] = "'".\SET_DL::realEscapeString( $real_path  )."'";
+
+    $this->myCurrentReplace['__ROUTINE__'] =   "'".$this->myCurrentRoutineName."'";
+
+    $this->myCurrentReplace['__DIR__'] = "'".\SET_DL::realEscapeString( dirname( $real_path  ) )."'";
+
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /** Remove magic constant forom list.
+   */
+  private function unsetMagicConsatnt()
+  {
+    unset( $this->myCurrentReplace['__FILE__'] );
+    unset( $this->myCurrentReplace['__ROUTINE__'] );
+    unset( $this->myCurrentReplace['__DIR__'] );
+    unset( $this->myCurrentReplace['__LINE__'] );
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
   private function loadCurrentPsqlFile()
   {
     echo sprintf( "Loading %s %s\n",
                   $this->myCurrentRoutineType,
                   $this->myCurrentRoutineName );
 
-    $sql_source = strtr( $this->myCurrentPsqlSourceCode, $this->myCurrentReplace );
+    $this->setMagicConsatnt();
+
+    $lines = explode( "\n", $this->myCurrentPsqlSourceCode );
+    foreach( $lines as $i => &$line )
+    {
+      $this->myCurrentReplace['__LINE__']  = $i+1;
+      $sql_source[$i] = strtr( $line, $this->myCurrentReplace );
+    }
+
+    $sql_source = implode( "\n", $sql_source );
+
+    $this->unsetMagicConsatnt();
 
     // Drop the stored procedure or function if its exists.
     $this->dropCurrentRoutine();
