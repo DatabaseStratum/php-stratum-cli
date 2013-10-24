@@ -8,16 +8,25 @@ use       DataLayer;
  */
 class BulkInsert extends \DataLayer\MySqlRoutineWrapper
 {
-  /** XXX
-   */
-  private $myColumns;
-
-  /** XXX
+  /** Name of the temporary table.
    */
   private $myTableName;
 
+  /** Properties columns in the temporary table.
+   */
+  private $myColumns;
+
   //--------------------------------------------------------------------------------------------------------------------
-  /** XXX
+  /** Generates code for the arguments of the wrapper method for @a $theRoutine.
+      @param $theRoutine An array with the argument types of the stored routine.
+   */
+  protected function getWrapperArgs( $theRoutine )
+  {
+    return '$theData';
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /** Get name and properties of the temporary table from database.
    */
   private function getTableProperties( $theRoutine )
   {
@@ -46,9 +55,10 @@ class BulkInsert extends \DataLayer\MySqlRoutineWrapper
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** XXX
+  /** Sets shielding special characters for the field @a $fieldName, depends on the type value @a $theValueType
+      in this field.
    */
-  private function writeEscapedValue( $theValueType, $fieldName )
+  private function writeEscapesValue( $theValueType, $fieldName )
   {
     switch ($theValueType)
     {
@@ -100,11 +110,11 @@ class BulkInsert extends \DataLayer\MySqlRoutineWrapper
     case 'blob':
     case 'mediumblob':
     case 'longblob':
-      $ret = '?';
+      set_assert_failed( "LOBs are not possible in temporary tables" );
       break;
 
     default:
-      set_assert_failed( "Unknown value type '%s'.", $theValueType );
+      set_assert_failed( "Unknown type '%s'.", $theValueType );
     }
 
     return $ret;
@@ -137,7 +147,8 @@ class BulkInsert extends \DataLayer\MySqlRoutineWrapper
         if ($columns) $columns .= ',';
         $columns .= '`'.$this->myColumns[$i]['field'].'`';
 
-        $fields .= $this->writeEscapedValue( $this->myColumns[$i]['type'], '\''.$field.'\'' );
+        if ($fields) $fields .= ',';
+        $fields .= $this->writeEscapesValue( $this->myColumns[$i]['type'], '$row[\''.$field.'\']' );
       }
     }
 

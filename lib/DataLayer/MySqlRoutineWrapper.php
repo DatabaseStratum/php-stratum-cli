@@ -151,9 +151,9 @@ abstract class MySqlRoutineWrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /** Generates code for the arguments of the wrapper method for @a $theRoutine.
-      @param $theRoutine An arry with the argument types of the stored routine.
+      @param $theRoutine An array with the argument types of the stored routine.
    */
-  private function getWrapperArgs( $theRoutine )
+  protected function getWrapperArgs( $theRoutine )
   {
     if ($theRoutine['argument_types']) $argument_types = explode( ',', $theRoutine['argument_types'] );
     else                               $argument_types = array();

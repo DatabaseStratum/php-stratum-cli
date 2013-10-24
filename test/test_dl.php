@@ -552,17 +552,34 @@ class TST_DL
   }
 
   //-------------------------------------------------------------------------------------------------------------------
-  /** @sa Stored Routine tst_test_bulk_insert.
+  /** @sa Stored Routine tst_test_bulk_insert01.
    */
-  static function TestBulkInsert()
+  static function TestBulkInsert01($theData)
   {
-    self::Query(  'CALL tst_test_bulk_insert()');
-    $sql = "INSERT INTO `TMP_FENCER`(`imp_fencer_id`,`gen_id`,`imp_last_name`,`imp_first_name`,`imp_birthday`,`imp_club`,`imp_country`,`imp_national_registration`,`imp_international_registration`)";
+    self::Query(  'CALL tst_test_bulk_insert01()');
+    $sql = "INSERT INTO `TST_TEMPO`(`tst_col1`,`tst_col2`,`tst_col3`,`tst_col4`,`tst_col5`,`tst_col6`,`tst_col7`,`tst_col8`,`tst_col9`,`tst_col10`,`tst_col11`,`tst_col12`,`tst_col13`,`tst_col14`,`tst_col15`,`tst_col16`,`tst_col17`,`tst_col18`,`tst_col19`,`tst_col20`)";
     $first = true;
     foreach( $theData as $row )
     {
-        if ($first) $sql .=' values('.self::QuoteString('id').''.self::QuoteNum('gen_id').''.self::QuoteString('last_name').''.self::QuoteString('first_name').''.self::QuoteString('birthday').''.self::QuoteString('club').''.self::QuoteString('imp_country').''.self::QuoteString('national_registration').''.self::QuoteString('international_registration').')';
-        else        $sql .=',      ('.self::QuoteString('id').''.self::QuoteNum('gen_id').''.self::QuoteString('last_name').''.self::QuoteString('first_name').''.self::QuoteString('birthday').''.self::QuoteString('club').''.self::QuoteString('imp_country').''.self::QuoteString('national_registration').''.self::QuoteString('international_registration').')';
+        if ($first) $sql .=' values('.self::QuoteNum($row['field1']).','.self::QuoteNum($row['field2']).','.self::QuoteNum($row['field3']).','.self::QuoteNum($row['field4']).','.self::QuoteNum($row['field5']).','.self::QuoteNum($row['field6']).','.self::QuoteNum($row['field7']).','.self::QuoteNum($row['field8']).','.self::QuoteNum($row['field9']).','.self::QuoteString($row['field10']).','.self::QuoteString($row['field11']).','.self::QuoteString($row['field12']).','.self::QuoteString($row['field13']).','.self::QuoteString($row['field14']).','.self::QuoteString($row['field15']).','.self::QuoteString($row['field16']).','.self::QuoteString($row['field17']).','.self::QuoteString($row['field18']).','.self::QuoteString($row['field19']).','.self::QuoteBit($row['field20']).')';
+        else        $sql .=',      ('.self::QuoteNum($row['field1']).','.self::QuoteNum($row['field2']).','.self::QuoteNum($row['field3']).','.self::QuoteNum($row['field4']).','.self::QuoteNum($row['field5']).','.self::QuoteNum($row['field6']).','.self::QuoteNum($row['field7']).','.self::QuoteNum($row['field8']).','.self::QuoteNum($row['field9']).','.self::QuoteString($row['field10']).','.self::QuoteString($row['field11']).','.self::QuoteString($row['field12']).','.self::QuoteString($row['field13']).','.self::QuoteString($row['field14']).','.self::QuoteString($row['field15']).','.self::QuoteString($row['field16']).','.self::QuoteString($row['field17']).','.self::QuoteString($row['field18']).','.self::QuoteString($row['field19']).','.self::QuoteBit($row['field20']).')';
+        $first = false;
+    }
+    self::Query( $sql );
+  }
+
+  //-------------------------------------------------------------------------------------------------------------------
+  /** @sa Stored Routine tst_test_bulk_insert02.
+   */
+  static function TestBulkInsert02($theData)
+  {
+    self::Query(  'CALL tst_test_bulk_insert02()');
+    $sql = "INSERT INTO `TST_TEMPO`(`tst_col1`,`tst_col4`,`tst_col5`)";
+    $first = true;
+    foreach( $theData as $row )
+    {
+        if ($first) $sql .=' values('.self::QuoteNum($row['field1']).','.self::QuoteNum($row['field4']).','.self::QuoteNum($row['field5']).')';
+        else        $sql .=',      ('.self::QuoteNum($row['field1']).','.self::QuoteNum($row['field4']).','.self::QuoteNum($row['field5']).')';
         $first = false;
     }
     self::Query( $sql );

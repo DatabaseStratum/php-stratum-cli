@@ -41,7 +41,7 @@ class QuoteTest extends PHPUnit_Framework_TestCase
   {
     try
     {
-       $n = TST_DL::Test01( ($theColumn=='int')           ? $theValue : null,        // tst_c00 int
+       $n = TST_DL::Test01( ($theColumn=='int')        ? $theValue : null,        // tst_c00 int
                          ($theColumn=='smallint')      ? $theValue : null,        // tst_c01 smallint
                          ($theColumn=='tinyint')       ? $theValue : null,        // tst_c02 tinyint
                          ($theColumn=='mediumint')     ? $theValue : null,        // tst_c03 mediumint
