@@ -1,0 +1,24 @@
+create procedure tst_test_bulk_insert()
+modifies sql data
+-- type: bulk_insert id,_,gen_id,_,_,last_name,first_name,birthday,club,imp_country,national_registration,international_registration
+begin
+  drop temporary table if exists TMP_FENCER;
+
+  create temporary table TMP_FENCER
+  (
+    imp_fencer_id                   varchar(32)            not null,
+    fhd_id                          int,
+    gen_id                          int                    not null,
+    rcb_id                          varchar(80),
+    cnt_id                          int,
+    imp_last_name                   varchar(80)            not null,
+    imp_first_name                  varchar(80),
+    imp_birthday                    varchar(80),
+    imp_club                        varchar(80),
+    imp_country                     varchar(80),
+    imp_national_registration       varchar(80),
+    imp_international_registration  varchar(80),
+    primary key (imp_fencer_id)
+  ) engine = memory
+  ;
+end

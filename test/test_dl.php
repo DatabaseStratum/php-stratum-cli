@@ -552,6 +552,23 @@ class TST_DL
   }
 
   //-------------------------------------------------------------------------------------------------------------------
+  /** @sa Stored Routine tst_test_bulk_insert.
+   */
+  static function TestBulkInsert()
+  {
+    self::Query(  'CALL tst_test_bulk_insert()');
+    $sql = "INSERT INTO `TMP_FENCER`(`imp_fencer_id`,`gen_id`,`imp_last_name`,`imp_first_name`,`imp_birthday`,`imp_club`,`imp_country`,`imp_national_registration`,`imp_international_registration`)";
+    $first = true;
+    foreach( $theData as $row )
+    {
+        if ($first) $sql .=' values('.self::QuoteString('id').''.self::QuoteNum('gen_id').''.self::QuoteString('last_name').''.self::QuoteString('first_name').''.self::QuoteString('birthday').''.self::QuoteString('club').''.self::QuoteString('imp_country').''.self::QuoteString('national_registration').''.self::QuoteString('international_registration').')';
+        else        $sql .=',      ('.self::QuoteString('id').''.self::QuoteNum('gen_id').''.self::QuoteString('last_name').''.self::QuoteString('first_name').''.self::QuoteString('birthday').''.self::QuoteString('club').''.self::QuoteString('imp_country').''.self::QuoteString('national_registration').''.self::QuoteString('international_registration').')';
+        $first = false;
+    }
+    self::Query( $sql );
+  }
+
+  //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_max_alllowed_packet.
    */
   static function TestMaxAlllowedPacket($theArg0)

@@ -474,6 +474,10 @@ abstract class MySqlRoutineWrapper
       $class = 'Bulk';
       break;
 
+    case 'bulk_insert':
+      $class = 'BulkInsert';
+      break;
+
     case 'log':
       $class = 'Log';
       break;

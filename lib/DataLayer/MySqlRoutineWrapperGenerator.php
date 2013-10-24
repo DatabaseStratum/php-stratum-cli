@@ -28,6 +28,22 @@ class  MySqlRoutineWrapperGenerator
    */
   private $myConfigurationFilename;
 
+  /** Host name or addres.
+   */
+  private $myHostName;
+
+  /** User name.
+   */
+  private $myUserName;
+
+  /** Uesr password.
+   */
+  private $myPassword;
+
+  /** Name used databae.
+   */
+  private $myDatabase;
+
   //--------------------------------------------------------------------------------------------------------------------
   /** Generates a complete wrapper method for a Stored Routine.
    пїЅ  @param $theRoutine The row from table DEV_ROUTINE.
@@ -113,6 +129,11 @@ class  MySqlRoutineWrapperGenerator
     $settings = parse_ini_file( $this->myConfigurationFilename, true );
     if ($settings===false) set_assert_failed( "Unable open configuration file '%s'", $this->myConfigurationFilename );
 
+    $this->myHostName = $this->getSetting( $settings, 'database', 'host_name');
+    $this->myUserName = $this->getSetting( $settings, 'database', 'user_name');
+    $this->myPassword = $this->getSetting( $settings, 'database', 'password');
+    $this->myDatabase = $this->getSetting( $settings, 'database', 'database_name');
+
     $this->myTemplateFilename = $this->getSetting( $settings, 'wrapper', 'template' );
     $this->myWrapperFilename  = $this->getSetting( $settings, 'wrapper', 'wrapper'  );
     $this->myMetadataFilename = $this->getSetting( $settings, 'wrapper', 'metadata' );
@@ -127,6 +148,8 @@ class  MySqlRoutineWrapperGenerator
     $this->myConfigurationFilename = $theConfigurationFilename;
 
     $this->readConfigurationFile();
+
+    \SET_DL::connect( $this->myHostName, $this->myUserName, $this->myPassword, $this->myDatabase );
 
     $routines = $this->readRoutineMetaData();
 
@@ -144,6 +167,8 @@ class  MySqlRoutineWrapperGenerator
 
     $bytes = file_put_contents( $this->myWrapperFilename, $code );
     if ($bytes===false) set_assert_failed( "Error writing file %s", $this->myWrapperFilename );
+
+    \SET_DL::disconnect();
 
     return 0;
   }
