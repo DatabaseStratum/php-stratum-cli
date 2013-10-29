@@ -658,9 +658,6 @@ order by table_schema
 ,        table_name
 ,        column_name';
 
-
-    /// xxxx
-
     $rows = \SET_DL::executeRows( $query );
 
     foreach( $rows as $row )
