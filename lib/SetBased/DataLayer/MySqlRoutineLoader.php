@@ -1,6 +1,6 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-namespace DataLayer;
+namespace SetBased\DataLayer;
 
 //----------------------------------------------------------------------------------------------------------------------
 /** @brief Class for loading stored routine into a MySQL instance from pseudo SQL files (.psql).
@@ -15,10 +15,6 @@ class  MySqlRoutineLoader
   /** Path where .psql files can be found.
   */
   private $myIncludePath;
-
-  /** The name of the file with SQL statement to retreive table and column names, and column types.
-   */
-  private $mySqlColumnTypeFilename;
 
   /** The SQL mode under which the stored routine will be loaded and run.
    */
@@ -195,7 +191,6 @@ class  MySqlRoutineLoader
 
     $this->myMetadataFilename      = $this->getSetting( $settings, true,  'wrapper', 'metadata');
     $this->myIncludePath           = $this->getSetting( $settings, true,  'loader',  'psql' );
-    $this->mySqlColumnTypeFilename = $this->getSetting( $settings, true,  'loader',  'column_types_sql' );
     $this->myTargetConfigFilename  = $this->getSetting( $settings, false, 'loader',  'config' );
     $this->mySqlMode               = $this->getSetting( $settings, true,  'loader',  'sql_mode');
     $this->myCharacterSet          = $this->getSetting( $settings, true,  'loader',  'character_set' );
@@ -644,8 +639,27 @@ class  MySqlRoutineLoader
    */
   private function getColumnTypes()
   {
-    $query = file_get_contents( $this->mySqlColumnTypeFilename );
-    if ($query===false) set_assert_failed( "Unable to read file '%s'.", $this->mySqlColumnTypeFilename );
+
+    $query = 'select table_name                                    table_name
+,      column_name                                   column_name
+,      column_type                                   column_type
+,      character_set_name                            character_set_name
+,      null                                          table_schema
+from   information_schema.COLUMNS
+where  table_schema = database()
+union all
+select table_name                                    table_name
+,      column_name                                   column_name
+,      column_type                                   column_type
+,      character_set_name                            character_set_name
+,      table_schema                                  table_schema
+from   information_schema.COLUMNS
+order by table_schema
+,        table_name
+,        column_name';
+
+
+    /// xxxx
 
     $rows = \SET_DL::executeRows( $query );
 

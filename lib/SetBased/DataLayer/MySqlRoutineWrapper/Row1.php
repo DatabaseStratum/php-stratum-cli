@@ -1,12 +1,12 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-namespace DataLayer\MySqlRoutineWrapper;
-use       DataLayer;
+namespace SetBased\DataLayer\MySqlRoutineWrapper;
+use       SetBased\DataLayer;
 
 //----------------------------------------------------------------------------------------------------------------------
-/** @brief Class for generating a wrapper function around a stored procedure that selects 0 or 1 rows.
+/** @brief Class for generating a wrapper function around a stored procedure that selects 1 and only 1 rows.
  */
-class Row0 extends \DataLayer\MySqlRoutineWrapper
+class Row1 extends \SetBased\DataLayer\MySqlRoutineWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /** Generates code for calling the stored routine in the wrapper method.
@@ -16,9 +16,7 @@ class Row0 extends \DataLayer\MySqlRoutineWrapper
   protected function writeResultHandler( $theRoutine, $theArgumentTypes )
   {
     $routine_args = $this->getRoutineArgs( $theArgumentTypes );
-    $this->writeLine( 'return self::ExecuteRow0( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
-
-    /** @todo Test the actual number of rows and number  use result->num_rows*/
+    $this->writeLine( 'return self::ExecuteRow1( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -44,9 +42,9 @@ class Row0 extends \DataLayer\MySqlRoutineWrapper
   protected function writeRoutineFunctionLobReturnData()
   {
     $this->writeLine( 'if ($b===false) self::ThrowSqlError( \'mysqli_stmt::fetch failed\' );' );
-    $this->writeLine( 'if (sizeof($tmp)>1) self::ThrowSqlError( \'The unexpected number of rows, expected 0 or 1 rows.\' );' );
+    $this->writeLine( 'if (sizeof($tmp)!=1) self::ThrowSqlError( \'The unexpected  number of rows,  expected 1 row.\' );' );
     $this->writeLine();
-    $this->writeLine( 'return ($tmp) ? $tmp[0] : null;' );
+    $this->writeLine( 'return $row;' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

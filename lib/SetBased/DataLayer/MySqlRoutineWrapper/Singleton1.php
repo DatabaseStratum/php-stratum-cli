@@ -1,12 +1,12 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-namespace DataLayer\MySqlRoutineWrapper;
-use       DataLayer;
+namespace SetBased\DataLayer\MySqlRoutineWrapper;
+use       SetBased\DataLayer;
 
 //----------------------------------------------------------------------------------------------------------------------
 /** @brief Class for generating a wrapper function around a stored procedure that returns a scalar.
  */
-class Singleton1 extends \DataLayer\MySqlRoutineWrapper
+class Singleton1 extends \SetBased\DataLayer\MySqlRoutineWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /** Generates code for calling the stored routine in the wrapper method.
