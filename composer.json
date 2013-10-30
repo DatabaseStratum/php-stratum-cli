@@ -9,7 +9,10 @@
   "require-dev": {
         "phpunit/phpunit": "~3.7.0"
   },
+  "bin": [
+        "build/dlgen"
+   ],
   "autoload": {
-        "psr-0": {"DataLayer": "lib/"}
+        "psr-0": {"SetBased\\DataLayer\\": "lib/"}
     }
 }

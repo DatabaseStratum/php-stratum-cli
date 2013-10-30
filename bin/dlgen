@@ -1,3 +1,4 @@
+#!/usr/bin/php
 <?php
 //----------------------------------------------------------------------------------------------------------------------
 require __DIR__.'/../vendor/autoload.php';
@@ -240,22 +241,22 @@ function main( $options )
   if (isset($setting['fast']))
   {
     // Fast mode: only load stored routines.
-    $loader = new \DataLayer\MySqlRoutineLoader;
+    $loader = new \SetBased\DataLayer\MySqlRoutineLoader;
     $ret = $loader->run( $setting['config'], $setting['psql_files'] );
     if ($ret!=0) exit( $ret );
   }
   else
   {
     // Normal mode: create constants, config file, load routines, and create routine wrapper class.
-    $consts = new \DataLayer\MySqlConfigConstants;
+    $consts = new \SetBased\DataLayer\MySqlConfigConstants;
     $ret = $consts->run( $setting['config'] );
     if ($ret!=0) exit( $ret );
 
-    $loader = new \DataLayer\MySqlRoutineLoader;
+    $loader = new \SetBased\DataLayer\MySqlRoutineLoader;
     $ret = $loader->run( $setting['config'], $setting['psql_files'] );
     if ($ret!=0) exit( $ret );
 
-    $wrapper = new \DataLayer\MySqlRoutineWrapperGenerator;
+    $wrapper = new \SetBased\DataLayer\MySqlRoutineWrapperGenerator;
     $ret = $wrapper->run( $setting['config'] );
     if ($ret!=0) exit( $ret );
   }

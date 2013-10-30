@@ -1,7 +1,7 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-namespace DataLayer;
-use DataLayer\MySqlRoutineWrapper;
+namespace SetBased\DataLayer;
+use SetBased\DataLayer\MySqlRoutineWrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /** @brief abstract supper class for generation stored routine wrapper methods based on the type of the stored routine.
@@ -518,7 +518,7 @@ abstract class MySqlRoutineWrapper
       set_assert_failed( "Unknown routine type '%s'.", $theRoutine['type'] );
     }
 
-    $class = 'DataLayer\\MySqlRoutineWrapper\\'.$class;
+    $class = '\SetBased\DataLayer\MySqlRoutineWrapper\\'.$class;
     $wrapper = new $class();
 
     return $wrapper;

@@ -7,7 +7,7 @@ use       DataLayer;
 /** @brief Class for generating a wrapper function around a stored procedure that returns nothing but writes the rows of
  *  the results sets to the standard out.
  */
-class Log extends \DataLayer\MySqlRoutineWrapper
+class Log extends \SetBased\DataLayer\MySqlRoutineWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /** Generates code for calling the stored routine in the wrapper method.

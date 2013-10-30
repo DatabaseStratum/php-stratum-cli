@@ -1,6 +1,6 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-namespace DataLayer;
+namespace SetBased\DataLayer;
 
 //----------------------------------------------------------------------------------------------------------------------
 /** @brief Klasse voor een programma voor het aanmaken aan een klasse met wrappers functies voor Stored Routines in het

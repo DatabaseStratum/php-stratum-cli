@@ -1,12 +1,12 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-namespace DataLayer\MySqlRoutineWrapper;
-use       DataLayer;
+namespace SetBased\DataLayer\MySqlRoutineWrapper;
+use       SetBased\DataLayer;
 
 //----------------------------------------------------------------------------------------------------------------------
-/** @brief Class for generating a wrapper function around a stored procedure that selects rows on index.
+/** @brief Class for generating a wrapper function around a stored procedure that returns a scalar or 0.
  */
-class RowsWithIndex extends \DataLayer\MySqlRoutineWrapper
+class Singleton0 extends \SetBased\DataLayer\MySqlRoutineWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /** Generates code for calling the stored routine in the wrapper method.
@@ -16,35 +16,24 @@ class RowsWithIndex extends \DataLayer\MySqlRoutineWrapper
   protected function writeResultHandler( $theRoutine, $theArgumentTypes )
   {
     $routine_args = $this->getRoutineArgs( $theArgumentTypes );
-    $index = '';
-    foreach( $theRoutine['columns'] as $column ) $index .= '[$row[\''.$column.'\']]';
-
-    $this->writeLine( '$result = self::Query( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
-    $this->writeLine( '$ret = array();' );
-    $this->writeLine( 'while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret'.$index.'[] = $row;' );
-    $this->writeLine( '$result->close();' );
-    $this->writeLine( 'self::$ourMySql->next_result();' );
-    $this->writeLine( 'return $ret;' );
+    $this->writeLine( 'return self::ExecuteSingleton0( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   protected function writeRoutineFunctionLobFetchData( $theRoutine )
   {
-    $index = '';
-    foreach( $theRoutine['columns'] as $column ) $index .= '[$new[\''.$column.'\']]';
-
     $this->writeLine( '$row = array();' );
     $this->writeLine( 'self::stmt_bind_assoc( $stmt, $row );' );
     $this->writeLine();
-    $this->writeLine( '$ret = array();' );
+    $this->writeLine( '$tmp = array();' );
     $this->writeLine( 'while (($b = $stmt->fetch()))' );
     $this->writeLine( '{' );
     $this->writeLine( '$new = array();' );
-    $this->writeLine( 'foreach( $row as $key => $value )' );
+    $this->writeLine( 'foreach( $row as $value )' );
     $this->writeLine( '{' );
-    $this->writeLine( '$new[$key] = $value;' );
+    $this->writeLine( '$new[] = $value;' );
     $this->writeLine( '}' );
-    $this->writeLine( '$ret'.$index.'[] = $new;' );
+    $this->writeLine( '$tmp[] = $new;' );
     $this->writeLine( '}' );
     $this->writeLine();
     $this->writeLine( '$b = $stmt->fetch();' );
@@ -54,10 +43,10 @@ class RowsWithIndex extends \DataLayer\MySqlRoutineWrapper
   //--------------------------------------------------------------------------------------------------------------------
   protected function writeRoutineFunctionLobReturnData()
   {
-
     $this->writeLine( 'if ($b===false) self::ThrowSqlError( \'mysqli_stmt::fetch failed\' );' );
+    $this->writeLine( 'if (sizeof($tmp)>1) self::ThrowSqlError( \'The unexpected number of rows, expected 0 or 1 rows.\' );');
     $this->writeLine();
-    $this->writeLine( 'return $ret;' );
+    $this->writeLine( 'return ($tmp) ? $tmp[0][0] : null;' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

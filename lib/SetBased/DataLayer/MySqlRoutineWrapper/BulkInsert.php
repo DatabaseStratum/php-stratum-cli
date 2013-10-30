@@ -1,12 +1,12 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-namespace DataLayer\MySqlRoutineWrapper;
-use       DataLayer;
+namespace SetBased\DataLayer\MySqlRoutineWrapper;
+use       SetBased\DataLayer;
 
 //----------------------------------------------------------------------------------------------------------------------
 /** @brief Class for generating a wrapper function around a stored procedure that ...
  */
-class BulkInsert extends \DataLayer\MySqlRoutineWrapper
+class BulkInsert extends \SetBased\DataLayer\MySqlRoutineWrapper
 {
   /** Name of the temporary table.
    */
