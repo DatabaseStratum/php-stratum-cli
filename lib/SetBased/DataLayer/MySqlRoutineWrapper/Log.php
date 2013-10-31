@@ -1,7 +1,7 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-namespace DataLayer\MySqlRoutineWrapper;
-use       DataLayer;
+namespace SetBased\DataLayer\MySqlRoutineWrapper;
+use       SetBased\DataLayer;
 
 //----------------------------------------------------------------------------------------------------------------------
 /** @brief Class for generating a wrapper function around a stored procedure that returns nothing but writes the rows of

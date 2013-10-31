@@ -213,7 +213,7 @@ class TST_DL
             if ($i>0) $line .= ' ';
             $line .= str_pad( $field, $fields[$i]->max_length );
           }
-          etl_log( $line );
+          echo date( 'Y-m-d H:i:s' ),' ',$line,"\n";
         }
         $result->free();
       }
@@ -583,6 +583,14 @@ class TST_DL
         $first = false;
     }
     self::Query( $sql );
+  }
+
+  //-------------------------------------------------------------------------------------------------------------------
+  /** @sa Stored Routine tst_test_log.
+   */
+  static function TestLog()
+  {
+    self::ExecuteEcho( 'CALL tst_test_log()' );
   }
 
   //-------------------------------------------------------------------------------------------------------------------
