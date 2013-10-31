@@ -16,7 +16,7 @@ class LogTest extends PHPUnit_Framework_TestCase
   public function test1()
   {
     TST_DL::TestLog();
-    $this->expectOutputRegex('/(\d{2}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}\sHello, world\n)/');
+    $this->expectOutputRegex('/^(\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}\sHello, world\n){2}$/');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
