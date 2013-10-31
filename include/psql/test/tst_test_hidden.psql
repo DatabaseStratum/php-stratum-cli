@@ -1,24 +1,8 @@
 /** Test for desgination type hidden.
  */
-create procedure tst_test_hidden( p_count bigint )
+create procedure tst_test_hidden()
 reads sql data
 -- type: hidden
 begin
- declare l_count bigint default 0;
-
- drop temporary table if exists TMP_TMP;
-
- create temporary table TMP_TMP( c bigint );
-
- while( l_count < p_count )
- do
-   insert into TMP_TMP( c )
-   values( l_count )
-   ;
-
-   set l_count = l_count +1;
- end while;
-
- delete from TMP_TMP
- ;
+  select 1;
 end

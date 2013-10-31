@@ -155,7 +155,8 @@ class  MySqlRoutineWrapperGenerator
 
     foreach( $routines as $routine )
     {
-      if($routine['type']!=='hidden')
+      // If routine type is hidden don't create routine wrapper.
+      if ($routine['type']!='hidden')
       {
         $this->writeRoutineFunction( $routine );
       }

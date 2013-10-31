@@ -16,7 +16,7 @@ class Functions extends \SetBased\DataLayer\MySqlRoutineWrapper
   protected function writeResultHandler( $theRoutine, $theArgumentTypes )
   {
     $routine_args = $this->getRoutineArgs( $theArgumentTypes );
-    $this->writeLine( 'return self::ExecuteSingleton0( \'SELECT ( '.$theRoutine['routine_name'].'('.$routine_args.') )\' );' );
+    $this->writeLine( 'return self::ExecuteSingleton0( \'SELECT '.$theRoutine['routine_name'].'('.$routine_args.') \' );' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

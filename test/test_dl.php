@@ -590,7 +590,7 @@ class TST_DL
    */
   static function TestFunction($theArg0,$theArg1)
   {
-    return self::ExecuteSingleton0( 'SELECT ( tst_test_function('.self::QuoteNum($theArg0).','.self::QuoteNum($theArg1).') )' );
+    return self::ExecuteSingleton0( 'SELECT tst_test_function('.self::QuoteNum($theArg0).','.self::QuoteNum($theArg1).') ' );
   }
 
   //-------------------------------------------------------------------------------------------------------------------

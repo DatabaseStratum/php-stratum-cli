@@ -9,7 +9,7 @@ tst_test02,none,"int,smallint,tinyint,mediumint,bigint,decimal,float,double,bit,
 tst_test_bulk_insert01,bulk_insert,,"field1,field2,field3,field4,field5,field6,field7,field8,field9,field10,field11,field12,field13,field14,field15,field16,field17,field18,field19,field20",1383245776,a:0:{}
 tst_test_bulk_insert02,bulk_insert,,"field1,_,_,field4,field5",1383245776,a:0:{}
 tst_test_function,function,"int,int",,1383245776,a:0:{}
-tst_test_hidden,hidden,bigint,,1383245776,a:0:{}
+tst_test_hidden,hidden,,,1383250566,a:0:{}
 tst_test_log,log,,,1383245776,a:0:{}
 tst_test_max_alllowed_packet,singleton1,longblob,,1383245776,a:0:{}
 tst_test_none,none,bigint,,1383245776,a:0:{}
