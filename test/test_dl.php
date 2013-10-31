@@ -586,6 +586,14 @@ class TST_DL
   }
 
   //-------------------------------------------------------------------------------------------------------------------
+  /** @sa Stored Routine tst_test_function.
+   */
+  static function TestFunction($theArg0,$theArg1)
+  {
+    return self::ExecuteSingleton0( 'SELECT ( tst_test_function('.self::QuoteNum($theArg0).','.self::QuoteNum($theArg1).') )' );
+  }
+
+  //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_log.
    */
   static function TestLog()

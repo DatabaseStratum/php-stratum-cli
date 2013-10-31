@@ -683,7 +683,8 @@ order by table_schema
 select group_concat( t2.data_type order by t2.ordinal_position separator ',' ) 'arguments'
 from            information_schema.ROUTINES   t1
 left outer join information_schema.PARAMETERS t2  on  t2.specific_schema = t1.routine_schema and
-                                                      t2.specific_name   = t1.routine_name
+                                                      t2.specific_name   = t1.routine_name and
+                                                      t2.parameter_mode   is not null
 where t1.routine_schema = database()
 and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
 

@@ -155,7 +155,10 @@ class  MySqlRoutineWrapperGenerator
 
     foreach( $routines as $routine )
     {
-      $this->writeRoutineFunction( $routine );
+      if($routine['type']!=='hidden')
+      {
+        $this->writeRoutineFunction( $routine );
+      }
     }
 
     $replace['  /* AUTO_GENERATED_ROUINE_WRAPPERS */'] =  $this->myCode;

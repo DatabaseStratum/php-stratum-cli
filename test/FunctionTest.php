@@ -1,6 +1,6 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-class NoneTest extends PHPUnit_Framework_TestCase
+class FunctionTest extends PHPUnit_Framework_TestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
   /** Setups a form with a select form control.
@@ -11,33 +11,25 @@ class NoneTest extends PHPUnit_Framework_TestCase
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Stored routine with designation type none must return the number of rows affected.
+  /** Stored routine with designation type function execute stored function and return result.
    */
   public function test1()
   {
-    $ret = TST_DL::TestNone( 0 );
-    $this->assertEquals( 0, $ret );
+    $ret = TST_DL::TestFunction( 2, 3 );
+    $this->assertEquals( 5, $ret );
   }
 
+
   //--------------------------------------------------------------------------------------------------------------------
-  /** Stored routine with designation type none must return the number of rows affected.
+  /** Stored routine with designation type function execute stored function and return result.
    */
   public function test2()
   {
-    $ret = TST_DL::TestNone( 1 );
-    $this->assertEquals( 1, $ret );
+    $ret = TST_DL::TestFunction( 3, 4 );
+    $this->assertNotEquals( 5, $ret );
   }
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /** Stored routine with designation type none must return the number of rows affected.
-   */
-  public function test3()
-  {
-    $ret = TST_DL::TestNone( 20 );
-    $this->assertEquals( 20, $ret );
-  }
 
-  //--------------------------------------------------------------------------------------------------------------------
 }
 
 //----------------------------------------------------------------------------------------------------------------------
