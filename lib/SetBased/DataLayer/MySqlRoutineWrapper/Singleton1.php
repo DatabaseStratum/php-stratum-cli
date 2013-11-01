@@ -4,13 +4,14 @@ namespace SetBased\DataLayer\MySqlRoutineWrapper;
 use       SetBased\DataLayer;
 
 //----------------------------------------------------------------------------------------------------------------------
-/** @brief Class for generating a wrapper function around a stored procedure that returns a scalar.
+/** @brief Class for generating a wrapper function around a stored procedure selects 1 and only 1 row with only one
+           column.
  */
 class Singleton1 extends \SetBased\DataLayer\MySqlRoutineWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /** Generates code for calling the stored routine in the wrapper method.
-      @param $theRoutine       An array with the metadata of the stored routine.
+      @param $theRoutine       An array with the metadata about the stored routine.
       @param $theArgumentTypes An array with the arguments types of the stored routine.
    */
   protected function writeResultHandler( $theRoutine, $theArgumentTypes )

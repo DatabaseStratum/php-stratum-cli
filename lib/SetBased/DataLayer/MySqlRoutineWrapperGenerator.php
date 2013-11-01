@@ -46,7 +46,7 @@ class  MySqlRoutineWrapperGenerator
 
   //--------------------------------------------------------------------------------------------------------------------
   /** Generates a complete wrapper method for a Stored Routine.
-   пїЅ  @param $theRoutine The row from table DEV_ROUTINE.
+      @param $theRoutine The row from table DEV_ROUTINE.
    */
   private function writeRoutineFunction( $theRoutine )
   {
@@ -56,7 +56,7 @@ class  MySqlRoutineWrapperGenerator
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Returns the metadata @a $routines of stored routines stored in file.
+  /** Returns the metadata about all stored routines stored in @c myMetadataFilename.
    */
   private function readRoutineMetaData()
   {
@@ -89,6 +89,7 @@ class  MySqlRoutineWrapperGenerator
                            'argument_types' => $row[2],
                            'columns'        => explode( ',', $row[3] ) );
     }
+    if (!feof($handle)) etl_assert_failed('Did not reach eof of %s', $theFilename );
 
     $err = fclose( $handle );
     if ($err===false) set_assert_failed( "Error closing file '%s'.", $theFilename );
@@ -97,7 +98,10 @@ class  MySqlRoutineWrapperGenerator
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Getting parameters from a array @a $theSettings whit key @c $theSectionName and @c $theSettingName.
+  /** Returns the value of a setting.
+      @param $theSettings    The settings (as returned by parse_ini_file).
+      @param $theSectionName The section name.
+      @param $theSettingName The setting name.
    */
   private function getSetting( $theSettings, $theSectionName, $theSettingName )
   {
@@ -122,7 +126,7 @@ class  MySqlRoutineWrapperGenerator
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Read parameters from the configuration file @c $myConfigurationFilename.
+  /** Read parameters from configuration file @c $myConfigurationFilename.
    */
   private function readConfigurationFile()
   {
@@ -140,8 +144,8 @@ class  MySqlRoutineWrapperGenerator
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Construction class for stored routine wrapper.
-      @param $ConfigurationFilename The path file configuration.
+  /** Creates the actual stored routine wrapper class.
+      @param $ConfigurationFilename The name of configuration file.
    */
   public function run( $theConfigurationFilename )
   {

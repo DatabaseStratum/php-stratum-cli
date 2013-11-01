@@ -3,11 +3,11 @@
 namespace SetBased\DataLayer;
 
 //----------------------------------------------------------------------------------------------------------------------
-/** @brief The class creates a file which contains all used constants with values.
+/** @brief Class for creating PHP constants based on column widths, and auto increment columns and labels.
  */
 class MySqlConfigConstants
 {
-  /** Filename with columnnames, their widths, and constant names.
+  /** Filename with column names, their widths, and constant names.
    */
   private $myConstsFilename;
 
@@ -38,7 +38,8 @@ class MySqlConfigConstants
 
   /**
    */
-   private $myLabels = array();
+  private $myLabels = array();
+
 
   /** @name MySQL
      @{
@@ -203,7 +204,7 @@ order by table_name
 
     case 'enum':
     case 'set':
-      // Nothing to do. We don't assign a width to column of enum type.
+      // Nothing to do. We don't assign a width to column with type enum and set.
       break;
 
     default:
@@ -312,7 +313,9 @@ order by table_name
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Definition a unknown constants.
+  /** Enhances @c myOldColumns as follows:
+      * If the constant name is *, is is replaced with the column name prefixed by @c $this->myPrefix in uppercase.
+      * Otherwise the constant name is set to uppercase.
    */
   private function enhanceColumns()
   {
@@ -338,7 +341,7 @@ order by table_name
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Merges the columns with the old and new constants.
+  /** Enhances @c $this->myColumns with the constant name from @c $this->myOldColumns. I.e. preserves constant names.
    */
   private function mergeColumns()
   {
@@ -355,7 +358,7 @@ order by table_name
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Get all lable from the MySQL.
+  /** Get all labels and their values (i.e. the value of the auto increment column) from the database.
    */
   private function getLabels()
   {
@@ -389,7 +392,7 @@ where   nullif(`%s`,'') is not null";
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Get all known constants into the array myConstants.
+  /** Merges @c myColumns and @c myLabels (i.e. all known constants) into @c myConstants.
    */
   private function fillConstants()
   {
@@ -408,12 +411,15 @@ where   nullif(`%s`,'') is not null";
     {
       $this->myConstants[$label] = $id;
     }
+
     $ok = ksort( $this->myConstants );
     if ($ok===false) set_assert_failed( 'Internal error.' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Automatic generation the constants.
+  /** Creates a PHP configuration file (@c myConfigFilename) from the configuration template file
+      (@c myTemplateConfigFilename). In the configuration template file the place holder for constants is replaced
+      with the constants definition.
    */
   private function writeTargetConfigFile()
   {

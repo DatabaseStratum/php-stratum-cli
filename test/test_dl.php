@@ -151,7 +151,7 @@ class TST_DL
    */
   public static function ShowWarnings()
   {
-    self::ExecuteEcho( 'show warnings' );
+    self::ExecuteLog( 'show warnings' );
   }
 
   // -------------------------------------------------------------------------------------------------------------------
@@ -194,7 +194,7 @@ class TST_DL
   /** Voert query @a $theQuery uit. De query mag een multi query zijn (b.v. een store procedure) en de output van de
    *  query wordt gelogt.
    */
-  public static function ExecuteEcho( $theQuery )
+  public static function ExecuteLog( $theQuery )
   {
     $ret = self::$ourMySql->multi_query( $theQuery );
     if (!$ret) self::ThrowSqlError( $theQuery );
@@ -590,7 +590,7 @@ class TST_DL
    */
   static function TestLog()
   {
-    self::ExecuteEcho( 'CALL tst_test_log()' );
+    self::ExecuteLog( 'CALL tst_test_log()' );
   }
 
   //-------------------------------------------------------------------------------------------------------------------

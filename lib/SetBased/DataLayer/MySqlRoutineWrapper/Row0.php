@@ -4,21 +4,19 @@ namespace SetBased\DataLayer\MySqlRoutineWrapper;
 use       SetBased\DataLayer;
 
 //----------------------------------------------------------------------------------------------------------------------
-/** @brief Class for generating a wrapper function around a stored procedure that selects 0 or 1 rows.
+/** @brief Class for generating a wrapper function around a stored procedure that selects 0 or 1 row.
  */
 class Row0 extends \SetBased\DataLayer\MySqlRoutineWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /** Generates code for calling the stored routine in the wrapper method.
-      @param $theRoutine       An array with the metadata of the stored routine.
+      @param $theRoutine       An array with the metadata about the stored routine.
       @param $theArgumentTypes An array with the arguments types of the stored routine.
    */
   protected function writeResultHandler( $theRoutine, $theArgumentTypes )
   {
     $routine_args = $this->getRoutineArgs( $theArgumentTypes );
     $this->writeLine( 'return self::ExecuteRow0( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
-
-    /** @todo Test the actual number of rows and number  use result->num_rows*/
   }
 
   //--------------------------------------------------------------------------------------------------------------------
