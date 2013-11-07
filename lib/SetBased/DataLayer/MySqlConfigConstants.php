@@ -429,6 +429,7 @@ where   nullif(`%s`,'') is not null";
     $width1 = 0;
     $width2 = 0;
     $constants = '';
+
     foreach( $this->myConstants as $constant => $value )
     {
       $width1 = max( strlen( $constant ), $width1 );

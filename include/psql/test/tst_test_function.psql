@@ -1,0 +1,8 @@
+create function tst_test_function( p_a int,
+                                   p_b int )
+returns int
+no sql
+-- type: function
+begin
+  return p_a + p_b;
+end

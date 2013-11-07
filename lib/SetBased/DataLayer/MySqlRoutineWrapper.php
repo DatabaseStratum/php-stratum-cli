@@ -514,8 +514,16 @@ abstract class MySqlRoutineWrapper
       $class = 'Singleton1';
       break;
 
+    case 'function':
+      $class = 'Functions';
+      break;
+
+    case 'hidden':
+      $class = 'Hidden';
+      break;
+
     default:
-      set_assert_failed( "Unknown routine type '%s'.", $theRoutine['type'] );
+      set_assert_failed( "Unknown routine type '%s'.", $theRoutine['type']."\n" );
     }
 
     $class = '\SetBased\DataLayer\MySqlRoutineWrapper\\'.$class;
