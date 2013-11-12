@@ -1,12 +1,11 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\DataLayer\MySqlRoutineWrapper;
-use       SetBased\DataLayer;
+use SetBased\DataLayer\MySqlRoutineWrapper;
 
-//----------------------------------------------------------------------------------------------------------------------
 /** @brief Class for generating a wrapper function around a stored procedure that ...
  */
-class BulkInsert extends \SetBased\DataLayer\MySqlRoutineWrapper
+class BulkInsert extends MySqlRoutineWrapper
 {
   /** Name of the temporary table.
    */
@@ -60,6 +59,7 @@ class BulkInsert extends \SetBased\DataLayer\MySqlRoutineWrapper
    */
   private function writeEscapesValue( $theValueType, $fieldName )
   {
+    $ret ='';
     switch ($theValueType)
     {
     case 'tinyint':
@@ -122,11 +122,12 @@ class BulkInsert extends \SetBased\DataLayer\MySqlRoutineWrapper
 
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Generates code for calling the stored routine in the wrapper method.
-      @param $theRoutine       An array with the metadata of the stored routine.
-      @param $theArgumentTypes An array with the arguments types of the stored routine.
+  /**
+   * Generates code for calling the stored routine in the wrapper method.
+   *
+   * @param $theRoutine array The metadata of the stored routine.
    */
-  protected function writeResultHandler( $theRoutine, $theArgumentTypes )
+  protected function writeResultHandler( $theRoutine )
   {
     $this->getTableProperties( $theRoutine );
 
@@ -134,8 +135,7 @@ class BulkInsert extends \SetBased\DataLayer\MySqlRoutineWrapper
     $n2 = count($this->myColumns);
     if ($n1!=$n2) set_assert_failed( "Number of fields %d and number of columns %d don't match.", $n1, $n2 );
 
-    $routine_args = $this->getRoutineArgs( $theArgumentTypes );
-
+    $routine_args = $this->getRoutineArgs( $theRoutine );
     $this->writeLine( 'self::Query(  \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
 
     $columns = '';
@@ -168,13 +168,13 @@ class BulkInsert extends \SetBased\DataLayer\MySqlRoutineWrapper
   //--------------------------------------------------------------------------------------------------------------------
   protected function writeRoutineFunctionLobFetchData( $theRoutine )
   {
-    // Nothing todo.
+    // Nothing to do.
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   protected function writeRoutineFunctionLobReturnData()
   {
-    // Nothing todo.
+    // Nothing to do.
   }
 
   //--------------------------------------------------------------------------------------------------------------------

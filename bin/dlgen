@@ -118,7 +118,7 @@ class SET_DL
   //--------------------------------------------------------------------------------------------------------------------
   /** Voert query @a $theQuery uit. @a $theQuery mag 0 of meer rijen teruggeven.
    */
-  public function executeRows( $theQuery )
+  public static function executeRows( $theQuery )
   {
     $result = self::query( $theQuery );
     $ret = array();
@@ -133,7 +133,7 @@ class SET_DL
   //--------------------------------------------------------------------------------------------------------------------
   /** Voert query @a $theQuery uit een geeft het aantal "affected rows" terug. @a $theQuery mag geen rijen teruggeven.
    */
-  public function executeNone( $theQuery )
+  public static function executeNone( $theQuery )
   {
     self::query( $theQuery );
 
@@ -167,7 +167,7 @@ class SET_DL
             if ($i>0) $line .= ' ';
             $line .= str_pad( $field, $fields[$i]->max_length );
           }
-          etl_log( $line );
+           echo date( 'Y-m-d H:i:s' ),' ',$line,"\n";
         }
         $result->free();
       }

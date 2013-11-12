@@ -1,21 +1,23 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\DataLayer\MySqlRoutineWrapper;
-use       SetBased\DataLayer;
+use SetBased\DataLayer\MySqlRoutineWrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /** @brief Class for generating a wrapper function around a stored procedure that selects rows on keys.
  */
-class RowsWithKey extends \SetBased\DataLayer\MySqlRoutineWrapper
+class RowsWithKey extends MySqlRoutineWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
-  /** Generates code for calling the stored routine in the wrapper method.
-      @param $theRoutine       An array with the metadata of the stored routine.
-      @param $theArgumentTypes An array with the arguments types of the stored routine.
+  /**
+   * Generates code for calling the stored routine in the wrapper method.
+   *
+   * @param $theRoutine array The metadata of the stored routine.
    */
-  protected function writeResultHandler( $theRoutine, $theArgumentTypes )
+  protected function writeResultHandler( $theRoutine )
   {
-    $routine_args = $this->getRoutineArgs( $theArgumentTypes );
+    $routine_args = $this->getRoutineArgs( $theRoutine );
+
     $key = '';
     foreach( $theRoutine['columns'] as $column ) $key .= '[$row[\''.$column.'\']]';
 

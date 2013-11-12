@@ -3,69 +3,89 @@
 namespace SetBased\DataLayer;
 
 //----------------------------------------------------------------------------------------------------------------------
-/** @brief The class creates a file which contains all used constants with values.
+/**
+ * Class MySqlConfigConstants. The class creates a file which contains all used constants with values.
+ * @package SetBased\DataLayer
  */
 class MySqlConfigConstants
 {
-  /** Filename with columnnames, their widths, and constant names.
-   */
-  private $myConstsFilename;
 
-  /** Template filename under which the file is generated with the constants.
+  /**
+   * @var string Filename with column names, their widths, and constant names.
+   */
+  private $myConstantsFilename;
+
+  /**
+   * @var string Template filename under which the file is generated with the constants.
    */
   private $myTemplateConfigFilename;
 
-  /** Name of file that contains all constants.
+  /**
+   * @var string Name of file that contains all constants.
    */
   private $myConfigFilename;
 
-  /** All columns in the MySQL schema.
+  /**
+   * @var array All columns in the MySQL schema.
    */
   private $myColumns = array();
 
-  /** Array with the previous column names, widths, and constant names (i.e. the content of @c $myConstsFilename upon
-   *  starting this program).
+  /**
+   * @var array The previous column names, widths, and constant names (i.e. the content of @c $myConstantsFilename upon
+   * starting this program).
    */
   private $myOldColumns = array();
 
-  /** Array with all constants.
+  /**
+   * @var array All constants.
    */
   private $myConstants = array ();
 
-  /** The prefix used for designations a unknown constants.
+  /**
+   * @var string The prefix used for designations a unknown constants.
    */
   private $myPrefix;
 
   /**
+   * @var array
    */
-   private $myLabels = array();
+  private $myLabels = array();
 
   /** @name MySQL
      @{
      MySQL database settings.
    */
 
-  /** Host name or addres.
+  /**
+   * @var string Host name or address.
    */
   private $myHostName;
-  /** User name.
+
+  /**
+   * @var string User name.
    */
   private $myUserName;
-  /** Uesr password.
+
+  /**
+   * @var string User password.
    */
   private $myPassword;
-  /** Name used databae.
+
+  /**
+   * @var string Name used database.
    */
   private $myDatabase;
   /** @} */
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Returns the value of a setting.
-      @param $theSettings      The settings as returned by @c parse_ini_file.
-      @param $theMandatoryFlag If set and setting @a $theSettingName is not found in section @a $theSectionName an
-                               exception will be thrown.
-      @param $theSectionName   The name of the section of the requested setting.
-      @param $theSettingName   The name of the setting of the requested setting.
+  /**
+   * Returns the value of a setting.
+   * @param $theSettings array The settings as returned by @c parse_ini_file.
+   * @param $theMandatoryFlag bool If set and setting @a $theSettingName is not found in section @a $theSectionName an exception will be thrown.
+   * @param $theSectionName string The name of the section of the requested setting.
+   * @param $theSettingName string The name of the setting of the requested setting.
+   *
+   * @return array | null
    */
   private function getSetting( $theSettings, $theMandatoryFlag, $theSectionName, $theSettingName )
   {
@@ -100,7 +120,9 @@ class MySqlConfigConstants
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Reads parameters from configuration @a $theConfigFilename
+  /**
+   * Reads configuration parameters.
+   * @param $theConfigFilename string.
    */
   private function readConfigFile( $theConfigFilename )
   {
@@ -112,14 +134,15 @@ class MySqlConfigConstants
     $this->myPassword = $this->getSetting( $settings, true,  'database', 'password' );
     $this->myDatabase = $this->getSetting( $settings, true,  'database', 'database_name' );
 
-    $this->myConstsFilename         = $this->getSetting( $settings, true,  'constants', 'columns' );
+    $this->myConstantsFilename         = $this->getSetting( $settings, true,  'constants', 'columns' );
     $this->myPrefix                 = $this->getSetting( $settings, true,  'constants', 'prefix' );
     $this->myTemplateConfigFilename = $this->getSetting( $settings, true,  'constants', 'config_template' );
     $this->myConfigFilename         = $this->getSetting( $settings, true,  'constants', 'config' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Get all columns with data from table in MySQL into @a myColumns.
+  /**
+   * Get all columns with data from table in MySQL into @a myColumns.
    */
   private function getColumns()
   {
@@ -214,13 +237,14 @@ order by table_name
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Record constants and their values to the file @a myConstsFilename.
+  /*
+   * Record constants and their values to the file @a myConstantsFilename.
    */
   private function writeColumns()
   {
-    $temp_filename = $this->myConstsFilename.'.tmp';
+    $temp_filename = $this->myConstantsFilename.'.tmp';
     $handle = fopen( $temp_filename, 'w' );
-    if ($handle===null) set_assert_failed( "Unable to open file '%s'.", $this->myConstsFilename );
+    if ($handle===null) set_assert_failed( "Unable to open file '%s'.", $this->myConstantsFilename );
 
     foreach( $this->myColumns as $table )
     {
@@ -243,38 +267,39 @@ order by table_name
                                                  $column['column_name'],
                                                  $column['length'],
                                                  $column['constant_name'] );
-            if ($n===false) set_assert_failed( "Error writing file '%s'.", $this->myConstsFilename );
+            if ($n===false) set_assert_failed( "Error writing file '%s'.", $this->myConstantsFilename );
           }
           else
           {
             $line_format = sprintf( "%%s.%%-%ds %%%dd\n", $width1, $width2 );
             $n = fprintf( $handle, $line_format, $column['table_name'], $column['column_name'], $column['length'] );
-            if ($n===false) set_assert_failed( "Error writing file '%s'.", $this->myConstsFilename );
+            if ($n===false) set_assert_failed( "Error writing file '%s'.", $this->myConstantsFilename );
           }
         }
       }
 
       $n = fprintf( $handle, "\n" );
-      if ($n===false) set_assert_failed( "Error writing file '%s'.", $this->myConstsFilename );
+      if ($n===false) set_assert_failed( "Error writing file '%s'.", $this->myConstantsFilename );
     }
 
      $err = fclose( $handle );
-     if ($err===false) set_assert_failed( "Error closing file '%s'.", $this->myConstsFilename );
+     if ($err===false) set_assert_failed( "Error closing file '%s'.", $this->myConstantsFilename );
 
-     $err = rename( $this->myConstsFilename.'.tmp', $this->myConstsFilename );
+     $err = rename( $this->myConstantsFilename.'.tmp', $this->myConstantsFilename );
      if ($err===false) set_assert_failed( "Error: can't rename file '%s' to '%s'.", $temp_filename,
-                                                                                    $this->myConstsFilename );
+                                                                                    $this->myConstantsFilename );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Get old column with consatant from file @a myConstsFilename
+  /**
+   * Get old column with constant from file @a myConstantsFilename
    */
   private function getOldColumns()
   {
-    if (file_exists( $this->myConstsFilename ))
+    if (file_exists( $this->myConstantsFilename ))
     {
-      $handle = fopen( $this->myConstsFilename, 'r' );
-      if ($handle===null) set_assert_failed( "Unable to open file '%s'.", $this->myConstsFilename );
+      $handle = fopen( $this->myConstantsFilename, 'r' );
+      if ($handle===null) set_assert_failed( "Unable to open file '%s'.", $this->myConstantsFilename );
 
       $line_number = 0;
       while ($line = fgets( $handle ))
@@ -287,7 +312,7 @@ order by table_name
 
           if ($n==0)
           {
-            set_assert_failed( "Illegal format at line %d in file '%s'.", $line_number, $this->myConstsFilename );
+            set_assert_failed( "Illegal format at line %d in file '%s'.", $line_number, $this->myConstantsFilename );
           }
 
           if (isset($matches[4]))
@@ -304,15 +329,16 @@ order by table_name
           }
         }
       }
-      if (!feof($handle)) set_assert_failed( "Error reading from file '%s'.", $this->myConstsFilename );
+      if (!feof($handle)) set_assert_failed( "Error reading from file '%s'.", $this->myConstantsFilename );
 
       $ok = fclose( $handle );
-      if ($ok===false) set_assert_failed( "Error closing file '%s'.", $this->myConstsFilename );
+      if ($ok===false) set_assert_failed( "Error closing file '%s'.", $this->myConstantsFilename );
     }
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Definition a unknown constants.
+  /**
+   * Definition a unknown constants.
    */
   private function enhanceColumns()
   {
@@ -338,7 +364,8 @@ order by table_name
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Merges the columns with the old and new constants.
+  /**
+   * Merges the columns with the old and new constants.
    */
   private function mergeColumns()
   {
@@ -355,7 +382,7 @@ order by table_name
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Get all lable from the MySQL.
+  /** Get all label from the MySQL.
    */
   private function getLabels()
   {
@@ -389,7 +416,8 @@ where   nullif(`%s`,'') is not null";
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Get all known constants into the array myConstants.
+  /**
+   * Get all known constants into the array myConstants.
    */
   private function fillConstants()
   {
@@ -413,7 +441,8 @@ where   nullif(`%s`,'') is not null";
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Automatic generation the constants.
+  /**
+   * Automatic generation the constants.
    */
   private function writeTargetConfigFile()
   {
@@ -443,6 +472,11 @@ where   nullif(`%s`,'') is not null";
   }
 
   //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * @param $theConfigFilename
+   *
+   * @return int
+   */
   public function run( $theConfigFilename )
   {
     $this->readConfigFile( $theConfigFilename );
