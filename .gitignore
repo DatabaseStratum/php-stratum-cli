@@ -3,4 +3,5 @@ box.phar
 dlgen.json
 phar_mk.php
 setbased.xml
-
+etc/test_routines.csv
+*~
