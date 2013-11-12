@@ -450,17 +450,17 @@ class TST_DL
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test01.
    */
-  static function Test01($theArg0,$theArg1,$theArg2,$theArg3,$theArg4,$theArg5,$theArg6,$theArg7,$theArg8,$theArg9,$theArg10,$theArg11,$theArg12,$theArg13,$theArg14,$theArg15,$theArg16,$theArg17,$theArg18,$theArg19)
+  static function Test01($p_param00, $p_param01, $p_param02, $p_param03, $p_param04, $p_param05, $p_param06, $p_param07, $p_param08, $p_param09, $p_param10, $p_param11, $p_param12, $p_param13, $p_param14, $p_param15, $p_param16, $p_param17, $p_param26, $p_param27)
   {
-    return self::ExecuteNone( 'CALL tst_test01('.self::QuoteNum($theArg0).','.self::QuoteNum($theArg1).','.self::QuoteNum($theArg2).','.self::QuoteNum($theArg3).','.self::QuoteNum($theArg4).','.self::QuoteNum($theArg5).','.self::QuoteNum($theArg6).','.self::QuoteNum($theArg7).','.self::QuoteBit($theArg8).','.self::QuoteString($theArg9).','.self::QuoteString($theArg10).','.self::QuoteString($theArg11).','.self::QuoteString($theArg12).','.self::QuoteNum($theArg13).','.self::QuoteString($theArg14).','.self::QuoteString($theArg15).','.self::QuoteString($theArg16).','.self::QuoteString($theArg17).','.self::QuoteString($theArg18).','.self::QuoteString($theArg19).')' );
+    return self::ExecuteNone( 'CALL tst_test01('.self::QuoteNum($p_param00).','.self::QuoteNum($p_param01).','.self::QuoteNum($p_param02).','.self::QuoteNum($p_param03).','.self::QuoteNum($p_param04).','.self::QuoteNum($p_param05).','.self::QuoteNum($p_param06).','.self::QuoteNum($p_param07).','.self::QuoteBit($p_param08).','.self::QuoteString($p_param09).','.self::QuoteString($p_param10).','.self::QuoteString($p_param11).','.self::QuoteString($p_param12).','.self::QuoteNum($p_param13).','.self::QuoteString($p_param14).','.self::QuoteString($p_param15).','.self::QuoteString($p_param16).','.self::QuoteString($p_param17).','.self::QuoteString($p_param26).','.self::QuoteString($p_param27).')' );
   }
 
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test02.
    */
-  static function Test02($theArg0,$theArg1,$theArg2,$theArg3,$theArg4,$theArg5,$theArg6,$theArg7,$theArg8,$theArg9,$theArg10,$theArg11,$theArg12,$theArg13,$theArg14,$theArg15,$theArg16,$theArg17,$theArg18,$theArg19,$theArg20,$theArg21,$theArg22,$theArg23,$theArg24,$theArg25,$theArg26,$theArg27)
+  static function Test02($p_param00, $p_param01, $p_param02, $p_param03, $p_param04, $p_param05, $p_param06, $p_param07, $p_param08, $p_param09, $p_param10, $p_param11, $p_param12, $p_param13, $p_param14, $p_param15, $p_param16, $p_param17, $p_param18, $p_param19, $p_param20, $p_param21, $p_param22, $p_param23, $p_param24, $p_param25, $p_param26, $p_param27)
   {
-    $query = 'CALL tst_test02('.self::QuoteNum($theArg0).','.self::QuoteNum($theArg1).','.self::QuoteNum($theArg2).','.self::QuoteNum($theArg3).','.self::QuoteNum($theArg4).','.self::QuoteNum($theArg5).','.self::QuoteNum($theArg6).','.self::QuoteNum($theArg7).','.self::QuoteBit($theArg8).','.self::QuoteString($theArg9).','.self::QuoteString($theArg10).','.self::QuoteString($theArg11).','.self::QuoteString($theArg12).','.self::QuoteNum($theArg13).','.self::QuoteString($theArg14).','.self::QuoteString($theArg15).','.self::QuoteString($theArg16).','.self::QuoteString($theArg17).',?,?,?,?,?,?,?,?,'.self::QuoteString($theArg26).','.self::QuoteString($theArg27).')';
+    $query = 'CALL tst_test02('.self::QuoteNum($p_param00).','.self::QuoteNum($p_param01).','.self::QuoteNum($p_param02).','.self::QuoteNum($p_param03).','.self::QuoteNum($p_param04).','.self::QuoteNum($p_param05).','.self::QuoteNum($p_param06).','.self::QuoteNum($p_param07).','.self::QuoteBit($p_param08).','.self::QuoteString($p_param09).','.self::QuoteString($p_param10).','.self::QuoteString($p_param11).','.self::QuoteString($p_param12).','.self::QuoteNum($p_param13).','.self::QuoteString($p_param14).','.self::QuoteString($p_param15).','.self::QuoteString($p_param16).','.self::QuoteString($p_param17).',?,?,?,?,?,?,?,?,'.self::QuoteString($p_param26).','.self::QuoteString($p_param27).')';
     $stmt  = self::$ourMySql->prepare( $query );
     if (!$stmt) self::ThrowSqlError( 'prepare failed' );
 
@@ -468,74 +468,74 @@ class TST_DL
     $b = $stmt->bind_param( 'bbbbbbbb', $null,$null,$null,$null,$null,$null,$null,$null );
     if (!$b) self::ThrowSqlError( 'bind_param failed' );
 
-    $n = strlen( $theArg18 );
+    $n = strlen( $p_param18 );
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 0, substr( $theArg18, $p, self::$ourChunckSize ) );
+      $b = $stmt->send_long_data( 0, substr( $p_param18, $p, self::$ourChunckSize ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
       $p += self::$ourChunckSize;
     }
 
-    $n = strlen( $theArg19 );
+    $n = strlen( $p_param19 );
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 1, substr( $theArg19, $p, self::$ourChunckSize ) );
+      $b = $stmt->send_long_data( 1, substr( $p_param19, $p, self::$ourChunckSize ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
       $p += self::$ourChunckSize;
     }
 
-    $n = strlen( $theArg20 );
+    $n = strlen( $p_param20 );
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 2, substr( $theArg20, $p, self::$ourChunckSize ) );
+      $b = $stmt->send_long_data( 2, substr( $p_param20, $p, self::$ourChunckSize ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
       $p += self::$ourChunckSize;
     }
 
-    $n = strlen( $theArg21 );
+    $n = strlen( $p_param21 );
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 3, substr( $theArg21, $p, self::$ourChunckSize ) );
+      $b = $stmt->send_long_data( 3, substr( $p_param21, $p, self::$ourChunckSize ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
       $p += self::$ourChunckSize;
     }
 
-    $n = strlen( $theArg22 );
+    $n = strlen( $p_param22 );
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 4, substr( $theArg22, $p, self::$ourChunckSize ) );
+      $b = $stmt->send_long_data( 4, substr( $p_param22, $p, self::$ourChunckSize ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
       $p += self::$ourChunckSize;
     }
 
-    $n = strlen( $theArg23 );
+    $n = strlen( $p_param23 );
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 5, substr( $theArg23, $p, self::$ourChunckSize ) );
+      $b = $stmt->send_long_data( 5, substr( $p_param23, $p, self::$ourChunckSize ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
       $p += self::$ourChunckSize;
     }
 
-    $n = strlen( $theArg24 );
+    $n = strlen( $p_param24 );
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 6, substr( $theArg24, $p, self::$ourChunckSize ) );
+      $b = $stmt->send_long_data( 6, substr( $p_param24, $p, self::$ourChunckSize ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
       $p += self::$ourChunckSize;
     }
 
-    $n = strlen( $theArg25 );
+    $n = strlen( $p_param25 );
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 7, substr( $theArg25, $p, self::$ourChunckSize ) );
+      $b = $stmt->send_long_data( 7, substr( $p_param25, $p, self::$ourChunckSize ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
       $p += self::$ourChunckSize;
     }
@@ -588,9 +588,9 @@ class TST_DL
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_function.
    */
-  static function TestFunction($theArg0,$theArg1)
+  static function TestFunction($p_a, $p_b)
   {
-    return self::ExecuteSingleton0( 'SELECT tst_test_function('.self::QuoteNum($theArg0).','.self::QuoteNum($theArg1).') ' );
+    return self::ExecuteSingleton0( 'SELECT tst_test_function('.self::QuoteNum($p_a).','.self::QuoteNum($p_b).') ' );
   }
 
   //-------------------------------------------------------------------------------------------------------------------
@@ -604,7 +604,7 @@ class TST_DL
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_max_alllowed_packet.
    */
-  static function TestMaxAlllowedPacket($theArg0)
+  static function TestMaxAlllowedPacket($p_tmp_blob)
   {
     $query = 'CALL tst_test_max_alllowed_packet(?)';
     $stmt  = self::$ourMySql->prepare( $query );
@@ -614,11 +614,11 @@ class TST_DL
     $b = $stmt->bind_param( 'b', $null );
     if (!$b) self::ThrowSqlError( 'bind_param failed' );
 
-    $n = strlen( $theArg0 );
+    $n = strlen( $p_tmp_blob );
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 0, substr( $theArg0, $p, self::$ourChunckSize ) );
+      $b = $stmt->send_long_data( 0, substr( $p_tmp_blob, $p, self::$ourChunckSize ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
       $p += self::$ourChunckSize;
     }
@@ -654,17 +654,17 @@ class TST_DL
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_none.
    */
-  static function TestNone($theArg0)
+  static function TestNone($p_count)
   {
-    return self::ExecuteNone( 'CALL tst_test_none('.self::QuoteNum($theArg0).')' );
+    return self::ExecuteNone( 'CALL tst_test_none('.self::QuoteNum($p_count).')' );
   }
 
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_none_with_lob.
    */
-  static function TestNoneWithLob($theArg0,$theArg1)
+  static function TestNoneWithLob($p_count, $p_blob)
   {
-    $query = 'CALL tst_test_none_with_lob('.self::QuoteNum($theArg0).',?)';
+    $query = 'CALL tst_test_none_with_lob('.self::QuoteNum($p_count).',?)';
     $stmt  = self::$ourMySql->prepare( $query );
     if (!$stmt) self::ThrowSqlError( 'prepare failed' );
 
@@ -672,11 +672,11 @@ class TST_DL
     $b = $stmt->bind_param( 'b', $null );
     if (!$b) self::ThrowSqlError( 'bind_param failed' );
 
-    $n = strlen( $theArg1 );
+    $n = strlen( $p_blob );
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 0, substr( $theArg1, $p, self::$ourChunckSize ) );
+      $b = $stmt->send_long_data( 0, substr( $p_blob, $p, self::$ourChunckSize ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
       $p += self::$ourChunckSize;
     }
@@ -695,17 +695,17 @@ class TST_DL
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_row0a.
    */
-  static function TestRow0a($theArg0)
+  static function TestRow0a($p_count)
   {
-    return self::ExecuteRow0( 'CALL tst_test_row0a('.self::QuoteNum($theArg0).')');
+    return self::ExecuteRow0( 'CALL tst_test_row0a('.self::QuoteNum($p_count).')');
   }
 
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_row0a_with_lob.
    */
-  static function TestRow0aWithLob($theArg0,$theArg1)
+  static function TestRow0aWithLob($p_count, $p_blob)
   {
-    $query = 'CALL tst_test_row0a_with_lob('.self::QuoteNum($theArg0).',?)';
+    $query = 'CALL tst_test_row0a_with_lob('.self::QuoteNum($p_count).',?)';
     $stmt  = self::$ourMySql->prepare( $query );
     if (!$stmt) self::ThrowSqlError( 'prepare failed' );
 
@@ -713,11 +713,11 @@ class TST_DL
     $b = $stmt->bind_param( 'b', $null );
     if (!$b) self::ThrowSqlError( 'bind_param failed' );
 
-    $n = strlen( $theArg1 );
+    $n = strlen( $p_blob );
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 0, substr( $theArg1, $p, self::$ourChunckSize ) );
+      $b = $stmt->send_long_data( 0, substr( $p_blob, $p, self::$ourChunckSize ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
       $p += self::$ourChunckSize;
     }
@@ -751,17 +751,17 @@ class TST_DL
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_row1a.
    */
-  static function TestRow1a($theArg0)
+  static function TestRow1a($p_count)
   {
-    return self::ExecuteRow1( 'CALL tst_test_row1a('.self::QuoteNum($theArg0).')');
+    return self::ExecuteRow1( 'CALL tst_test_row1a('.self::QuoteNum($p_count).')');
   }
 
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_row1a_with_lob.
    */
-  static function TestRow1aWithLob($theArg0,$theArg1)
+  static function TestRow1aWithLob($p_count, $p_blob)
   {
-    $query = 'CALL tst_test_row1a_with_lob('.self::QuoteNum($theArg0).',?)';
+    $query = 'CALL tst_test_row1a_with_lob('.self::QuoteNum($p_count).',?)';
     $stmt  = self::$ourMySql->prepare( $query );
     if (!$stmt) self::ThrowSqlError( 'prepare failed' );
 
@@ -769,11 +769,11 @@ class TST_DL
     $b = $stmt->bind_param( 'b', $null );
     if (!$b) self::ThrowSqlError( 'bind_param failed' );
 
-    $n = strlen( $theArg1 );
+    $n = strlen( $p_blob );
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 0, substr( $theArg1, $p, self::$ourChunckSize ) );
+      $b = $stmt->send_long_data( 0, substr( $p_blob, $p, self::$ourChunckSize ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
       $p += self::$ourChunckSize;
     }
@@ -807,17 +807,17 @@ class TST_DL
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_rows1.
    */
-  static function TestRows1($theArg0)
+  static function TestRows1($p_count)
   {
-    return self::ExecuteRows( 'CALL tst_test_rows1('.self::QuoteNum($theArg0).')');
+    return self::ExecuteRows( 'CALL tst_test_rows1('.self::QuoteNum($p_count).')');
   }
 
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_rows1_with_lob.
    */
-  static function TestRows1WithLob($theArg0,$theArg1)
+  static function TestRows1WithLob($p_count, $p_blob)
   {
-    $query = 'CALL tst_test_rows1_with_lob('.self::QuoteNum($theArg0).',?)';
+    $query = 'CALL tst_test_rows1_with_lob('.self::QuoteNum($p_count).',?)';
     $stmt  = self::$ourMySql->prepare( $query );
     if (!$stmt) self::ThrowSqlError( 'prepare failed' );
 
@@ -825,11 +825,11 @@ class TST_DL
     $b = $stmt->bind_param( 'b', $null );
     if (!$b) self::ThrowSqlError( 'bind_param failed' );
 
-    $n = strlen( $theArg1 );
+    $n = strlen( $p_blob );
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 0, substr( $theArg1, $p, self::$ourChunckSize ) );
+      $b = $stmt->send_long_data( 0, substr( $p_blob, $p, self::$ourChunckSize ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
       $p += self::$ourChunckSize;
     }
@@ -862,9 +862,9 @@ class TST_DL
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_rows_with_index1.
    */
-  static function TestRowsWithIndex1($theArg0)
+  static function TestRowsWithIndex1($p_count)
   {
-    $result = self::Query( 'CALL tst_test_rows_with_index1('.self::QuoteNum($theArg0).')');
+    $result = self::Query( 'CALL tst_test_rows_with_index1('.self::QuoteNum($p_count).')');
     $ret = array();
     while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret[$row['tst_c01']][$row['tst_c02']][] = $row;
     $result->close();
@@ -875,9 +875,9 @@ class TST_DL
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_rows_with_index1_with_lob.
    */
-  static function TestRowsWithIndex1WithLob($theArg0,$theArg1)
+  static function TestRowsWithIndex1WithLob($p_count, $p_blob)
   {
-    $query = 'CALL tst_test_rows_with_index1_with_lob('.self::QuoteNum($theArg0).',?)';
+    $query = 'CALL tst_test_rows_with_index1_with_lob('.self::QuoteNum($p_count).',?)';
     $stmt  = self::$ourMySql->prepare( $query );
     if (!$stmt) self::ThrowSqlError( 'prepare failed' );
 
@@ -885,11 +885,11 @@ class TST_DL
     $b = $stmt->bind_param( 'b', $null );
     if (!$b) self::ThrowSqlError( 'bind_param failed' );
 
-    $n = strlen( $theArg1 );
+    $n = strlen( $p_blob );
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 0, substr( $theArg1, $p, self::$ourChunckSize ) );
+      $b = $stmt->send_long_data( 0, substr( $p_blob, $p, self::$ourChunckSize ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
       $p += self::$ourChunckSize;
     }
@@ -924,9 +924,9 @@ class TST_DL
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_rows_with_key1.
    */
-  static function TestRowsWithKey1($theArg0)
+  static function TestRowsWithKey1($p_count)
   {
-    $result = self::Query( 'CALL tst_test_rows_with_key1('.self::QuoteNum($theArg0).')');
+    $result = self::Query( 'CALL tst_test_rows_with_key1('.self::QuoteNum($p_count).')');
     $ret = array();
     while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret[$row['tst_c01']][$row['tst_c02']][$row['tst_c03']] = $row;
     $result->close();
@@ -937,9 +937,9 @@ class TST_DL
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_rows_with_key1_with_lob.
    */
-  static function TestRowsWithKey1WithLob($theArg0,$theArg1)
+  static function TestRowsWithKey1WithLob($p_count, $p_blob)
   {
-    $query = 'CALL tst_test_rows_with_key1_with_lob('.self::QuoteNum($theArg0).',?)';
+    $query = 'CALL tst_test_rows_with_key1_with_lob('.self::QuoteNum($p_count).',?)';
     $stmt  = self::$ourMySql->prepare( $query );
     if (!$stmt) self::ThrowSqlError( 'prepare failed' );
 
@@ -947,11 +947,11 @@ class TST_DL
     $b = $stmt->bind_param( 'b', $null );
     if (!$b) self::ThrowSqlError( 'bind_param failed' );
 
-    $n = strlen( $theArg1 );
+    $n = strlen( $p_blob );
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 0, substr( $theArg1, $p, self::$ourChunckSize ) );
+      $b = $stmt->send_long_data( 0, substr( $p_blob, $p, self::$ourChunckSize ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
       $p += self::$ourChunckSize;
     }
@@ -986,17 +986,17 @@ class TST_DL
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_singleton0a.
    */
-  static function TestSingleton0a($theArg0)
+  static function TestSingleton0a($p_count)
   {
-    return self::ExecuteSingleton0( 'CALL tst_test_singleton0a('.self::QuoteNum($theArg0).')');
+    return self::ExecuteSingleton0( 'CALL tst_test_singleton0a('.self::QuoteNum($p_count).')');
   }
 
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_singleton0a_with_lob.
    */
-  static function TestSingleton0aWithLob($theArg0,$theArg1)
+  static function TestSingleton0aWithLob($p_count, $p_blob)
   {
-    $query = 'CALL tst_test_singleton0a_with_lob('.self::QuoteNum($theArg0).',?)';
+    $query = 'CALL tst_test_singleton0a_with_lob('.self::QuoteNum($p_count).',?)';
     $stmt  = self::$ourMySql->prepare( $query );
     if (!$stmt) self::ThrowSqlError( 'prepare failed' );
 
@@ -1004,11 +1004,11 @@ class TST_DL
     $b = $stmt->bind_param( 'b', $null );
     if (!$b) self::ThrowSqlError( 'bind_param failed' );
 
-    $n = strlen( $theArg1 );
+    $n = strlen( $p_blob );
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 0, substr( $theArg1, $p, self::$ourChunckSize ) );
+      $b = $stmt->send_long_data( 0, substr( $p_blob, $p, self::$ourChunckSize ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
       $p += self::$ourChunckSize;
     }
@@ -1044,17 +1044,17 @@ class TST_DL
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_singleton1a.
    */
-  static function TestSingleton1a($theArg0)
+  static function TestSingleton1a($p_count)
   {
-    return self::ExecuteSingleton1( 'CALL tst_test_singleton1a('.self::QuoteNum($theArg0).')');
+    return self::ExecuteSingleton1( 'CALL tst_test_singleton1a('.self::QuoteNum($p_count).')');
   }
 
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_singleton1a_with_lob.
    */
-  static function TestSingleton1aWithLob($theArg0,$theArg1)
+  static function TestSingleton1aWithLob($p_count, $p_blob)
   {
-    $query = 'CALL tst_test_singleton1a_with_lob('.self::QuoteNum($theArg0).',?)';
+    $query = 'CALL tst_test_singleton1a_with_lob('.self::QuoteNum($p_count).',?)';
     $stmt  = self::$ourMySql->prepare( $query );
     if (!$stmt) self::ThrowSqlError( 'prepare failed' );
 
@@ -1062,11 +1062,11 @@ class TST_DL
     $b = $stmt->bind_param( 'b', $null );
     if (!$b) self::ThrowSqlError( 'bind_param failed' );
 
-    $n = strlen( $theArg1 );
+    $n = strlen( $p_blob );
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data( 0, substr( $theArg1, $p, self::$ourChunckSize ) );
+      $b = $stmt->send_long_data( 0, substr( $p_blob, $p, self::$ourChunckSize ) );
       if (!$b) self::ThrowSqlError( 'send_long_data failed' );
       $p += self::$ourChunckSize;
     }

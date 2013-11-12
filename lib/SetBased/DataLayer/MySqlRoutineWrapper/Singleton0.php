@@ -1,22 +1,19 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\DataLayer\MySqlRoutineWrapper;
-use       SetBased\DataLayer;
+
+use SetBased\DataLayer\MySqlRoutineWrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /** @brief Class for generating a wrapper function around a stored procedure that selects 0 or 1 row with only one
-           column.
+ * column.
  */
-class Singleton0 extends \SetBased\DataLayer\MySqlRoutineWrapper
+class Singleton0 extends MySqlRoutineWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
-  /** Generates code for calling the stored routine in the wrapper method.
-      @param $theRoutine       An array with the metadata about the stored routine.
-      @param $theArgumentTypes An array with the arguments types of the stored routine.
-   */
-  protected function writeResultHandler( $theRoutine, $theArgumentTypes )
+  protected function writeResultHandler( $theRoutine )
   {
-    $routine_args = $this->getRoutineArgs( $theArgumentTypes );
+    $routine_args = $this->getRoutineArgs( $theRoutine );
     $this->writeLine( 'return self::ExecuteSingleton0( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
   }
 
@@ -45,7 +42,7 @@ class Singleton0 extends \SetBased\DataLayer\MySqlRoutineWrapper
   protected function writeRoutineFunctionLobReturnData()
   {
     $this->writeLine( 'if ($b===false) self::ThrowSqlError( \'mysqli_stmt::fetch failed\' );' );
-    $this->writeLine( 'if (sizeof($tmp)>1) self::ThrowSqlError( \'The unexpected number of rows, expected 0 or 1 rows.\' );');
+    $this->writeLine( 'if (sizeof($tmp)>1) self::ThrowSqlError( \'The unexpected number of rows, expected 0 or 1 rows.\' );' );
     $this->writeLine();
     $this->writeLine( 'return ($tmp) ? $tmp[0][0] : null;' );
   }

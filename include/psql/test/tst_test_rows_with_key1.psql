@@ -1,4 +1,4 @@
-/** Test for desgination type rows_with_key.
+/** Test for designation type rows_with_key.
     @param p_count Bogus.
  */
 create procedure tst_test_rows_with_key1( p_count int )

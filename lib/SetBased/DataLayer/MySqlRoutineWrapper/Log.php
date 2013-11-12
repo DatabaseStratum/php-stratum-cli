@@ -1,35 +1,32 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\DataLayer\MySqlRoutineWrapper;
-use       SetBased\DataLayer;
+
+use SetBased\DataLayer\MySqlRoutineWrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /** @brief Class for generating a wrapper function around a stored procedure that logs the result sets of the wrapped
-           stored procedure.
+ * stored procedure.
  */
-class Log extends \SetBased\DataLayer\MySqlRoutineWrapper
+class Log extends MySqlRoutineWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
-  /** Generates code for calling the stored procedure in the wrapper method.
-      @param $theRoutine       An array with the metadata about the stored routine.
-      @param $theArgumentTypes An array with the arguments types of the stored routine.
-   */
-  protected function writeResultHandler( $theRoutine, $theArgumentTypes )
+  protected function writeResultHandler( $theRoutine )
   {
-    $routine_args = $this->getRoutineArgs( $theArgumentTypes );
+    $routine_args = $this->getRoutineArgs( $theRoutine );
     $this->writeLine( 'self::ExecuteLog( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\' );' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   protected function writeRoutineFunctionLobFetchData( $theRoutine )
   {
-    // Nothing todo.
+    // Nothing to do.
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   protected function writeRoutineFunctionLobReturnData()
   {
-    // Nothing todo.
+    // Nothing to do.
   }
 
   //--------------------------------------------------------------------------------------------------------------------
