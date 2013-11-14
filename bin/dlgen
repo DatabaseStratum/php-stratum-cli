@@ -4,7 +4,8 @@
 require __DIR__.'/../vendor/autoload.php';
 
 //----------------------------------------------------------------------------------------------------------------------
-/** Throws an execption. Arguments similair to printf.
+/**
+ * Throws an exception. Arguments similar to @c printf.
  */
 function set_assert_failed()
 {
@@ -214,7 +215,7 @@ function getSetting( $options )
       break;
 
     default:
-      $n = preg_match( "([A-Za-z0-9\_/]+.psql)", $param, $regs );
+      $n = preg_match( '([A-Za-z0-9\_/]+.psql)', $param, $regs );
       if ($n===false) set_assert_failed( 'Internal error.' );
       if ($n==1)
       {
@@ -248,8 +249,8 @@ function main( $options )
   else
   {
     // Normal mode: create constants, config file, load routines, and create routine wrapper class.
-    $consts = new \SetBased\DataLayer\MySqlConfigConstants;
-    $ret = $consts->run( $setting['config'] );
+    $constants = new \SetBased\DataLayer\MySqlConfigConstants;
+    $ret = $constants->run( $setting['config'] );
     if ($ret!=0) exit( $ret );
 
     $loader = new \SetBased\DataLayer\MySqlRoutineLoader;

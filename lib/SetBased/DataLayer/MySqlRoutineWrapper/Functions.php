@@ -10,11 +10,6 @@ use SetBased\DataLayer\MySqlRoutineWrapper;
 class Functions extends MySqlRoutineWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Generates code for calling the stored routine in the wrapper method.
-   *
-   * @param $theRoutine array The metadata of the stored routine.
-   */
   protected function writeResultHandler( $theRoutine )
   {
     $routine_args = $this->getRoutineArgs( $theRoutine );

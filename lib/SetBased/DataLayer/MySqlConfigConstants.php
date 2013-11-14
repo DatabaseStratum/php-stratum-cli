@@ -7,9 +7,12 @@ namespace SetBased\DataLayer;
  * Class for creating PHP constants based on column widths, and auto increment columns and labels.
  * @package SetBased\DataLayer
  */
+/**
+ * Class MySqlConfigConstants
+ * @package SetBased\DataLayer
+ */
 class MySqlConfigConstants
 {
-
   /**
    * @var string Filename with column names, their widths, and constant names.
    */
@@ -47,7 +50,7 @@ class MySqlConfigConstants
   private $myPrefix;
 
   /**
-   * @var array
+   * @var array All primary key labels, their widths and constant names.
    */
   private $myLabels = array();
 
@@ -79,7 +82,7 @@ class MySqlConfigConstants
   /** @} */
 
   /**
-   * Place holder in the template file that will be replaced with the generated config file.
+   * The placeholder in the template file to be replaced with the generated constants.
    */
   const C_PLACEHOLDER = '/* AUTO_GENERATED_CONSTS */';
 
@@ -162,7 +165,7 @@ class MySqlConfigConstants
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Reads configuration parameters.
+   * Reads configuration parameters from the configuration file.
    *
    * @param $theConfigFilename string.
    */
@@ -184,7 +187,7 @@ class MySqlConfigConstants
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Get all columns with data from table in MySQL into @a myColumns.
+   * Loads the width of all columns in the MySQL schema into @c myColumns.
    */
   private function getColumns()
   {
@@ -210,10 +213,12 @@ order by table_name
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /*
-   * Record constants and their values to the file @a myConstantsFilename.
-   */
-  /** Get the length of the field, depending on its type.
+  /**
+   * Returns the width of a field based on column.
+   *
+   * @param $theColumn array The column of which the field is based.
+   *
+   * @returns int
    */
   private function deriveFieldLength( $theColumn )
   {
@@ -282,6 +287,10 @@ order by table_name
   }
 
   //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Writes table and column names, the width of the column, and the constant name (if assigned) to @c
+   * myConstantsFilename.
+   */
   private function writeColumns()
   {
     $temp_filename = $this->myConstantsFilename.'.tmp';
@@ -337,7 +346,8 @@ order by table_name
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Get old column with constant from file @a myConstantsFilename
+   * Reads from file @c myConstantsFilename the previous table and column names, the width of the column,
+   * and the constant name (if assigned) and stores this data in @c myOldColumns.
    */
   private function getOldColumns()
   {
@@ -352,7 +362,7 @@ order by table_name
         $line_number++;
         if ($line!="\n")
         {
-          $n = preg_match( "/^\s*([a-zA-Z0-9_]+).([a-zA-Z0-9_]+)\s+(\d+)\s*(\*|[a-zA-Z0-9_]+)?\s*$/", $line, $matches );
+          $n = preg_match( '/^\s*([a-zA-Z0-9_]+).([a-zA-Z0-9_]+)\s+(\d+)\s*(\*|[a-zA-Z0-9_]+)?\s*$/', $line, $matches );
           if ($n===false) set_assert_failed( 'Internal error.' );
 
           if ($n==0)
@@ -382,7 +392,8 @@ order by table_name
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Enhances @c myOldColumns as follows:
+  /**
+   * Enhances @c myOldColumns as follows:
    * If the constant name is *, is is replaced with the column name prefixed by @c $this->myPrefix in uppercase.
    * Otherwise the constant name is set to uppercase.
    */
@@ -411,7 +422,7 @@ order by table_name
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Merges the columns with the old and new constants.
+   * Preserves relevant data in @c myOldColumns into @c myColumns.
    */
   private function mergeColumns()
   {
@@ -428,7 +439,8 @@ order by table_name
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Get all label from the MySQL.
+  /**
+   * Gets all primary key labels from the MySQL database and stores them into @c myLabels.
    */
   private function getLabels()
   {
