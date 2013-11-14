@@ -508,7 +508,7 @@ where   nullif(`%s`,'') is not null";
   private function writeTargetConfigFile()
   {
     $source = file_get_contents( $this->myTemplateConfigFilename );
-    if ($source===false) set_assert_failed( "Unable to open file '%s'.", $this->myTemplateConfigFilename );
+    if ($source===false) set_assert_failed( "Unable to read file '%s'.", $this->myTemplateConfigFilename );
 
     $width1    = 0;
     $width2    = 0;
@@ -534,13 +534,11 @@ where   nullif(`%s`,'') is not null";
 
     $source = str_replace( self::C_PLACEHOLDER , $constants, $source );
 
-
-
     $write_config_file_flag = true;
     if(file_exists($this->myConfigFilename))
     {
       $old_source = file_get_contents( $this->myConfigFilename );
-      if ($old_source===false) set_assert_failed( "Unable to open file '%s'.", $this->myConfigFilename );
+      if ($old_source===false) set_assert_failed( "Unable to read file '%s'.", $this->myConfigFilename );
       if ($source == $old_source) $write_config_file_flag = false;
     }
 
