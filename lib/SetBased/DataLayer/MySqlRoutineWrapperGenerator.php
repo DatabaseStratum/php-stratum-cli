@@ -106,7 +106,6 @@ class  MySqlRoutineWrapperGenerator
     if(file_exists($this->myWrapperFilename))
     {
       $old_code = file_get_contents( $this->myWrapperFilename );
-      // xxx if false
       if ($code == $old_code) $write_wrapper_file_flag = false;
     }
 

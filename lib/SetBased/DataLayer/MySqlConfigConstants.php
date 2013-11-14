@@ -78,6 +78,8 @@ class MySqlConfigConstants
   private $myDatabase;
   /** @} */
 
+  const C_PLACEHOLDER = '/* AUTO_GENERATED_CONSTS */';
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * @param $theConfigFilename
@@ -509,10 +511,30 @@ where   nullif(`%s`,'') is not null";
       $constants .= sprintf( $line_format, $constant, $value );
     }
 
-    $source = str_replace( '/* AUTO_GENERATED_CONSTS */', $constants, $source );
+    $count_match = substr_count( $source, self::C_PLACEHOLDER );
+    if($count_match != 1)
+    {
+      set_assert_failed( "Error expected 1 placeholder in file '%s', found %d.", $this->myTemplateConfigFilename, $count_match );
+    }
 
-    $ok = file_put_contents( $this->myConfigFilename, $source );
-    if ($ok===false) set_assert_failed( "Unable to write to file '%s'.", $this->myTemplateConfigFilename );
+    $source = str_replace( self::C_PLACEHOLDER , $constants, $source );
+
+
+
+    $write_config_file_flag = true;
+    if(file_exists($this->myConfigFilename))
+    {
+      $old_code = file_get_contents( $this->myConfigFilename );
+      if ($source == $old_code) $write_config_file_flag = false;
+    }
+
+    if ($write_config_file_flag)
+    {
+      $ok = file_put_contents( $this->myConfigFilename, $source );
+      if ($ok===false) set_assert_failed( "Unable to write to file '%s'.", $this->myConfigFilename );
+      echo "Created : '", $this->myConfigFilename, "'.\n";
+    }
+
   }
 
   //--------------------------------------------------------------------------------------------------------------------
