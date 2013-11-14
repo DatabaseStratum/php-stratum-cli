@@ -55,6 +55,12 @@ class  MySqlRoutineWrapperGenerator
    */
   private $myDatabase;
 
+
+  /**
+   * Place holder in the template file that will be replaced with the generated routine wrappers.
+   */
+  const C_PLACEHOLDER = '  /* AUTO_GENERATED_ROUTINE_WRAPPERS */';
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * The "main" of the wrapper generator.
@@ -82,15 +88,34 @@ class  MySqlRoutineWrapperGenerator
       }
     }
 
-    $replace['  /* AUTO_GENERATED_ROUINE_WRAPPERS */'] = $this->myCode;
+    $replace[self::C_PLACEHOLDER] = $this->myCode;
+
 
     $code = file_get_contents( $this->myTemplateFilename );
     if ($code===false) set_assert_failed( "Error reading file %s", $this->myTemplateFilename );
 
+    $count_match = substr_count($code, self::C_PLACEHOLDER );
+    if($count_match != 1)
+    {
+      set_assert_failed( "Error expected 1 placeholder in file '%s', found %d.", $this->myTemplateFilename, $count_match );
+    }
+
     $code = strtr( $code, $replace );
 
-    $bytes = file_put_contents( $this->myWrapperFilename, $code );
-    if ($bytes===false) set_assert_failed( "Error writing file %s", $this->myWrapperFilename );
+    $write_wrapper_file_flag = true;
+    if(file_exists($this->myWrapperFilename))
+    {
+      $old_code = file_get_contents( $this->myWrapperFilename );
+      // xxx if false
+      if ($code == $old_code) $write_wrapper_file_flag = false;
+    }
+
+    if ($write_wrapper_file_flag)
+    {
+      $bytes = file_put_contents( $this->myWrapperFilename, $code );
+      if ($bytes===false) set_assert_failed( "Error writing file %s", $this->myWrapperFilename );
+      echo "Created : '", $this->myWrapperFilename, "'.\n";
+    }
 
     \SET_DL::disconnect();
 

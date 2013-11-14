@@ -191,11 +191,16 @@ class TST_DL
   }
 
   // -------------------------------------------------------------------------------------------------------------------
-  /** Voert query @a $theQuery uit. De query mag een multi query zijn (b.v. een store procedure) en de output van de
+  /** Executes query $theQuery and logs the result set of $theQuery.
+      @param $theQuery The query
+  Voert query @a $theQuery uit. De query mag een multi query zijn (b.v. een store procedure) en de output van de
    *  query wordt gelogt.
    */
   public static function ExecuteLog( $theQuery )
   {
+    // Counter for the number of rows written/logged.
+    $n = 0;
+
     $ret = self::$ourMySql->multi_query( $theQuery );
     if (!$ret) self::ThrowSqlError( $theQuery );
     do
@@ -214,12 +219,15 @@ class TST_DL
             $line .= str_pad( $field, $fields[$i]->max_length );
           }
           echo date( 'Y-m-d H:i:s' ),' ',$line,"\n";
+          $n++;
         }
         $result->free();
       }
     }
     while (self::$ourMySql->next_result());
     if (self::$ourMySql->errno) self::ThrowSqlError( '$mysqli->next_result failed for \''.$theQuery.'\'' );
+
+    return $n;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -1098,6 +1106,8 @@ class TST_DL
 
     return $tmp[0][0];
   }
+
+
 
 
   // -------------------------------------------------------------------------------------------------------------------
