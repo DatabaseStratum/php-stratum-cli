@@ -78,6 +78,9 @@ class MySqlConfigConstants
   private $myDatabase;
   /** @} */
 
+  /**
+   * Place holder in the template file that will be replaced with the generated config file.
+   */
   const C_PLACEHOLDER = '/* AUTO_GENERATED_CONSTS */';
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -524,8 +527,9 @@ where   nullif(`%s`,'') is not null";
     $write_config_file_flag = true;
     if(file_exists($this->myConfigFilename))
     {
-      $old_code = file_get_contents( $this->myConfigFilename );
-      if ($source == $old_code) $write_config_file_flag = false;
+      $old_source = file_get_contents( $this->myConfigFilename );
+      if ($old_source===false) set_assert_failed( "Unable to open file '%s'.", $this->myConfigFilename );
+      if ($source == $old_source) $write_config_file_flag = false;
     }
 
     if ($write_config_file_flag)

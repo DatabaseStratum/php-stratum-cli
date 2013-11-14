@@ -106,6 +106,7 @@ class  MySqlRoutineWrapperGenerator
     if(file_exists($this->myWrapperFilename))
     {
       $old_code = file_get_contents( $this->myWrapperFilename );
+      if ($old_code===false) set_assert_failed( "Unable to open file '%s'.", $this->myConfigFilename );
       if ($code == $old_code) $write_wrapper_file_flag = false;
     }
 
