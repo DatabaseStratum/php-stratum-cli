@@ -10,7 +10,6 @@ use Exception;
  */
 class  MySqlRoutineLoader
 {
-
   /** @name Settings
   @{
    * Properties for settings.
@@ -193,9 +192,9 @@ class  MySqlRoutineLoader
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Get all .psql file from source directory and processed their.
+   * Loads all stored routines into MySQL.
    *
-   * @param string $theConfigFilename
+   * @param string $theConfigFilename The filename of the configuration file.
    */
   private function loadAll( $theConfigFilename )
   {
@@ -265,7 +264,7 @@ class  MySqlRoutineLoader
    * @param $theSectionName   string  The name of the section of the requested setting.
    * @param $theSettingName   string  The name of the setting of the requested setting.
    *
-   * @return array | null
+   * @return array|null
    */
   private function getSetting( $theSettings, $theMandatoryFlag, $theSectionName, $theSettingName )
   {
@@ -390,7 +389,7 @@ order by table_schema
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Get the metadata of stored routines from in file in to array @a myMetadata.
+   * Reads the metadata of stored routines from file @c myMetadataFilename in to @a myMetadata.
    */
   private function readRoutineMetaData()
   {
@@ -474,7 +473,7 @@ order by routine_name";
   }
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Gets real sql mode.
+   * Gets the SQL mode as in the order as preferred by MySQL .
    */
   private function getCorrectSqlMode()
   {
@@ -490,6 +489,7 @@ order by routine_name";
   /**
    * Loads the stored routine in file @c myCurrentPsqlFilename into MySQL.
    * Returns @c true on success, @c false otherwise.
+   * @return bool
    */
   private function loadPsqlFile()
   {
@@ -569,7 +569,7 @@ order by routine_name";
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Updates the metadata for current .psql if it exist, otherwise drops current metadata.
+   * Updates the metadata for current .psql file.
    */
   private function updateCurrentMetadata()
   {
@@ -599,7 +599,9 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Returns @c true if the current .psql file must be load or reloaded. Otherwise returns @c false.
+  /**
+   * Returns @c true if the current .psql file must be load or reloaded. Otherwise returns @c false.
+   * @return bool
    */
   private function getCurrentMustReload()
   {
@@ -643,12 +645,14 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Extracts the placeholders from the current psql file and stored them in @c myCurrentPlaceholders.
+  /**
+   * Extracts the placeholders from the current psql file and stored them in @c myCurrentPlaceholders.
    * Returns @c true if all placeholders are defined, @c false otherwise.
+   * @return bool
    */
   private function getCurrentPlaceholders()
   {
-    $err = preg_match_all( "(@[A-Za-z0-9\_\.]+(\%type)?@)", $this->myCurrentPsqlSourceCode, $matches );
+    $err = preg_match_all( '(@[A-Za-z0-9\_\.]+(\%type)?@)', $this->myCurrentPsqlSourceCode, $matches );
     if ($err===false) set_assert_failed( 'Internal error.' );
 
     $ret                         = true;
@@ -685,8 +689,10 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Extracts the designation type of the current stored routine and sets @c myCurrentType and @c myCurrentColumns.
+  /**
+   * Extracts the designation type of the current stored routine and sets @c myCurrentType and @c myCurrentColumns.
    * Returns @c true on success. Otherwise returns @c false.
+   * @return bool
    */
   private function getCurrentType()
   {
@@ -695,7 +701,7 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
 
     if ($key!==false)
     {
-      $n = preg_match( "/^\s*--\s+type:\s*(\w+)\s*([a-zA-Z0-9_,]+)?\s*/", $this->myCurrentPsqlSourceCodeLines[$key - 1],
+      $n = preg_match( '/^\s*--\s+type:\s*(\w+)\s*([a-zA-Z0-9_,]+)?\s*/', $this->myCurrentPsqlSourceCodeLines[$key - 1],
                        $matches );
       if ($n===false) set_assert_failed( "Internal error." );
 
@@ -719,7 +725,7 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
 
     if ($ret===false)
     {
-      echo sprintf( "Error: Unable to find the desgination type of the stored routine in file '%s'.",
+      echo sprintf( "Error: Unable to find the designation type of the stored routine in file '%s'.",
                     $this->myCurrentPsqlFilename );
     }
 
@@ -728,7 +734,8 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Extracts the name of the stored routine and the stored routine type (i.e. procedure or function) and sets @c    myCurrentRoutineType and @c myCurrentRoutineName.
+   * Extracts the name of the stored routine and the stored routine type (i.e. procedure or function) and sets
+   * @c    myCurrentRoutineType and @c myCurrentRoutineName.
    * Returns @c true on success. Otherwise returns @c false.
    * @todo Skip comments and string literals.
    * @return bool
@@ -807,7 +814,7 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Add magic constants to constant list.
+   * Add magic constants to current replace list.
    */
   private function setMagicConstant()
   {
@@ -823,7 +830,7 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Remove magic constant from list.
+   * Remove magic constants from current replace list.
    */
   private function unsetMagicConstant()
   {
@@ -834,7 +841,8 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Drops the current routine if it exists.
+  /**
+   * Drops the current routine if it exists.
    */
   private function dropCurrentRoutine()
   {
@@ -850,7 +858,7 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Drop obsolete routines (i.e. routines that exits in MySQL but for which we don't have a source file).
+   * Drops obsolete routines (i.e. routines that exits in MySQL but for which we don't have a source file).
    */
   private function dropObsoleteRoutines()
   {
@@ -868,10 +876,9 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
     }
   }
 
-
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Remove obsolete entries from metadata.
+   * Removes obsolete entries from @c myMetadata.
    */
   private function removeObsoleteMetadata()
   {
@@ -886,7 +893,7 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Writes the stored routines metadata @c myMetadatae to file @c myMetadataFilename.
+   * Writes the stored routines metadata @c myMetadata to file @c myMetadataFilename.
    */
   private function writeRoutineMetadata()
   {
@@ -896,7 +903,6 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
     $header = array('routine_name', 'type', 'argument_names', 'argument_types', 'columns', 'timestamp', 'replace');
 
     $n = fputcsv( $handle, $header );
-
     if ($n===false) set_assert_failed( "Error writing file '%s'.", $this->myMetadataFilename );
 
     $ok = ksort( $this->myMetadata );
@@ -914,7 +920,10 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Get all .psql file from list set in command line and processed their.
+   * Loads all stored routines in a list into MySQL.
+   *
+   * @param string $theConfigFilename The filename of the configuration file.
+   * @param array  $theFilenames      The list of files to be loaded.
    */
   private function loadList( $theConfigFilename, $theFilenames )
   {
@@ -922,7 +931,7 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
 
     \SET_DL::connect( $this->myHostName, $this->myUserName, $this->myPassword, $this->myDatabase );
 
-    $this->getPsqlFilename( $theFilenames );
+    $this->findPsqlFilesFromList( $theFilenames );
     $this->getColumnTypes();
     $this->readRoutineMetaData();
     $this->getConstants();
@@ -947,9 +956,9 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Get all .psql into $this->myPsqlFileNames file from list.
+   *  Find all .psql that actually exists from a list of filenames.
    */
-  private function getPsqlFilename( $theFilenames )
+  private function findPsqlFilesFromList( $theFilenames )
   {
     foreach ($theFilenames as $psql_filename)
     {
@@ -970,11 +979,13 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
       }
       else
       {
-        echo sprintf( " Not correct set name file or file not exists: '%s'.\n", $psql_filename );
+        echo sprintf( "File not exists: '%s'.\n", $psql_filename );
       }
     }
   }
 
   //--------------------------------------------------------------------------------------------------------------------
 }
+
+//----------------------------------------------------------------------------------------------------------------------
 

@@ -5,11 +5,15 @@ namespace SetBased\DataLayer;
 //----------------------------------------------------------------------------------------------------------------------
 /**
  * Class for generating a  class with wrappers for stored routines.
- *
  * @package SetBased\DataLayer
  */
 class  MySqlRoutineWrapperGenerator
 {
+  /**
+   * Place holder in the template file that will be replaced with the generated routine wrappers.
+   */
+  const C_PLACEHOLDER = '  /* AUTO_GENERATED_ROUTINE_WRAPPERS */';
+
   /**
    * @var string .The generated PHP code.
    */
@@ -40,7 +44,7 @@ class  MySqlRoutineWrapperGenerator
    */
   private $myHostName;
 
-   /**
+  /**
    * @var string user name.
    */
   private $myUserName;
@@ -50,16 +54,10 @@ class  MySqlRoutineWrapperGenerator
    */
   private $myPassword;
 
-   /**
-    * @var string The schema name.
+  /**
+   * @var string The schema name.
    */
   private $myDatabase;
-
-
-  /**
-   * Place holder in the template file that will be replaced with the generated routine wrappers.
-   */
-  const C_PLACEHOLDER = '  /* AUTO_GENERATED_ROUTINE_WRAPPERS */';
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -94,8 +92,8 @@ class  MySqlRoutineWrapperGenerator
     $code = file_get_contents( $this->myTemplateFilename );
     if ($code===false) set_assert_failed( "Error reading file %s", $this->myTemplateFilename );
 
-    $count_match = substr_count($code, self::C_PLACEHOLDER );
-    if($count_match != 1)
+    $count_match = substr_count( $code, self::C_PLACEHOLDER );
+    if ($count_match!=1)
     {
       set_assert_failed( "Error expected 1 placeholder in file '%s', found %d.", $this->myTemplateFilename, $count_match );
     }
@@ -103,10 +101,10 @@ class  MySqlRoutineWrapperGenerator
     $code = strtr( $code, $replace );
 
     $write_wrapper_file_flag = true;
-    if(file_exists($this->myWrapperFilename))
+    if (file_exists( $this->myWrapperFilename ))
     {
       $old_code = file_get_contents( $this->myWrapperFilename );
-      if ($code == $old_code) $write_wrapper_file_flag = false;
+      if ($code==$old_code) $write_wrapper_file_flag = false;
     }
 
     if ($write_wrapper_file_flag)
@@ -175,7 +173,6 @@ class  MySqlRoutineWrapperGenerator
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Returns the metadata of stored routines stored in the metadata file $myMetadataFilename.
-   *
    * @return array
    */
   private function readRoutineMetaData()
@@ -212,7 +209,7 @@ class  MySqlRoutineWrapperGenerator
       $routines[$line_number]['argument_types'] = ($row[3]) ? explode( ',', $row[3] ) : array();
       $routines[$line_number]['columns']        = ($row[4]) ? explode( ',', $row[4] ) : array();
     }
-    if (!feof($handle)) set_assert_failed('Did not reach eof of %s', $theFilename);
+    if (!feof( $handle )) set_assert_failed( 'Did not reach eof of %s', $theFilename );
 
     $err = fclose( $handle );
     if ($err===false) set_assert_failed( "Error closing file '%s'.", $theFilename );
@@ -224,7 +221,7 @@ class  MySqlRoutineWrapperGenerator
   /**
    * Generates a complete wrapper method for a stored routine.
    *
-   * @param $theRoutine array The row from table DEV_ROUTINE.
+   * @param $theRoutine array The metadata of the stored routine.
    */
   private function writeRoutineFunction( $theRoutine )
   {
@@ -235,3 +232,4 @@ class  MySqlRoutineWrapperGenerator
   //--------------------------------------------------------------------------------------------------------------------
 }
 
+//----------------------------------------------------------------------------------------------------------------------
