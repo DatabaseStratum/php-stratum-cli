@@ -224,9 +224,9 @@ abstract class MySqlRoutineWrapper
     $this->writeSeparator();
     $this->writeLine( '/** @sa Stored Routine '.$theRoutine['routine_name'].'.' );
     $this->writeLine( ' */' );
-    $this->writeLine( 'static function '.$wrapper_function_name.'('.$wrapper_args.')' );
+    $this->writeLine( 'static function '.$wrapper_function_name.'( '.$wrapper_args.' )' );
     $this->writeLine( '{' );
-    $this->writeLine( '$query = \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\';' );
+    $this->writeLine( '$query = \'CALL '.$theRoutine['routine_name'].'( '.$routine_args.' )\';' );
     $this->writeLine( '$stmt  = self::$ourMySql->prepare( $query );' );
     $this->writeLine( 'if (!$stmt) self::ThrowSqlError( \'prepare failed\' );' );
     $this->writeLine();
@@ -285,7 +285,7 @@ abstract class MySqlRoutineWrapper
     $this->writeSeparator();
     $this->writeLine( '/** @sa Stored Routine '.$theRoutine['routine_name'].'.' );
     $this->writeLine( ' */' );
-    $this->writeLine( 'static function '.$wrapper_function_name.'('.$wrapper_args.')' );
+    $this->writeLine( 'static function '.$wrapper_function_name.'( '.$wrapper_args.' )' );
     $this->writeLine( '{' );
 
     $this->writeResultHandler( $theRoutine, $theRoutine['argument_types'] );
@@ -583,7 +583,7 @@ abstract class MySqlRoutineWrapper
       case 'decimal':
       case 'float':
       case 'double':
-        $ret = '\'.self::QuoteNum($'.$argName.').\'';
+        $ret = '\'.self::QuoteNum( $'.$argName.' ).\'';
         break;
 
       case 'varbinary':
@@ -591,7 +591,7 @@ abstract class MySqlRoutineWrapper
 
       case 'char':
       case 'varchar':
-        $ret = '\'.self::QuoteString($'.$argName.').\'';
+        $ret = '\'.self::QuoteString( $'.$argName.' ).\'';
         break;
 
       case 'time':
@@ -599,16 +599,16 @@ abstract class MySqlRoutineWrapper
 
       case 'date':
       case 'datetime':
-        $ret = '\'.self::QuoteString($'.$argName.').\'';
+        $ret = '\'.self::QuoteString( $'.$argName.' ).\'';
         break;
 
       case 'enum':
       case 'set':
-        $ret = '\'.self::QuoteString($'.$argName.').\'';
+        $ret = '\'.self::QuoteString( $'.$argName.' ).\'';
         break;
 
       case 'bit':
-        $ret = '\'.self::QuoteBit($'.$argName.').\'';
+        $ret = '\'.self::QuoteBit( $'.$argName.' ).\'';
         break;
 
       case 'tinytext':
