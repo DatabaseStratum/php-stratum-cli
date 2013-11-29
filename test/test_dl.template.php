@@ -259,7 +259,7 @@ class TST_DL
     if (!($n==0 || $n==1))
     {
       TST_DL::AssertFailed( "Number of rows selected by query below is %d expected 0 or 1.\n%s",
-                            $result->num_rows,
+                            $n,
                             $theQuery );
     } // @codeCoverageIgnore
 
@@ -281,7 +281,7 @@ class TST_DL
     if($n!=1)
     {
       TST_DL::AssertFailed( "Number of rows selected by query below is %d expected 1.\n%s",
-                            $result->num_rows,
+                            $n,
                             $theQuery );
     } // @codeCoverageIgnore
 
@@ -319,7 +319,7 @@ class TST_DL
     if (!($n==0 || $n==1))
     {
       TST_DL::AssertFailed( "Number of rows selected by query below is %d expected 0 or 1.\n%s",
-                            $result->num_rows,
+                            $n,
                             $theQuery );
     } // @codeCoverageIgnore
 
@@ -342,7 +342,7 @@ class TST_DL
     if ($n!=1)
     {
       TST_DL::AssertFailed( "Number of rows selected by query below is %d expected 1.\n%s",
-                            $result->num_rows,
+                            $n,
                             $theQuery );
     } // @codeCoverageIgnore
 
