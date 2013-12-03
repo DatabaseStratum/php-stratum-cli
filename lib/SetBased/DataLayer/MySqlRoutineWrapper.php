@@ -40,67 +40,65 @@ abstract class MySqlRoutineWrapper
    */
   static public function createRoutineWrapper( $theRoutine )
   {
+    $wrapper ='';
     switch ($theRoutine['type'])
     {
       case 'bulk':
-        $class = 'Bulk';
+        $wrapper = new \SetBased\DataLayer\MySqlRoutineWrapper\Bulk();
         break;
 
       case 'bulk_insert':
-        $class = 'BulkInsert';
+        $wrapper = new \SetBased\DataLayer\MySqlRoutineWrapper\BulkInsert();
         break;
 
       case 'log':
-        $class = 'Log';
+        $wrapper = new \SetBased\DataLayer\MySqlRoutineWrapper\Log();
         break;
 
       case 'none':
-        $class = 'None';
+        $wrapper = new \SetBased\DataLayer\MySqlRoutineWrapper\None();
         break;
 
       case 'row0':
-        $class = 'Row0';
+        $wrapper = new \SetBased\DataLayer\MySqlRoutineWrapper\Row0();
         break;
 
       case 'row1':
-        $class = 'Row1';
+        $wrapper = new \SetBased\DataLayer\MySqlRoutineWrapper\Row1();
         break;
 
       case 'rows':
-        $class = 'Rows';
+        $wrapper = new \SetBased\DataLayer\MySqlRoutineWrapper\Rows();
         break;
 
       case 'rows_with_key':
-        $class = 'RowsWithKey';
+        $wrapper = new \SetBased\DataLayer\MySqlRoutineWrapper\RowsWithKey();
         break;
 
       case 'rows_with_index':
-        $class = 'RowsWithIndex';
+        $wrapper = new \SetBased\DataLayer\MySqlRoutineWrapper\RowsWithIndex();
         break;
 
       case 'singleton0':
-        $class = 'Singleton0';
+        $wrapper = new \SetBased\DataLayer\MySqlRoutineWrapper\Singleton0();
         break;
 
       case 'singleton1':
-        $class = 'Singleton1';
+        $wrapper = new \SetBased\DataLayer\MySqlRoutineWrapper\Singleton1();
         break;
 
       case 'function':
-        $class = 'Functions';
+        $wrapper = new \SetBased\DataLayer\MySqlRoutineWrapper\Functions();
         break;
 
       case 'hidden':
-        $class = 'Hidden';
+        $wrapper = new \SetBased\DataLayer\MySqlRoutineWrapper\Hidden();
         break;
 
       default:
-        $class = ''; // Prevent warnings (possible $class not defined) from IDE.
+        // Prevent warnings (possible $class not defined) from IDE.
         set_assert_failed( "Unknown routine type '%s'.", $theRoutine['type']."\n" );
     }
-
-    $class   = '\SetBased\DataLayer\MySqlRoutineWrapper\\'.$class;
-    $wrapper = new $class();
 
     return $wrapper;
   }
