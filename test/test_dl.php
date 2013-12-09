@@ -259,7 +259,7 @@ class TST_DL
     if (!($n==0 || $n==1))
     {
       TST_DL::AssertFailed( "Number of rows selected by query below is %d expected 0 or 1.\n%s",
-                            $result->num_rows,
+                            $n,
                             $theQuery );
     } // @codeCoverageIgnore
 
@@ -281,7 +281,7 @@ class TST_DL
     if($n!=1)
     {
       TST_DL::AssertFailed( "Number of rows selected by query below is %d expected 1.\n%s",
-                            $result->num_rows,
+                            $n,
                             $theQuery );
     } // @codeCoverageIgnore
 
@@ -319,7 +319,7 @@ class TST_DL
     if (!($n==0 || $n==1))
     {
       TST_DL::AssertFailed( "Number of rows selected by query below is %d expected 0 or 1.\n%s",
-                            $result->num_rows,
+                            $n,
                             $theQuery );
     } // @codeCoverageIgnore
 
@@ -342,7 +342,7 @@ class TST_DL
     if ($n!=1)
     {
       TST_DL::AssertFailed( "Number of rows selected by query below is %d expected 1.\n%s",
-                            $result->num_rows,
+                            $n,
                             $theQuery );
     } // @codeCoverageIgnore
 
@@ -418,7 +418,7 @@ class TST_DL
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_magic_constant01.
    */
-  static function MagicConstant01()
+  static function MagicConstant01(  )
   {
     return self::ExecuteSingleton1( 'CALL tst_magic_constant01()');
   }
@@ -426,7 +426,7 @@ class TST_DL
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_magic_constant02.
    */
-  static function MagicConstant02()
+  static function MagicConstant02(  )
   {
     return self::ExecuteSingleton1( 'CALL tst_magic_constant02()');
   }
@@ -434,7 +434,7 @@ class TST_DL
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_magic_constant03.
    */
-  static function MagicConstant03()
+  static function MagicConstant03(  )
   {
     return self::ExecuteSingleton1( 'CALL tst_magic_constant03()');
   }
@@ -442,7 +442,7 @@ class TST_DL
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_magic_constant04.
    */
-  static function MagicConstant04()
+  static function MagicConstant04(  )
   {
     return self::ExecuteSingleton1( 'CALL tst_magic_constant04()');
   }
@@ -450,7 +450,7 @@ class TST_DL
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_magic_constant05.
    */
-  static function MagicConstant05()
+  static function MagicConstant05(  )
   {
     return self::ExecuteSingleton1( 'CALL tst_magic_constant05()');
   }
@@ -458,17 +458,17 @@ class TST_DL
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test01.
    */
-  static function Test01($p_param00, $p_param01, $p_param02, $p_param03, $p_param04, $p_param05, $p_param06, $p_param07, $p_param08, $p_param09, $p_param10, $p_param11, $p_param12, $p_param13, $p_param14, $p_param15, $p_param16, $p_param17, $p_param26, $p_param27)
+  static function Test01( $p_param00, $p_param01, $p_param02, $p_param03, $p_param04, $p_param05, $p_param06, $p_param07, $p_param08, $p_param09, $p_param10, $p_param11, $p_param12, $p_param13, $p_param14, $p_param15, $p_param16, $p_param17, $p_param26, $p_param27 )
   {
-    return self::ExecuteNone( 'CALL tst_test01('.self::QuoteNum($p_param00).','.self::QuoteNum($p_param01).','.self::QuoteNum($p_param02).','.self::QuoteNum($p_param03).','.self::QuoteNum($p_param04).','.self::QuoteNum($p_param05).','.self::QuoteNum($p_param06).','.self::QuoteNum($p_param07).','.self::QuoteBit($p_param08).','.self::QuoteString($p_param09).','.self::QuoteString($p_param10).','.self::QuoteString($p_param11).','.self::QuoteString($p_param12).','.self::QuoteNum($p_param13).','.self::QuoteString($p_param14).','.self::QuoteString($p_param15).','.self::QuoteString($p_param16).','.self::QuoteString($p_param17).','.self::QuoteString($p_param26).','.self::QuoteString($p_param27).')' );
+    return self::ExecuteNone( 'CALL tst_test01('.self::QuoteNum( $p_param00 ).','.self::QuoteNum( $p_param01 ).','.self::QuoteNum( $p_param02 ).','.self::QuoteNum( $p_param03 ).','.self::QuoteNum( $p_param04 ).','.self::QuoteNum( $p_param05 ).','.self::QuoteNum( $p_param06 ).','.self::QuoteNum( $p_param07 ).','.self::QuoteBit( $p_param08 ).','.self::QuoteString( $p_param09 ).','.self::QuoteString( $p_param10 ).','.self::QuoteString( $p_param11 ).','.self::QuoteString( $p_param12 ).','.self::QuoteNum( $p_param13 ).','.self::QuoteString( $p_param14 ).','.self::QuoteString( $p_param15 ).','.self::QuoteString( $p_param16 ).','.self::QuoteString( $p_param17 ).','.self::QuoteString( $p_param26 ).','.self::QuoteString( $p_param27 ).')' );
   }
 
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test02.
    */
-  static function Test02($p_param00, $p_param01, $p_param02, $p_param03, $p_param04, $p_param05, $p_param06, $p_param07, $p_param08, $p_param09, $p_param10, $p_param11, $p_param12, $p_param13, $p_param14, $p_param15, $p_param16, $p_param17, $p_param18, $p_param19, $p_param20, $p_param21, $p_param22, $p_param23, $p_param24, $p_param25, $p_param26, $p_param27)
+  static function Test02( $p_param00, $p_param01, $p_param02, $p_param03, $p_param04, $p_param05, $p_param06, $p_param07, $p_param08, $p_param09, $p_param10, $p_param11, $p_param12, $p_param13, $p_param14, $p_param15, $p_param16, $p_param17, $p_param18, $p_param19, $p_param20, $p_param21, $p_param22, $p_param23, $p_param24, $p_param25, $p_param26, $p_param27 )
   {
-    $query = 'CALL tst_test02('.self::QuoteNum($p_param00).','.self::QuoteNum($p_param01).','.self::QuoteNum($p_param02).','.self::QuoteNum($p_param03).','.self::QuoteNum($p_param04).','.self::QuoteNum($p_param05).','.self::QuoteNum($p_param06).','.self::QuoteNum($p_param07).','.self::QuoteBit($p_param08).','.self::QuoteString($p_param09).','.self::QuoteString($p_param10).','.self::QuoteString($p_param11).','.self::QuoteString($p_param12).','.self::QuoteNum($p_param13).','.self::QuoteString($p_param14).','.self::QuoteString($p_param15).','.self::QuoteString($p_param16).','.self::QuoteString($p_param17).',?,?,?,?,?,?,?,?,'.self::QuoteString($p_param26).','.self::QuoteString($p_param27).')';
+    $query = 'CALL tst_test02( '.self::QuoteNum( $p_param00 ).','.self::QuoteNum( $p_param01 ).','.self::QuoteNum( $p_param02 ).','.self::QuoteNum( $p_param03 ).','.self::QuoteNum( $p_param04 ).','.self::QuoteNum( $p_param05 ).','.self::QuoteNum( $p_param06 ).','.self::QuoteNum( $p_param07 ).','.self::QuoteBit( $p_param08 ).','.self::QuoteString( $p_param09 ).','.self::QuoteString( $p_param10 ).','.self::QuoteString( $p_param11 ).','.self::QuoteString( $p_param12 ).','.self::QuoteNum( $p_param13 ).','.self::QuoteString( $p_param14 ).','.self::QuoteString( $p_param15 ).','.self::QuoteString( $p_param16 ).','.self::QuoteString( $p_param17 ).',?,?,?,?,?,?,?,?,'.self::QuoteString( $p_param26 ).','.self::QuoteString( $p_param27 ).' )';
     $stmt  = self::$ourMySql->prepare( $query );
     if (!$stmt) self::ThrowSqlError( 'prepare failed' );
 
@@ -562,7 +562,7 @@ class TST_DL
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_bulk_insert01.
    */
-  static function TestBulkInsert01($theData)
+  static function TestBulkInsert01( $theData )
   {
     self::Query(  'CALL tst_test_bulk_insert01()');
     $sql = "INSERT INTO `TST_TEMPO`(`tst_col1`,`tst_col2`,`tst_col3`,`tst_col4`,`tst_col5`,`tst_col6`,`tst_col7`,`tst_col8`,`tst_col9`,`tst_col10`,`tst_col11`,`tst_col12`,`tst_col13`,`tst_col14`,`tst_col15`,`tst_col16`,`tst_col17`,`tst_col18`,`tst_col19`,`tst_col20`)";
@@ -579,7 +579,7 @@ class TST_DL
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_bulk_insert02.
    */
-  static function TestBulkInsert02($theData)
+  static function TestBulkInsert02( $theData )
   {
     self::Query(  'CALL tst_test_bulk_insert02()');
     $sql = "INSERT INTO `TST_TEMPO`(`tst_col1`,`tst_col4`,`tst_col5`)";
@@ -596,15 +596,15 @@ class TST_DL
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_function.
    */
-  static function TestFunction($p_a, $p_b)
+  static function TestFunction( $p_a, $p_b )
   {
-    return self::ExecuteSingleton0( 'SELECT tst_test_function('.self::QuoteNum($p_a).','.self::QuoteNum($p_b).') ' );
+    return self::ExecuteSingleton0( 'SELECT tst_test_function('.self::QuoteNum( $p_a ).','.self::QuoteNum( $p_b ).') ' );
   }
 
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_log.
    */
-  static function TestLog()
+  static function TestLog(  )
   {
     self::ExecuteLog( 'CALL tst_test_log()' );
   }
@@ -612,9 +612,9 @@ class TST_DL
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_max_alllowed_packet.
    */
-  static function TestMaxAlllowedPacket($p_tmp_blob)
+  static function TestMaxAlllowedPacket( $p_tmp_blob )
   {
-    $query = 'CALL tst_test_max_alllowed_packet(?)';
+    $query = 'CALL tst_test_max_alllowed_packet( ? )';
     $stmt  = self::$ourMySql->prepare( $query );
     if (!$stmt) self::ThrowSqlError( 'prepare failed' );
 
@@ -662,17 +662,17 @@ class TST_DL
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_none.
    */
-  static function TestNone($p_count)
+  static function TestNone( $p_count )
   {
-    return self::ExecuteNone( 'CALL tst_test_none('.self::QuoteNum($p_count).')' );
+    return self::ExecuteNone( 'CALL tst_test_none('.self::QuoteNum( $p_count ).')' );
   }
 
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_none_with_lob.
    */
-  static function TestNoneWithLob($p_count, $p_blob)
+  static function TestNoneWithLob( $p_count, $p_blob )
   {
-    $query = 'CALL tst_test_none_with_lob('.self::QuoteNum($p_count).',?)';
+    $query = 'CALL tst_test_none_with_lob( '.self::QuoteNum( $p_count ).',? )';
     $stmt  = self::$ourMySql->prepare( $query );
     if (!$stmt) self::ThrowSqlError( 'prepare failed' );
 
@@ -703,17 +703,17 @@ class TST_DL
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_row0a.
    */
-  static function TestRow0a($p_count)
+  static function TestRow0a( $p_count )
   {
-    return self::ExecuteRow0( 'CALL tst_test_row0a('.self::QuoteNum($p_count).')');
+    return self::ExecuteRow0( 'CALL tst_test_row0a('.self::QuoteNum( $p_count ).')');
   }
 
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_row0a_with_lob.
    */
-  static function TestRow0aWithLob($p_count, $p_blob)
+  static function TestRow0aWithLob( $p_count, $p_blob )
   {
-    $query = 'CALL tst_test_row0a_with_lob('.self::QuoteNum($p_count).',?)';
+    $query = 'CALL tst_test_row0a_with_lob( '.self::QuoteNum( $p_count ).',? )';
     $stmt  = self::$ourMySql->prepare( $query );
     if (!$stmt) self::ThrowSqlError( 'prepare failed' );
 
@@ -759,17 +759,17 @@ class TST_DL
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_row1a.
    */
-  static function TestRow1a($p_count)
+  static function TestRow1a( $p_count )
   {
-    return self::ExecuteRow1( 'CALL tst_test_row1a('.self::QuoteNum($p_count).')');
+    return self::ExecuteRow1( 'CALL tst_test_row1a('.self::QuoteNum( $p_count ).')');
   }
 
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_row1a_with_lob.
    */
-  static function TestRow1aWithLob($p_count, $p_blob)
+  static function TestRow1aWithLob( $p_count, $p_blob )
   {
-    $query = 'CALL tst_test_row1a_with_lob('.self::QuoteNum($p_count).',?)';
+    $query = 'CALL tst_test_row1a_with_lob( '.self::QuoteNum( $p_count ).',? )';
     $stmt  = self::$ourMySql->prepare( $query );
     if (!$stmt) self::ThrowSqlError( 'prepare failed' );
 
@@ -815,17 +815,17 @@ class TST_DL
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_rows1.
    */
-  static function TestRows1($p_count)
+  static function TestRows1( $p_count )
   {
-    return self::ExecuteRows( 'CALL tst_test_rows1('.self::QuoteNum($p_count).')');
+    return self::ExecuteRows( 'CALL tst_test_rows1('.self::QuoteNum( $p_count ).')' );
   }
 
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_rows1_with_lob.
    */
-  static function TestRows1WithLob($p_count, $p_blob)
+  static function TestRows1WithLob( $p_count, $p_blob )
   {
-    $query = 'CALL tst_test_rows1_with_lob('.self::QuoteNum($p_count).',?)';
+    $query = 'CALL tst_test_rows1_with_lob( '.self::QuoteNum( $p_count ).',? )';
     $stmt  = self::$ourMySql->prepare( $query );
     if (!$stmt) self::ThrowSqlError( 'prepare failed' );
 
@@ -870,9 +870,9 @@ class TST_DL
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_rows_with_index1.
    */
-  static function TestRowsWithIndex1($p_count)
+  static function TestRowsWithIndex1( $p_count )
   {
-    $result = self::Query( 'CALL tst_test_rows_with_index1('.self::QuoteNum($p_count).')');
+    $result = self::Query( 'CALL tst_test_rows_with_index1('.self::QuoteNum( $p_count ).')');
     $ret = array();
     while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret[$row['tst_c01']][$row['tst_c02']][] = $row;
     $result->close();
@@ -883,9 +883,9 @@ class TST_DL
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_rows_with_index1_with_lob.
    */
-  static function TestRowsWithIndex1WithLob($p_count, $p_blob)
+  static function TestRowsWithIndex1WithLob( $p_count, $p_blob )
   {
-    $query = 'CALL tst_test_rows_with_index1_with_lob('.self::QuoteNum($p_count).',?)';
+    $query = 'CALL tst_test_rows_with_index1_with_lob( '.self::QuoteNum( $p_count ).',? )';
     $stmt  = self::$ourMySql->prepare( $query );
     if (!$stmt) self::ThrowSqlError( 'prepare failed' );
 
@@ -932,9 +932,9 @@ class TST_DL
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_rows_with_key1.
    */
-  static function TestRowsWithKey1($p_count)
+  static function TestRowsWithKey1( $p_count )
   {
-    $result = self::Query( 'CALL tst_test_rows_with_key1('.self::QuoteNum($p_count).')');
+    $result = self::Query( 'CALL tst_test_rows_with_key1('.self::QuoteNum( $p_count ).')');
     $ret = array();
     while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret[$row['tst_c01']][$row['tst_c02']][$row['tst_c03']] = $row;
     $result->close();
@@ -945,9 +945,9 @@ class TST_DL
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_rows_with_key1_with_lob.
    */
-  static function TestRowsWithKey1WithLob($p_count, $p_blob)
+  static function TestRowsWithKey1WithLob( $p_count, $p_blob )
   {
-    $query = 'CALL tst_test_rows_with_key1_with_lob('.self::QuoteNum($p_count).',?)';
+    $query = 'CALL tst_test_rows_with_key1_with_lob( '.self::QuoteNum( $p_count ).',? )';
     $stmt  = self::$ourMySql->prepare( $query );
     if (!$stmt) self::ThrowSqlError( 'prepare failed' );
 
@@ -994,17 +994,17 @@ class TST_DL
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_singleton0a.
    */
-  static function TestSingleton0a($p_count)
+  static function TestSingleton0a( $p_count )
   {
-    return self::ExecuteSingleton0( 'CALL tst_test_singleton0a('.self::QuoteNum($p_count).')');
+    return self::ExecuteSingleton0( 'CALL tst_test_singleton0a('.self::QuoteNum( $p_count ).')');
   }
 
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_singleton0a_with_lob.
    */
-  static function TestSingleton0aWithLob($p_count, $p_blob)
+  static function TestSingleton0aWithLob( $p_count, $p_blob )
   {
-    $query = 'CALL tst_test_singleton0a_with_lob('.self::QuoteNum($p_count).',?)';
+    $query = 'CALL tst_test_singleton0a_with_lob( '.self::QuoteNum( $p_count ).',? )';
     $stmt  = self::$ourMySql->prepare( $query );
     if (!$stmt) self::ThrowSqlError( 'prepare failed' );
 
@@ -1052,17 +1052,17 @@ class TST_DL
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_singleton1a.
    */
-  static function TestSingleton1a($p_count)
+  static function TestSingleton1a( $p_count )
   {
-    return self::ExecuteSingleton1( 'CALL tst_test_singleton1a('.self::QuoteNum($p_count).')');
+    return self::ExecuteSingleton1( 'CALL tst_test_singleton1a('.self::QuoteNum( $p_count ).')');
   }
 
   //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test_singleton1a_with_lob.
    */
-  static function TestSingleton1aWithLob($p_count, $p_blob)
+  static function TestSingleton1aWithLob( $p_count, $p_blob )
   {
-    $query = 'CALL tst_test_singleton1a_with_lob('.self::QuoteNum($p_count).',?)';
+    $query = 'CALL tst_test_singleton1a_with_lob( '.self::QuoteNum( $p_count ).',? )';
     $stmt  = self::$ourMySql->prepare( $query );
     if (!$stmt) self::ThrowSqlError( 'prepare failed' );
 
