@@ -231,9 +231,27 @@ class MySqlRoutineWrapperGenerator
   //--------------------------------------------------------------------------------------------------------------------
   private function writeClassHeader()
   {
+    $p = strrpos( $this->myWrapperClassName, '\\' );
+    if ($p!==false)
+    {
+      $namespace  = ltrim( substr( $this->myWrapperClassName, 0, $p ), '\\' );
+      $class_name = substr( $this->myWrapperClassName, $p + 1 );
+    }
+    else
+    {
+      $namespace  = null;
+      $class_name = $this->myWrapperClassName;
+    }
+
     $this->myCode .= "<?php\n";
     $this->myCode .= '//'.str_repeat( '-', MySqlRoutineWrapper::C_PAGE_WIDTH - 2 )."\n";
-    $this->myCode .= 'class '.$this->myWrapperClassName.' extends '.$this->myParentClassName."\n";
+    if ($namespace)
+    {
+      $this->myCode .= "namespace ${namespace};\n";
+      $this->myCode .= "\n";
+      $this->myCode .= '//'.str_repeat( '-', MySqlRoutineWrapper::C_PAGE_WIDTH - 2 )."\n";
+    }
+    $this->myCode .= 'class '.$class_name.' extends '.$this->myParentClassName."\n";
     $this->myCode .= "{\n";
   }
 
