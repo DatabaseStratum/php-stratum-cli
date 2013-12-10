@@ -7,7 +7,7 @@ class Singleton0Test extends PHPUnit_Framework_TestCase
    */
   protected function setUp()
   {
-    TST_DL::Connect( 'localhost', 'test', 'test', 'test' );
+    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -15,7 +15,7 @@ class Singleton0Test extends PHPUnit_Framework_TestCase
    */
   public function test1()
   {
-    $ret = TST_DL::TestSingleton0a( 0 );
+    $ret = DataLayer::testSingleton0a( 0 );
     $this->assertInternalType( 'null', $ret );
   }
 
@@ -24,7 +24,7 @@ class Singleton0Test extends PHPUnit_Framework_TestCase
    */
   public function test2()
   {
-    $ret = TST_DL::TestSingleton0a( 1 );
+    $ret = DataLayer::testSingleton0a( 1 );
     $this->assertInternalType( 'string', $ret );
   }
 
@@ -34,7 +34,7 @@ class Singleton0Test extends PHPUnit_Framework_TestCase
    */
   public function test3()
   {
-    TST_DL::TestSingleton0a( 2 );
+    DataLayer::testSingleton0a( 2 );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

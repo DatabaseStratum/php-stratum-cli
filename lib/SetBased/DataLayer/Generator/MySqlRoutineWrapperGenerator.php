@@ -1,38 +1,22 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\DataLayer;
+namespace SetBased\DataLayer\Generator;
+
+use SetBased\DataLayer\Generator\MySqlRoutineWrapper;
+use SetBased\DataLayer\StaticDataLayer as DataLayer;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
  * Class for generating a  class with wrappers for stored routines.
+ *
  * @package SetBased\DataLayer
  */
-class  MySqlRoutineWrapperGenerator
+class MySqlRoutineWrapperGenerator
 {
-  /**
-   * Place holder in the template file that will be replaced with the generated routine wrappers.
-   */
-  const C_PLACEHOLDER = '  /* AUTO_GENERATED_ROUTINE_WRAPPERS */';
-
   /**
    * @var string .The generated PHP code.
    */
   private $myCode = '';
-
-  /**
-   * @var string The filename of the template.
-   */
-  private $myTemplateFilename;
-
-  /**
-   * @var string The filename where the generated wrapper class must be stored
-   */
-  private $myWrapperFilename;
-
-  /**
-   * @var string The filename of the file with the metadata of all stored procedures.
-   */
-  private $myMetadataFilename;
 
   /**
    * @var string The filename of the configuration file.
@@ -40,24 +24,54 @@ class  MySqlRoutineWrapperGenerator
   private $myConfigurationFilename;
 
   /**
+   * @var string The schema name.
+   */
+  private $myDatabase;
+
+  /**
    * @var string Host name or address.
    */
   private $myHostName;
 
   /**
-   * @var string user name.
+   * @var string The filename of the file with the metadata of all stored procedures.
    */
-  private $myUserName;
+  private $myMetadataFilename;
 
   /**
-   * @var string User password.
+   * The class name (including namespace) of the parent class of the routine wrapper.
+   *
+   * @var string
+   */
+  private $myParentClassName;
+
+  /**
+   * The password.
+   *
+   * @var string
    */
   private $myPassword;
 
   /**
-   * @var string The schema name.
+   * The user name.
+   *
+   * @var string
    */
-  private $myDatabase;
+  private $myUserName;
+
+  /**
+   * The class name (including namespace) of the routine wrapper.
+   *
+   * @var string
+   */
+  private $myWrapperClassName;
+
+  /**
+   * The filename where the generated wrapper class must be stored
+   *
+   * @var string
+   */
+  private $myWrapperFilename;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -73,10 +87,14 @@ class  MySqlRoutineWrapperGenerator
 
     $this->readConfigurationFile();
 
-    \SET_DL::connect( $this->myHostName, $this->myUserName, $this->myPassword, $this->myDatabase );
+    DataLayer::connect( $this->myHostName, $this->myUserName, $this->myPassword, $this->myDatabase );
 
     $routines = $this->readRoutineMetaData();
 
+    // Write the header of the wrapper class.
+    $this->writeClassHeader();
+
+    // Write methods for each stored routine.
     foreach ($routines as $routine)
     {
       // If routine type is hidden don't create routine wrapper.
@@ -86,57 +104,28 @@ class  MySqlRoutineWrapperGenerator
       }
     }
 
-    $replace[self::C_PLACEHOLDER] = $this->myCode;
+    // Write the trailer of the wrapper class.
+    $this->writeClassTrailer();
 
-
-    $code = file_get_contents( $this->myTemplateFilename );
-    if ($code===false) set_assert_failed( "Error reading file %s", $this->myTemplateFilename );
-
-    $count_match = substr_count( $code, self::C_PLACEHOLDER );
-    if ($count_match!=1)
-    {
-      set_assert_failed( "Error expected 1 placeholder in file '%s', found %d.", $this->myTemplateFilename, $count_match );
-    }
-
-    $code = strtr( $code, $replace );
 
     $write_wrapper_file_flag = true;
     if (file_exists( $this->myWrapperFilename ))
     {
       $old_code = file_get_contents( $this->myWrapperFilename );
       if ($old_code===false) set_assert_failed( "Unable to read file '%s'.", $this->myWrapperFilename );
-      if ($code==$old_code) $write_wrapper_file_flag = false;
+      if ($this->myCode==$old_code) $write_wrapper_file_flag = false;
     }
 
     if ($write_wrapper_file_flag)
     {
-      $bytes = file_put_contents( $this->myWrapperFilename, $code );
+      $bytes = file_put_contents( $this->myWrapperFilename, $this->myCode );
       if ($bytes===false) set_assert_failed( "Error writing file %s", $this->myWrapperFilename );
-      echo "Created : '", $this->myWrapperFilename, "'.\n";
+      echo "Created: '", $this->myWrapperFilename, "'.\n";
     }
 
-    \SET_DL::disconnect();
+    DataLayer::disconnect();
 
     return 0;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Reads parameters from the configuration file @c $myConfigurationFilename.
-   */
-  private function readConfigurationFile()
-  {
-    $settings = parse_ini_file( $this->myConfigurationFilename, true );
-    if ($settings===false) set_assert_failed( "Unable open configuration file '%s'", $this->myConfigurationFilename );
-
-    $this->myHostName = $this->getSetting( $settings, 'database', 'host_name' );
-    $this->myUserName = $this->getSetting( $settings, 'database', 'user_name' );
-    $this->myPassword = $this->getSetting( $settings, 'database', 'password' );
-    $this->myDatabase = $this->getSetting( $settings, 'database', 'database_name' );
-
-    $this->myTemplateFilename = $this->getSetting( $settings, 'wrapper', 'template' );
-    $this->myWrapperFilename  = $this->getSetting( $settings, 'wrapper', 'wrapper' );
-    $this->myMetadataFilename = $this->getSetting( $settings, 'wrapper', 'metadata' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -173,7 +162,28 @@ class  MySqlRoutineWrapperGenerator
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * Reads parameters from the configuration file @c $myConfigurationFilename.
+   */
+  private function readConfigurationFile()
+  {
+    $settings = parse_ini_file( $this->myConfigurationFilename, true );
+    if ($settings===false) set_assert_failed( "Unable open configuration file '%s'", $this->myConfigurationFilename );
+
+    $this->myHostName = $this->getSetting( $settings, 'database', 'host_name' );
+    $this->myUserName = $this->getSetting( $settings, 'database', 'user_name' );
+    $this->myPassword = $this->getSetting( $settings, 'database', 'password' );
+    $this->myDatabase = $this->getSetting( $settings, 'database', 'database_name' );
+
+    $this->myParentClassName  = $this->getSetting( $settings, 'wrapper', 'parent_class' );
+    $this->myWrapperClassName = $this->getSetting( $settings, 'wrapper', 'wrapper_class' );
+    $this->myWrapperFilename  = $this->getSetting( $settings, 'wrapper', 'wrapper_file' );
+    $this->myMetadataFilename = $this->getSetting( $settings, 'wrapper', 'metadata' );
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Returns the metadata of stored routines stored in the metadata file $myMetadataFilename.
+   *
    * @return array
    */
   private function readRoutineMetaData()
@@ -216,6 +226,24 @@ class  MySqlRoutineWrapperGenerator
     if ($err===false) set_assert_failed( "Error closing file '%s'.", $theFilename );
 
     return $routines;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  private function writeClassHeader()
+  {
+    $this->myCode .= "<?php\n";
+    $this->myCode .= '//'.str_repeat( '-', MySqlRoutineWrapper::C_PAGE_WIDTH - 2 )."\n";
+    $this->myCode .= 'class '.$this->myWrapperClassName.' extends '.$this->myParentClassName."\n";
+    $this->myCode .= "{\n";
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  private function writeClassTrailer()
+  {
+    $this->myCode .= '  //'.str_repeat( '-', MySqlRoutineWrapper::C_PAGE_WIDTH - 4 )."\n";
+    $this->myCode .= "}\n";
+    $this->myCode .= "\n";
+    $this->myCode .= '//'.str_repeat( '-', MySqlRoutineWrapper::C_PAGE_WIDTH - 2 )."\n";
   }
 
   //--------------------------------------------------------------------------------------------------------------------

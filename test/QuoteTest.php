@@ -7,13 +7,13 @@ class QuoteTest extends PHPUnit_Framework_TestCase
    */
   protected function setUp()
   {
-    TST_DL::Connect( 'localhost', 'test', 'test', 'test' );
+    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   public function genericValid( $theColumn, $theValue )
   {
-    $n = TST_DL::Test01( ($theColumn=='int')           ? $theValue : null,        // tst_c00 int
+    $n = DataLayer::test01( ($theColumn=='int')           ? $theValue : null,        // tst_c00 int
                          ($theColumn=='smallint')      ? $theValue : null,        // tst_c01 smallint
                          ($theColumn=='tinyint')       ? $theValue : null,        // tst_c02 tinyint
                          ($theColumn=='mediumint')     ? $theValue : null,        // tst_c03 mediumint
@@ -41,7 +41,7 @@ class QuoteTest extends PHPUnit_Framework_TestCase
   {
     try
     {
-       $n = TST_DL::Test01( ($theColumn=='int')        ? $theValue : null,        // tst_c00 int
+       $n = DataLayer::test01( ($theColumn=='int')        ? $theValue : null,        // tst_c00 int
                          ($theColumn=='smallint')      ? $theValue : null,        // tst_c01 smallint
                          ($theColumn=='tinyint')       ? $theValue : null,        // tst_c02 tinyint
                          ($theColumn=='mediumint')     ? $theValue : null,        // tst_c03 mediumint

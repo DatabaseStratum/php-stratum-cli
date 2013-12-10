@@ -7,7 +7,7 @@ class RowsWithKeyWithLobTest extends PHPUnit_Framework_TestCase
    */
   protected function setUp()
   {
-    TST_DL::Connect( 'localhost', 'test', 'test', 'test' );
+    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -15,7 +15,7 @@ class RowsWithKeyWithLobTest extends PHPUnit_Framework_TestCase
    */
   public function test1()
   {
-    $rows = TST_DL::TestRowsWithKey1WithLob( 100, 'blob' );
+    $rows = DataLayer::testRowsWithKey1WithLob( 100, 'blob' );
     $this->assertInternalType( 'array', $rows );
     $this->assertCount( 1, $rows );
 
@@ -34,7 +34,7 @@ class RowsWithKeyWithLobTest extends PHPUnit_Framework_TestCase
    */
   public function test2()
   {
-    $rows = TST_DL::TestRowsWithKey1WithLob( 0, 'blob' );
+    $rows = DataLayer::testRowsWithKey1WithLob( 0, 'blob' );
     $this->assertInternalType( 'array', $rows );
     $this->assertCount( 0, $rows );
 

@@ -7,7 +7,7 @@ class MagicConstantTest extends PHPUnit_Framework_TestCase
    */
   protected function setUp()
   {
-    TST_DL::Connect( 'localhost', 'test', 'test', 'test' );
+    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -15,7 +15,7 @@ class MagicConstantTest extends PHPUnit_Framework_TestCase
    */
   public function test1()
   {
-    $ret = TST_DL::MagicConstant01();
+    $ret = DataLayer::magicConstant01();
     $this->assertEquals( 'tst_magic_constant01', $ret );
   }
 
@@ -24,7 +24,7 @@ class MagicConstantTest extends PHPUnit_Framework_TestCase
    */
   public function test2()
   {
-    $ret = TST_DL::MagicConstant02();
+    $ret = DataLayer::magicConstant02();
     $this->assertEquals( 7, $ret );
   }
 
@@ -35,7 +35,7 @@ class MagicConstantTest extends PHPUnit_Framework_TestCase
   {
     $filename = realpath( __DIR__.'/../include/psql/test/tst_magic_constant03.psql' );
 
-    $ret = TST_DL::MagicConstant03();
+    $ret = DataLayer::magicConstant03();
     $this->assertEquals( $filename, $ret );
   }
 
@@ -46,7 +46,7 @@ class MagicConstantTest extends PHPUnit_Framework_TestCase
   {
     $dir_name = realpath( __DIR__.'/../include/psql/test' );
 
-    $ret = TST_DL::MagicConstant04();
+    $ret = DataLayer::magicConstant04();
     $this->assertEquals( $dir_name, $ret );
   }
 
@@ -57,7 +57,7 @@ class MagicConstantTest extends PHPUnit_Framework_TestCase
   {
     $dir_name = realpath( __DIR__.'/../include/psql/test/ test_escape \' " @ $ ! .' );
 
-    $ret = TST_DL::MagicConstant05();
+    $ret = DataLayer::magicConstant05();
     $this->assertEquals( $dir_name, $ret );
   }
 }

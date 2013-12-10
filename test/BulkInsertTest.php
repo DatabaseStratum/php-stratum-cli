@@ -7,7 +7,7 @@ class BulkInsertTest extends PHPUnit_Framework_TestCase
    */
   protected function setUp()
   {
-    TST_DL::Connect( 'localhost', 'test', 'test', 'test' );
+    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -99,10 +99,10 @@ class BulkInsertTest extends PHPUnit_Framework_TestCase
                      'field19' => 'a,b',                 //  set('a','b','c'),
                      'field20' => 1010 );                //  bit(4),
 
-    TST_DL::TestBulkInsert01( $data );
+    DataLayer::testBulkInsert01( $data );
 
     $query = 'SELECT count(*) FROM `TST_TEMPO`';
-    $ret = TST_DL::ExecuteSingleton1( $query );
+    $ret = DataLayer::executeSingleton1( $query );
 
     $this->assertEquals( 4, $ret );
   }
@@ -119,7 +119,7 @@ class BulkInsertTest extends PHPUnit_Framework_TestCase
                      'field4' => 1,                      //  int,
                      'field5' => 1 );                     //  int,
 
-    TST_DL::TestBulkInsert02( $data );
+    DataLayer::testBulkInsert02( $data );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

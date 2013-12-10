@@ -1,19 +1,20 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\DataLayer\MySqlRoutineWrapper;
+namespace SetBased\DataLayer\Generator\MySqlRoutineWrapper;
 
-use SetBased\DataLayer\MySqlRoutineWrapper;
+use SetBased\DataLayer\Generator\MySqlRoutineWrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
-/** @brief Class for generating a wrapper function around a stored procedure that selects 1 and only 1 row.
+/** @brief Class for generating a wrapper function around a stored procedure selects 1 and only 1 row with only one
+ * column.
  */
-class Row1 extends MySqlRoutineWrapper
+class Singleton1 extends MySqlRoutineWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   protected function writeResultHandler( $theRoutine )
   {
     $routine_args = $this->getRoutineArgs( $theRoutine );
-    $this->writeLine( 'return self::ExecuteRow1( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
+    $this->writeLine( 'return self::executeSingleton1( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -26,22 +27,24 @@ class Row1 extends MySqlRoutineWrapper
     $this->writeLine( 'while (($b = $stmt->fetch()))' );
     $this->writeLine( '{' );
     $this->writeLine( '$new = array();' );
-    $this->writeLine( 'foreach( $row as $key => $value )' );
+    $this->writeLine( 'foreach( $row as $value )' );
     $this->writeLine( '{' );
-    $this->writeLine( '$new[$key] = $value;' );
+    $this->writeLine( '$new[] = $value;' );
     $this->writeLine( '}' );
     $this->writeLine( '$tmp[] = $new;' );
     $this->writeLine( '}' );
+    $this->writeLine();
+    $this->writeLine( '$b = $stmt->fetch();' );
     $this->writeLine();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   protected function writeRoutineFunctionLobReturnData()
   {
-    $this->writeLine( 'if ($b===false) self::ThrowSqlError( \'mysqli_stmt::fetch failed\' );' );
-    $this->writeLine( 'if (sizeof($tmp)!=1) self::ThrowSqlError( \'The unexpected  number of rows,  expected 1 row.\' );' );
+    $this->writeLine( 'if ($b===false) self::mysqlError( \'mysqli_stmt::fetch failed\' );' );
+    $this->writeLine( 'if (sizeof($tmp)!=1) self::mysqlError( \'The unexpected number of rows, expected 1 row.\' );' );
     $this->writeLine();
-    $this->writeLine( 'return $row;' );
+    $this->writeLine( 'return $tmp[0][0];' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

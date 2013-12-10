@@ -17,170 +17,6 @@ function set_assert_failed()
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-/** @brief Klasse met wrapper functies voor alle stored procedures die aangeroepen mogen worden door PHP-code.
- */
-class SET_DL
-{
-  /** Referentie naar een mysqli object (zie Connect) dat gebruikt wordt voor het afvuren van alle SQL satements in
-   *  deze klasse.
-   */
-  private static $ourMySql;
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /** Werpt een excptie met de huidige error code en beschrijving van $ourMySql.
-   */
-  private static function throwSqlError( $theText )
-  {
-    $message  = "MySQL Error no: ".self::$ourMySql->errno."\n";
-    $message .= self::$ourMySql->error;
-    $message .= "\n";
-    $message .= $theText."\n";
-
-    throw new Exception( $message );
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /** Wrapper om mysqli::query. Indien de call naar mysqli::query mislukt wordt een een exceptie geworpen.
-   */
-  private static function query( $theQuery )
-  {
-    $ret = self::$ourMySql->query( $theQuery );
-    if ($ret===false) self::throwSqlError( $theQuery );
-
-    return $ret;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /** Wrapper om mysqli::real_query. Indien de call naar mysqli::real_query mislukt wordt een een exceptie geworpen.
-   */
-  private static function realQuery( $theQuery )
-  {
-    $tmp = self::$ourMySql->real_query( $theQuery );
-    if ($tmp===false) self::throwSqlError( $theQuery );
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /** Start een transactie in MySQL.
-   */
-  public static function begin()
-  {
-    $ret = self::$ourMySql->autocommit(false);
-    if (!$ret) self::throwSqlError( 'autocommit' );
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /** Commit de huidige transactie in MySQL.
-   */
-  public static function commit()
-  {
-    $ret = self::$ourMySql->commit();
-    if (!$ret) self::throwSqlError( 'commit' );
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /** Connecteert naar de MySQL server (parameters @a $theHostName, @a $theUserName, @a $thePassWord en @a $theDatabase)
-   *  en voert een aantal initialisaties uit.
-   */
-  public static function connect( $theHostName, $theUserName, $thePassWord, $theDatabase )
-  {
-    self::$ourMySql = new mysqli( $theHostName, $theUserName, $thePassWord, $theDatabase );
-    if (!self::$ourMySql) self::throwSqlError( 'init' );
-
-    $ret = self::$ourMySql->options(MYSQLI_OPT_CONNECT_TIMEOUT, 600);
-    if (!$ret) self::throwSqlError( 'options' );
-
-    $ret = self::$ourMySql->set_charset("utf8");
-    if (!$ret) self::throwSqlError( 'set_charset' );
-    /*
-    $ret = self::executeNone( "set sql_mode = '".SET_SQL_MODE."'");
-    */
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /** Indien er een verbinding is met een MySQL server, verbreekt de verbinding.
-   */
-  public static function disconnect()
-  {
-    if (self::$ourMySql)
-    {
-      self::$ourMySql->close();
-      self::$ourMySql = null;
-    }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /** Escapes special characters in a string @a $theString. Returns the safe string.
-   */
-  public static function realEscapeString( $theString )
-  {
-    return self::$ourMySql->real_escape_string( $theString );
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /** Voert query @a $theQuery uit. @a $theQuery mag 0 of meer rijen teruggeven.
-   */
-  public static function executeRows( $theQuery )
-  {
-    $result = self::query( $theQuery );
-    $ret = array();
-    while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret[] = $row;
-    $result->close();
-
-    self::$ourMySql->next_result();
-
-    return $ret;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /** Voert query @a $theQuery uit een geeft het aantal "affected rows" terug. @a $theQuery mag geen rijen teruggeven.
-   */
-  public static function executeNone( $theQuery )
-  {
-    self::query( $theQuery );
-
-    $n = self::$ourMySql->affected_rows;
-
-    self::$ourMySql->next_result();
-
-    return $n;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /** Voert query @a $theQuery uit. De query mag een multi query zijn (b.v. een store procedure) en de output van de
-   *  query wordt gelogt.
-   */
-  public static function executeEcho( $theQuery )
-  {
-    $ret = self::$ourMySql->multi_query( $theQuery );
-    if (!$ret) self::throwSqlError( $theQuery );
-    do
-    {
-      $result = self::$ourMySql->store_result();
-      if (self::$ourMySql->errno) self::throwSqlError( '$mysqli->store_result failed for \''.$theQuery.'\'' );
-      if ($result)
-      {
-        $fields = $result->fetch_fields();
-        while ($row = $result->fetch_row())
-        {
-          $line = '';
-          foreach( $row as $i => $field )
-          {
-            if ($i>0) $line .= ' ';
-            $line .= str_pad( $field, $fields[$i]->max_length );
-          }
-           echo date( 'Y-m-d H:i:s' ),' ',$line,"\n";
-        }
-        $result->free();
-      }
-    }
-    while (self::$ourMySql->next_result());
-    if (self::$ourMySql->errno) self::throwSqlError( '$mysqli->next_result failed for \''.$theQuery.'\'' );
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-}
-
-//----------------------------------------------------------------------------------------------------------------------
 function synopsis()
 {
   echo "Synopsis: dlgen [-f] -c <configuration file> [routine.psql] ... \n";
@@ -242,22 +78,22 @@ function main( $options )
   if (isset($setting['fast']))
   {
     // Fast mode: only load stored routines.
-    $loader = new \SetBased\DataLayer\MySqlRoutineLoader;
+    $loader = new \SetBased\DataLayer\Generator\MySqlRoutineLoader;
     $ret = $loader->run( $setting['config'], $setting['psql_files'] );
     if ($ret!=0) exit( $ret );
   }
   else
   {
     // Normal mode: create constants, config file, load routines, and create routine wrapper class.
-    $constants = new \SetBased\DataLayer\MySqlConfigConstants;
+    $constants = new \SetBased\DataLayer\Generator\MySqlConfigConstants;
     $ret = $constants->run( $setting['config'] );
     if ($ret!=0) exit( $ret );
 
-    $loader = new \SetBased\DataLayer\MySqlRoutineLoader;
+    $loader = new \SetBased\DataLayer\Generator\MySqlRoutineLoader;
     $ret = $loader->run( $setting['config'], $setting['psql_files'] );
     if ($ret!=0) exit( $ret );
 
-    $wrapper = new \SetBased\DataLayer\MySqlRoutineWrapperGenerator;
+    $wrapper = new \SetBased\DataLayer\Generator\MySqlRoutineWrapperGenerator;
     $ret = $wrapper->run( $setting['config'] );
     if ($ret!=0) exit( $ret );
   }

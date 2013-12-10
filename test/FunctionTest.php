@@ -7,7 +7,7 @@ class FunctionTest extends PHPUnit_Framework_TestCase
    */
   protected function setUp()
   {
-    TST_DL::Connect( 'localhost', 'test', 'test', 'test' );
+    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -15,7 +15,7 @@ class FunctionTest extends PHPUnit_Framework_TestCase
    */
   public function test1()
   {
-    $ret = TST_DL::TestFunction( 2, 3 );
+    $ret = DataLayer::testFunction( 2, 3 );
     $this->assertEquals( 5, $ret );
   }
 
@@ -25,7 +25,7 @@ class FunctionTest extends PHPUnit_Framework_TestCase
    */
   public function test2()
   {
-    $ret = TST_DL::TestFunction( 3, 4 );
+    $ret = DataLayer::testFunction( 3, 4 );
     $this->assertNotEquals( 5, $ret );
   }
 

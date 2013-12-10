@@ -1,6 +1,6 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\DataLayer;
+namespace SetBased\DataLayer\Generator;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
@@ -40,64 +40,60 @@ abstract class MySqlRoutineWrapper
    */
   static public function createRoutineWrapper( $theRoutine )
   {
-    $wrapper ='';
     switch ($theRoutine['type'])
     {
       case 'bulk':
-        $wrapper = new \SetBased\DataLayer\MySqlRoutineWrapper\Bulk();
+        $wrapper = new MySqlRoutineWrapper\Bulk();
         break;
 
       case 'bulk_insert':
-        $wrapper = new \SetBased\DataLayer\MySqlRoutineWrapper\BulkInsert();
+        $wrapper = new MySqlRoutineWrapper\BulkInsert();
         break;
 
       case 'log':
-        $wrapper = new \SetBased\DataLayer\MySqlRoutineWrapper\Log();
+        $wrapper = new MySqlRoutineWrapper\Log();
         break;
 
       case 'none':
-        $wrapper = new \SetBased\DataLayer\MySqlRoutineWrapper\None();
+        $wrapper = new MySqlRoutineWrapper\None();
         break;
 
       case 'row0':
-        $wrapper = new \SetBased\DataLayer\MySqlRoutineWrapper\Row0();
+        $wrapper = new MySqlRoutineWrapper\Row0();
         break;
 
       case 'row1':
-        $wrapper = new \SetBased\DataLayer\MySqlRoutineWrapper\Row1();
+        $wrapper = new MySqlRoutineWrapper\Row1();
         break;
 
       case 'rows':
-        $wrapper = new \SetBased\DataLayer\MySqlRoutineWrapper\Rows();
+        $wrapper = new MySqlRoutineWrapper\Rows();
         break;
 
       case 'rows_with_key':
-        $wrapper = new \SetBased\DataLayer\MySqlRoutineWrapper\RowsWithKey();
+        $wrapper = new MySqlRoutineWrapper\RowsWithKey();
         break;
 
       case 'rows_with_index':
-        $wrapper = new \SetBased\DataLayer\MySqlRoutineWrapper\RowsWithIndex();
+        $wrapper = new MySqlRoutineWrapper\RowsWithIndex();
         break;
 
       case 'singleton0':
-        $wrapper = new \SetBased\DataLayer\MySqlRoutineWrapper\Singleton0();
+        $wrapper = new MySqlRoutineWrapper\Singleton0();
         break;
 
       case 'singleton1':
-        $wrapper = new \SetBased\DataLayer\MySqlRoutineWrapper\Singleton1();
+        $wrapper = new MySqlRoutineWrapper\Singleton1();
         break;
 
       case 'function':
-        $wrapper = new \SetBased\DataLayer\MySqlRoutineWrapper\Functions();
-        break;
-
-      case 'hidden':
-        $wrapper = new \SetBased\DataLayer\MySqlRoutineWrapper\Hidden();
+        $wrapper = new MySqlRoutineWrapper\Functions();
         break;
 
       default:
-        // Prevent warnings (possible $class not defined) from IDE.
         set_assert_failed( "Unknown routine type '%s'.", $theRoutine['type']."\n" );
+        // Prevent warnings from IDE.
+        $wrapper = null;
     }
 
     return $wrapper;
@@ -226,11 +222,11 @@ abstract class MySqlRoutineWrapper
     $this->writeLine( '{' );
     $this->writeLine( '$query = \'CALL '.$theRoutine['routine_name'].'( '.$routine_args.' )\';' );
     $this->writeLine( '$stmt  = self::$ourMySql->prepare( $query );' );
-    $this->writeLine( 'if (!$stmt) self::ThrowSqlError( \'prepare failed\' );' );
+    $this->writeLine( 'if (!$stmt) self::mysqlError( \'prepare failed\' );' );
     $this->writeLine();
     $this->writeLine( '$null = null;' );
     $this->writeLine( '$b = $stmt->bind_param( \''.$types.'\', '.$nulls.' );' );
-    $this->writeLine( 'if (!$b) self::ThrowSqlError( \'bind_param failed\' );' );
+    $this->writeLine( 'if (!$b) self::mysqlError( \'bind_param failed\' );' );
     $this->writeLine();
 
     $blob_argument_index = 0;
@@ -242,9 +238,9 @@ abstract class MySqlRoutineWrapper
         $this->writeLine( '$p = 0;' );
         $this->writeLine( 'while ($p<$n)' );
         $this->writeLine( '{' );
-        $this->writeLine( '$b = $stmt->send_long_data( '.$blob_argument_index.', substr( $'.$theRoutine['argument_names'][$i].', $p, self::$ourChunckSize ) );' );
-        $this->writeLine( 'if (!$b) self::ThrowSqlError( \'send_long_data failed\' );' );
-        $this->writeLine( '$p += self::$ourChunckSize;' );
+        $this->writeLine( '$b = $stmt->send_long_data( '.$blob_argument_index.', substr( $'.$theRoutine['argument_names'][$i].', $p, self::$ourChunkSize ) );' );
+        $this->writeLine( 'if (!$b) self::mysqlError( \'send_long_data failed\' );' );
+        $this->writeLine( '$p += self::$ourChunkSize;' );
         $this->writeLine( '}' );
         $this->writeLine();
 
@@ -253,7 +249,7 @@ abstract class MySqlRoutineWrapper
     }
 
     $this->writeLine( '$b = $stmt->execute();' );
-    $this->writeLine( 'if (!$b) self::ThrowSqlError( \'execute failed\' );' );
+    $this->writeLine( 'if (!$b) self::mysqlError( \'execute failed\' );' );
     $this->writeLine();
     $this->writeRoutineFunctionLobFetchData( $theRoutine );
     $this->writeLine( '$stmt->close();' );
@@ -545,7 +541,7 @@ abstract class MySqlRoutineWrapper
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Returns @a $theStoredRoutineName after the first underscore in camel case.
-   * E.g. set_foo_foo => FooFoo.
+   * E.g. set_foo_foo => fooFoo.
    *
    * @param $theStoredRoutineName string The name of the stored routine.
    *
@@ -553,7 +549,7 @@ abstract class MySqlRoutineWrapper
    */
   private function getWrapperRoutineName( $theStoredRoutineName )
   {
-    return preg_replace( '/(_)([a-z])/e', "strtoupper('\\2')", stristr( $theStoredRoutineName, '_' ) );
+    return lcfirst( preg_replace( '/(_)([a-z])/e', "strtoupper('\\2')", stristr( $theStoredRoutineName, '_' ) ) );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -581,7 +577,7 @@ abstract class MySqlRoutineWrapper
       case 'decimal':
       case 'float':
       case 'double':
-        $ret = '\'.self::QuoteNum( $'.$argName.' ).\'';
+        $ret = '\'.self::quoteNum( $'.$argName.' ).\'';
         break;
 
       case 'varbinary':
@@ -589,7 +585,7 @@ abstract class MySqlRoutineWrapper
 
       case 'char':
       case 'varchar':
-        $ret = '\'.self::QuoteString( $'.$argName.' ).\'';
+        $ret = '\'.self::quoteString( $'.$argName.' ).\'';
         break;
 
       case 'time':
@@ -597,16 +593,16 @@ abstract class MySqlRoutineWrapper
 
       case 'date':
       case 'datetime':
-        $ret = '\'.self::QuoteString( $'.$argName.' ).\'';
+        $ret = '\'.self::quoteString( $'.$argName.' ).\'';
         break;
 
       case 'enum':
       case 'set':
-        $ret = '\'.self::QuoteString( $'.$argName.' ).\'';
+        $ret = '\'.self::quoteString( $'.$argName.' ).\'';
         break;
 
       case 'bit':
-        $ret = '\'.self::QuoteBit( $'.$argName.' ).\'';
+        $ret = '\'.self::quoteBit( $'.$argName.' ).\'';
         break;
 
       case 'tinytext':

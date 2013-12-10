@@ -7,7 +7,7 @@ class Row0Test extends PHPUnit_Framework_TestCase
    */
   protected function setUp()
   {
-    TST_DL::Connect( 'localhost', 'test', 'test', 'test' );
+    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -15,7 +15,7 @@ class Row0Test extends PHPUnit_Framework_TestCase
    */
   public function test1()
   {
-    $ret = TST_DL::TestRow0a( 0 );
+    $ret = DataLayer::testRow0a( 0 );
     $this->assertInternalType( 'null', $ret );
   }
 
@@ -24,7 +24,7 @@ class Row0Test extends PHPUnit_Framework_TestCase
    */
   public function test2()
   {
-    $ret = TST_DL::TestRow0a( 1 );
+    $ret = DataLayer::testRow0a( 1 );
     $this->assertInternalType( 'array', $ret );
   }
 
@@ -34,7 +34,7 @@ class Row0Test extends PHPUnit_Framework_TestCase
    */
   public function test3()
   {
-    TST_DL::TestRow0a( 2 );
+    DataLayer::testRow0a( 2 );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

@@ -1,19 +1,19 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\DataLayer\MySqlRoutineWrapper;
+namespace SetBased\DataLayer\Generator\MySqlRoutineWrapper;
 
-use SetBased\DataLayer\MySqlRoutineWrapper;
+use SetBased\DataLayer\Generator\MySqlRoutineWrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
-/** @brief Class for generating a wrapper function around a stored procedure that selects 0 or more rows.
+/** @brief Class for generating a wrapper function around a stored procedure that selects 0 or 1 row.
  */
-class Rows extends MySqlRoutineWrapper
+class Row0 extends MySqlRoutineWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   protected function writeResultHandler( $theRoutine )
   {
     $routine_args = $this->getRoutineArgs( $theRoutine );
-    $this->writeLine( 'return self::ExecuteRows( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\' );' );
+    $this->writeLine( 'return self::executeRow0( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -30,7 +30,7 @@ class Rows extends MySqlRoutineWrapper
     $this->writeLine( '{' );
     $this->writeLine( '$new[$key] = $value;' );
     $this->writeLine( '}' );
-    $this->writeLine( ' $tmp[] = $new;' );
+    $this->writeLine( '$tmp[] = $new;' );
     $this->writeLine( '}' );
     $this->writeLine();
   }
@@ -38,9 +38,10 @@ class Rows extends MySqlRoutineWrapper
   //--------------------------------------------------------------------------------------------------------------------
   protected function writeRoutineFunctionLobReturnData()
   {
-    $this->writeLine( 'if ($b===false) self::ThrowSqlError( \'mysqli_stmt::fetch failed\' );' );
+    $this->writeLine( 'if ($b===false) self::mysqlError( \'mysqli_stmt::fetch failed\' );' );
+    $this->writeLine( 'if (sizeof($tmp)>1) self::mysqlError( \'The unexpected number of rows, expected 0 or 1 rows.\' );' );
     $this->writeLine();
-    $this->writeLine( 'return $tmp;' );
+    $this->writeLine( 'return ($tmp) ? $tmp[0] : null;' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

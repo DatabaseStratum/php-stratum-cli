@@ -7,7 +7,7 @@ class NoneTest extends PHPUnit_Framework_TestCase
    */
   protected function setUp()
   {
-    TST_DL::Connect( 'localhost', 'test', 'test', 'test' );
+    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -15,7 +15,7 @@ class NoneTest extends PHPUnit_Framework_TestCase
    */
   public function test1()
   {
-    $ret = TST_DL::TestNone( 0 );
+    $ret = DataLayer::testNone( 0 );
     $this->assertEquals( 0, $ret );
   }
 
@@ -24,7 +24,7 @@ class NoneTest extends PHPUnit_Framework_TestCase
    */
   public function test2()
   {
-    $ret = TST_DL::TestNone( 1 );
+    $ret = DataLayer::testNone( 1 );
     $this->assertEquals( 1, $ret );
   }
 
@@ -33,7 +33,7 @@ class NoneTest extends PHPUnit_Framework_TestCase
    */
   public function test3()
   {
-    $ret = TST_DL::TestNone( 20 );
+    $ret = DataLayer::testNone( 20 );
     $this->assertEquals( 20, $ret );
   }
 

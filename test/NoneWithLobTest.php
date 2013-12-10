@@ -7,7 +7,7 @@ class NoneWithLobTest extends PHPUnit_Framework_TestCase
    */
   protected function setUp()
   {
-    TST_DL::Connect( 'localhost', 'test', 'test', 'test' );
+    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -15,7 +15,7 @@ class NoneWithLobTest extends PHPUnit_Framework_TestCase
    */
   public function test1()
   {
-    $ret = TST_DL::TestNoneWithLob( 0, 'blob' );
+    $ret = DataLayer::testNoneWithLob( 0, 'blob' );
     $this->assertEquals( 0, $ret );
   }
 
@@ -24,7 +24,7 @@ class NoneWithLobTest extends PHPUnit_Framework_TestCase
    */
   public function test2()
   {
-    $ret = TST_DL::TestNoneWithLob( 1, 'blob' );
+    $ret = DataLayer::testNoneWithLob( 1, 'blob' );
     $this->assertEquals( 1, $ret );
   }
 
@@ -33,7 +33,7 @@ class NoneWithLobTest extends PHPUnit_Framework_TestCase
    */
   public function test3()
   {
-    $ret = TST_DL::TestNoneWithLob( 20, 'blob' );
+    $ret = DataLayer::testNoneWithLob( 20, 'blob' );
     $this->assertEquals( 20, $ret );
   }
 

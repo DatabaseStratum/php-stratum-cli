@@ -7,15 +7,15 @@ class LogTest extends PHPUnit_Framework_TestCase
    */
   protected function setUp()
   {
-    TST_DL::Connect( 'localhost', 'test', 'test', 'test' );
+    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Stored routine with designation type none must return the nummber of rows affected.
+  /** Stored routine with designation type none must return the number of rows affected.
    */
   public function test1()
   {
-    $n = TST_DL::TestLog();
+    $n = DataLayer::testLog();
 
     $this->expectOutputRegex('/^(\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}\sHello, world\n){2}$/');
     $this->assertEquals( 2, $n );

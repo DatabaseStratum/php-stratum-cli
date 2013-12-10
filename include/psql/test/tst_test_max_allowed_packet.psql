@@ -1,6 +1,6 @@
 /** Test for sending data larger than max_allowed_packet.
  */
-create procedure tst_test_max_alllowed_packet( p_tmp_blob longblob )
+create procedure tst_test_max_allowed_packet( p_tmp_blob longblob )
 reads sql data
 -- type: singleton1
 begin

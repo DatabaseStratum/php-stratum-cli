@@ -1,6 +1,8 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\DataLayer;
+namespace SetBased\DataLayer\Generator;
+
+use SetBased\DataLayer\StaticDataLayer as DataLayer;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
@@ -96,7 +98,7 @@ class MySqlConfigConstants
   {
     $this->readConfigFile( $theConfigFilename );
 
-    \SET_DL::connect( $this->myHostName, $this->myUserName, $this->myPassword, $this->myDatabase );
+    DataLayer::connect( $this->myHostName, $this->myUserName, $this->myPassword, $this->myDatabase );
 
     $this->getOldColumns();
 
@@ -114,7 +116,7 @@ class MySqlConfigConstants
 
     $this->writeTargetConfigFile();
 
-    \SET_DL::disconnect();
+    DataLayer::disconnect();
 
     return 0;
   }
@@ -204,7 +206,7 @@ and    column_name rlike '^[a-zA-Z0-9_]*$'
 order by table_name
 ,        ordinal_position";
 
-    $rows = \SET_DL::executeRows( $query );
+    $rows = DataLayer::executeRows( $query );
     foreach ($rows as $row)
     {
       $row['length']                                            = $this->deriveFieldLength( $row );
@@ -455,7 +457,7 @@ and   t1.extra        = 'auto_increment'
 and   t2.table_schema = database()
 and   t2.column_name like '%%\_label'";
 
-    $tables = \SET_DL::executeRows( $query_string );
+    $tables = DataLayer::executeRows( $query_string );
     foreach ($tables as $table)
     {
       $query_string = "
@@ -465,7 +467,7 @@ from   `%s`
 where   nullif(`%s`,'') is not null";
 
       $query_string = sprintf( $query_string, $table['id'], $table['label'], $table['table_name'], $table['label'] );
-      $rows         = \SET_DL::executeRows( $query_string );
+      $rows         = DataLayer::executeRows( $query_string );
       foreach ($rows as $row)
       {
         $this->myLabels[$row['label']] = $row['id'];
@@ -546,7 +548,7 @@ where   nullif(`%s`,'') is not null";
     {
       $ok = file_put_contents( $this->myConfigFilename, $source );
       if ($ok===false) set_assert_failed( "Unable to write to file '%s'.", $this->myConfigFilename );
-      echo "Created : '", $this->myConfigFilename, "'.\n";
+      echo "Created: '", $this->myConfigFilename, "'.\n";
     }
 
   }

@@ -1,20 +1,15 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\DataLayer;
+namespace SetBased\DataLayer\Generator;
 
-use Exception;
+use SetBased\DataLayer\StaticDataLayer as DataLayer;
 
 /**
  * Class MySqlRoutineLoader Class for loading stored routine into a MySQL instance from pseudo SQL files (.psql).
  * @package SetBased\DataLayer
  */
-class  MySqlRoutineLoader
+class MySqlRoutineLoader
 {
-  /** @name Settings
-  @{
-   * Properties for settings.
-   */
-
   /**
    * @var string Path where .psql files can be found.
    */
@@ -40,13 +35,7 @@ class  MySqlRoutineLoader
    */
   private $myTargetConfigFilename;
 
-  /** @} */
 
-
-  /** @name Overall
-  @{
-   * Properties with data about all stored routines and .psql files.
-   */
 
   /**
    * @var array An array with all found .psql files.
@@ -77,15 +66,8 @@ class  MySqlRoutineLoader
    * @var array Information about old routines.
    */
   private $myOldRoutines;
-
-  /** @} */
-
-
-  /** @name Current
-  @{
-   * Properties with data about the current stored routine and/or .psql file.
-   */
-
+  
+  
   /**
    * @var string The current .psql filename.
    */
@@ -141,13 +123,6 @@ class  MySqlRoutineLoader
    */
   private $myCurrentOldMetadata;
 
-  /** @} */
-
-  /** @name MySQL
-  @{
-   * MySQL database settings.
-   */
-
   /**
    * @var string Host name or address.
    */
@@ -167,7 +142,6 @@ class  MySqlRoutineLoader
    * @var string Name used database.
    */
   private $myDatabase;
-  /** @} */
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -200,7 +174,7 @@ class  MySqlRoutineLoader
   {
     $this->readConfigFile( $theConfigFilename );
 
-    \SET_DL::connect( $this->myHostName, $this->myUserName, $this->myPassword, $this->myDatabase );
+    DataLayer::connect( $this->myHostName, $this->myUserName, $this->myPassword, $this->myDatabase );
 
     $this->findPsqlFiles();
     $this->getColumnTypes();
@@ -228,7 +202,7 @@ class  MySqlRoutineLoader
     // Write the metadata to @c $myMetadataFilename.
     $this->writeRoutineMetadata();
 
-    \SET_DL::disconnect();
+    DataLayer::disconnect();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -371,7 +345,7 @@ order by table_schema
 ,        table_name
 ,        column_name';
 
-    $rows = \SET_DL::executeRows( $query );
+    $rows = DataLayer::executeRows( $query );
 
     foreach ($rows as $row)
     {
@@ -463,7 +437,7 @@ from  information_schema.ROUTINES
 where ROUTINE_SCHEMA = database()
 order by routine_name";
 
-    $rows = \SET_DL::executeRows( $query );
+    $rows = DataLayer::executeRows( $query );
 
     $this->myOldRoutines = array();
     foreach ($rows as $row)
@@ -478,10 +452,10 @@ order by routine_name";
   private function getCorrectSqlMode()
   {
     $sql = sprintf( "set sql_mode ='%s'", $this->mySqlMode );
-    \SET_DL::executeNone( $sql );
+    DataLayer::executeNone( $sql );
 
     $query           = "select @@sql_mode;";
-    $tmp             = \SET_DL::executeRows( $query );
+    $tmp             = DataLayer::executeRows( $query );
     $this->mySqlMode = $tmp[0]['@@sql_mode'];
   }
 
@@ -557,7 +531,7 @@ order by routine_name";
 
       return true;
     }
-    catch (Exception $e)
+    catch (\Exception $e)
     {
       echo $e->getMessage();
 
@@ -583,7 +557,7 @@ left outer join information_schema.PARAMETERS t2  on  t2.specific_schema = t1.ro
 where t1.routine_schema = database()
 and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
 
-    $tmp = \SET_DL::executeRows( $query );
+    $tmp = DataLayer::executeRows( $query );
     /** @todo replace with execute singleton */
 
     $argument_names = $tmp[0]['argument_names'];
@@ -744,7 +718,7 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
   {
     $ret = true;
 
-    $n = preg_match( "/create\s+(procedure|function)\s+([a-zA-Z0-9_]+)/i", $this->myCurrentPsqlSourceCode, $matches );
+    $n = preg_match( "/create\\s+(procedure|function)\\s+([a-zA-Z0-9_]+)/i", $this->myCurrentPsqlSourceCode, $matches );
     if ($n===false) set_assert_failed( 'Internal error.' );
 
     if ($n==1)
@@ -802,14 +776,14 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
 
     // Set the SQL-mode under which the stored routine will run.
     $sql = sprintf( "set sql_mode ='%s'", $this->mySqlMode );
-    \SET_DL::executeNone( $sql );
+    DataLayer::executeNone( $sql );
 
     // Set the default character set and collate under which the store routine will run.
     $sql = sprintf( "set names '%s' COLLATE '%s'", $this->myCharacterSet, $this->myCollate );
-    \SET_DL::executeNone( $sql );
+    DataLayer::executeNone( $sql );
 
     // Load the stored routine into MySQL.
-    \SET_DL::executeNone( $sql_source );
+    DataLayer::executeNone( $sql_source );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -820,11 +794,11 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
   {
     $real_path = realpath( $this->myCurrentPsqlFilename );
 
-    $this->myCurrentReplace['__FILE__'] = "'".\SET_DL::realEscapeString( $real_path )."'";
+    $this->myCurrentReplace['__FILE__'] = "'".DataLayer::realEscapeString( $real_path )."'";
 
     $this->myCurrentReplace['__ROUTINE__'] = "'".$this->myCurrentRoutineName."'";
 
-    $this->myCurrentReplace['__DIR__'] = "'".\SET_DL::realEscapeString( dirname( $real_path ) )."'";
+    $this->myCurrentReplace['__DIR__'] = "'".DataLayer::realEscapeString( dirname( $real_path ) )."'";
 
   }
 
@@ -852,7 +826,7 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
                       $this->myOldRoutines[$this->myCurrentRoutineName]['routine_type'],
                       $this->myCurrentRoutineName );
 
-      \SET_DL::executeNone( $sql );
+      DataLayer::executeNone( $sql );
     }
   }
 
@@ -871,7 +845,7 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
                       $old_routine['routine_name'] );
 
         $sql = sprintf( "drop %s if exists %s", $old_routine['routine_type'], $old_routine['routine_name'] );
-        \SET_DL::executeNone( $sql );
+        DataLayer::executeNone( $sql );
       }
     }
   }
@@ -929,7 +903,7 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
   {
     $this->readConfigFile( $theConfigFilename );
 
-    \SET_DL::connect( $this->myHostName, $this->myUserName, $this->myPassword, $this->myDatabase );
+    DataLayer::connect( $this->myHostName, $this->myUserName, $this->myPassword, $this->myDatabase );
 
     $this->findPsqlFilesFromList( $theFilenames );
     $this->getColumnTypes();
@@ -951,7 +925,7 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
     // Write the metadata to @c $myMetadataFilename.
     $this->writeRoutineMetadata();
 
-    \SET_DL::disconnect();
+    DataLayer::disconnect();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -988,4 +962,3 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-

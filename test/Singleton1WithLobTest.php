@@ -7,7 +7,7 @@ class Singleton1WithLobTest extends PHPUnit_Framework_TestCase
    */
   protected function setUp()
   {
-    TST_DL::Connect( 'localhost', 'test', 'test', 'test' );
+    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -15,7 +15,7 @@ class Singleton1WithLobTest extends PHPUnit_Framework_TestCase
    */
   public function test1()
   {
-    $ret = TST_DL::TestSingleton1aWithLob( 1, 'blob' );
+    $ret = DataLayer::testSingleton1aWithLob( 1, 'blob' );
     $this->assertEquals( '1', $ret );
   }
 
@@ -25,7 +25,7 @@ class Singleton1WithLobTest extends PHPUnit_Framework_TestCase
    */
   public function test2()
   {
-    TST_DL::TestSingleton1aWithLob( 0, 'blob' );
+    DataLayer::testSingleton1aWithLob( 0, 'blob' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ class Singleton1WithLobTest extends PHPUnit_Framework_TestCase
    */
   public function test3()
   {
-    TST_DL::TestSingleton1aWithLob( 2, 'blob' );
+    DataLayer::testSingleton1aWithLob( 2, 'blob' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

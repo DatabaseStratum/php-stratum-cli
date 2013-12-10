@@ -7,7 +7,7 @@ class RowsWithLobTest extends PHPUnit_Framework_TestCase
    */
   protected function setUp()
   {
-    TST_DL::Connect( 'localhost', 'test', 'test', 'test' );
+    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -15,7 +15,7 @@ class RowsWithLobTest extends PHPUnit_Framework_TestCase
    */
   public function testSelect0Rows()
   {
-    $ret = TST_DL::TestRows1WithLob( 0, 'blob' );
+    $ret = DataLayer::testRows1WithLob( 0, 'blob' );
     $this->assertInternalType( 'array', $ret );
     $this->assertCount( 0, $ret );
   }
@@ -25,7 +25,7 @@ class RowsWithLobTest extends PHPUnit_Framework_TestCase
    */
   public function test1()
   {
-    $ret = TST_DL::TestRows1WithLob( 1, 'blob' );
+    $ret = DataLayer::testRows1WithLob( 1, 'blob' );
     $this->assertInternalType( 'array', $ret );
     $this->assertCount( 1, $ret );
   }
@@ -35,7 +35,7 @@ class RowsWithLobTest extends PHPUnit_Framework_TestCase
    */
   public function test2()
   {
-    $ret = TST_DL::TestRows1WithLob( 3, 'blob' );
+    $ret = DataLayer::testRows1WithLob( 3, 'blob' );
     $this->assertInternalType( 'array', $ret );
     $this->assertCount( 3, $ret );
   }

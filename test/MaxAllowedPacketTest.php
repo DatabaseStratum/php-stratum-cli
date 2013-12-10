@@ -7,11 +7,12 @@ class MaxAllowedPacketTest extends PHPUnit_Framework_TestCase
    */
   protected function setUp()
   {
-    TST_DL::Connect( 'localhost', 'test', 'test', 'test' );
+    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Generete test for the data Lob type diferend size.
+  /**
+   * Generate test for the data Lob type different size.
    */
   public function generic( $theSize )
   {
@@ -25,25 +26,25 @@ class MaxAllowedPacketTest extends PHPUnit_Framework_TestCase
 
     $crc32_php = sprintf( "%u", crc32( $data ) );
 
-    $crc32_db = TST_DL::TestMaxAlllowedPacket( $data );
+    $crc32_db = DataLayer::testMaxAllowedPacket( $data );
 
     $this->assertEquals( $crc32_php, $crc32_db );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Calling a stored routine with a BLOB less than max_allowed_packet must not be a poblem.
+  /** Calling a stored routine with a BLOB less than max_allowed_packet must not be a problem.
    */
   public function test1()
   {
-    $this->generic( 0.5 * TST_DL::getMaxAllowedPacket() );
+    $this->generic( 0.5 * DataLayer::getMaxAllowedPacket() );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Calling a stored routine with a BLOB of max_allowed_packet bytes must not be a poblem.
+  /** Calling a stored routine with a BLOB of max_allowed_packet bytes must not be a problem.
    */
   public function test2()
   {
-    $this->generic( TST_DL::getMaxAllowedPacket() );
+    $this->generic( DataLayer::getMaxAllowedPacket() );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -52,7 +53,7 @@ class MaxAllowedPacketTest extends PHPUnit_Framework_TestCase
    */
   public function test3()
   {
-    $this->generic( TST_DL::getMaxAllowedPacket() + 1 );
+    $this->generic( DataLayer::getMaxAllowedPacket() + 1 );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -61,7 +62,7 @@ class MaxAllowedPacketTest extends PHPUnit_Framework_TestCase
    */
   public function test4()
   {
-    $this->generic( 2 * TST_DL::getMaxAllowedPacket() );
+    $this->generic( 2 * DataLayer::getMaxAllowedPacket() );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

@@ -1,8 +1,9 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\DataLayer\MySqlRoutineWrapper;
+namespace SetBased\DataLayer\Generator\MySqlRoutineWrapper;
 
-use SetBased\DataLayer\MySqlRoutineWrapper;
+use SetBased\DataLayer\Generator\MySqlRoutineWrapper;
+use SetBased\DataLayer\StaticDataLayer as DataLayer;
 
 /** @brief Class for generating a wrapper function around a stored procedure that ...
  */
@@ -96,26 +97,26 @@ class BulkInsert extends MySqlRoutineWrapper
   {
     $query = 'call '.$theRoutine['routine_name'].'()';
 
-    \SET_DL::executeNone( $query );
+    DataLayer::executeNone( $query );
 
     $query = 'select table_name from information_schema.TEMPORARY_TABLES';
-    $rows  = \SET_DL::executeRows( $query );
+    $rows  = DataLayer::executeRows( $query );
 
     if (count( $rows )!=1) set_assert_failed( "Error can't find temporary table." );
 
     $this->myTableName = $rows['0']['table_name'];
 
     $query   = sprintf( "describe `%s`", $this->myTableName );
-    $columns = \SET_DL::executeRows( $query );
+    $columns = DataLayer::executeRows( $query );
     foreach ($columns as $key => $column)
     {
-      preg_match( "(\w+)", $column['Type'], $type );
+      preg_match( "(\\w+)", $column['Type'], $type );
       $this->myColumns[$key]['type']  = $type['0'];
       $this->myColumns[$key]['field'] = $column['Field'];
     }
 
     $query = sprintf( "drop temporary table`%s`", $this->myTableName );
-    \SET_DL::executeNone( $query );
+    DataLayer::executeNone( $query );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -138,7 +139,7 @@ class BulkInsert extends MySqlRoutineWrapper
       case 'decimal':
       case 'float':
       case 'double':
-        $ret = '\'.self::QuoteNum('.$fieldName.').\'';
+        $ret = '\'.self::quoteNum('.$fieldName.').\'';
         break;
 
       case 'varbinary':
@@ -146,7 +147,7 @@ class BulkInsert extends MySqlRoutineWrapper
 
       case 'char':
       case 'varchar':
-        $ret = '\'.self::QuoteString('.$fieldName.').\'';
+        $ret = '\'.self::quoteString('.$fieldName.').\'';
         break;
 
       case 'time':
@@ -154,16 +155,16 @@ class BulkInsert extends MySqlRoutineWrapper
 
       case 'date':
       case 'datetime':
-        $ret = '\'.self::QuoteString('.$fieldName.').\'';
+        $ret = '\'.self::quoteString('.$fieldName.').\'';
         break;
 
       case 'enum':
       case 'set':
-        $ret = '\'.self::QuoteString('.$fieldName.').\'';
+        $ret = '\'.self::quoteString('.$fieldName.').\'';
         break;
 
       case 'bit':
-        $ret = '\'.self::QuoteBit('.$fieldName.').\'';
+        $ret = '\'.self::quoteBit('.$fieldName.').\'';
         break;
 
       case 'tinytext':

@@ -1,8 +1,8 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\DataLayer\MySqlRoutineWrapper;
+namespace SetBased\DataLayer\Generator\MySqlRoutineWrapper;
 
-use SetBased\DataLayer\MySqlRoutineWrapper;
+use SetBased\DataLayer\Generator\MySqlRoutineWrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /** @brief Class for generating a wrapper function around a stored procedure without result set.
@@ -13,7 +13,7 @@ class None extends MySqlRoutineWrapper
   protected function writeResultHandler( $theRoutine )
   {
     $routine_args = $this->getRoutineArgs( $theRoutine );
-    $this->writeLine( 'return self::ExecuteNone( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\' );' );
+    $this->writeLine( 'return self::executeNone( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\' );' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
