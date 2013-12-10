@@ -218,7 +218,7 @@ abstract class MySqlRoutineWrapper
     $this->writeSeparator();
     $this->writeLine( '/** @sa Stored Routine '.$theRoutine['routine_name'].'.' );
     $this->writeLine( ' */' );
-    $this->writeLine( 'static function '.$wrapper_function_name.'( '.$wrapper_args.' )' );
+    $this->writeLine( 'public static function '.$wrapper_function_name.'( '.$wrapper_args.' )' );
     $this->writeLine( '{' );
     $this->writeLine( '$query = \'CALL '.$theRoutine['routine_name'].'( '.$routine_args.' )\';' );
     $this->writeLine( '$stmt  = self::$ourMySql->prepare( $query );' );
@@ -279,7 +279,7 @@ abstract class MySqlRoutineWrapper
     $this->writeSeparator();
     $this->writeLine( '/** @sa Stored Routine '.$theRoutine['routine_name'].'.' );
     $this->writeLine( ' */' );
-    $this->writeLine( 'static function '.$wrapper_function_name.'( '.$wrapper_args.' )' );
+    $this->writeLine( 'public static function '.$wrapper_function_name.'( '.$wrapper_args.' )' );
     $this->writeLine( '{' );
 
     $this->writeResultHandler( $theRoutine, $theRoutine['argument_types'] );
