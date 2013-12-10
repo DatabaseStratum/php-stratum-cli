@@ -36,18 +36,18 @@ class StaticDataLayer
   public static $ourTransactionIsolationLevel = 'READ-COMMITTED';
 
   /**
-   * Value of variable max_allowed_packet
-   *
-   * @var int
-   */
-  protected static $ourMaxAllowedPacket;
-
-  /**
    * Chunk size when transmitting LOB to the MySQL instance. Must be less than max_allowed_packet.
    *
    * @var int
    */
   protected static $ourChunkSize = 1048576;
+
+  /**
+   * Value of variable max_allowed_packet
+   *
+   * @var int
+   */
+  protected static $ourMaxAllowedPacket;
 
   /**
    * The connection between PHP and the MySQL instance.
@@ -116,7 +116,7 @@ class StaticDataLayer
     // @todo Set MYSQLI_OPT_CONNECT_TIMEOUT???
   }
 
-  //--------------------------------------------------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------------------------------------
   /**
    * Closes the connection to the MySQL instance, if connected.
    */
@@ -129,7 +129,7 @@ class StaticDataLayer
     }
   }
 
-  // -------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Runs a query using a bulk handler.
    *
@@ -214,19 +214,6 @@ class StaticDataLayer
     return $n;
   }
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Escapes special characters in a string such that it can be safely used in SQL statements.
-   *
-   * @param string $theString  The string.
-   *
-   * @return string
-   */
-  public static function realEscapeString( $theString )
-  {
-    return self::$ourMySql->real_escape_string( $theString );
-  }
-
   // -------------------------------------------------------------------------------------------------------------------
   /**
    * Runs a query that returns 0 or 1 row and returns that row.
@@ -255,7 +242,7 @@ class StaticDataLayer
     return $row;
   }
 
-  // -------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Runs a query that returns 1 and only 1 row and returns that row.
    * Throws an exception if the query selects none, 2 or more rows.
@@ -362,7 +349,7 @@ class StaticDataLayer
     return $row[0];
   }
 
-  //--------------------------------------------------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------------------------------------
   /**
    * Returns the value of the MySQL variable max_allowed_packet.
    *
@@ -381,7 +368,7 @@ class StaticDataLayer
     return self::$ourMaxAllowedPacket;
   }
 
-  //--------------------------------------------------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------------------------------------
   /**
    * Returns a literal for a bit field that can be safely used in SQL statements.
    *
@@ -437,6 +424,30 @@ class StaticDataLayer
     {
       return "'".self::$ourMySql->real_escape_string( $theString )."'";
     }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Escapes special characters in a string such that it can be safely used in SQL statements.
+   *
+   * @param string $theString The string.
+   *
+   * @return string
+   */
+  public static function realEscapeString( $theString )
+  {
+    return self::$ourMySql->real_escape_string( $theString );
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Rollbacks the current transaction (and starts a new transaction).
+   * Wrapper around mysqli::rollback, however on failure an exception is thrown.
+   */
+  public static function rollback()
+  {
+    $ret = self::$ourMySql->rollback();
+    if (!$ret) self::mysqlError( 'rollback' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
