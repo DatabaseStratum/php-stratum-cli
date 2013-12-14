@@ -91,6 +91,8 @@ class StaticDataLayer
     if ($b===false) self::sqlError( 'mysqli_stmt::bind_result' );
 
     $data->free();
+
+    self::$ourMySql->next_result();
   }
 
   // -------------------------------------------------------------------------------------------------------------------
