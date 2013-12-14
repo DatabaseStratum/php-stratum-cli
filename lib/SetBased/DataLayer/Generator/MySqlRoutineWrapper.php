@@ -253,6 +253,7 @@ abstract class MySqlRoutineWrapper
     $this->writeLine();
     $this->writeRoutineFunctionLobFetchData( $theRoutine );
     $this->writeLine( '$stmt->close();' );
+    $this->writeLine( 'self::$ourMySql->next_result();' );
     $this->writeLine();
     $this->writeRoutineFunctionLobReturnData();
     $this->writeLine( '}' );

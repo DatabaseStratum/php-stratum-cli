@@ -174,6 +174,8 @@ class StaticDataLayer
     $result->free();
 
     $theBulkHandler->stop();
+
+    self::$ourMySql->next_result();
   }
 
   // -------------------------------------------------------------------------------------------------------------------
@@ -213,6 +215,7 @@ class StaticDataLayer
       }
 
       $continue = self::$ourMySql->more_results();
+
       if ($continue)
       {
         $b = self::$ourMySql->next_result();
@@ -237,6 +240,8 @@ class StaticDataLayer
 
     $n = self::$ourMySql->affected_rows;
 
+    self::$ourMySql->next_result();
+
     return $n;
   }
 
@@ -255,6 +260,8 @@ class StaticDataLayer
     $row    = $result->fetch_array( MYSQLI_ASSOC );
     $n      = $result->num_rows;
     $result->free();
+
+    self::$ourMySql->next_result();
 
     if (!($n==0 || $n==1))
     {
@@ -281,6 +288,8 @@ class StaticDataLayer
     $row    = $result->fetch_array( MYSQLI_ASSOC );
     $n      = $result->num_rows;
     $result->free();
+
+    self::$ourMySql->next_result();
 
     if ($n!=1)
     {
@@ -310,6 +319,8 @@ class StaticDataLayer
     }
     $result->free();
 
+    self::$ourMySql->next_result();
+
     return $ret;
   }
 
@@ -328,6 +339,8 @@ class StaticDataLayer
     $row    = $result->fetch_array( MYSQL_NUM );
     $n      = $result->num_rows;
     $result->free();
+
+    self::$ourMySql->next_result();
 
     if (!($n==0 || $n==1))
     {
@@ -354,6 +367,8 @@ class StaticDataLayer
     $row    = $result->fetch_array( MYSQL_NUM );
     $n      = $result->num_rows;
     $result->free();
+
+    self::$ourMySql->next_result();
 
     if ($n!=1)
     {

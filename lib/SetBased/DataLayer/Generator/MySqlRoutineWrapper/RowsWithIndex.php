@@ -25,6 +25,7 @@ class RowsWithIndex extends MySqlRoutineWrapper
     $this->writeLine( '$ret = array();' );
     $this->writeLine( 'while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret'.$index.'[] = $row;' );
     $this->writeLine( '$result->close();' );
+    $this->writeLine( 'self::$ourMySql->next_result();' );
     $this->writeLine( 'return $ret;' );
   }
 
