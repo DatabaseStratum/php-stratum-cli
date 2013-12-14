@@ -61,17 +61,17 @@ class BulkInsert extends MySqlRoutineWrapper
       }
     }
 
-    $this->writeLine( 'if (is_array($theData))' );
+    $this->writeLine( 'if (is_array($theData) &&!empty($theData))' );
     $this->writeLine( '{' );
     $this->writeLine( '$sql = "INSERT INTO `'.$this->myTableName.'`('.$columns.')";' );
     $this->writeLine( '$first = true;' );
     $this->writeLine( 'foreach( $theData as $row )' );
     $this->writeLine( '{' );
 
-    $this->writeLine( '  if ($first) $sql .=\' values('.$fields.')\';' );
-    $this->writeLine( '  else        $sql .=\',      ('.$fields.')\';' );
+    $this->writeLine( 'if ($first) $sql .=\' values('.$fields.')\';' );
+    $this->writeLine( 'else        $sql .=\',      ('.$fields.')\';' );
 
-    $this->writeLine( '  $first = false;' );
+    $this->writeLine( '$first = false;' );
     $this->writeLine( '}' );
     $this->writeLine( 'self::query( $sql );' );
     $this->writeLine( '}' );
