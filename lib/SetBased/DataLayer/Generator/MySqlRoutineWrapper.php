@@ -222,11 +222,11 @@ abstract class MySqlRoutineWrapper
     $this->writeLine( '{' );
     $this->writeLine( '$query = \'CALL '.$theRoutine['routine_name'].'( '.$routine_args.' )\';' );
     $this->writeLine( '$stmt  = self::$ourMySql->prepare( $query );' );
-    $this->writeLine( 'if (!$stmt) self::mysqlError( \'prepare failed\' );' );
+    $this->writeLine( 'if (!$stmt) self::sqlError( \'prepare failed\' );' );
     $this->writeLine();
     $this->writeLine( '$null = null;' );
     $this->writeLine( '$b = $stmt->bind_param( \''.$types.'\', '.$nulls.' );' );
-    $this->writeLine( 'if (!$b) self::mysqlError( \'bind_param failed\' );' );
+    $this->writeLine( 'if (!$b) self::sqlError( \'bind_param failed\' );' );
     $this->writeLine();
 
     $blob_argument_index = 0;
@@ -239,7 +239,7 @@ abstract class MySqlRoutineWrapper
         $this->writeLine( 'while ($p<$n)' );
         $this->writeLine( '{' );
         $this->writeLine( '$b = $stmt->send_long_data( '.$blob_argument_index.', substr( $'.$theRoutine['argument_names'][$i].', $p, self::$ourChunkSize ) );' );
-        $this->writeLine( 'if (!$b) self::mysqlError( \'send_long_data failed\' );' );
+        $this->writeLine( 'if (!$b) self::sqlError( \'send_long_data failed\' );' );
         $this->writeLine( '$p += self::$ourChunkSize;' );
         $this->writeLine( '}' );
         $this->writeLine();
@@ -249,11 +249,10 @@ abstract class MySqlRoutineWrapper
     }
 
     $this->writeLine( '$b = $stmt->execute();' );
-    $this->writeLine( 'if (!$b) self::mysqlError( \'execute failed\' );' );
+    $this->writeLine( 'if (!$b) self::sqlError( \'execute failed\' );' );
     $this->writeLine();
     $this->writeRoutineFunctionLobFetchData( $theRoutine );
     $this->writeLine( '$stmt->close();' );
-    $this->writeLine( 'self::$ourMySql->next_result();' );
     $this->writeLine();
     $this->writeRoutineFunctionLobReturnData();
     $this->writeLine( '}' );

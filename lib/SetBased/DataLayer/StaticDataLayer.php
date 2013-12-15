@@ -40,7 +40,7 @@ class StaticDataLayer
    *
    * @var int
    */
-  protected static $ourChunkSize = 1048576;
+  protected static $ourChunkSize;
 
   /**
    * Value of variable max_allowed_packet
@@ -64,7 +64,33 @@ class StaticDataLayer
   public static function begin()
   {
     $ret = self::$ourMySql->autocommit( false );
-    if (!$ret) self::mysqlError( 'autocommit' );
+    if (!$ret) self::sqlError( 'autocommit' );
+  }
+
+  // -------------------------------------------------------------------------------------------------------------------
+  /**
+   * @param \mysqli_stmt $stmt
+   * @param array        $out
+   */
+  public static function bindAssoc( $stmt, &$out )
+  {
+    $data = $stmt->result_metadata();
+    if (!$data) self::sqlError( 'mysqli_stmt::result_metadata failed' );
+
+    $fields = array();
+    $out    = array();
+
+    $i = 0;
+    while ($field = $data->fetch_field())
+    {
+      $fields[$i] = & $out[$field->name];
+      $i++;
+    }
+
+    $b = call_user_func_array( array($stmt, 'bind_result'), $fields );
+    if ($b===false) self::sqlError( 'mysqli_stmt::bind_result failed' );
+
+    $data->free();
   }
 
   // -------------------------------------------------------------------------------------------------------------------
@@ -75,7 +101,7 @@ class StaticDataLayer
   public static function commit()
   {
     $ret = self::$ourMySql->commit();
-    if (!$ret) self::mysqlError( 'commit' );
+    if (!$ret) self::sqlError( 'commit' );
   }
 
   // -------------------------------------------------------------------------------------------------------------------
@@ -92,13 +118,13 @@ class StaticDataLayer
   public static function connect( $theHostName, $theUserName, $thePassWord, $theDatabase, $thePort = 3306 )
   {
     self::$ourMySql = new \mysqli($theHostName, $theUserName, $thePassWord, $theDatabase, $thePort);
-    if (!self::$ourMySql) self::mysqlError( 'init' );
+    if (!self::$ourMySql) self::sqlError( 'init' );
 
     // Set the default character set.
     if (self::$ourCharSet)
     {
       $ret = self::$ourMySql->set_charset( self::$ourCharSet );
-      if (!$ret) self::mysqlError( 'set_charset' );
+      if (!$ret) self::sqlError( 'set_charset' );
     }
 
     // Set the SQL mode.
@@ -112,11 +138,9 @@ class StaticDataLayer
     {
       self::executeNone( "SET SESSION tx_isolation = '".self::$ourTransactionIsolationLevel."'" );
     }
-
-    // @todo Set MYSQLI_OPT_CONNECT_TIMEOUT???
   }
 
-  // -------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Closes the connection to the MySQL instance, if connected.
    */
@@ -129,7 +153,7 @@ class StaticDataLayer
     }
   }
 
-  //--------------------------------------------------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------------------------------------
   /**
    * Runs a query using a bulk handler.
    *
@@ -150,8 +174,6 @@ class StaticDataLayer
     $result->free();
 
     $theBulkHandler->stop();
-
-    self::$ourMySql->next_result();
   }
 
   // -------------------------------------------------------------------------------------------------------------------
@@ -168,11 +190,11 @@ class StaticDataLayer
     $n = 0;
 
     $ret = self::$ourMySql->multi_query( $theQuery );
-    if (!$ret) self::mysqlError( $theQuery );
+    if (!$ret) self::sqlError( $theQuery );
     do
     {
       $result = self::$ourMySql->store_result();
-      if (self::$ourMySql->errno) self::mysqlError( '$mysqli->store_result failed for \''.$theQuery.'\'' );
+      if (self::$ourMySql->errno) self::sqlError( '$mysqli->store_result failed for \''.$theQuery.'\'' );
       if ($result)
       {
         $fields = $result->fetch_fields();
@@ -189,8 +211,14 @@ class StaticDataLayer
         }
         $result->free();
       }
-    } while (self::$ourMySql->next_result());
-    if (self::$ourMySql->errno) self::mysqlError( '$mysqli->next_result failed for \''.$theQuery.'\'' );
+
+      $continue = self::$ourMySql->more_results();
+      if ($continue)
+      {
+        $b = self::$ourMySql->next_result();
+        if ($b===false) self::sqlError( 'mysqli::next_result failed for \''.$theQuery.'\'' );
+      }
+    } while ($continue);
 
     return $n;
   }
@@ -209,12 +237,10 @@ class StaticDataLayer
 
     $n = self::$ourMySql->affected_rows;
 
-    self::$ourMySql->next_result();
-
     return $n;
   }
 
-  // -------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Runs a query that returns 0 or 1 row and returns that row.
    * Throws an exception if the query selects 2 or more rows.
@@ -230,8 +256,6 @@ class StaticDataLayer
     $n      = $result->num_rows;
     $result->free();
 
-    self::$ourMySql->next_result();
-
     if (!($n==0 || $n==1))
     {
       self::assertFailed( "Number of rows selected by query below is %d expected 0 or 1.\n%s",
@@ -242,7 +266,7 @@ class StaticDataLayer
     return $row;
   }
 
-  //--------------------------------------------------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------------------------------------
   /**
    * Runs a query that returns 1 and only 1 row and returns that row.
    * Throws an exception if the query selects none, 2 or more rows.
@@ -257,8 +281,6 @@ class StaticDataLayer
     $row    = $result->fetch_array( MYSQLI_ASSOC );
     $n      = $result->num_rows;
     $result->free();
-
-    self::$ourMySql->next_result();
 
     if ($n!=1)
     {
@@ -288,8 +310,6 @@ class StaticDataLayer
     }
     $result->free();
 
-    self::$ourMySql->next_result();
-
     return $ret;
   }
 
@@ -308,8 +328,6 @@ class StaticDataLayer
     $row    = $result->fetch_array( MYSQL_NUM );
     $n      = $result->num_rows;
     $result->free();
-
-    self::$ourMySql->next_result();
 
     if (!($n==0 || $n==1))
     {
@@ -337,8 +355,6 @@ class StaticDataLayer
     $n      = $result->num_rows;
     $result->free();
 
-    self::$ourMySql->next_result();
-
     if ($n!=1)
     {
       self::assertFailed( "Number of rows selected by query below is %d expected 1.\n%s",
@@ -363,12 +379,18 @@ class StaticDataLayer
       $max_allowed_packet = self::executeRow1( $query );
 
       self::$ourMaxAllowedPacket = $max_allowed_packet['Value'];
+
+      // Note: When setting $ourChunkSize equal to $ourMaxAllowedPacket it is not possible to transmit a LOB
+      // with size $ourMaxAllowedPacket bytes (but only $ourMaxAllowedPacket - 8 bytes). But when setting the size of
+      // $ourChunkSize less than $ourMaxAllowedPacket than it is possible to transmit a LOB with size
+      // $ourMaxAllowedPacket bytes.
+      self::$ourChunkSize = min( self::$ourMaxAllowedPacket - 8, 1024 * 1024 );
     }
 
     return self::$ourMaxAllowedPacket;
   }
 
-  // -------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Returns a literal for a bit field that can be safely used in SQL statements.
    *
@@ -403,7 +425,12 @@ class StaticDataLayer
     if ($theValue===null || $theValue==='' || $theValue===false) return 'NULL';
     if ($theValue===true) return 1;
 
-    self::mysqlError( "Value '$theValue' is not a number." );
+    self::sqlError( "Value '$theValue' is not a number." );
+
+    // Not reached.
+
+    // Keep our IDE happy.
+    return 0;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -447,7 +474,7 @@ class StaticDataLayer
   public static function rollback()
   {
     $ret = self::$ourMySql->rollback();
-    if (!$ret) self::mysqlError( 'rollback' );
+    if (!$ret) self::sqlError( 'rollback' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -458,34 +485,6 @@ class StaticDataLayer
   public static function showWarnings()
   {
     self::executeLog( 'show warnings' );
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * @param \mysqli_stmt $stmt
-   * @param array        $out
-   */
-  public static function stmt_bind_assoc( $stmt, &$out )
-  {
-    $data = $stmt->result_metadata();
-    if (!$data) self::mysqlError( 'mysqli_stmt::result_metadata failed' );
-
-    $fields = array();
-    $out    = array();
-
-    $fields[0] = $stmt;
-    $count     = 1;
-
-    while ($field = $data->fetch_field())
-    {
-      $fields[$count] = & $out[$field->name];
-      $count++;
-    }
-
-    $b = call_user_func_array( 'mysqli_stmt_bind_result', $fields );
-    if ($b===false) self::mysqlError( 'mysqli_stmt_bind_result failed' );
-
-    $data->free();
   }
 
   // -------------------------------------------------------------------------------------------------------------------
@@ -503,20 +502,6 @@ class StaticDataLayer
 
   // -------------------------------------------------------------------------------------------------------------------
   /**
-   *
-   */
-  protected static function mysqlError( $theText )
-  {
-    $message = "MySQL Error no: ".self::$ourMySql->errno."\n";
-    $message .= self::$ourMySql->error;
-    $message .= "\n";
-    $message .= $theText."\n";
-
-    throw new \Exception($message);
-  }
-
-  // -------------------------------------------------------------------------------------------------------------------
-  /**
    * Wrapper around mysqli::query, however on failure an exception is thrown.
    *
    * @param string $theQuery The SQL statement.
@@ -526,7 +511,7 @@ class StaticDataLayer
   protected static function query( $theQuery )
   {
     $ret = self::$ourMySql->query( $theQuery );
-    if ($ret===false) self::mysqlError( $theQuery );
+    if ($ret===false) self::sqlError( $theQuery );
 
     return $ret;
   }
@@ -540,7 +525,21 @@ class StaticDataLayer
   protected static function realQuery( $theQuery )
   {
     $tmp = self::$ourMySql->real_query( $theQuery );
-    if ($tmp===false) self::mysqlError( $theQuery );
+    if ($tmp===false) self::sqlError( $theQuery );
+  }
+
+  // -------------------------------------------------------------------------------------------------------------------
+  /**
+   *
+   */
+  protected static function sqlError( $theText )
+  {
+    $message = "MySQL Error no: ".self::$ourMySql->errno."\n";
+    $message .= self::$ourMySql->error;
+    $message .= "\n";
+    $message .= $theText."\n";
+
+    throw new \Exception($message);
   }
 
   // -------------------------------------------------------------------------------------------------------------------

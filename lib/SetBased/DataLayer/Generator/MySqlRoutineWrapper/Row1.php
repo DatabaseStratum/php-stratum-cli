@@ -20,7 +20,7 @@ class Row1 extends MySqlRoutineWrapper
   protected function writeRoutineFunctionLobFetchData( $theRoutine )
   {
     $this->writeLine( '$row = array();' );
-    $this->writeLine( 'self::stmt_bind_assoc( $stmt, $row );' );
+    $this->writeLine( 'self::bindAssoc( $stmt, $row );' );
     $this->writeLine();
     $this->writeLine( '$tmp = array();' );
     $this->writeLine( 'while (($b = $stmt->fetch()))' );
@@ -38,8 +38,8 @@ class Row1 extends MySqlRoutineWrapper
   //--------------------------------------------------------------------------------------------------------------------
   protected function writeRoutineFunctionLobReturnData()
   {
-    $this->writeLine( 'if ($b===false) self::mysqlError( \'mysqli_stmt::fetch failed\' );' );
-    $this->writeLine( 'if (sizeof($tmp)!=1) self::mysqlError( \'The unexpected  number of rows,  expected 1 row.\' );' );
+    $this->writeLine( 'if ($b===false) self::sqlError( \'mysqli_stmt::fetch failed\' );' );
+    $this->writeLine( 'if (sizeof($tmp)!=1) self::sqlError( \'The unexpected  number of rows,  expected 1 row.\' );' );
     $this->writeLine();
     $this->writeLine( 'return $row;' );
   }

@@ -14,7 +14,7 @@ interface BulkHandler
 {
   // -------------------------------------------------------------------------------------------------------------------
   /**
-   * Will be called for each row in the result set.
+   * Will be invoked for each row in the result set.
    *
    * @param string[] $theRow A row from the result set.
    */

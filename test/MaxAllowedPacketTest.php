@@ -44,7 +44,7 @@ class MaxAllowedPacketTest extends PHPUnit_Framework_TestCase
    */
   public function test2()
   {
-    $this->generic( DataLayer::getMaxAllowedPacket() );
+    $this->generic( DataLayer::getMaxAllowedPacket()  );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
