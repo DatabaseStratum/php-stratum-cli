@@ -57,18 +57,18 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   {
     $query = 'CALL tst_test02( '.self::quoteNum( $p_param00 ).','.self::quoteNum( $p_param01 ).','.self::quoteNum( $p_param02 ).','.self::quoteNum( $p_param03 ).','.self::quoteNum( $p_param04 ).','.self::quoteNum( $p_param05 ).','.self::quoteNum( $p_param06 ).','.self::quoteNum( $p_param07 ).','.self::quoteBit( $p_param08 ).','.self::quoteString( $p_param09 ).','.self::quoteString( $p_param10 ).','.self::quoteString( $p_param11 ).','.self::quoteString( $p_param12 ).','.self::quoteNum( $p_param13 ).','.self::quoteString( $p_param14 ).','.self::quoteString( $p_param15 ).','.self::quoteString( $p_param16 ).','.self::quoteString( $p_param17 ).',?,?,?,?,?,?,?,?,'.self::quoteString( $p_param26 ).','.self::quoteString( $p_param27 ).' )';
     $stmt  = self::$ourMySql->prepare( $query );
-    if (!$stmt) self::sqlError( 'prepare failed' );
+    if (!$stmt) self::sqlError( 'mysqli::prepare' );
 
     $null = null;
     $b = $stmt->bind_param( 'bbbbbbbb', $null,$null,$null,$null,$null,$null,$null,$null );
-    if (!$b) self::sqlError( 'bind_param failed' );
+    if (!$b) self::sqlError( 'mysqli_stmt::bind_param' );
 
     $n = strlen( $p_param18 );
     $p = 0;
     while ($p<$n)
     {
       $b = $stmt->send_long_data( 0, substr( $p_param18, $p, self::$ourChunkSize ) );
-      if (!$b) self::sqlError( 'send_long_data failed' );
+      if (!$b) self::sqlError( 'mysqli_stmt::send_long_data' );
       $p += self::$ourChunkSize;
     }
 
@@ -77,7 +77,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
     while ($p<$n)
     {
       $b = $stmt->send_long_data( 1, substr( $p_param19, $p, self::$ourChunkSize ) );
-      if (!$b) self::sqlError( 'send_long_data failed' );
+      if (!$b) self::sqlError( 'mysqli_stmt::send_long_data' );
       $p += self::$ourChunkSize;
     }
 
@@ -86,7 +86,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
     while ($p<$n)
     {
       $b = $stmt->send_long_data( 2, substr( $p_param20, $p, self::$ourChunkSize ) );
-      if (!$b) self::sqlError( 'send_long_data failed' );
+      if (!$b) self::sqlError( 'mysqli_stmt::send_long_data' );
       $p += self::$ourChunkSize;
     }
 
@@ -95,7 +95,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
     while ($p<$n)
     {
       $b = $stmt->send_long_data( 3, substr( $p_param21, $p, self::$ourChunkSize ) );
-      if (!$b) self::sqlError( 'send_long_data failed' );
+      if (!$b) self::sqlError( 'mysqli_stmt::send_long_data' );
       $p += self::$ourChunkSize;
     }
 
@@ -104,7 +104,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
     while ($p<$n)
     {
       $b = $stmt->send_long_data( 4, substr( $p_param22, $p, self::$ourChunkSize ) );
-      if (!$b) self::sqlError( 'send_long_data failed' );
+      if (!$b) self::sqlError( 'mysqli_stmt::send_long_data' );
       $p += self::$ourChunkSize;
     }
 
@@ -113,7 +113,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
     while ($p<$n)
     {
       $b = $stmt->send_long_data( 5, substr( $p_param23, $p, self::$ourChunkSize ) );
-      if (!$b) self::sqlError( 'send_long_data failed' );
+      if (!$b) self::sqlError( 'mysqli_stmt::send_long_data' );
       $p += self::$ourChunkSize;
     }
 
@@ -122,7 +122,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
     while ($p<$n)
     {
       $b = $stmt->send_long_data( 6, substr( $p_param24, $p, self::$ourChunkSize ) );
-      if (!$b) self::sqlError( 'send_long_data failed' );
+      if (!$b) self::sqlError( 'mysqli_stmt::send_long_data' );
       $p += self::$ourChunkSize;
     }
 
@@ -131,12 +131,12 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
     while ($p<$n)
     {
       $b = $stmt->send_long_data( 7, substr( $p_param25, $p, self::$ourChunkSize ) );
-      if (!$b) self::sqlError( 'send_long_data failed' );
+      if (!$b) self::sqlError( 'mysqli_stmt::send_long_data' );
       $p += self::$ourChunkSize;
     }
 
     $b = $stmt->execute();
-    if (!$b) self::sqlError( 'execute failed' );
+    if (!$b) self::sqlError( 'mysqli_stmt::execute' );
 
     $ret = self::$ourMySql->affected_rows;
 
@@ -150,7 +150,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
    */
   public static function testBulkInsert01( $theData )
   {
-    self::Query(  'CALL tst_test_bulk_insert01()');
+    self::query( 'CALL tst_test_bulk_insert01()');
     $sql = "INSERT INTO `TST_TEMPO`(`tst_col1`,`tst_col2`,`tst_col3`,`tst_col4`,`tst_col5`,`tst_col6`,`tst_col7`,`tst_col8`,`tst_col9`,`tst_col10`,`tst_col11`,`tst_col12`,`tst_col13`,`tst_col14`,`tst_col15`,`tst_col16`,`tst_col17`,`tst_col18`,`tst_col19`,`tst_col20`)";
     $first = true;
     foreach( $theData as $row )
@@ -159,7 +159,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
         else        $sql .=',      ('.self::quoteNum($row['field1']).','.self::quoteNum($row['field2']).','.self::quoteNum($row['field3']).','.self::quoteNum($row['field4']).','.self::quoteNum($row['field5']).','.self::quoteNum($row['field6']).','.self::quoteNum($row['field7']).','.self::quoteNum($row['field8']).','.self::quoteNum($row['field9']).','.self::quoteString($row['field10']).','.self::quoteString($row['field11']).','.self::quoteString($row['field12']).','.self::quoteString($row['field13']).','.self::quoteString($row['field14']).','.self::quoteString($row['field15']).','.self::quoteString($row['field16']).','.self::quoteString($row['field17']).','.self::quoteString($row['field18']).','.self::quoteString($row['field19']).','.self::quoteBit($row['field20']).')';
         $first = false;
     }
-    self::Query( $sql );
+    self::query( $sql );
   }
 
   //-------------------------------------------------------------------------------------------------------------------
@@ -167,7 +167,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
    */
   public static function testBulkInsert02( $theData )
   {
-    self::Query(  'CALL tst_test_bulk_insert02()');
+    self::query( 'CALL tst_test_bulk_insert02()');
     $sql = "INSERT INTO `TST_TEMPO`(`tst_col1`,`tst_col4`,`tst_col5`)";
     $first = true;
     foreach( $theData as $row )
@@ -176,7 +176,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
         else        $sql .=',      ('.self::quoteNum($row['field1']).','.self::quoteNum($row['field4']).','.self::quoteNum($row['field5']).')';
         $first = false;
     }
-    self::Query( $sql );
+    self::query( $sql );
   }
 
   //-------------------------------------------------------------------------------------------------------------------
@@ -202,23 +202,23 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   {
     $query = 'CALL tst_test_max_allowed_packet( ? )';
     $stmt  = self::$ourMySql->prepare( $query );
-    if (!$stmt) self::sqlError( 'prepare failed' );
+    if (!$stmt) self::sqlError( 'mysqli::prepare' );
 
     $null = null;
     $b = $stmt->bind_param( 'b', $null );
-    if (!$b) self::sqlError( 'bind_param failed' );
+    if (!$b) self::sqlError( 'mysqli_stmt::bind_param' );
 
     $n = strlen( $p_tmp_blob );
     $p = 0;
     while ($p<$n)
     {
       $b = $stmt->send_long_data( 0, substr( $p_tmp_blob, $p, self::$ourChunkSize ) );
-      if (!$b) self::sqlError( 'send_long_data failed' );
+      if (!$b) self::sqlError( 'mysqli_stmt::send_long_data' );
       $p += self::$ourChunkSize;
     }
 
     $b = $stmt->execute();
-    if (!$b) self::sqlError( 'execute failed' );
+    if (!$b) self::sqlError( 'mysqli_stmt::execute' );
 
     $row = array();
     self::bindAssoc( $stmt, $row );
@@ -234,12 +234,10 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
       $tmp[] = $new;
     }
 
-    $b = $stmt->fetch();
-
     $stmt->close();
 
-    if ($b===false) self::sqlError( 'mysqli_stmt::fetch failed' );
-    if (sizeof($tmp)!=1) self::sqlError( 'The unexpected number of rows, expected 1 row.' );
+    if ($b===false) self::sqlError( 'mysqli_stmt::fetch' );
+    if (sizeof($tmp)!=1) self::assertFailed( 'Expected 1 row found %d rows.', sizeof($tmp) );
 
     return $tmp[0][0];
   }
@@ -259,23 +257,23 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   {
     $query = 'CALL tst_test_none_with_lob( '.self::quoteNum( $p_count ).',? )';
     $stmt  = self::$ourMySql->prepare( $query );
-    if (!$stmt) self::sqlError( 'prepare failed' );
+    if (!$stmt) self::sqlError( 'mysqli::prepare' );
 
     $null = null;
     $b = $stmt->bind_param( 'b', $null );
-    if (!$b) self::sqlError( 'bind_param failed' );
+    if (!$b) self::sqlError( 'mysqli_stmt::bind_param' );
 
     $n = strlen( $p_blob );
     $p = 0;
     while ($p<$n)
     {
       $b = $stmt->send_long_data( 0, substr( $p_blob, $p, self::$ourChunkSize ) );
-      if (!$b) self::sqlError( 'send_long_data failed' );
+      if (!$b) self::sqlError( 'mysqli_stmt::send_long_data' );
       $p += self::$ourChunkSize;
     }
 
     $b = $stmt->execute();
-    if (!$b) self::sqlError( 'execute failed' );
+    if (!$b) self::sqlError( 'mysqli_stmt::execute' );
 
     $ret = self::$ourMySql->affected_rows;
 
@@ -299,23 +297,23 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   {
     $query = 'CALL tst_test_row0a_with_lob( '.self::quoteNum( $p_count ).',? )';
     $stmt  = self::$ourMySql->prepare( $query );
-    if (!$stmt) self::sqlError( 'prepare failed' );
+    if (!$stmt) self::sqlError( 'mysqli::prepare' );
 
     $null = null;
     $b = $stmt->bind_param( 'b', $null );
-    if (!$b) self::sqlError( 'bind_param failed' );
+    if (!$b) self::sqlError( 'mysqli_stmt::bind_param' );
 
     $n = strlen( $p_blob );
     $p = 0;
     while ($p<$n)
     {
       $b = $stmt->send_long_data( 0, substr( $p_blob, $p, self::$ourChunkSize ) );
-      if (!$b) self::sqlError( 'send_long_data failed' );
+      if (!$b) self::sqlError( 'mysqli_stmt::send_long_data' );
       $p += self::$ourChunkSize;
     }
 
     $b = $stmt->execute();
-    if (!$b) self::sqlError( 'execute failed' );
+    if (!$b) self::sqlError( 'mysqli_stmt::execute' );
 
     $row = array();
     self::bindAssoc( $stmt, $row );
@@ -333,8 +331,8 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
 
     $stmt->close();
 
-    if ($b===false) self::sqlError( 'mysqli_stmt::fetch failed' );
-    if (sizeof($tmp)>1) self::sqlError( 'The unexpected number of rows, expected 0 or 1 rows.' );
+    if ($b===false) self::sqlError( 'mysqli_stmt::fetch' );
+    if (sizeof($tmp)>1) self::assertFailed( 'Expected 0 or 1 row found %d rows.', sizeof($tmp) );
 
     return ($tmp) ? $tmp[0] : null;
   }
@@ -354,23 +352,23 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   {
     $query = 'CALL tst_test_row1a_with_lob( '.self::quoteNum( $p_count ).',? )';
     $stmt  = self::$ourMySql->prepare( $query );
-    if (!$stmt) self::sqlError( 'prepare failed' );
+    if (!$stmt) self::sqlError( 'mysqli::prepare' );
 
     $null = null;
     $b = $stmt->bind_param( 'b', $null );
-    if (!$b) self::sqlError( 'bind_param failed' );
+    if (!$b) self::sqlError( 'mysqli_stmt::bind_param' );
 
     $n = strlen( $p_blob );
     $p = 0;
     while ($p<$n)
     {
       $b = $stmt->send_long_data( 0, substr( $p_blob, $p, self::$ourChunkSize ) );
-      if (!$b) self::sqlError( 'send_long_data failed' );
+      if (!$b) self::sqlError( 'mysqli_stmt::send_long_data' );
       $p += self::$ourChunkSize;
     }
 
     $b = $stmt->execute();
-    if (!$b) self::sqlError( 'execute failed' );
+    if (!$b) self::sqlError( 'mysqli_stmt::execute' );
 
     $row = array();
     self::bindAssoc( $stmt, $row );
@@ -388,8 +386,8 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
 
     $stmt->close();
 
-    if ($b===false) self::sqlError( 'mysqli_stmt::fetch failed' );
-    if (sizeof($tmp)!=1) self::sqlError( 'The unexpected  number of rows,  expected 1 row.' );
+    if ($b===false) self::sqlError( 'mysqli_stmt::fetch' );
+    if (sizeof($tmp)!=1) self::assertFailed( 'Expected 1 row found %d rows.', sizeof($tmp) );
 
     return $row;
   }
@@ -409,23 +407,23 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   {
     $query = 'CALL tst_test_rows1_with_lob( '.self::quoteNum( $p_count ).',? )';
     $stmt  = self::$ourMySql->prepare( $query );
-    if (!$stmt) self::sqlError( 'prepare failed' );
+    if (!$stmt) self::sqlError( 'mysqli::prepare' );
 
     $null = null;
     $b = $stmt->bind_param( 'b', $null );
-    if (!$b) self::sqlError( 'bind_param failed' );
+    if (!$b) self::sqlError( 'mysqli_stmt::bind_param' );
 
     $n = strlen( $p_blob );
     $p = 0;
     while ($p<$n)
     {
       $b = $stmt->send_long_data( 0, substr( $p_blob, $p, self::$ourChunkSize ) );
-      if (!$b) self::sqlError( 'send_long_data failed' );
+      if (!$b) self::sqlError( 'mysqli_stmt::send_long_data' );
       $p += self::$ourChunkSize;
     }
 
     $b = $stmt->execute();
-    if (!$b) self::sqlError( 'execute failed' );
+    if (!$b) self::sqlError( 'mysqli_stmt::execute' );
 
     $row = array();
     self::bindAssoc( $stmt, $row );
@@ -443,7 +441,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
 
     $stmt->close();
 
-    if ($b===false) self::sqlError( 'mysqli_stmt::fetch failed' );
+    if ($b===false) self::sqlError( 'mysqli_stmt::fetch' );
 
     return $tmp;
   }
@@ -453,7 +451,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
    */
   public static function testRowsWithIndex1( $p_count )
   {
-    $result = self::Query( 'CALL tst_test_rows_with_index1('.self::quoteNum( $p_count ).')');
+    $result = self::query( 'CALL tst_test_rows_with_index1('.self::quoteNum( $p_count ).')');
     $ret = array();
     while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret[$row['tst_c01']][$row['tst_c02']][] = $row;
     $result->close();
@@ -467,23 +465,23 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   {
     $query = 'CALL tst_test_rows_with_index1_with_lob( '.self::quoteNum( $p_count ).',? )';
     $stmt  = self::$ourMySql->prepare( $query );
-    if (!$stmt) self::sqlError( 'prepare failed' );
+    if (!$stmt) self::sqlError( 'mysqli::prepare' );
 
     $null = null;
     $b = $stmt->bind_param( 'b', $null );
-    if (!$b) self::sqlError( 'bind_param failed' );
+    if (!$b) self::sqlError( 'mysqli_stmt::bind_param' );
 
     $n = strlen( $p_blob );
     $p = 0;
     while ($p<$n)
     {
       $b = $stmt->send_long_data( 0, substr( $p_blob, $p, self::$ourChunkSize ) );
-      if (!$b) self::sqlError( 'send_long_data failed' );
+      if (!$b) self::sqlError( 'mysqli_stmt::send_long_data' );
       $p += self::$ourChunkSize;
     }
 
     $b = $stmt->execute();
-    if (!$b) self::sqlError( 'execute failed' );
+    if (!$b) self::sqlError( 'mysqli_stmt::execute' );
 
     $row = array();
     self::bindAssoc( $stmt, $row );
@@ -499,11 +497,9 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
       $ret[$new['tst_c01']][$new['tst_c02']][] = $new;
     }
 
-    $b = $stmt->fetch();
-
     $stmt->close();
 
-    if ($b===false) self::sqlError( 'mysqli_stmt::fetch failed' );
+    if ($b===false) self::sqlError( 'mysqli_stmt::fetch' );
 
     return $ret;
   }
@@ -513,7 +509,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
    */
   public static function testRowsWithKey1( $p_count )
   {
-    $result = self::Query( 'CALL tst_test_rows_with_key1('.self::quoteNum( $p_count ).')');
+    $result = self::query( 'CALL tst_test_rows_with_key1('.self::quoteNum( $p_count ).')');
     $ret = array();
     while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret[$row['tst_c01']][$row['tst_c02']][$row['tst_c03']] = $row;
     $result->close();
@@ -527,23 +523,23 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   {
     $query = 'CALL tst_test_rows_with_key1_with_lob( '.self::quoteNum( $p_count ).',? )';
     $stmt  = self::$ourMySql->prepare( $query );
-    if (!$stmt) self::sqlError( 'prepare failed' );
+    if (!$stmt) self::sqlError( 'mysqli::prepare' );
 
     $null = null;
     $b = $stmt->bind_param( 'b', $null );
-    if (!$b) self::sqlError( 'bind_param failed' );
+    if (!$b) self::sqlError( 'mysqli_stmt::bind_param' );
 
     $n = strlen( $p_blob );
     $p = 0;
     while ($p<$n)
     {
       $b = $stmt->send_long_data( 0, substr( $p_blob, $p, self::$ourChunkSize ) );
-      if (!$b) self::sqlError( 'send_long_data failed' );
+      if (!$b) self::sqlError( 'mysqli_stmt::send_long_data' );
       $p += self::$ourChunkSize;
     }
 
     $b = $stmt->execute();
-    if (!$b) self::sqlError( 'execute failed' );
+    if (!$b) self::sqlError( 'mysqli_stmt::execute' );
 
     $row = array();
     self::bindAssoc( $stmt, $row );
@@ -559,11 +555,9 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
       $ret[$new['tst_c01']][$new['tst_c02']][$new['tst_c03']] = $new;
     }
 
-    $b = $stmt->fetch();
-
     $stmt->close();
 
-    if ($b===false) self::sqlError( 'mysqli_stmt::fetch failed' );
+    if ($b===false) self::sqlError( 'mysqli_stmt::fetch' );
 
     return $ret;
   }
@@ -583,23 +577,23 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   {
     $query = 'CALL tst_test_singleton0a_with_lob( '.self::quoteNum( $p_count ).',? )';
     $stmt  = self::$ourMySql->prepare( $query );
-    if (!$stmt) self::sqlError( 'prepare failed' );
+    if (!$stmt) self::sqlError( 'mysqli::prepare' );
 
     $null = null;
     $b = $stmt->bind_param( 'b', $null );
-    if (!$b) self::sqlError( 'bind_param failed' );
+    if (!$b) self::sqlError( 'mysqli_stmt::bind_param' );
 
     $n = strlen( $p_blob );
     $p = 0;
     while ($p<$n)
     {
       $b = $stmt->send_long_data( 0, substr( $p_blob, $p, self::$ourChunkSize ) );
-      if (!$b) self::sqlError( 'send_long_data failed' );
+      if (!$b) self::sqlError( 'mysqli_stmt::send_long_data' );
       $p += self::$ourChunkSize;
     }
 
     $b = $stmt->execute();
-    if (!$b) self::sqlError( 'execute failed' );
+    if (!$b) self::sqlError( 'mysqli_stmt::execute' );
 
     $row = array();
     self::bindAssoc( $stmt, $row );
@@ -615,12 +609,10 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
       $tmp[] = $new;
     }
 
-    $b = $stmt->fetch();
-
     $stmt->close();
 
-    if ($b===false) self::sqlError( 'mysqli_stmt::fetch failed' );
-    if (sizeof($tmp)>1) self::sqlError( 'The unexpected number of rows, expected 0 or 1 rows.' );
+    if ($b===false) self::sqlError( 'mysqli_stmt::fetch' );
+    if (sizeof($tmp)>1) self::assertFailed( 'Expected 0 or 1 row found %d rows.', sizeof($tmp) );
 
     return ($tmp) ? $tmp[0][0] : null;
   }
@@ -640,23 +632,23 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   {
     $query = 'CALL tst_test_singleton1a_with_lob( '.self::quoteNum( $p_count ).',? )';
     $stmt  = self::$ourMySql->prepare( $query );
-    if (!$stmt) self::sqlError( 'prepare failed' );
+    if (!$stmt) self::sqlError( 'mysqli::prepare' );
 
     $null = null;
     $b = $stmt->bind_param( 'b', $null );
-    if (!$b) self::sqlError( 'bind_param failed' );
+    if (!$b) self::sqlError( 'mysqli_stmt::bind_param' );
 
     $n = strlen( $p_blob );
     $p = 0;
     while ($p<$n)
     {
       $b = $stmt->send_long_data( 0, substr( $p_blob, $p, self::$ourChunkSize ) );
-      if (!$b) self::sqlError( 'send_long_data failed' );
+      if (!$b) self::sqlError( 'mysqli_stmt::send_long_data' );
       $p += self::$ourChunkSize;
     }
 
     $b = $stmt->execute();
-    if (!$b) self::sqlError( 'execute failed' );
+    if (!$b) self::sqlError( 'mysqli_stmt::execute' );
 
     $row = array();
     self::bindAssoc( $stmt, $row );
@@ -672,12 +664,10 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
       $tmp[] = $new;
     }
 
-    $b = $stmt->fetch();
-
     $stmt->close();
 
-    if ($b===false) self::sqlError( 'mysqli_stmt::fetch failed' );
-    if (sizeof($tmp)!=1) self::sqlError( 'The unexpected number of rows, expected 1 row.' );
+    if ($b===false) self::sqlError( 'mysqli_stmt::fetch' );
+    if (sizeof($tmp)!=1) self::assertFailed( 'Expected 1 row found %d rows.', sizeof($tmp) );
 
     return $tmp[0][0];
   }

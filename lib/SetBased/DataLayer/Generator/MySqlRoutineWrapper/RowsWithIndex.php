@@ -21,7 +21,7 @@ class RowsWithIndex extends MySqlRoutineWrapper
       $index .= '[$row[\''.$column.'\']]';
     }
 
-    $this->writeLine( '$result = self::Query( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
+    $this->writeLine( '$result = self::query( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
     $this->writeLine( '$ret = array();' );
     $this->writeLine( 'while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret'.$index.'[] = $row;' );
     $this->writeLine( '$result->close();' );
@@ -51,15 +51,13 @@ class RowsWithIndex extends MySqlRoutineWrapper
     $this->writeLine( '$ret'.$index.'[] = $new;' );
     $this->writeLine( '}' );
     $this->writeLine();
-    $this->writeLine( '$b = $stmt->fetch();' );
-    $this->writeLine();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   protected function writeRoutineFunctionLobReturnData()
   {
 
-    $this->writeLine( 'if ($b===false) self::sqlError( \'mysqli_stmt::fetch failed\' );' );
+    $this->writeLine( 'if ($b===false) self::sqlError( \'mysqli_stmt::fetch\' );' );
     $this->writeLine();
     $this->writeLine( 'return $ret;' );
   }

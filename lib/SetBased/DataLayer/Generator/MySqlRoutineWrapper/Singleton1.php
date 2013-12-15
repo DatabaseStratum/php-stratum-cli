@@ -34,15 +34,13 @@ class Singleton1 extends MySqlRoutineWrapper
     $this->writeLine( '$tmp[] = $new;' );
     $this->writeLine( '}' );
     $this->writeLine();
-    $this->writeLine( '$b = $stmt->fetch();' );
-    $this->writeLine();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   protected function writeRoutineFunctionLobReturnData()
   {
-    $this->writeLine( 'if ($b===false) self::sqlError( \'mysqli_stmt::fetch failed\' );' );
-    $this->writeLine( 'if (sizeof($tmp)!=1) self::sqlError( \'The unexpected number of rows, expected 1 row.\' );' );
+    $this->writeLine( 'if ($b===false) self::sqlError( \'mysqli_stmt::fetch\' );' );
+    $this->writeLine( 'if (sizeof($tmp)!=1) self::assertFailed( \'Expected 1 row found %d rows.\', sizeof($tmp) );' );
     $this->writeLine();
     $this->writeLine( 'return $tmp[0][0];' );
   }

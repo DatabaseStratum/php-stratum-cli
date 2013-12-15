@@ -45,7 +45,7 @@ class BulkInsert extends MySqlRoutineWrapper
     if ($n1!=$n2) set_assert_failed( "Number of fields %d and number of columns %d don't match.", $n1, $n2 );
 
     $routine_args = $this->getRoutineArgs( $theRoutine );
-    $this->writeLine( 'self::Query(  \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
+    $this->writeLine( 'self::query( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
 
     $columns = '';
     $fields  = '';
@@ -71,7 +71,7 @@ class BulkInsert extends MySqlRoutineWrapper
 
     $this->writeLine( '  $first = false;' );
     $this->writeLine( '}' );
-    $this->writeLine( 'self::Query( $sql );' );
+    $this->writeLine( 'self::query( $sql );' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

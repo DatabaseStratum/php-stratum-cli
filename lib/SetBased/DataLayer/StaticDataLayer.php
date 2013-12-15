@@ -64,7 +64,7 @@ class StaticDataLayer
   public static function begin()
   {
     $ret = self::$ourMySql->autocommit( false );
-    if (!$ret) self::sqlError( 'autocommit' );
+    if (!$ret) self::sqlError( 'mysqli::autocommit' );
   }
 
   // -------------------------------------------------------------------------------------------------------------------
@@ -75,7 +75,7 @@ class StaticDataLayer
   public static function bindAssoc( $stmt, &$out )
   {
     $data = $stmt->result_metadata();
-    if (!$data) self::sqlError( 'mysqli_stmt::result_metadata failed' );
+    if (!$data) self::sqlError( 'mysqli_stmt::result_metadata' );
 
     $fields = array();
     $out    = array();
@@ -88,7 +88,7 @@ class StaticDataLayer
     }
 
     $b = call_user_func_array( array($stmt, 'bind_result'), $fields );
-    if ($b===false) self::sqlError( 'mysqli_stmt::bind_result failed' );
+    if ($b===false) self::sqlError( 'mysqli_stmt::bind_result' );
 
     $data->free();
   }
@@ -101,7 +101,7 @@ class StaticDataLayer
   public static function commit()
   {
     $ret = self::$ourMySql->commit();
-    if (!$ret) self::sqlError( 'commit' );
+    if (!$ret) self::sqlError( 'mysqli::commit' );
   }
 
   // -------------------------------------------------------------------------------------------------------------------
@@ -118,13 +118,13 @@ class StaticDataLayer
   public static function connect( $theHostName, $theUserName, $thePassWord, $theDatabase, $thePort = 3306 )
   {
     self::$ourMySql = new \mysqli($theHostName, $theUserName, $thePassWord, $theDatabase, $thePort);
-    if (!self::$ourMySql) self::sqlError( 'init' );
+    if (!self::$ourMySql) self::sqlError( 'mysqli::__construct' );
 
     // Set the default character set.
     if (self::$ourCharSet)
     {
       $ret = self::$ourMySql->set_charset( self::$ourCharSet );
-      if (!$ret) self::sqlError( 'set_charset' );
+      if (!$ret) self::sqlError( 'mysqli::set_charset' );
     }
 
     // Set the SQL mode.
@@ -194,7 +194,7 @@ class StaticDataLayer
     do
     {
       $result = self::$ourMySql->store_result();
-      if (self::$ourMySql->errno) self::sqlError( '$mysqli->store_result failed for \''.$theQuery.'\'' );
+      if (self::$ourMySql->errno) self::sqlError( 'mysqli::store_result' );
       if ($result)
       {
         $fields = $result->fetch_fields();
@@ -216,7 +216,7 @@ class StaticDataLayer
       if ($continue)
       {
         $b = self::$ourMySql->next_result();
-        if ($b===false) self::sqlError( 'mysqli::next_result failed for \''.$theQuery.'\'' );
+        if ($b===false) self::sqlError( 'mysqli::next_result' );
       }
     } while ($continue);
 
@@ -425,8 +425,7 @@ class StaticDataLayer
     if ($theValue===null || $theValue==='' || $theValue===false) return 'NULL';
     if ($theValue===true) return 1;
 
-    self::sqlError( "Value '$theValue' is not a number." );
-
+    self::assertFailed( "Value '%s' is not a number.", $theValue );
     // Not reached.
 
     // Keep our IDE happy.
@@ -474,12 +473,12 @@ class StaticDataLayer
   public static function rollback()
   {
     $ret = self::$ourMySql->rollback();
-    if (!$ret) self::sqlError( 'rollback' );
+    if (!$ret) self::sqlError( 'mysqli::rollback' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Logs the warnings of the last executes SQL statement.
+   * Logs the warnings of the last executed SQL statement.
    * Wrapper around the SQL statement 'show warnings'.
    */
   public static function showWarnings()
@@ -506,7 +505,7 @@ class StaticDataLayer
    *
    * @param string $theQuery The SQL statement.
    *
-   * @return \mysqli_result|bool
+   * @return \mysqli_result
    */
   protected static function query( $theQuery )
   {
