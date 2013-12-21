@@ -728,7 +728,7 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
       if ($this->myCurrentRoutineName!=$matches[2])
       {
         echo sprintf( "Error: Stored routine name '%s' does not match filename in file '%s'.\n",
-                      $this->myCurrentRoutineName,
+                      $matches[2],
                       $this->myCurrentPsqlFilename );
         $ret = false;
       }
