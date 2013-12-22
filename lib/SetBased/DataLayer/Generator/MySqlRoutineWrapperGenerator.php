@@ -229,6 +229,9 @@ class MySqlRoutineWrapperGenerator
   }
 
   //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Generate a class header for stored routines.
+   */
   private function writeClassHeader()
   {
     $p = strrpos( $this->myWrapperClassName, '\\' );
@@ -256,6 +259,9 @@ class MySqlRoutineWrapperGenerator
   }
 
   //--------------------------------------------------------------------------------------------------------------------
+  /**
+   *
+   */
   private function writeClassTrailer()
   {
     $this->myCode .= '  //'.str_repeat( '-', MySqlRoutineWrapper::C_PAGE_WIDTH - 4 )."\n";

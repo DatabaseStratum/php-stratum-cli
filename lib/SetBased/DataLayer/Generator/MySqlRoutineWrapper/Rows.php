@@ -5,7 +5,12 @@ namespace SetBased\DataLayer\Generator\MySqlRoutineWrapper;
 use SetBased\DataLayer\Generator\MySqlRoutineWrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
-/** @brief Class for generating a wrapper function around a stored procedure that selects 0 or more rows.
+/**
+ * Class Rows
+ *
+ * @package SetBased\DataLayer\Generator\MySqlRoutineWrapper
+ *
+ * Class for generating a wrapper function around a stored procedure that selects 0 or more rows.
  */
 class Rows extends MySqlRoutineWrapper
 {

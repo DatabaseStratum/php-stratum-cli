@@ -5,7 +5,12 @@ namespace SetBased\DataLayer\Generator\MySqlRoutineWrapper;
 use SetBased\DataLayer\Generator\MySqlRoutineWrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
-/** @brief Class for generating a wrapper function around a stored procedure without result set.
+/**
+ * Class None
+ *
+ * @package SetBased\DataLayer\Generator\MySqlRoutineWrapper
+ *
+ * Class for generating a wrapper function around a stored procedure without result set.
  */
 class None extends MySqlRoutineWrapper
 {

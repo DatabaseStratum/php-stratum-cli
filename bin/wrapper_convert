@@ -1,7 +1,8 @@
 #!/usr/bin/php
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-/** Throws an execption. Takes arguments similair to printf.
+/**
+ * Throws an execption. Takes arguments similair to printf.
  */
 function set_assert_failed()
 {
@@ -13,8 +14,14 @@ function set_assert_failed()
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-function ReadMetadata( $theMatadataFile )
+/**
+ * @param string $theMatadataFile The path to the file with metadata.
+ *
+ * @return array
+ */
+function readMetadata( $theMatadataFile )
 {
+  $metadata = array();
   $handle = fopen( $theMatadataFile, 'r' );
   if ($handle===false) set_assert_failed( "Unable to open file '%s'.", $theMatadataFile );
 
@@ -35,7 +42,12 @@ function ReadMetadata( $theMatadataFile )
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-function GetPSQLList( $theSourceDir )
+/**
+ * @param string $theSourceDir
+ *
+ * @return array
+ */
+function getPSQLList( $theSourceDir )
 {
   $PSQLList = glob( "$theSourceDir/*.psql" );
   $FileList = scandir( $theSourceDir );
@@ -55,7 +67,7 @@ function GetPSQLList( $theSourceDir )
   {
     foreach ( $DirList as $DirPath )
     {
-      $SubPSQLList = GetPSQLList( $DirPath );
+      $SubPSQLList = getPSQLList( $DirPath );
       $PSQLList = array_merge( $PSQLList, $SubPSQLList );
     }
   }
@@ -64,7 +76,10 @@ function GetPSQLList( $theSourceDir )
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-function CreateDestinationDir( $theDirectoryName )
+/**
+ * @param string $theDirectoryName
+ */
+function createDestinationDir( $theDirectoryName )
 {
   if (!is_dir( $theDirectoryName ))
   {
@@ -75,7 +90,13 @@ function CreateDestinationDir( $theDirectoryName )
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-function ProcessSourcFile( $theSource, $theDestinationDir, $metadata, $theSourceDir )
+/**
+ * @param string $theSource
+ * @param string $theDestinationDir
+ * @param array  $metadata
+ * @param string $theSourceDir
+ */
+function processSourcFile( $theSource, $theDestinationDir, $metadata, $theSourceDir )
 {
   $routine_name = basename( $theSource, '.psql' );
 
@@ -88,7 +109,7 @@ function ProcessSourcFile( $theSource, $theDestinationDir, $metadata, $theSource
 
   $output_file_name = $theDestinationDir.substr( $theSource, strlen(  $theSourceDir ) );
 
-  CreateDestinationDir( dirname( $output_file_name ) );
+  createDestinationDir( dirname( $output_file_name ) );
 
   $source = file_get_contents( $theSource );
   if ($source===false) set_assert_failed( "Unable to read file '%s'.", $theSource );
@@ -167,42 +188,39 @@ function ProcessSourcFile( $theSource, $theDestinationDir, $metadata, $theSource
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-function Synopsis()
+/**
+ * Show synopsis message.
+ */
+function synopsis()
 {
   echo "Synopsis: wrapper_convert <metadata.cvs> <source dir> <destination dir>\n";
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-function WrapperConvert( $theMetadatFileName, $theSourceDir, $theDestinationDir )
+/**
+ * @param string $theMetadatFileName
+ * @param string $theSourceDir
+ * @param string $theDestinationDir
+ */
+function wrapperConvert( $theMetadatFileName, $theSourceDir, $theDestinationDir )
 {
-  $theSources = GetPSQLList( $theSourceDir );
+  $theSources = getPSQLList( $theSourceDir );
 
-  $metadata = ReadMetadata( $theMetadatFileName );
+  $metadata = readMetadata( $theMetadatFileName );
 
   foreach( $theSources as $theSource )
   {
-    ProcessSourcFile( $theSource, $theDestinationDir, $metadata, $theSourceDir );
+    processSourcFile( $theSource, $theDestinationDir, $metadata, $theSourceDir );
   }
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 if ($argc!=4)
 {
-  Synopsis();
+  synopsis();
   exit(1);
 }
 
-/** @todo Valery
-    * Before line starting with "create procedure" or "create function"
-    * remove lines starting with "set sql_mode ="
-    * remove lines starting with "set names"
-    * remove lines starting with "delimiter"
-    * remove lines starting with "drop"
-    * remove double emtpy lines
-    * After line "end$$"
-    * Replace "end$$" with "end" (with lew line)
-    * remove all following lines
-    */
 //----------------------------------------------------------------------------------------------------------------------
-WrapperConvert( $argv[1], $argv[2], $argv[3] );
+wrapperConvert( $argv[1], $argv[2], $argv[3] );
 

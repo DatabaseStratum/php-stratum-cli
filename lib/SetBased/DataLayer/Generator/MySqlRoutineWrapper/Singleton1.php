@@ -5,7 +5,12 @@ namespace SetBased\DataLayer\Generator\MySqlRoutineWrapper;
 use SetBased\DataLayer\Generator\MySqlRoutineWrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
-/** @brief Class for generating a wrapper function around a stored procedure selects 1 and only 1 row with only one
+/**
+ * Class Singleton1
+ *
+ * @package SetBased\DataLayer\Generator\MySqlRoutineWrapper
+ *
+ * Class for generating a wrapper function around a stored procedure selects 1 and only 1 row with only one
  * column.
  */
 class Singleton1 extends MySqlRoutineWrapper

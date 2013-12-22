@@ -4,13 +4,9 @@ namespace SetBased\DataLayer\Generator;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class MySqlRoutineWrapper abstract supper class for generation stored routine wrapper methods based on the type of
- * the stored routine.
- * @package SetBased\DataLayer
- */
-/**
  * Class MySqlRoutineWrapper
  * @package SetBased\DataLayer
+ * abstract supper class for generation stored routine wrapper methods based on the type of the stored routine.
  */
 abstract class MySqlRoutineWrapper
 {

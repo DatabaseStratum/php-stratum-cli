@@ -17,6 +17,9 @@ function set_assert_failed()
 }
 
 //----------------------------------------------------------------------------------------------------------------------
+/**
+ * Show synopsis massage.
+ */
 function synopsis()
 {
   echo "Synopsis: dlgen [-f] -c <configuration file> [routine.psql] ... \n";
@@ -26,6 +29,13 @@ function synopsis()
 }
 
 //----------------------------------------------------------------------------------------------------------------------
+/**
+ * Processed CLI command.
+ *
+ * @param array $options
+ *
+ * @return mixed
+ */
 function getSetting( $options )
 {
   // skip first key with current file name.
@@ -71,6 +81,9 @@ function getSetting( $options )
 }
 
 //----------------------------------------------------------------------------------------------------------------------
+/**
+ * @param array $options
+ */
 function main( $options )
 {
   $setting = getSetting( $options );

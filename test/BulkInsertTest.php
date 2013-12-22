@@ -1,9 +1,13 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
+/**
+ * Class BulkInsertTest
+ */
 class BulkInsertTest extends PHPUnit_Framework_TestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
-  /** Setups a form with a select form control.
+  /**
+   * Setups a form with a select form control.
    */
   protected function setUp()
   {
@@ -11,7 +15,8 @@ class BulkInsertTest extends PHPUnit_Framework_TestCase
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Test number of rows inserted is corrected. All columns type supported.
+  /**
+   * Test number of rows inserted is corrected. All columns type supported.
    */
   public function test1()
   {
@@ -108,7 +113,8 @@ class BulkInsertTest extends PHPUnit_Framework_TestCase
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Test must not be a poblem.
+  /**
+   * Test must not be a poblem.
    */
   public function test2()
   {

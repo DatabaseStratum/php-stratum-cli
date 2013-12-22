@@ -6,12 +6,11 @@ use SetBased\DataLayer\StaticDataLayer as DataLayer;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class for creating PHP constants based on column widths, and auto increment columns and labels.
- * @package SetBased\DataLayer
- */
-/**
  * Class MySqlConfigConstants
+ *
  * @package SetBased\DataLayer
+ *
+ * Class for creating PHP constants based on column widths, and auto increment columns and labels.
  */
 class MySqlConfigConstants
 {
@@ -90,7 +89,7 @@ class MySqlConfigConstants
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * @param $theConfigFilename
+   * @param string $theConfigFilename
    *
    * @return int
    */
@@ -220,7 +219,7 @@ order by table_name
    *
    * @param $theColumn array The column of which the field is based.
    *
-   * @returns int
+   * @returns int|null
    */
   private function deriveFieldLength( $theColumn )
   {

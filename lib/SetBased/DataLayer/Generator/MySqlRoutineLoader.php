@@ -5,8 +5,9 @@ namespace SetBased\DataLayer\Generator;
 use SetBased\DataLayer\StaticDataLayer as DataLayer;
 
 /**
- * Class MySqlRoutineLoader Class for loading stored routine into a MySQL instance from pseudo SQL files (.psql).
+ * Class MySqlRoutineLoader
  * @package SetBased\DataLayer
+ * Class for loading stored routine into a MySQL instance from pseudo SQL files (.psql).
  */
 class MySqlRoutineLoader
 {
@@ -34,8 +35,6 @@ class MySqlRoutineLoader
    * @var string The name of the configuration file of the target project
    */
   private $myTargetConfigFilename;
-
-
 
   /**
    * @var array An array with all found .psql files.
@@ -66,8 +65,7 @@ class MySqlRoutineLoader
    * @var array Information about old routines.
    */
   private $myOldRoutines;
-  
-  
+
   /**
    * @var string The current .psql filename.
    */

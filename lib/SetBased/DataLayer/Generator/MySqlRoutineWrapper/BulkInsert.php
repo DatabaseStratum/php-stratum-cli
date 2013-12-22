@@ -5,7 +5,13 @@ namespace SetBased\DataLayer\Generator\MySqlRoutineWrapper;
 use SetBased\DataLayer\Generator\MySqlRoutineWrapper;
 use SetBased\DataLayer\StaticDataLayer as DataLayer;
 
-/** @brief Class for generating a wrapper function around a stored procedure that ...
+
+/**
+ * Class BulkInsert
+ *
+ * @package SetBased\DataLayer\Generator\MySqlRoutineWrapper
+ *
+ * Class for generating a wrapper function around a stored procedure that ...
  */
 class BulkInsert extends MySqlRoutineWrapper
 {
@@ -123,8 +129,14 @@ class BulkInsert extends MySqlRoutineWrapper
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Sets shielding special characters for the field @a $fieldName, depends on the type value @a $theValueType
+  /**
+   * Sets shielding special characters for the field @a $fieldName, depends on the type value @a $theValueType
    * in this field.
+   *
+   * @param string $theValueType
+   * @param string $fieldName
+   *
+   * @return string
    */
   private function writeEscapesValue( $theValueType, $fieldName )
   {
