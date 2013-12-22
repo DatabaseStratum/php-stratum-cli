@@ -1,8 +1,5 @@
 vendor/
-box.phar
-dlgen.json
-phar_mk.php
-setbased.xml
+composer.lock
 etc/test_routines.csv
 *~
 doc/

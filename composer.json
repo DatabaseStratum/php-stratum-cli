@@ -4,15 +4,17 @@
   "type": "tool",
   "license": "MIT",
   "require": {
-        "php": ">=5.3.0"
+    "php": ">=5.3.0"
   },
   "require-dev": {
-        "phpunit/phpunit": "~3.7.0"
+    "phpunit/phpunit": "~3.7.0"
   },
   "bin": [
-        "build/dlgen"
-   ],
+    "bin/dlgen"
+  ],
   "autoload": {
-        "psr-0": {"SetBased\\DataLayer\\": "lib/"}
+    "psr-0": {
+      "SetBased\\DataLayer\\": "lib/"
     }
+  }
 }
