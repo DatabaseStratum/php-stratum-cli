@@ -224,6 +224,8 @@ abstract class MySqlRoutineWrapper
     $this->writeLine( '$b = $stmt->bind_param( \''.$types.'\', '.$nulls.' );' );
     $this->writeLine( 'if (!$b) self::sqlError( \'mysqli_stmt::bind_param\' );' );
     $this->writeLine();
+    $this->writeLine( 'self::getMaxAllowedPacket();' );
+    $this->writeLine();
 
     $blob_argument_index = 0;
     foreach ($theRoutine['argument_types'] as $i => $argument)
