@@ -409,6 +409,22 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * Wrapper around mysqli::query, however on failure an exception is thrown.
+   *
+   * @param string $theQuery The SQL statement.
+   *
+   * @return \mysqli_result
+   */
+  public static function query( $theQuery )
+  {
+    $ret = self::$ourMySql->query( $theQuery );
+    if ($ret===false) self::sqlError( $theQuery );
+
+    return $ret;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Returns a literal for a bit field that can be safely used in SQL statements.
    *
    * @param string $theBits The bit field.
@@ -484,6 +500,18 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * Wrapper around mysqli::query, however on failure an exception is thrown.
+   *
+   * @param string $theQuery The SQL statement.
+   */
+  public static function realQuery( $theQuery )
+  {
+    $tmp = self::$ourMySql->real_query( $theQuery );
+    if ($tmp===false) self::sqlError( $theQuery );
+  }
+
+  // -------------------------------------------------------------------------------------------------------------------
+  /**
    * Rollbacks the current transaction (and starts a new transaction).
    * Wrapper around mysqli::rollback, however on failure an exception is thrown.
    */
@@ -493,7 +521,7 @@ class StaticDataLayer
     if (!$ret) self::sqlError( 'mysqli::rollback' );
   }
 
-  //--------------------------------------------------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------------------------------------
   /**
    * Logs the warnings of the last executed SQL statement.
    * Wrapper around the SQL statement 'show warnings'.
@@ -514,34 +542,6 @@ class StaticDataLayer
     $message = vsprintf( $format, $args );
 
     throw new \Exception($message);
-  }
-
-  // -------------------------------------------------------------------------------------------------------------------
-  /**
-   * Wrapper around mysqli::query, however on failure an exception is thrown.
-   *
-   * @param string $theQuery The SQL statement.
-   *
-   * @return \mysqli_result
-   */
-  protected static function query( $theQuery )
-  {
-    $ret = self::$ourMySql->query( $theQuery );
-    if ($ret===false) self::sqlError( $theQuery );
-
-    return $ret;
-  }
-
-  // -------------------------------------------------------------------------------------------------------------------
-  /**
-   * Wrapper around mysqli::query, however on failure an exception is thrown.
-   *
-   * @param string $theQuery The SQL statement.
-   */
-  protected static function realQuery( $theQuery )
-  {
-    $tmp = self::$ourMySql->real_query( $theQuery );
-    if ($tmp===false) self::sqlError( $theQuery );
   }
 
   // -------------------------------------------------------------------------------------------------------------------
