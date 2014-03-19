@@ -193,7 +193,7 @@ class MySqlConfigConstants
   private function getColumns()
   {
     $query = "
-select table_name
+(select table_name
 ,      column_name
 ,      data_type
 ,      character_maximum_length
@@ -203,7 +203,23 @@ where  table_schema = database()
 and    table_name  rlike '^[a-zA-Z0-9_]*$'
 and    column_name rlike '^[a-zA-Z0-9_]*$'
 order by table_name
-,        ordinal_position";
+,        ordinal_position)
+
+union all
+
+(select concat(table_schema,'.',table_name) table_name
+,      column_name
+,      data_type
+,      character_maximum_length
+,      numeric_precision
+from   information_schema.COLUMNS
+where  table_schema in ('information_schema','performance_schema')
+and    table_name  rlike '^[a-zA-Z0-9_]*$'
+and    column_name rlike '^[a-zA-Z0-9_]*$'
+order by table_schema
+,        table_name
+,        ordinal_position)
+";
 
     $rows = DataLayer::executeRows( $query );
     foreach ($rows as $row)
