@@ -23,7 +23,7 @@ function readMetadata( $theMatadataFile )
 {
   $metadata = array();
   $handle = fopen( $theMatadataFile, 'r' );
-  if ($handle===false) set_assert_failed( "Unable to open file '%s'.", $theMatadataFile );
+  if ($handle===false) set_assert_failed( "Unable to open file '%s'\n.", $theMatadataFile );
 
   // Ignore the header row.
   fgetcsv( $handle, 0, ',' );
@@ -36,7 +36,7 @@ function readMetadata( $theMatadataFile )
   }
 
   $err = fclose( $handle );
-  if ($err===false) set_assert_failed( "Error closing file '%s'.", $theMatadataFile );
+  if ($err===false) set_assert_failed( "Error closing file '%s'.\n", $theMatadataFile );
 
   return $metadata;
 }
@@ -84,7 +84,7 @@ function createDestinationDir( $theDirectoryName )
   if (!is_dir( $theDirectoryName ))
   {
     $err = mkdir( $theDirectoryName, 0775, true );
-    if ($err===false) set_assert_failed( "Ca not create directory '%s'.", $theDirectoryName );
+    if ($err===false) set_assert_failed( "Can not create directory '%s'.\n", $theDirectoryName );
   }
 
 }
@@ -112,7 +112,7 @@ function processSourcFile( $theSource, $theDestinationDir, $metadata, $theSource
   createDestinationDir( dirname( $output_file_name ) );
 
   $source = file_get_contents( $theSource );
-  if ($source===false) set_assert_failed( "Unable to read file '%s'.", $theSource );
+  if ($source===false) set_assert_failed( "Unable to read file '%s'.\n", $theSource );
 
   $input_lines = explode( "\n", $source );
   $output_lines = array();
@@ -183,7 +183,7 @@ function processSourcFile( $theSource, $theDestinationDir, $metadata, $theSource
 
   $output = ltrim( implode( "\n", $output_lines ) )."\n";
   $err = file_put_contents( $output_file_name, $output );
-  if ($err===false) set_assert_failed( "Error writing file '%s'.", $output_file_name );
+  if ($err===false) set_assert_failed( "Error writing file '%s'.\n", $output_file_name );
 
 }
 

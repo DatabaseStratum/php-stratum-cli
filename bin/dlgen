@@ -1,11 +1,16 @@
 #!/usr/bin/php
 <?php
 //----------------------------------------------------------------------------------------------------------------------
+use SetBased\DataLayer\Generator\MySqlConfigConstants;
+use SetBased\DataLayer\Generator\MySqlRoutineLoader;
+use SetBased\DataLayer\Generator\MySqlRoutineWrapperGenerator;
+
+//----------------------------------------------------------------------------------------------------------------------
 $files = array(__DIR__.'/../vendor/autoload.php',
                __DIR__.'/../../vendor/autoload.php',
                __DIR__.'/../../../vendor/autoload.php',
                __DIR__.'/../../../../vendor/autoload.php' );
-               
+
 foreach ($files as $file)
 {
   if (file_exists( $file ))
@@ -90,22 +95,22 @@ function main( $options )
   if (isset($setting['fast']))
   {
     // Fast mode: only load stored routines.
-    $loader = new \SetBased\DataLayer\Generator\MySqlRoutineLoader;
+    $loader = new MySqlRoutineLoader;
     $ret = $loader->run( $setting['config'], $setting['psql_files'] );
     if ($ret!=0) exit( $ret );
   }
   else
   {
     // Normal mode: create constants, config file, load routines, and create routine wrapper class.
-    $constants = new \SetBased\DataLayer\Generator\MySqlConfigConstants;
+    $constants = new MySqlConfigConstants;
     $ret = $constants->run( $setting['config'] );
     if ($ret!=0) exit( $ret );
 
-    $loader = new \SetBased\DataLayer\Generator\MySqlRoutineLoader;
+    $loader = new MySqlRoutineLoader;
     $ret = $loader->run( $setting['config'], $setting['psql_files'] );
     if ($ret!=0) exit( $ret );
 
-    $wrapper = new \SetBased\DataLayer\Generator\MySqlRoutineWrapperGenerator;
+    $wrapper = new MySqlRoutineWrapperGenerator;
     $ret = $wrapper->run( $setting['config'] );
     if ($ret!=0) exit( $ret );
   }

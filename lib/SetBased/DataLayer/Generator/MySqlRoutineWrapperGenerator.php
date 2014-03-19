@@ -119,7 +119,7 @@ class MySqlRoutineWrapperGenerator
     if ($write_wrapper_file_flag)
     {
       $bytes = file_put_contents( $this->myWrapperFilename, $this->myCode );
-      if ($bytes===false) set_assert_failed( "Error writing file %s", $this->myWrapperFilename );
+      if ($bytes===false) set_assert_failed( "Error writing file '%s'.", $this->myWrapperFilename );
       echo "Created: '", $this->myWrapperFilename, "'.\n";
     }
 
@@ -167,7 +167,7 @@ class MySqlRoutineWrapperGenerator
   private function readConfigurationFile()
   {
     $settings = parse_ini_file( $this->myConfigurationFilename, true );
-    if ($settings===false) set_assert_failed( "Unable open configuration file '%s'", $this->myConfigurationFilename );
+    if ($settings===false) set_assert_failed( "Unable open configuration file '%s'.", $this->myConfigurationFilename );
 
     $this->myHostName = $this->getSetting( $settings, 'database', 'host_name' );
     $this->myUserName = $this->getSetting( $settings, 'database', 'user_name' );
@@ -220,7 +220,7 @@ class MySqlRoutineWrapperGenerator
       $routines[$line_number]['argument_types'] = ($row[3]) ? explode( ',', $row[3] ) : array();
       $routines[$line_number]['columns']        = ($row[4]) ? explode( ',', $row[4] ) : array();
     }
-    if (!feof( $handle )) set_assert_failed( 'Did not reach eof of %s', $theFilename );
+    if (!feof( $handle )) set_assert_failed( "Did not reach eof of '%s'.", $theFilename );
 
     $err = fclose( $handle );
     if ($err===false) set_assert_failed( "Error closing file '%s'.", $theFilename );

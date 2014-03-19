@@ -173,7 +173,7 @@ class MySqlConfigConstants
   private function readConfigFile( $theConfigFilename )
   {
     $settings = parse_ini_file( $theConfigFilename, true );
-    if ($settings===false) set_assert_failed( "Unable open configuration file" );
+    if ($settings===false) set_assert_failed( "Unable open configuration file." );
 
     $this->myHostName = $this->getSetting( $settings, true, 'database', 'host_name' );
     $this->myUserName = $this->getSetting( $settings, true, 'database', 'user_name' );
@@ -364,11 +364,11 @@ order by table_name
         if ($line!="\n")
         {
           $n = preg_match( '/^\s*([a-zA-Z0-9_]+).([a-zA-Z0-9_]+)\s+(\d+)\s*(\*|[a-zA-Z0-9_]+)?\s*$/', $line, $matches );
-          if ($n===false) set_assert_failed( 'Internal error.' );
+          if ($n===false) set_assert_failed( "Internal error." );
 
           if ($n==0)
           {
-            set_assert_failed( "Illegal format at line %d in file '%s'.", $line_number, $this->myConstantsFilename );
+            set_assert_failed( "Illegal format at line %d in file '%s'.\n", $line_number, $this->myConstantsFilename );
           }
 
           if (isset($matches[4]))
@@ -497,7 +497,7 @@ where   nullif(`%s`,'') is not null";
     }
 
     $ok = ksort( $this->myConstants );
-    if ($ok===false) set_assert_failed( 'Internal error.' );
+    if ($ok===false) set_assert_failed( "Internal error." );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

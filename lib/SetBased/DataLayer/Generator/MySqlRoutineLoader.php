@@ -212,7 +212,7 @@ class MySqlRoutineLoader
   private function readConfigFile( $theConfigFilename )
   {
     $settings = parse_ini_file( $theConfigFilename, true );
-    if ($settings===false) set_assert_failed( "Unable open configuration file" );
+    if ($settings===false) set_assert_failed( "Unable open configuration file." );
 
     $this->myHostName = $this->getSetting( $settings, true, 'database', 'host_name' );
     $this->myUserName = $this->getSetting( $settings, true, 'database', 'user_name' );
@@ -587,7 +587,7 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
     $old_replace_pairs = unserialize( $this->myCurrentOldMetadata['replace'] );
     if ($old_replace_pairs===false)
     {
-      set_assert_failed( "Unable to unserialize replace pairs for stored routine '%s'.", $this->myCurrentRoutineName );
+      set_assert_failed( "Unable to unserialize replace pairs for stored routine '%s'.\n", $this->myCurrentRoutineName );
     }
 
     // If the value of placeholder has changed the current .psql file is must be loaded.
@@ -625,7 +625,7 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
   private function getCurrentPlaceholders()
   {
     $err = preg_match_all( '(@[A-Za-z0-9\_\.]+(\%type)?@)', $this->myCurrentPsqlSourceCode, $matches );
-    if ($err===false) set_assert_failed( 'Internal error.' );
+    if ($err===false) set_assert_failed( "Internal error." );
 
     $ret                         = true;
     $this->myCurrentPlaceholders = array();
@@ -654,7 +654,7 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
         $this->myCurrentReplace[$placeholder] = $this->myReplacePairs[strtoupper( $placeholder )];
       }
       $ok = ksort( $this->myCurrentReplace );
-      if ($ok===false) set_assert_failed( 'Internal error.' );
+      if ($ok===false) set_assert_failed( "Internal error." );
     }
 
     return $ret;
@@ -697,7 +697,7 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
 
     if ($ret===false)
     {
-      echo sprintf( "Error: Unable to find the designation type of the stored routine in file '%s'.",
+      echo sprintf( "Error: Unable to find the designation type of the stored routine in file '%s'.\n",
                     $this->myCurrentPsqlFilename );
     }
 
@@ -717,7 +717,7 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
     $ret = true;
 
     $n = preg_match( "/create\\s+(procedure|function)\\s+([a-zA-Z0-9_]+)/i", $this->myCurrentPsqlSourceCode, $matches );
-    if ($n===false) set_assert_failed( 'Internal error.' );
+    if ($n===false) set_assert_failed( "Internal error." );
 
     if ($n==1)
     {
