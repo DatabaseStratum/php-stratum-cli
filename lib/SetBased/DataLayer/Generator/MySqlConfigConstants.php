@@ -9,8 +9,7 @@ use SetBased\DataLayer\StaticDataLayer as DataLayer;
  * Class MySqlConfigConstants
  *
  * @package SetBased\DataLayer
- *
- * Class for creating PHP constants based on column widths, and auto increment columns and labels.
+ *          Class for creating PHP constants based on column widths, and auto increment columns and labels.
  */
 class MySqlConfigConstants
 {
@@ -193,32 +192,36 @@ class MySqlConfigConstants
   private function getColumns()
   {
     $query = "
-(select table_name
-,      column_name
-,      data_type
-,      character_maximum_length
-,      numeric_precision
-from   information_schema.COLUMNS
-where  table_schema = database()
-and    table_name  rlike '^[a-zA-Z0-9_]*$'
-and    column_name rlike '^[a-zA-Z0-9_]*$'
-order by table_name
-,        ordinal_position)
+(
+  select table_name
+  ,      column_name
+  ,      data_type
+  ,      character_maximum_length
+  ,      numeric_precision
+  from   information_schema.COLUMNS
+  where  table_schema = database()
+  and    table_name  rlike '^[a-zA-Z0-9_]*$'
+  and    column_name rlike '^[a-zA-Z0-9_]*$'
+  order by table_name
+  ,        ordinal_position
+)
 
 union all
 
-(select concat(table_schema,'.',table_name) table_name
-,      column_name
-,      data_type
-,      character_maximum_length
-,      numeric_precision
-from   information_schema.COLUMNS
-where  table_schema in ('information_schema','performance_schema')
-and    table_name  rlike '^[a-zA-Z0-9_]*$'
-and    column_name rlike '^[a-zA-Z0-9_]*$'
-order by table_schema
-,        table_name
-,        ordinal_position)
+(
+  select concat(table_schema,'.',table_name) table_name
+  ,      column_name
+  ,      data_type
+  ,      character_maximum_length
+  ,      numeric_precision
+  from   information_schema.COLUMNS
+  where  table_schema in ('information_schema','performance_schema')
+  and    table_name  rlike '^[a-zA-Z0-9_]*$'
+  and    column_name rlike '^[a-zA-Z0-9_]*$'
+  order by table_schema
+  ,        table_name
+  ,        ordinal_position
+)
 ";
 
     $rows = DataLayer::executeRows( $query );
@@ -379,20 +382,26 @@ order by table_schema
         $line_number++;
         if ($line!="\n")
         {
-          $n = preg_match( '/^\s*([a-zA-Z0-9_]+).([a-zA-Z0-9_]+)\s+(\d+)\s*(\*|[a-zA-Z0-9_]+)?\s*$/', $line, $matches );
+          $n = preg_match( '/^\s*(([a-zA-Z0-9_]+)\.)?([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s+(\d+)\s*(\*|[a-zA-Z0-9_]+)?\s*$/', $line, $matches );
           if ($n===false) set_assert_failed( "Internal error." );
 
           if ($n==0)
           {
-            set_assert_failed( "Illegal format at line %d in file '%s'.\n", $line_number, $this->myConstantsFilename );
+            set_assert_failed( "Illegal format at line %d in file '%s'.", $line_number, $this->myConstantsFilename );
           }
 
-          if (isset($matches[4]))
+          if (isset($matches[6]))
           {
-            $table_name    = $matches[1];
-            $column_name   = $matches[2];
-            $length        = $matches[3];
-            $constant_name = $matches[4];
+            $schema_name   = $matches[2];
+            $table_name    = $matches[3];
+            $column_name   = $matches[4];
+            $length        = $matches[5];
+            $constant_name = $matches[6];
+
+            if ($schema_name)
+            {
+              $table_name = $schema_name.'.'.$table_name;
+            }
 
             $this->myOldColumns[$table_name][$column_name] = array('table_name'    => $table_name,
                                                                    'column_name'   => $column_name,
@@ -544,19 +553,19 @@ where   nullif(`%s`,'') is not null";
     }
 
     $count_match = substr_count( $source, self::C_PLACEHOLDER );
-    if($count_match != 1)
+    if ($count_match!=1)
     {
       set_assert_failed( "Error expected 1 placeholder in file '%s', found %d.", $this->myTemplateConfigFilename, $count_match );
     }
 
-    $source = str_replace( self::C_PLACEHOLDER , $constants, $source );
+    $source = str_replace( self::C_PLACEHOLDER, $constants, $source );
 
     $write_config_file_flag = true;
-    if(file_exists($this->myConfigFilename))
+    if (file_exists( $this->myConfigFilename ))
     {
       $old_source = file_get_contents( $this->myConfigFilename );
       if ($old_source===false) set_assert_failed( "Unable to read file '%s'.", $this->myConfigFilename );
-      if ($source == $old_source) $write_config_file_flag = false;
+      if ($source==$old_source) $write_config_file_flag = false;
     }
 
     if ($write_config_file_flag)
