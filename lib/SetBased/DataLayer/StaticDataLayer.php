@@ -58,7 +58,7 @@ class StaticDataLayer
    */
   protected static $ourMySql;
 
-  // -------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Starts a transaction.
    * Wrapper around mysqli::autocommit, however on failure an exception is thrown.
@@ -69,7 +69,7 @@ class StaticDataLayer
     if (!$ret) self::sqlError( 'mysqli::autocommit' );
   }
 
-  // -------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * @param \mysqli_stmt $stmt
    * @param array        $out
@@ -97,7 +97,7 @@ class StaticDataLayer
     self::$ourMySql->next_result();
   }
 
-  // -------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Commits the current transaction (and starts a new transaction).
    * Wrapper around mysqli::commit, however on failure an exception is thrown.
@@ -108,7 +108,7 @@ class StaticDataLayer
     if (!$ret) self::sqlError( 'mysqli::commit' );
   }
 
-  // -------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Connects to a MySQL instance.
    * Wrapper around mysqli::__construct, however on failure an exception is thrown.
@@ -157,7 +157,7 @@ class StaticDataLayer
     }
   }
 
-  // -------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Runs a query using a bulk handler.
    *
@@ -182,7 +182,7 @@ class StaticDataLayer
     self::$ourMySql->next_result();
   }
 
-  // -------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Executes a query and logs the result set and returns the total number of rows selected.
    *
@@ -230,7 +230,162 @@ class StaticDataLayer
     return $n;
   }
 
-  // -------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Executes a query and show table by returned data and metadata.
+   *
+   * @param string $theQuery
+   */
+  public static function executeTable( $theQuery )
+  {
+    $ret = self::$ourMySql->multi_query( $theQuery );
+    if (!$ret) self::sqlError( $theQuery );
+    do
+    {
+      $result = self::$ourMySql->store_result();
+
+      if (self::$ourMySql->errno) self::sqlError( 'mysqli::store_result' );
+      if ($result)
+      {
+        $columns = array();
+
+        foreach ($result->fetch_fields() as $str_num => $column)
+        {
+          $columns[$str_num]['header'] = $column->name;
+          $columns[$str_num]['type']   = $column->type;
+          if ($column->max_length>strlen( $column->name ))
+          {
+            $columns[$str_num]['length'] = $column->max_length;
+          }
+          else
+          {
+            $columns[$str_num]['length'] = strlen( $column->name );
+          }
+        }
+
+        self::showHeader( $columns );
+
+        while ($row = $result->fetch_row())
+        {
+          echo '|';
+
+          foreach ($row as $i => $value)
+          {
+            self::showTableColumn( $columns[$i], $value );
+          }
+          echo "\n";
+        }
+
+
+        self::showFooter( $columns );
+      }
+
+      $continue = self::$ourMySql->more_results();
+
+      if ($continue)
+      {
+        $b = self::$ourMySql->next_result();
+        if ($b===false) self::sqlError( 'mysqli::next_result' );
+      }
+    } while ($continue);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Show table header.
+   *
+   * @param array $theColumns
+   */
+  private static function showHeader( $theColumns )
+  {
+    $separator = '+';
+    $header    = '|';
+
+    foreach ($theColumns as $column)
+    {
+      $separator .= str_repeat( '-', $column['length'] + 2 )."+";
+      $spaces = ($column['length'] + 2) - strlen( $column['header'] );
+
+      $l_spaces = $spaces / 2;
+      $r_spaces = ($spaces / 2) + ($spaces % 2);
+
+      $l_spaces = ($l_spaces>0) ? str_repeat( " ", $l_spaces ) : '';
+      $r_spaces = ($r_spaces>0) ? str_repeat( " ", $r_spaces ) : '';
+
+      $header .= $l_spaces.$column['header'].$r_spaces.'|';
+    }
+
+    echo "\n".$separator."\n";
+    echo $header."\n";
+    echo $separator."\n";
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Show table cell with data.
+   *
+   * @param array  $theColumn
+   * @param string $theValue
+   */
+  private static function showTableColumn( $theColumn, $theValue )
+  {
+    switch ($theColumn['type'])
+    {
+      case 1: // tinyint
+      case 2: // smallint
+      case 3: // int
+      case 4: // float
+      case 5: // double
+      case 8: // bigint
+      case 9: // mediumint
+
+        $spaces = str_repeat( " ", (($theColumn['length'] + 2) - strlen( $theValue )) - 1 );
+        echo $spaces.$theValue." |";
+        break;
+
+      case 7: // timestamp
+      case 10: // date
+      case 11: // time
+      case 12: // datetime
+      case 13: // year
+      case 16: // bit
+      case 252: // is currently mapped to all text and blob types (MySQL 5.0.51a)
+      case 253: // varchar
+      case 254: // char
+
+        $spaces = str_repeat( " ", (($theColumn['length'] + 2) - strlen( $theValue )) - 1 );
+        echo " ".$theValue.$spaces."|";
+        break;
+
+      case 246: // decimal
+
+        $spaces = str_repeat( " ", (($theColumn['length'] + 2) - strlen( $theValue )) - 1 );
+        echo " ".$theValue.$spaces."|";
+        break;
+
+      default:
+        self::assertFailed( "Unknown data type id %s.\n", $theColumn['type'] );
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Show table footer.
+   *
+   * @param array $theColumns
+   */
+  private static function showFooter( $theColumns )
+  {
+    $separator = '+';
+
+    foreach ($theColumns as $column)
+    {
+      $separator .= str_repeat( '-', $column['length'] + 2 )."+";
+    }
+    echo $separator."\n";
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Runs a query that does not select any rows and returns the number of affected rows (if any).
    *
@@ -277,7 +432,7 @@ class StaticDataLayer
     return $row;
   }
 
-  // -------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Runs a query that returns 1 and only 1 row and returns that row.
    * Throws an exception if the query selects none, 2 or more rows.
@@ -305,7 +460,7 @@ class StaticDataLayer
     return $row;
   }
 
-  // -------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Runs a query that returns 0 or more rows and returns those rows.
    *
@@ -328,7 +483,7 @@ class StaticDataLayer
     return $ret;
   }
 
-  // -------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Runs a query that returns 0 or 1 row with one column and returns the value of that column.
    * Throws an exception if the query selects 2 or more rows.
@@ -356,7 +511,7 @@ class StaticDataLayer
     return $row[0];
   }
 
-  // -------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Runs a query that returns 1 and only 1 row with 1 column and returns the value of that column.
    * Throws an exception if the query selects none, 2 or more rows.
@@ -384,7 +539,7 @@ class StaticDataLayer
     return $row[0];
   }
 
-  // -------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Returns the value of the MySQL variable max_allowed_packet.
    *
@@ -512,7 +667,7 @@ class StaticDataLayer
     if ($tmp===false) self::sqlError( $theQuery );
   }
 
-  // -------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Rollbacks the current transaction (and starts a new transaction).
    * Wrapper around mysqli::rollback, however on failure an exception is thrown.
@@ -523,7 +678,7 @@ class StaticDataLayer
     if (!$ret) self::sqlError( 'mysqli::rollback' );
   }
 
-  // -------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Logs the warnings of the last executed SQL statement.
    * Wrapper around the SQL statement 'show warnings'.
@@ -533,7 +688,7 @@ class StaticDataLayer
     self::executeLog( 'show warnings' );
   }
 
-  // -------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Throws an exception.
    */
@@ -546,7 +701,7 @@ class StaticDataLayer
     throw new \Exception($message);
   }
 
-  // -------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    *
    */
@@ -560,7 +715,7 @@ class StaticDataLayer
     throw new \Exception($message);
   }
 
-  // -------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
 }
 
 //----------------------------------------------------------------------------------------------------------------------

@@ -710,6 +710,14 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
     return $tmp[0][0];
   }
 
+  //-------------------------------------------------------------------------------------------------------------------
+  /** @sa Stored Routine tst_test_table.
+   */
+  public static function testTable(  )
+  {
+    return self::executeTable( 'CALL tst_test_table()' );
+  }
+
   //--------------------------------------------------------------------------------------------------------------------
 }
 

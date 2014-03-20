@@ -86,6 +86,10 @@ abstract class MySqlRoutineWrapper
         $wrapper = new MySqlRoutineWrapper\Functions();
         break;
 
+      case 'table':
+        $wrapper = new MySqlRoutineWrapper\Table();
+        break;
+
       default:
         set_assert_failed( "Unknown routine type '%s'.", $theRoutine['type']."\n" );
         // Prevent warnings from IDE.
