@@ -232,166 +232,6 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Executes a query and shows the data in a formatted table (like mysql's pager)
-   *
-   * @param string $theQuery
-   */
-  public static function executeTable( $theQuery )
-  {
-    $ret = self::$ourMySql->multi_query( $theQuery );
-    if (!$ret) self::sqlError( $theQuery );
-    do
-    {
-      $result = self::$ourMySql->store_result();
-
-      if (self::$ourMySql->errno) self::sqlError( 'mysqli::store_result' );
-      if ($result)
-      {
-        $columns = array();
-
-        // Get metadata to array.
-        foreach ($result->fetch_fields() as $str_num => $column)
-        {
-          $columns[$str_num]['header'] = $column->name;
-          $columns[$str_num]['type']   = $column->type;
-
-          $length = ($column->max_length > 4) ? $column->max_length : 4;
-          
-          if ($length > strlen( $column->name ))
-          {
-            $columns[$str_num]['length'] = $length;
-          }
-          else
-          {
-            $columns[$str_num]['length'] = strlen( $column->name );
-          }
-        }
-
-        // Make table header from metadata.
-        self::showHeader( $columns );
-
-        // Make columns from data.
-        while ($row = $result->fetch_row())
-        {
-          echo '|';
-          foreach ($row as $i => $value)
-          {
-            self::showTableColumn( $columns[$i], $value );
-          }
-          echo "\n";
-        }
-
-        // Make table from from metadata.
-        self::showFooter( $columns );
-      }
-
-      $continue = self::$ourMySql->more_results();
-
-      if ($continue)
-      {
-        $b = self::$ourMySql->next_result();
-        if ($b===false) self::sqlError( 'mysqli::next_result' );
-      }
-    } while ($continue);
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Show table header.
-   *
-   * @param array $theColumns
-   */
-  private static function showHeader( $theColumns )
-  {
-    $separator = '+';
-    $header    = '|';
-
-    foreach ($theColumns as $column)
-    {
-      $separator .= str_repeat( '-', $column['length'] + 2 )."+";
-      $spaces = ($column['length'] + 2) - strlen( $column['header'] );
-
-      $l_spaces = $spaces / 2;
-      $r_spaces = ($spaces / 2) + ($spaces % 2);
-
-      $l_spaces = ($l_spaces>0) ? str_repeat( " ", $l_spaces ) : '';
-      $r_spaces = ($r_spaces>0) ? str_repeat( " ", $r_spaces ) : '';
-
-      $header .= $l_spaces.$column['header'].$r_spaces.'|';
-    }
-
-    echo "\n".$separator."\n";
-    echo $header."\n";
-    echo $separator."\n";
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Show table cell with data.
-   *
-   * @param array  $theColumn
-   * @param string $theValue
-   */
-  private static function showTableColumn( $theColumn, $theValue )
-  {
-    switch ($theColumn['type'])
-    {
-      case 1: // tinyint
-      case 2: // smallint
-      case 3: // int
-      case 4: // float
-      case 5: // double
-      case 8: // bigint
-      case 9: // mediumint
-
-        $spaces = str_repeat( " ", (($theColumn['length'] + 2) - strlen( $theValue )) - 1 );
-        echo $spaces.$theValue." |";
-        break;
-
-      case 7: // timestamp
-      case 10: // date
-      case 11: // time
-      case 12: // datetime
-      case 13: // year
-      case 16: // bit
-      case 252: // is currently mapped to all text and blob types (MySQL 5.0.51a)
-      case 253: // varchar
-      case 254: // char
-
-        $spaces = str_repeat( " ", (($theColumn['length'] + 2) - strlen( $theValue )) - 1 );
-        echo " ".$theValue.$spaces."|";
-        break;
-
-      case 246: // decimal
-
-        $spaces = str_repeat( " ", (($theColumn['length'] + 2) - strlen( $theValue )) - 1 );
-        echo " ".$theValue.$spaces."|";
-        break;
-
-      default:
-        self::assertFailed( "Unknown data type id %s.\n", $theColumn['type'] );
-    }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Show table footer.
-   *
-   * @param array $theColumns
-   */
-  private static function showFooter( $theColumns )
-  {
-    $separator = '+';
-
-    foreach ($theColumns as $column)
-    {
-      $separator .= str_repeat( '-', $column['length'] + 2 )."+";
-    }
-    echo $separator."\n";
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
    * Runs a query that does not select any rows and returns the number of affected rows (if any).
    *
    * @param string $theQuery The SQL statement.
@@ -542,6 +382,71 @@ class StaticDataLayer
     }
 
     return $row[0];
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Executes a query and shows the data in a formatted table (like mysql's default pager)
+   *
+   * @param string $theQuery The query.
+   */
+  public static function executeTable( $theQuery )
+  {
+    $ret = self::$ourMySql->multi_query( $theQuery );
+    if (!$ret) self::sqlError( $theQuery );
+    do
+    {
+      $result = self::$ourMySql->store_result();
+
+      if (self::$ourMySql->errno) self::sqlError( 'mysqli::store_result' );
+      if ($result)
+      {
+        $columns = array();
+
+        // Get metadata to array.
+        foreach ($result->fetch_fields() as $str_num => $column)
+        {
+          $columns[$str_num]['header'] = $column->name;
+          $columns[$str_num]['type']   = $column->type;
+
+          $length = ($column->max_length>4) ? $column->max_length : 4;
+
+          if ($length>strlen( $column->name ))
+          {
+            $columns[$str_num]['length'] = $length;
+          }
+          else
+          {
+            $columns[$str_num]['length'] = strlen( $column->name );
+          }
+        }
+
+        // Show the table header.
+        self::executeTableShowHeader( $columns );
+
+        // Show for all rows all columns.
+        while ($row = $result->fetch_row())
+        {
+          echo '|';
+          foreach ($row as $i => $value)
+          {
+            self::executeTableShowTableColumn( $columns[$i], $value );
+          }
+          echo "\n";
+        }
+
+        // Show the table footer.
+        self::executeTableShowFooter( $columns );
+      }
+
+      $continue = self::$ourMySql->more_results();
+
+      if ($continue)
+      {
+        $b = self::$ourMySql->next_result();
+        if ($b===false) self::sqlError( 'mysqli::next_result' );
+      }
+    } while ($continue);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -718,6 +623,101 @@ class StaticDataLayer
     $message .= $theText."\n";
 
     throw new \Exception($message);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Show table footer.
+   *
+   * @param array $theColumns
+   */
+  private static function executeTableShowFooter( $theColumns )
+  {
+    $separator = '+';
+
+    foreach ($theColumns as $column)
+    {
+      $separator .= str_repeat( '-', $column['length'] + 2 )."+";
+    }
+    echo $separator."\n";
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Show table header.
+   *
+   * @param array $theColumns
+   */
+  private static function executeTableShowHeader( $theColumns )
+  {
+    $separator = '+';
+    $header    = '|';
+
+    foreach ($theColumns as $column)
+    {
+      $separator .= str_repeat( '-', $column['length'] + 2 )."+";
+      $spaces = ($column['length'] + 2) - strlen( $column['header'] );
+
+      $l_spaces = $spaces / 2;
+      $r_spaces = ($spaces / 2) + ($spaces % 2);
+
+      $l_spaces = ($l_spaces>0) ? str_repeat( " ", $l_spaces ) : '';
+      $r_spaces = ($r_spaces>0) ? str_repeat( " ", $r_spaces ) : '';
+
+      $header .= $l_spaces.$column['header'].$r_spaces.'|';
+    }
+
+    echo "\n".$separator."\n";
+    echo $header."\n";
+    echo $separator."\n";
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Show table cell with data.
+   *
+   * @param array  $theColumn
+   * @param string $theValue
+   */
+  private static function executeTableShowTableColumn( $theColumn, $theValue )
+  {
+    switch ($theColumn['type'])
+    {
+      case 1: // tinyint
+      case 2: // smallint
+      case 3: // int
+      case 4: // float
+      case 5: // double
+      case 8: // bigint
+      case 9: // mediumint
+
+        $spaces = str_repeat( " ", (($theColumn['length'] + 2) - strlen( $theValue )) - 1 );
+        echo $spaces.$theValue." |";
+        break;
+
+      case 7: // timestamp
+      case 10: // date
+      case 11: // time
+      case 12: // datetime
+      case 13: // year
+      case 16: // bit
+      case 252: // is currently mapped to all text and blob types (MySQL 5.0.51a)
+      case 253: // varchar
+      case 254: // char
+
+        $spaces = str_repeat( " ", (($theColumn['length'] + 2) - strlen( $theValue )) - 1 );
+        echo " ".$theValue.$spaces."|";
+        break;
+
+      case 246: // decimal
+
+        $spaces = str_repeat( " ", (($theColumn['length'] + 2) - strlen( $theValue )) - 1 );
+        echo " ".$theValue.$spaces."|";
+        break;
+
+      default:
+        self::assertFailed( "Unknown data type id %s.\n", $theColumn['type'] );
+    }
   }
 
   //--------------------------------------------------------------------------------------------------------------------
