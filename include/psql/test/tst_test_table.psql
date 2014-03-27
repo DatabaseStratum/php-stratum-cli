@@ -2,11 +2,7 @@ create procedure tst_test_table()
 reads sql data
 -- type: table
 begin
-  select tst_c00
-  ,      tst_c01
-  ,      tst_c02
-  ,      tst_c03
-  ,      tst_c04
+  select *
   from   TST_TABLE
   ;
 end

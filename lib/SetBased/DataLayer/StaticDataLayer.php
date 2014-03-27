@@ -232,7 +232,7 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Executes a query and show table by returned data and metadata.
+   * Executes a query and shows the data in a formatted table (like mysql's pager)
    *
    * @param string $theQuery
    */
@@ -249,13 +249,17 @@ class StaticDataLayer
       {
         $columns = array();
 
+        // Get metadata to array.
         foreach ($result->fetch_fields() as $str_num => $column)
         {
           $columns[$str_num]['header'] = $column->name;
           $columns[$str_num]['type']   = $column->type;
-          if ($column->max_length>strlen( $column->name ))
+
+          $length = ($column->max_length > 4) ? $column->max_length : 4;
+          
+          if ($length > strlen( $column->name ))
           {
-            $columns[$str_num]['length'] = $column->max_length;
+            $columns[$str_num]['length'] = $length;
           }
           else
           {
@@ -263,12 +267,13 @@ class StaticDataLayer
           }
         }
 
+        // Make table header from metadata.
         self::showHeader( $columns );
 
+        // Make columns from data.
         while ($row = $result->fetch_row())
         {
           echo '|';
-
           foreach ($row as $i => $value)
           {
             self::showTableColumn( $columns[$i], $value );
@@ -276,7 +281,7 @@ class StaticDataLayer
           echo "\n";
         }
 
-
+        // Make table from from metadata.
         self::showFooter( $columns );
       }
 
