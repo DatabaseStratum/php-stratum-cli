@@ -408,17 +408,7 @@ class StaticDataLayer
         {
           $columns[$str_num]['header'] = $column->name;
           $columns[$str_num]['type']   = $column->type;
-
-          $length = ($column->max_length>4) ? $column->max_length : 4;
-
-          if ($length>strlen( $column->name ))
-          {
-            $columns[$str_num]['length'] = $length;
-          }
-          else
-          {
-            $columns[$str_num]['length'] = strlen( $column->name );
-          }
+          $columns[$str_num]['length'] = max( array(4, $column->max_length, strlen( $column->name )) );
         }
 
         // Show the table header.
