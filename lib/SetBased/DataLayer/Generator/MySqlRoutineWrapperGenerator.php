@@ -94,15 +94,23 @@ class MySqlRoutineWrapperGenerator
     // Write the header of the wrapper class.
     $this->writeClassHeader();
 
-    // Write methods for each stored routine.
-    foreach ($routines as $routine)
+    if (is_array( $routines ))
     {
-      // If routine type is hidden don't create routine wrapper.
-      if ($routine['type']!='hidden')
+      // Write methods for each stored routine.
+      foreach ($routines as $routine)
       {
-        $this->writeRoutineFunction( $routine );
+        // If routine type is hidden don't create routine wrapper.
+        if ($routine['type']!='hidden')
+        {
+          $this->writeRoutineFunction( $routine );
+        }
       }
     }
+    else
+    {
+      echo "No stored routine files found.\n";
+    }
+
 
     // Write the trailer of the wrapper class.
     $this->writeClassTrailer();
