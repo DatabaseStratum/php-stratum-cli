@@ -167,7 +167,7 @@ information_schema.FILES.LAST_ACCESS_TIME      16
 information_schema.FILES.RECOVER_TIME          19
 information_schema.FILES.TRANSACTION_COUNTER   19
 information_schema.FILES.VERSION               20
-information_schema.FILES.ROW_FORMAT            10
+information_schema.FILES.ROW_FORMAT            20
 information_schema.FILES.TABLE_ROWS            20
 information_schema.FILES.AVG_ROW_LENGTH        20
 information_schema.FILES.DATA_LENGTH           20
@@ -388,7 +388,7 @@ information_schema.TABLES.TABLE_NAME        64
 information_schema.TABLES.TABLE_TYPE        64
 information_schema.TABLES.ENGINE            64
 information_schema.TABLES.VERSION           20
-information_schema.TABLES.ROW_FORMAT        10
+information_schema.TABLES.ROW_FORMAT        20
 information_schema.TABLES.TABLE_ROWS        20
 information_schema.TABLES.AVG_ROW_LENGTH    20
 information_schema.TABLES.DATA_LENGTH       20
