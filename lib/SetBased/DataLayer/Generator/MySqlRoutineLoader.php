@@ -6,8 +6,9 @@ use SetBased\DataLayer\StaticDataLayer as DataLayer;
 
 /**
  * Class MySqlRoutineLoader
+ *
  * @package SetBased\DataLayer
- * Class for loading stored routine into a MySQL instance from pseudo SQL files (.psql).
+ *          Class for loading stored routine into a MySQL instance from pseudo SQL files (.psql).
  */
 class MySqlRoutineLoader
 {
@@ -297,22 +298,29 @@ class MySqlRoutineLoader
       }
     }
 
-    $filenames = scandir( $theSourceDir );
-    $dir_names = array();
-    foreach ($filenames as $filename)
+    if (is_dir( $theSourceDir ))
     {
-      if (is_dir( $theSourceDir.'/'.$filename ))
+      $filenames = scandir( $theSourceDir );
+      $dir_names = array();
+      foreach ($filenames as $filename)
       {
-        if ($filename!='.' && $filename!='..')
+        if (is_dir( $theSourceDir.'/'.$filename ))
         {
-          $dir_names[] = $theSourceDir.'/'.$filename;
+          if ($filename!='.' && $filename!='..')
+          {
+            $dir_names[] = $theSourceDir.'/'.$filename;
+          }
         }
       }
-    }
 
-    foreach ($dir_names as $dir_name)
+      foreach ($dir_names as $dir_name)
+      {
+        $this->findPsqlFiles( $dir_name );
+      }
+    }
+    else
     {
-      $this->findPsqlFiles( $dir_name );
+      echo sprintf( "Error: Directory '%s' not exist.\n", $theSourceDir );
     }
   }
 
@@ -461,6 +469,7 @@ order by routine_name";
   /**
    * Loads the stored routine in file @c myCurrentPsqlFilename into MySQL.
    * Returns @c true on success, @c false otherwise.
+   *
    * @return bool
    */
   private function loadPsqlFile()
@@ -573,6 +582,7 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Returns @c true if the current .psql file must be load or reloaded. Otherwise returns @c false.
+   *
    * @return bool
    */
   private function getCurrentMustReload()
@@ -620,6 +630,7 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
   /**
    * Extracts the placeholders from the current psql file and stored them in @c myCurrentPlaceholders.
    * Returns @c true if all placeholders are defined, @c false otherwise.
+   *
    * @return bool
    */
   private function getCurrentPlaceholders()
@@ -664,6 +675,7 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
   /**
    * Extracts the designation type of the current stored routine and sets @c myCurrentType and @c myCurrentColumns.
    * Returns @c true on success. Otherwise returns @c false.
+   *
    * @return bool
    */
   private function getCurrentType()
@@ -707,8 +719,9 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Extracts the name of the stored routine and the stored routine type (i.e. procedure or function) and sets
+   *
    * @c    myCurrentRoutineType and @c myCurrentRoutineName.
-   * Returns @c true on success. Otherwise returns @c false.
+   *       Returns @c true on success. Otherwise returns @c false.
    * @todo Skip comments and string literals.
    * @return bool
    */

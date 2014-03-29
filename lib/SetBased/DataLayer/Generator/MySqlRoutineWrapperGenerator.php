@@ -108,7 +108,7 @@ class MySqlRoutineWrapperGenerator
     }
     else
     {
-      echo "No stored routine files found.\n";
+      echo "Stored routine files not found.\n";
     }
 
 
