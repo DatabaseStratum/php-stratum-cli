@@ -215,7 +215,6 @@ union all
   ,      character_maximum_length
   ,      numeric_precision
   from   information_schema.COLUMNS
-  where  table_schema in ('information_schema','performance_schema')
   and    table_name  rlike '^[a-zA-Z0-9_]*$'
   and    column_name rlike '^[a-zA-Z0-9_]*$'
   order by table_schema
