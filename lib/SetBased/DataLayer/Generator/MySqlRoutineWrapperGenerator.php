@@ -186,7 +186,7 @@ class MySqlRoutineWrapperGenerator
     // Set default values.
     if (!isset($theSettings['wrapper']['lob_as_string']))
     {
-      $theSettings['wrapper']['lob_as_string'] = false;
+      $settings['wrapper']['lob_as_string'] = false;
     }
 
     $this->myHostName = $this->getSetting( $settings, 'database', 'host_name' );
