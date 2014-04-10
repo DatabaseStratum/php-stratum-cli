@@ -184,7 +184,7 @@ class MySqlRoutineWrapperGenerator
     if ($settings===false) set_assert_failed( "Unable open configuration file '%s'.", $this->myConfigurationFilename );
 
     // Set default values.
-    if (!isset($theSettings['wrapper']['lob_as_string']))
+    if (!isset($settings['wrapper']['lob_as_string']))
     {
       $settings['wrapper']['lob_as_string'] = false;
     }
