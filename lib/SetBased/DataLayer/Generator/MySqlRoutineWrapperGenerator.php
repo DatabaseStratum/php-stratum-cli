@@ -14,7 +14,7 @@ use SetBased\DataLayer\StaticDataLayer as DataLayer;
 class MySqlRoutineWrapperGenerator
 {
   /**
-   * @var string .The generated PHP code.
+   * @var string The generated PHP code.
    */
   private $myCode = '';
 
@@ -32,6 +32,11 @@ class MySqlRoutineWrapperGenerator
    * @var string Host name or address.
    */
   private $myHostName;
+
+  /**
+   * @var bool If true BLOBs and CLOBs must be treated as strings.
+   */
+  private $myLobAsStringFlag;
 
   /**
    * @var string The filename of the file with the metadata of all stored procedures.
@@ -174,8 +179,15 @@ class MySqlRoutineWrapperGenerator
    */
   private function readConfigurationFile()
   {
+    // Read the configuration file.
     $settings = parse_ini_file( $this->myConfigurationFilename, true );
     if ($settings===false) set_assert_failed( "Unable open configuration file '%s'.", $this->myConfigurationFilename );
+
+    // Set default values.
+    if (!isset($theSettings['wrapper']['lob_as_string']))
+    {
+      $theSettings['wrapper']['lob_as_string'] = false;
+    }
 
     $this->myHostName = $this->getSetting( $settings, 'database', 'host_name' );
     $this->myUserName = $this->getSetting( $settings, 'database', 'user_name' );
@@ -186,6 +198,7 @@ class MySqlRoutineWrapperGenerator
     $this->myWrapperClassName = $this->getSetting( $settings, 'wrapper', 'wrapper_class' );
     $this->myWrapperFilename  = $this->getSetting( $settings, 'wrapper', 'wrapper_file' );
     $this->myMetadataFilename = $this->getSetting( $settings, 'wrapper', 'metadata' );
+    $this->myLobAsStringFlag  = ($this->getSetting( $settings, 'wrapper', 'lob_as_string' )) ? true : false;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -286,7 +299,7 @@ class MySqlRoutineWrapperGenerator
    */
   private function writeRoutineFunction( $theRoutine )
   {
-    $wrapper = MySqlRoutineWrapper::createRoutineWrapper( $theRoutine );
+    $wrapper = MySqlRoutineWrapper::createRoutineWrapper( $theRoutine, $this->myLobAsStringFlag );
     $this->myCode .= $wrapper->writeRoutineFunction( $theRoutine );
   }
 

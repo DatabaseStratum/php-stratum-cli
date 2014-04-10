@@ -5,8 +5,9 @@ namespace SetBased\DataLayer\Generator;
 //----------------------------------------------------------------------------------------------------------------------
 /**
  * Class MySqlRoutineWrapper
+ *
  * @package SetBased\DataLayer
- * abstract supper class for generation stored routine wrapper methods based on the type of the stored routine.
+ *          abstract supper class for generation stored routine wrapper methods based on the type of the stored routine.
  */
 abstract class MySqlRoutineWrapper
 {
@@ -17,77 +18,96 @@ abstract class MySqlRoutineWrapper
   const C_PAGE_WIDTH = 120;
 
   /**
+   * @var string Buffer for generated code.
+   */
+  private $myCode = '';
+
+  /**
    * @var int The current level of indentation in the generated code.
    */
   private $myIndentLevel = 1;
 
-   /**
-   * @var string Buffer for generated code.
+  /**
+   * @var bool If true BLOBs and CLOBs must be treated as strings.
    */
-  private $myCode = '';
+  private $myLobAsStringFlag;
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Object constructor.
+   *
+   * @param bool $theLobAsStringFlag  If set BLOBs and CLOBs are treated as string. Otherwise, BLOBs and CLOBs will be
+   *                                  send as long data.
+   */
+  public function __construct( $theLobAsStringFlag )
+  {
+    $this->myLobAsStringFlag = $theLobAsStringFlag;
+  }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * A factory for creating the appropriate object for generating a wrapper method for a stored routine.
    *
-   * @param array $theRoutine The metadata of the stored routine.
+   * @param array $theRoutine          The metadata of the stored routine.
+   * @param bool  $theLobAsStringFlag  If set BLOBs and CLOBs are treated as string. Otherwise, BLOBs and CLOBs will be
+   *                                   send as long data.
    *
    * @return MySqlRoutineWrapper
    */
-  static public function createRoutineWrapper( $theRoutine )
+  static public function createRoutineWrapper( $theRoutine, $theLobAsStringFlag )
   {
     switch ($theRoutine['type'])
     {
       case 'bulk':
-        $wrapper = new MySqlRoutineWrapper\Bulk();
+        $wrapper = new MySqlRoutineWrapper\Bulk($theLobAsStringFlag);
         break;
 
       case 'bulk_insert':
-        $wrapper = new MySqlRoutineWrapper\BulkInsert();
+        $wrapper = new MySqlRoutineWrapper\BulkInsert($theLobAsStringFlag);
         break;
 
       case 'log':
-        $wrapper = new MySqlRoutineWrapper\Log();
+        $wrapper = new MySqlRoutineWrapper\Log($theLobAsStringFlag);
         break;
 
       case 'none':
-        $wrapper = new MySqlRoutineWrapper\None();
+        $wrapper = new MySqlRoutineWrapper\None($theLobAsStringFlag);
         break;
 
       case 'row0':
-        $wrapper = new MySqlRoutineWrapper\Row0();
+        $wrapper = new MySqlRoutineWrapper\Row0($theLobAsStringFlag);
         break;
 
       case 'row1':
-        $wrapper = new MySqlRoutineWrapper\Row1();
+        $wrapper = new MySqlRoutineWrapper\Row1($theLobAsStringFlag);
         break;
 
       case 'rows':
-        $wrapper = new MySqlRoutineWrapper\Rows();
+        $wrapper = new MySqlRoutineWrapper\Rows($theLobAsStringFlag);
         break;
 
       case 'rows_with_key':
-        $wrapper = new MySqlRoutineWrapper\RowsWithKey();
+        $wrapper = new MySqlRoutineWrapper\RowsWithKey($theLobAsStringFlag);
         break;
 
       case 'rows_with_index':
-        $wrapper = new MySqlRoutineWrapper\RowsWithIndex();
+        $wrapper = new MySqlRoutineWrapper\RowsWithIndex($theLobAsStringFlag);
         break;
 
       case 'singleton0':
-        $wrapper = new MySqlRoutineWrapper\Singleton0();
+        $wrapper = new MySqlRoutineWrapper\Singleton0($theLobAsStringFlag);
         break;
 
       case 'singleton1':
-        $wrapper = new MySqlRoutineWrapper\Singleton1();
+        $wrapper = new MySqlRoutineWrapper\Singleton1($theLobAsStringFlag);
         break;
 
       case 'function':
-        $wrapper = new MySqlRoutineWrapper\Functions();
+        $wrapper = new MySqlRoutineWrapper\Functions($theLobAsStringFlag);
         break;
 
       case 'table':
-        $wrapper = new MySqlRoutineWrapper\Table();
+        $wrapper = new MySqlRoutineWrapper\Table($theLobAsStringFlag);
         break;
 
       default:
@@ -97,28 +117,6 @@ abstract class MySqlRoutineWrapper
     }
 
     return $wrapper;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Generates a complete wrapper method.
-   *
-   * @param $theRoutine array Metadata of the stored routine.
-   *
-   * @return string
-   */
-  public function writeRoutineFunction( $theRoutine )
-  {
-    $has_blob = $this->isBlobArgument( $theRoutine['argument_types'] );
-
-    if ($has_blob)
-    {
-      return $this->writeRoutineFunctionWithLob( $theRoutine );
-    }
-    else
-    {
-      return $this->writeRoutineFunctionWithoutLob( $theRoutine );
-    }
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -183,6 +181,26 @@ abstract class MySqlRoutineWrapper
     }
 
     return $has_blob;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Generates a complete wrapper method.
+   *
+   * @param $theRoutine array Metadata of the stored routine.
+   *
+   * @return string
+   */
+  public function writeRoutineFunction( $theRoutine )
+  {
+    if (!$this->myLobAsStringFlag && $this->isBlobArgument( $theRoutine['argument_types'] ))
+    {
+      return $this->writeRoutineFunctionWithLob( $theRoutine );
+    }
+    else
+    {
+      return $this->writeRoutineFunctionWithoutLob( $theRoutine );
+    }
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -293,6 +311,90 @@ abstract class MySqlRoutineWrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * Returns the type of the corresponding bind variable. @sa http://php.net/manual/en/mysqli-stmt.bind-param.php
+   *
+   * @param string $theType The argument type of on argument of a stored routine.
+   *
+   * @return string
+   */
+  protected function getBindVariableType( $theType )
+  {
+    $ret = '';
+    switch ($theType)
+    {
+      case 'tinyint':
+      case 'smallint':
+      case 'mediumint':
+      case 'int':
+      case 'bigint':
+      case 'year':
+        $ret = 'i';
+        break;
+
+      case 'decimal':
+      case 'float':
+      case 'double':
+        $ret = 'd';
+        break;
+
+      case 'time':
+      case 'timestamp':
+      case 'binary':
+      case 'enum':
+      case 'bit':
+      case 'set':
+      case 'char':
+      case 'varchar':
+      case 'date':
+      case 'datetime':
+      case 'varbinary':
+        $ret = 's';
+        break;
+
+      case 'tinytext':
+      case 'text':
+      case 'mediumtext':
+      case 'longtext':
+      case 'tinyblob':
+      case 'blob':
+      case 'mediumblob':
+      case 'longblob':
+        $ret .= ($this->myLobAsStringFlag) ? 's' : 'b';
+        break;
+
+      default:
+        set_assert_failed( "Unknown argument type '%s'.", $theType );
+    }
+
+    return $ret;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns code for the arguments for calling the stored routine in a wrapper method.
+   *
+   * @param $theRoutine array The metadata of the stored routine.
+   *
+   * @return string
+   */
+  protected function getRoutineArgs( $theRoutine )
+  {
+    $ret = '';
+
+    if ($theRoutine['argument_types'])
+    {
+      foreach ($theRoutine['argument_types'] as $i => $arg_type)
+      {
+        if ($ret) $ret .= ',';
+        $ret .= $this->writeEscapedArgs( $arg_type, $theRoutine['argument_names'][$i] );
+      }
+    }
+
+    return $ret;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Returns code for the arguments of the wrapper method for the stored routine.
    *
    * @param $theRoutine array The metadata of the stored routine.
@@ -378,110 +480,6 @@ abstract class MySqlRoutineWrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns code for the arguments for calling the stored routine in a wrapper method.
-   *
-   * @param $theRoutine array The metadata of the stored routine.
-   *
-   * @return string
-   */
-  protected function getRoutineArgs( $theRoutine )
-  {
-    $ret = '';
-
-    if ($theRoutine['argument_types'])
-    {
-      foreach ($theRoutine['argument_types'] as $i => $arg_type)
-      {
-        if ($ret) $ret .= ',';
-        $ret .= $this->writeEscapedArgs( $arg_type, $theRoutine['argument_names'][$i] );
-      }
-    }
-
-    return $ret;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns the type of the corresponding bind variable. @sa http://php.net/manual/en/mysqli-stmt.bind-param.php
-   *
-   * @param string $theType The argument type of on argument of a stored routine.
-   *
-   * @return string
-   */
-  protected function getBindVariableType( $theType )
-  {
-    $ret = '';
-    switch ($theType)
-    {
-      case 'tinyint':
-      case 'smallint':
-      case 'mediumint':
-      case 'int':
-      case 'bigint':
-      case 'year':
-        $ret = 'i';
-        break;
-
-      case 'decimal':
-      case 'float':
-      case 'double':
-        $ret = 'd';
-        break;
-
-      case 'time':
-      case 'timestamp':
-      case 'binary':
-      case 'enum':
-      case 'bit':
-      case 'set':
-      case 'char':
-      case 'varchar':
-      case 'date':
-      case 'datetime':
-      case 'varbinary':
-        $ret = 's';
-        break;
-
-      case 'tinytext':
-      case 'text':
-      case 'mediumtext':
-      case 'longtext':
-      case 'tinyblob':
-      case 'blob':
-      case 'mediumblob':
-      case 'longblob':
-        $ret .= 'b';
-        break;
-
-      default:
-        set_assert_failed( "Unknown argument type '%s'.", $theType );
-    }
-
-    return $ret;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Appends a comment line to @c $myCode.
-   */
-  protected function writeSeparator()
-  {
-    for ($i = 0; $i<2 * $this->myIndentLevel; $i++)
-    {
-      $this->write( ' ' );
-    }
-
-    $this->write( '//' );
-
-    for ($i = 0; $i<(self::C_PAGE_WIDTH - 2 * $this->myIndentLevel - 2 - 1); $i++)
-    {
-      $this->write( '-' );
-    }
-    $this->writeLine();
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
    * @param $theString string Appends @a $theString to @c $myCode
    */
   protected function write( $theString )
@@ -520,6 +518,14 @@ abstract class MySqlRoutineWrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * Generates code for calling the stored routine in the wrapper method.
+   *
+   * @param $theRoutine array The metadata of the stored routine.
+   */
+  abstract protected function writeResultHandler( $theRoutine );
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Generates code for fetching data of a stored routine with one or more LOB arguments.
    *
    * @param $theRoutine array The metadata of the stored routine.
@@ -534,11 +540,23 @@ abstract class MySqlRoutineWrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Generates code for calling the stored routine in the wrapper method.
-   *
-   * @param $theRoutine array The metadata of the stored routine.
+   * Appends a comment line to @c $myCode.
    */
-  abstract protected function writeResultHandler( $theRoutine );
+  protected function writeSeparator()
+  {
+    for ($i = 0; $i<2 * $this->myIndentLevel; $i++)
+    {
+      $this->write( ' ' );
+    }
+
+    $this->write( '//' );
+
+    for ($i = 0; $i<(self::C_PAGE_WIDTH - 2 * $this->myIndentLevel - 2 - 1); $i++)
+    {
+      $this->write( '-' );
+    }
+    $this->writeLine();
+  }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -616,7 +634,7 @@ abstract class MySqlRoutineWrapper
       case 'blob':
       case 'mediumblob':
       case 'longblob':
-        $ret = '?';
+        $ret = ($this->myLobAsStringFlag) ? $ret = '\'.self::quoteString( $'.$argName.' ).\'' : '?';
         break;
 
       default:

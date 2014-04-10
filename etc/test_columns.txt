@@ -30,14 +30,6 @@ TST_FOO2.tst_c02 10
 TST_FOO2.tst_c03 10
 TST_FOO2.tst_c04 10
 
-TST_TABLE.tst_c00 20
-TST_TABLE.tst_c01 10
-TST_TABLE.tst_c02 22
-TST_TABLE.tst_c03 10
-TST_TABLE.tst_c04 16
-TST_TABLE.t       10
-TST_TABLE.s       10
-
 information_schema.CHARACTER_SETS.CHARACTER_SET_NAME   32
 information_schema.CHARACTER_SETS.DEFAULT_COLLATE_NAME 32
 information_schema.CHARACTER_SETS.DESCRIPTION          60
@@ -815,4 +807,36 @@ information_schema.INNODB_BUFFER_PAGE.PAGE_STATE            64
 information_schema.INNODB_BUFFER_PAGE.IO_FIX                64
 information_schema.INNODB_BUFFER_PAGE.IS_OLD                 3
 information_schema.INNODB_BUFFER_PAGE.FREE_PAGE_CLOCK       20
+
+test.TST_FOO1.tst_c00         10
+test.TST_FOO1.tst_c01          5
+test.TST_FOO1.tst_c02          3
+test.TST_FOO1.tst_c03          7
+test.TST_FOO1.tst_c04         19
+test.TST_FOO1.tst_c05         10
+test.TST_FOO1.tst_c06         12
+test.TST_FOO1.tst_c07         22
+test.TST_FOO1.tst_c09         10
+test.TST_FOO1.tst_c10         16
+test.TST_FOO1.tst_c11         16
+test.TST_FOO1.tst_c12          8
+test.TST_FOO1.tst_c13          4
+test.TST_FOO1.tst_c14         10
+test.TST_FOO1.tst_c15         10
+test.TST_FOO1.tst_c16         10
+test.TST_FOO1.tst_c17         10
+test.TST_FOO1.tst_c18        255
+test.TST_FOO1.tst_c19      65535
+test.TST_FOO1.tst_c20   16777215
+test.TST_FOO1.tst_c21 4294967295
+test.TST_FOO1.tst_c22        255
+test.TST_FOO1.tst_c23      65535
+test.TST_FOO1.tst_c24   16777215
+test.TST_FOO1.tst_c25 4294967295
+
+test.TST_FOO2.tst_c00 10
+test.TST_FOO2.tst_c01 10
+test.TST_FOO2.tst_c02 10
+test.TST_FOO2.tst_c03 10
+test.TST_FOO2.tst_c04 10
 
