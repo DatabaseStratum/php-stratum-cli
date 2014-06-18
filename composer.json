@@ -13,8 +13,8 @@
     "bin/dlgen"
   ],
   "autoload": {
-    "psr-0": {
-      "SetBased": "lib/"
+    "psr-4": {
+      "SetBased\\DataLayer\\": "lib/"
     }
   }
 }
