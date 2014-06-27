@@ -30,6 +30,14 @@ TST_FOO2.tst_c02 10
 TST_FOO2.tst_c03 10
 TST_FOO2.tst_c04 10
 
+TST_TABLE.tst_c00 20
+TST_TABLE.tst_c01 10
+TST_TABLE.tst_c02 22
+TST_TABLE.tst_c03 10
+TST_TABLE.tst_c04 16
+TST_TABLE.t       10
+TST_TABLE.s       10
+
 information_schema.CHARACTER_SETS.CHARACTER_SET_NAME   32
 information_schema.CHARACTER_SETS.DEFAULT_COLLATE_NAME 32
 information_schema.CHARACTER_SETS.DESCRIPTION          60
@@ -839,4 +847,12 @@ test.TST_FOO2.tst_c01 10
 test.TST_FOO2.tst_c02 10
 test.TST_FOO2.tst_c03 10
 test.TST_FOO2.tst_c04 10
+
+test.TST_TABLE.tst_c00 20
+test.TST_TABLE.tst_c01 10
+test.TST_TABLE.tst_c02 22
+test.TST_TABLE.tst_c03 10
+test.TST_TABLE.tst_c04 16
+test.TST_TABLE.t       10
+test.TST_TABLE.s       10
 

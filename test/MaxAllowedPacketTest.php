@@ -1,4 +1,5 @@
 <?php
+
 //----------------------------------------------------------------------------------------------------------------------
 class MaxAllowedPacketTest extends PHPUnit_Framework_TestCase
 {
@@ -18,11 +19,11 @@ class MaxAllowedPacketTest extends PHPUnit_Framework_TestCase
   {
     $data  = '';
     $chars = 'abdefhiknrstyzABDEFGHKNQRSTYZ1234567890';
-    for($i=0; $i<=1024; $i++)
+    for ($i = 0; $i<=1024; $i++)
     {
-      $data .= substr( $chars, rand( 0, strlen($chars) ), 1 );
+      $data .= substr( $chars, rand( 0, strlen( $chars ) ), 1 );
     }
-    $data = substr( str_repeat( $data, $theSize/1024 + 1024 ), 0, $theSize );
+    $data = substr( str_repeat( $data, $theSize / 1024 + 1024 ), 0, $theSize );
 
     $crc32_php = sprintf( "%u", crc32( $data ) );
 
@@ -44,12 +45,13 @@ class MaxAllowedPacketTest extends PHPUnit_Framework_TestCase
    */
   public function test2()
   {
-    $this->generic( DataLayer::getMaxAllowedPacket()  );
+    $this->generic( DataLayer::getMaxAllowedPacket() );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /** Calling a stored routine with a BLOB larger than max_allowed_packet bytes is not possible.
-   *  @expectedException Exception
+   *
+   * @expectedException Exception
    */
   public function test3()
   {
@@ -58,7 +60,8 @@ class MaxAllowedPacketTest extends PHPUnit_Framework_TestCase
 
   //--------------------------------------------------------------------------------------------------------------------
   /** Calling a stored routine with a BLOB of larger than max_allowed_packet bytes is not possible.
-   *  @expectedException Exception
+   *
+   * @expectedException Exception
    */
   public function test4()
   {
