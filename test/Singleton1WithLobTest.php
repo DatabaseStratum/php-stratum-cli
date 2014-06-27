@@ -1,9 +1,11 @@
 <?php
+
 //----------------------------------------------------------------------------------------------------------------------
 class Singleton1WithLobTest extends PHPUnit_Framework_TestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
-  /** Stored routine with designation type singleton1 must return 1 value and 1 value only.
+  /**
+   * Stored routine with designation type singleton1 must return 1 value and 1 value only.
    */
   public function test1()
   {
@@ -12,7 +14,8 @@ class Singleton1WithLobTest extends PHPUnit_Framework_TestCase
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** An exception must be thrown when a stored routine with designation type singleton1 returns 0 values.
+  /**
+   * An exception must be thrown when a stored routine with designation type singleton1 returns 0 values.
    *
    * @expectedException Exception
    */
@@ -22,7 +25,8 @@ class Singleton1WithLobTest extends PHPUnit_Framework_TestCase
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** An exception must be thrown when a stored routine with designation type singleton1 returns more than 1 values.
+  /**
+   * An exception must be thrown when a stored routine with designation type singleton1 returns more than 1 values.
    *
    * @expectedException Exception
    */
@@ -32,7 +36,8 @@ class Singleton1WithLobTest extends PHPUnit_Framework_TestCase
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Setups a form with a select form control.
+  /**
+   * Connects to the MySQL server.
    */
   protected function setUp()
   {

@@ -1,17 +1,11 @@
 <?php
+
 //----------------------------------------------------------------------------------------------------------------------
 class RowsWithKeyWithLobTest extends PHPUnit_Framework_TestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
-  /** Setups a form with a select form control.
-   */
-  protected function setUp()
-  {
-    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /** Stored routine with designation type rows_with_key must return multi dimensional array.
+  /**
+   * Stored routine with designation type rows_with_key must return multi dimensional array.
    */
   public function test1()
   {
@@ -30,7 +24,8 @@ class RowsWithKeyWithLobTest extends PHPUnit_Framework_TestCase
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Stored routine with designation type rows_with_key must return empty array when no rwos are selected.
+  /**
+   * Stored routine with designation type rows_with_key must return empty array when no rwos are selected.
    */
   public function test2()
   {
@@ -38,6 +33,15 @@ class RowsWithKeyWithLobTest extends PHPUnit_Framework_TestCase
     $this->assertInternalType( 'array', $rows );
     $this->assertCount( 0, $rows );
 
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Connects to the MySQL server.
+   */
+  protected function setUp()
+  {
+    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
   }
   //--------------------------------------------------------------------------------------------------------------------
 }

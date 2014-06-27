@@ -1,17 +1,11 @@
 <?php
+
 //----------------------------------------------------------------------------------------------------------------------
 class MagicConstantTest extends PHPUnit_Framework_TestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
-  /** Setups a form with a select form control.
-   */
-  protected function setUp()
-  {
-    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /** Test constant __ROUTINE__. Must return name of routine.
+  /**
+   * Test constant __ROUTINE__. Must return name of routine.
    */
   public function test1()
   {
@@ -20,7 +14,8 @@ class MagicConstantTest extends PHPUnit_Framework_TestCase
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Test constant __LINE__. Must return line number in the source code.
+  /**
+   * Test constant __LINE__. Must return line number in the source code.
    */
   public function test2()
   {
@@ -29,7 +24,8 @@ class MagicConstantTest extends PHPUnit_Framework_TestCase
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Test constant __FILE__. Must return the filename of the source of the routine.
+  /**
+   * Test constant __FILE__. Must return the filename of the source of the routine.
    */
   public function test3()
   {
@@ -40,7 +36,8 @@ class MagicConstantTest extends PHPUnit_Framework_TestCase
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Test constant __DIR__. Must return name of the folder where the source file of routine the is located.
+  /**
+   * Test constant __DIR__. Must return name of the folder where the source file of routine the is located.
    */
   public function test4()
   {
@@ -51,7 +48,8 @@ class MagicConstantTest extends PHPUnit_Framework_TestCase
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Test constant __DIR__ with several characters that need escaping.
+  /**
+   * Test constant __DIR__ with several characters that need escaping.
    */
   public function test5()
   {
@@ -59,6 +57,15 @@ class MagicConstantTest extends PHPUnit_Framework_TestCase
 
     $ret = DataLayer::magicConstant05();
     $this->assertEquals( $dir_name, $ret );
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Connects to the MySQL server.
+   */
+  protected function setUp()
+  {
+    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
   }
 }
 

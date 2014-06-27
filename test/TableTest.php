@@ -1,17 +1,11 @@
 <?php
+
 //----------------------------------------------------------------------------------------------------------------------
 class TableTest extends PHPUnit_Framework_TestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
-  /** Setups a form with a select form control.
-   */
-  protected function setUp()
-  {
-    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /** Stored routine with designation type table must show table.
+  /**
+   * Stored routine with designation type table must show table.
    */
   public function test1()
   {
@@ -29,7 +23,16 @@ class TableTest extends PHPUnit_Framework_TestCase
     DataLayer::testTable();
     $table = ob_get_contents();
     ob_end_clean();
-    $this->assertEquals( $table, $template_table);
+    $this->assertEquals( $table, $template_table );
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Connects to the MySQL server.
+   */
+  protected function setUp()
+  {
+    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

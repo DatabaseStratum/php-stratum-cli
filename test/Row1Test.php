@@ -1,17 +1,11 @@
 <?php
+
 //----------------------------------------------------------------------------------------------------------------------
 class Row1Test extends PHPUnit_Framework_TestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
-  /** Setups a form with a select form control.
-   */
-  protected function setUp()
-  {
-    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /** Stored routine with designation type row1 must return 1 row and 1 row only.
+  /**
+   * Stored routine with designation type row1 must return 1 row and 1 row only.
    */
   public function test1()
   {
@@ -20,8 +14,10 @@ class Row1Test extends PHPUnit_Framework_TestCase
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** An exception must be thrown when a stored routine with designation type row1 returns 0 rows.
-   *  @expectedException Exception
+  /**
+   * An exception must be thrown when a stored routine with designation type row1 returns 0 rows.
+   *
+   * @expectedException Exception
    */
   public function test2()
   {
@@ -29,12 +25,23 @@ class Row1Test extends PHPUnit_Framework_TestCase
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** An exception must be thrown when a stored routine with designation type row1 returns more than 1 rows.
-   *  @expectedException Exception
+  /**
+   * An exception must be thrown when a stored routine with designation type row1 returns more than 1 rows.
+   *
+   * @expectedException Exception
    */
   public function test3()
   {
     DataLayer::testRow1a( 2 );
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Connects to the MySQL server.
+   */
+  protected function setUp()
+  {
+    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

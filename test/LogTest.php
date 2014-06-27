@@ -1,24 +1,27 @@
 <?php
+
 //----------------------------------------------------------------------------------------------------------------------
 class LogTest extends PHPUnit_Framework_TestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
-  /** Setups a form with a select form control.
-   */
-  protected function setUp()
-  {
-    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /** Stored routine with designation type none must return the number of rows affected.
+  /**
+   * Stored routine with designation type none must return the number of rows affected.
    */
   public function test1()
   {
     $n = DataLayer::testLog();
 
-    $this->expectOutputRegex('/^(\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}\sHello, world\n){2}$/');
+    $this->expectOutputRegex( '/^(\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}\sHello, world\n){2}$/' );
     $this->assertEquals( 2, $n );
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Connects to the MySQL server.
+   */
+  protected function setUp()
+  {
+    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

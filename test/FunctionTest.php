@@ -1,17 +1,11 @@
 <?php
+
 //----------------------------------------------------------------------------------------------------------------------
 class FunctionTest extends PHPUnit_Framework_TestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
-  /** Setups a form with a select form control.
-   */
-  protected function setUp()
-  {
-    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /** Stored routine with designation type function execute stored function and return result.
+  /**
+   * Stored routine with designation type function executes a stored function and return result.
    */
   public function test1()
   {
@@ -19,9 +13,9 @@ class FunctionTest extends PHPUnit_Framework_TestCase
     $this->assertEquals( 5, $ret );
   }
 
-
   //--------------------------------------------------------------------------------------------------------------------
-  /** Stored routine with designation type function execute stored function and return result.
+  /**
+   * Stored routine with designation type function execute stored function and return result.
    */
   public function test2()
   {
@@ -30,6 +24,16 @@ class FunctionTest extends PHPUnit_Framework_TestCase
   }
 
 
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Connects to the MySQL server.
+   */
+  protected function setUp()
+  {
+    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
 }
 
 //----------------------------------------------------------------------------------------------------------------------

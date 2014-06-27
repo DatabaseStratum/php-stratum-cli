@@ -3,7 +3,8 @@
 class NoneWithLobTest extends PHPUnit_Framework_TestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
-  /** Setups a form with a select form control.
+  /**
+   * Connects to the MySQL server.
    */
   protected function setUp()
   {
@@ -11,7 +12,8 @@ class NoneWithLobTest extends PHPUnit_Framework_TestCase
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Stored routine with designation type none must return the nummber of rows affected.
+  /**
+   * Stored routine with designation type none must return the nummber of rows affected.
    */
   public function test1()
   {
@@ -20,7 +22,8 @@ class NoneWithLobTest extends PHPUnit_Framework_TestCase
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Stored routine with designation type none must return the nummber of rows affected.
+  /**
+   * Stored routine with designation type none must return the nummber of rows affected.
    */
   public function test2()
   {
@@ -29,7 +32,8 @@ class NoneWithLobTest extends PHPUnit_Framework_TestCase
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Stored routine with designation type none must return the nummber of rows affected.
+  /**
+   * Stored routine with designation type none must return the nummber of rows affected.
    */
   public function test3()
   {

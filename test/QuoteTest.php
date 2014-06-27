@@ -3,7 +3,8 @@
 class QuoteTest extends PHPUnit_Framework_TestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
-  /** Setups a form with a select form control.
+  /**
+   * Connects to the MySQL server.
    */
   protected function setUp()
   {
@@ -70,7 +71,8 @@ class QuoteTest extends PHPUnit_Framework_TestCase
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Test all column types are quoted properly.
+  /**
+   * Test all column types are quoted properly.
    */
   public function testValid()
   {
@@ -130,7 +132,8 @@ class QuoteTest extends PHPUnit_Framework_TestCase
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Test illegal values will raise an exception.
+  /**
+   * Test illegal values will raise an exception.
    */
   public function testInvalid()
   {

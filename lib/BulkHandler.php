@@ -16,19 +16,25 @@ interface BulkHandler
   /**
    * Will be invoked for each row in the result set.
    *
+   * @api
+   *
    * @param string[] $theRow A row from the result set.
    */
-  public function row( &$theRow );
+  public function row( $theRow );
 
   // -------------------------------------------------------------------------------------------------------------------
   /**
    * Will be invoked before the first row will be processed.
+   *
+   * @api
    */
   public function start();
 
   // -------------------------------------------------------------------------------------------------------------------
   /**
    * Will be invoked after the last row has been processed.
+   *
+   * @api
    */
   public function stop();
 

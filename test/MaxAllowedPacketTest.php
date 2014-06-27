@@ -15,7 +15,7 @@ class MaxAllowedPacketTest extends PHPUnit_Framework_TestCase
   /**
    * Generate test for the data Lob type different size.
    */
-  public function generic( $theSize )
+  public function crc32WithStoredRoutine( $theSize )
   {
     $data  = '';
     $chars = 'abdefhiknrstyzABDEFGHKNQRSTYZ1234567890';
@@ -37,7 +37,7 @@ class MaxAllowedPacketTest extends PHPUnit_Framework_TestCase
    */
   public function test1()
   {
-    $this->generic( 0.5 * DataLayer::getMaxAllowedPacket() );
+    $this->crc32WithStoredRoutine( 0.5 * DataLayer::getMaxAllowedPacket() );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -45,7 +45,7 @@ class MaxAllowedPacketTest extends PHPUnit_Framework_TestCase
    */
   public function test2()
   {
-    $this->generic( DataLayer::getMaxAllowedPacket() );
+    $this->crc32WithStoredRoutine( DataLayer::getMaxAllowedPacket() );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -55,7 +55,7 @@ class MaxAllowedPacketTest extends PHPUnit_Framework_TestCase
    */
   public function test3()
   {
-    $this->generic( DataLayer::getMaxAllowedPacket() + 1 );
+    $this->crc32WithStoredRoutine( DataLayer::getMaxAllowedPacket() + 1 );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -65,7 +65,7 @@ class MaxAllowedPacketTest extends PHPUnit_Framework_TestCase
    */
   public function test4()
   {
-    $this->generic( 2 * DataLayer::getMaxAllowedPacket() );
+    $this->crc32WithStoredRoutine( 2 * DataLayer::getMaxAllowedPacket() );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
