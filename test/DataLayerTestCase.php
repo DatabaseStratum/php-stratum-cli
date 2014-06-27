@@ -1,17 +1,14 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-class LogTest extends DataLayerTestCase
+class DataLayerTestCase extends PHPUnit_Framework_TestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Stored routine with designation type none must return the number of rows affected.
+   * Connects to the MySQL server.
    */
-  public function test1()
+  protected function setUp()
   {
-    $n = DataLayer::testLog();
-
-    $this->expectOutputRegex( '/^(\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}\sHello, world\n){2}$/' );
-    $this->assertEquals( 2, $n );
+    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

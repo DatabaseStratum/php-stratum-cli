@@ -3,7 +3,7 @@
 /**
  * Class BulkInsertTest
  */
-class BulkInsertTest extends PHPUnit_Framework_TestCase
+class BulkInsertTest extends DataLayerTestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -117,15 +117,6 @@ class BulkInsertTest extends PHPUnit_Framework_TestCase
                     'field5' => 1); //  int,
 
     DataLayer::testBulkInsert02( $data );
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Connects to the MySQL server.
-   */
-  protected function setUp()
-  {
-    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 <?php
 
 //----------------------------------------------------------------------------------------------------------------------
-class RowsWithIndexTest extends PHPUnit_Framework_TestCase
+class RowsWithIndexTest extends DataLayerTestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -28,15 +28,6 @@ class RowsWithIndexTest extends PHPUnit_Framework_TestCase
     $this->assertInternalType( 'array', $rows );
     $this->assertCount( 0, $rows );
 
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Connects to the MySQL server.
-   */
-  protected function setUp()
-  {
-    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 <?php
 
 //----------------------------------------------------------------------------------------------------------------------
-class RowsWithIndexWithLobTest extends PHPUnit_Framework_TestCase
+class RowsWithIndexWithLobTest extends DataLayerTestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -30,14 +30,6 @@ class RowsWithIndexWithLobTest extends PHPUnit_Framework_TestCase
 
   }
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Connects to the MySQL server.
-   */
-  protected function setUp()
-  {
-    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
-  }
   //--------------------------------------------------------------------------------------------------------------------
 }
 

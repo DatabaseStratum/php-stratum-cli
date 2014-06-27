@@ -1,7 +1,7 @@
 <?php
 
 //----------------------------------------------------------------------------------------------------------------------
-class Singleton1Test extends PHPUnit_Framework_TestCase
+class Singleton1Test extends DataLayerTestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -33,15 +33,6 @@ class Singleton1Test extends PHPUnit_Framework_TestCase
   public function test3()
   {
     DataLayer::testSingleton1a( 2 );
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Connects to the MySQL server.
-   */
-  protected function setUp()
-  {
-    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

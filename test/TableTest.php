@@ -1,7 +1,7 @@
 <?php
 
 //----------------------------------------------------------------------------------------------------------------------
-class TableTest extends PHPUnit_Framework_TestCase
+class TableTest extends DataLayerTestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -24,15 +24,6 @@ class TableTest extends PHPUnit_Framework_TestCase
     $table = ob_get_contents();
     ob_end_clean();
     $this->assertEquals( $table, $template_table );
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Connects to the MySQL server.
-   */
-  protected function setUp()
-  {
-    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

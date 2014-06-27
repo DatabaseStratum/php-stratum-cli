@@ -1,7 +1,7 @@
 <?php
 
 //----------------------------------------------------------------------------------------------------------------------
-class NoneTest extends PHPUnit_Framework_TestCase
+class NoneTest extends DataLayerTestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -31,15 +31,6 @@ class NoneTest extends PHPUnit_Framework_TestCase
   {
     $ret = DataLayer::testNone( 20 );
     $this->assertEquals( 20, $ret );
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Connects to the MySQL server.
-   */
-  protected function setUp()
-  {
-    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

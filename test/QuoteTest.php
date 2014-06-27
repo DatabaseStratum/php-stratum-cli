@@ -1,16 +1,7 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-class QuoteTest extends PHPUnit_Framework_TestCase
+class QuoteTest extends DataLayerTestCase
 {
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Connects to the MySQL server.
-   */
-  protected function setUp()
-  {
-    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
-  }
-
   //--------------------------------------------------------------------------------------------------------------------
   public function genericValid( $theColumn, $theValue )
   {

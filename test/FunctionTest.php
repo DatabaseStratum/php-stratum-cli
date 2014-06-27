@@ -1,7 +1,7 @@
 <?php
 
 //----------------------------------------------------------------------------------------------------------------------
-class FunctionTest extends PHPUnit_Framework_TestCase
+class FunctionTest extends DataLayerTestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -23,15 +23,6 @@ class FunctionTest extends PHPUnit_Framework_TestCase
     $this->assertNotEquals( 5, $ret );
   }
 
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Connects to the MySQL server.
-   */
-  protected function setUp()
-  {
-    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
-  }
 
   //--------------------------------------------------------------------------------------------------------------------
 }

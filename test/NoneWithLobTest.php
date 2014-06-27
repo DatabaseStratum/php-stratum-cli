@@ -1,16 +1,7 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-class NoneWithLobTest extends PHPUnit_Framework_TestCase
+class NoneWithLobTest extends DataLayerTestCase
 {
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Connects to the MySQL server.
-   */
-  protected function setUp()
-  {
-    DataLayer::connect( 'localhost', 'test', 'test', 'test' );
-  }
-
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Stored routine with designation type none must return the nummber of rows affected.
