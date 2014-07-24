@@ -30,7 +30,7 @@ class RowsWithKey extends MySqlRoutineWrapper
     $this->writeLine( '$ret = array();' );
     $this->writeLine( 'while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret'.$key.' = $row;' );
     $this->writeLine( '$result->close();' );
-    $this->writeLine( 'self::$ourMySql->next_result();' );
+    $this->writeLine( 'if(self::$ourMySql->more_results()) self::$ourMySql->next_result();' );
     $this->writeLine( 'return  $ret;' );
   }
 

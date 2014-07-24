@@ -94,7 +94,7 @@ class StaticDataLayer
 
     $data->free();
 
-    self::$ourMySql->next_result();
+     if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -179,7 +179,7 @@ class StaticDataLayer
 
     $theBulkHandler->stop();
 
-    self::$ourMySql->next_result();
+     if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -222,7 +222,9 @@ class StaticDataLayer
 
       if ($continue)
       {
-        $b = self::$ourMySql->next_result();
+        if(self::$ourMySql->more_results()) $b = self::$ourMySql->next_result();
+        else $b = false;
+
         if ($b===false) self::sqlError( 'mysqli::next_result' );
       }
     } while ($continue);
@@ -244,7 +246,7 @@ class StaticDataLayer
 
     $n = self::$ourMySql->affected_rows;
 
-    self::$ourMySql->next_result();
+     if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     return $n;
   }
@@ -265,7 +267,7 @@ class StaticDataLayer
     $n      = $result->num_rows;
     $result->free();
 
-    self::$ourMySql->next_result();
+     if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     if (!($n==0 || $n==1))
     {
@@ -293,7 +295,7 @@ class StaticDataLayer
     $n      = $result->num_rows;
     $result->free();
 
-    self::$ourMySql->next_result();
+     if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     if ($n!=1)
     {
@@ -323,7 +325,7 @@ class StaticDataLayer
     }
     $result->free();
 
-    self::$ourMySql->next_result();
+     if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     return $ret;
   }
@@ -344,7 +346,7 @@ class StaticDataLayer
     $n      = $result->num_rows;
     $result->free();
 
-    self::$ourMySql->next_result();
+     if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     if (!($n==0 || $n==1))
     {
@@ -372,7 +374,7 @@ class StaticDataLayer
     $n      = $result->num_rows;
     $result->free();
 
-    self::$ourMySql->next_result();
+     if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     if ($n!=1)
     {
@@ -433,7 +435,9 @@ class StaticDataLayer
 
       if ($continue)
       {
-        $b = self::$ourMySql->next_result();
+        if(self::$ourMySql->more_results()) $b = self::$ourMySql->next_result();
+        else $b = false;
+
         if ($b===false) self::sqlError( 'mysqli::next_result' );
       }
     } while ($continue);

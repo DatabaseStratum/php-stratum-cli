@@ -143,7 +143,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
     $ret = self::$ourMySql->affected_rows;
 
     $stmt->close();
-    self::$ourMySql->next_result();
+    if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     return $ret;
   }
@@ -246,7 +246,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
     }
 
     $stmt->close();
-    self::$ourMySql->next_result();
+    if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     if ($b===false) self::sqlError( 'mysqli_stmt::fetch' );
     if (sizeof($tmp)!=1) self::assertFailed( 'Expected 1 row found %d rows.', sizeof($tmp) );
@@ -292,7 +292,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
     $ret = self::$ourMySql->affected_rows;
 
     $stmt->close();
-    self::$ourMySql->next_result();
+    if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     return $ret;
   }
@@ -347,7 +347,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
     }
 
     $stmt->close();
-    self::$ourMySql->next_result();
+    if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     if ($b===false) self::sqlError( 'mysqli_stmt::fetch' );
     if (sizeof($tmp)>1) self::assertFailed( 'Expected 0 or 1 row found %d rows.', sizeof($tmp) );
@@ -405,7 +405,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
     }
 
     $stmt->close();
-    self::$ourMySql->next_result();
+    if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     if ($b===false) self::sqlError( 'mysqli_stmt::fetch' );
     if (sizeof($tmp)!=1) self::assertFailed( 'Expected 1 row found %d rows.', sizeof($tmp) );
@@ -463,7 +463,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
     }
 
     $stmt->close();
-    self::$ourMySql->next_result();
+    if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     if ($b===false) self::sqlError( 'mysqli_stmt::fetch' );
 
@@ -479,7 +479,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
     $ret = array();
     while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret[$row['tst_c01']][$row['tst_c02']][] = $row;
     $result->close();
-    self::$ourMySql->next_result();
+    if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
     return $ret;
   }
 
@@ -525,7 +525,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
     }
 
     $stmt->close();
-    self::$ourMySql->next_result();
+    if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     if ($b===false) self::sqlError( 'mysqli_stmt::fetch' );
 
@@ -541,7 +541,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
     $ret = array();
     while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret[$row['tst_c01']][$row['tst_c02']][$row['tst_c03']] = $row;
     $result->close();
-    self::$ourMySql->next_result();
+    if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
     return  $ret;
   }
 
@@ -587,7 +587,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
     }
 
     $stmt->close();
-    self::$ourMySql->next_result();
+    if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     if ($b===false) self::sqlError( 'mysqli_stmt::fetch' );
 
@@ -644,7 +644,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
     }
 
     $stmt->close();
-    self::$ourMySql->next_result();
+    if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     if ($b===false) self::sqlError( 'mysqli_stmt::fetch' );
     if (sizeof($tmp)>1) self::assertFailed( 'Expected 0 or 1 row found %d rows.', sizeof($tmp) );
@@ -702,7 +702,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
     }
 
     $stmt->close();
-    self::$ourMySql->next_result();
+    if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     if ($b===false) self::sqlError( 'mysqli_stmt::fetch' );
     if (sizeof($tmp)!=1) self::assertFailed( 'Expected 1 row found %d rows.', sizeof($tmp) );
