@@ -94,7 +94,7 @@ class StaticDataLayer
 
     $data->free();
 
-     if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
+    if (self::$ourMySql->more_results()) self::$ourMySql->next_result();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -179,7 +179,7 @@ class StaticDataLayer
 
     $theBulkHandler->stop();
 
-     if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
+    if (self::$ourMySql->more_results()) self::$ourMySql->next_result();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -219,13 +219,10 @@ class StaticDataLayer
       }
 
       $continue = self::$ourMySql->more_results();
-
       if ($continue)
       {
-        if(self::$ourMySql->more_results()) $b = self::$ourMySql->next_result();
-        else $b = false;
-
-        if ($b===false) self::sqlError( 'mysqli::next_result' );
+        $tmp = self::$ourMySql->next_result();
+        if ($tmp===false) self::sqlError( 'mysqli::next_result' );
       }
     } while ($continue);
 
@@ -246,7 +243,7 @@ class StaticDataLayer
 
     $n = self::$ourMySql->affected_rows;
 
-     if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
+    if (self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     return $n;
   }
@@ -267,7 +264,7 @@ class StaticDataLayer
     $n      = $result->num_rows;
     $result->free();
 
-     if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
+    if (self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     if (!($n==0 || $n==1))
     {
@@ -295,7 +292,7 @@ class StaticDataLayer
     $n      = $result->num_rows;
     $result->free();
 
-     if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
+    if (self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     if ($n!=1)
     {
@@ -325,7 +322,7 @@ class StaticDataLayer
     }
     $result->free();
 
-     if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
+    if (self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     return $ret;
   }
@@ -346,7 +343,7 @@ class StaticDataLayer
     $n      = $result->num_rows;
     $result->free();
 
-     if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
+    if (self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     if (!($n==0 || $n==1))
     {
@@ -374,7 +371,7 @@ class StaticDataLayer
     $n      = $result->num_rows;
     $result->free();
 
-     if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
+    if (self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     if ($n!=1)
     {
@@ -410,7 +407,7 @@ class StaticDataLayer
         {
           $columns[$str_num]['header'] = $column->name;
           $columns[$str_num]['type']   = $column->type;
-          $columns[$str_num]['length'] = max( 4, $column->max_length, strlen( $column->name ));
+          $columns[$str_num]['length'] = max( 4, $column->max_length, strlen( $column->name ) );
         }
 
         // Show the table header.
@@ -432,13 +429,10 @@ class StaticDataLayer
       }
 
       $continue = self::$ourMySql->more_results();
-
       if ($continue)
       {
-        if(self::$ourMySql->more_results()) $b = self::$ourMySql->next_result();
-        else $b = false;
-
-        if ($b===false) self::sqlError( 'mysqli::next_result' );
+        $tmp = self::$ourMySql->next_result();
+        if ($tmp===false) self::sqlError( 'mysqli::next_result' );
       }
     } while ($continue);
   }
