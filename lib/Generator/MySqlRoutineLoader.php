@@ -12,6 +12,8 @@ use SetBased\DataLayer\StaticDataLayer as DataLayer;
  */
 class MySqlRoutineLoader
 {
+  private $myCurrentTableName;
+
   /**
    * @var string Path where .psql files can be found.
    */
@@ -387,11 +389,12 @@ order by table_schema
       {
         $this->myMetadata[$row[0]] = array('routine_name'   => $row[0],
                                            'type'           => $row[1],
-                                           'argument_names' => $row[2],
-                                           'argument_types' => $row[3],
-                                           'columns'        => $row[4],
-                                           'timestamp'      => $row[5],
-                                           'replace'        => $row[6]);
+                                           'table_name'     => $row[2],
+                                           'argument_names' => $row[3],
+                                           'argument_types' => $row[4],
+                                           'columns'        => $row[5],
+                                           'timestamp'      => $row[6],
+                                           'replace'        => $row[7]);
       }
       if (!feof( $handle )) set_assert_failed( "Did not reach eof of '%s'", $this->myMetadataFilename );
 
@@ -479,9 +482,11 @@ order by routine_name";
     $this->myCurrentPsqlSourceCodeLines = null;
     $this->myCurrentPlaceholders        = null;
     $this->myCurrentType                = null;
+    $this->myCurrentTableName           = null;
     $this->myCurrentRoutineType         = null;
     $this->myCurrentRoutineName         = null;
     $this->myCurrentColumns             = null;
+
     $this->myCurrentMTime               = null;
     $this->myCurrentReplace             = array();
 
@@ -572,11 +577,13 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
 
     $this->myMetadata[$this->myCurrentRoutineName]['routine_name']   = $this->myCurrentRoutineName;
     $this->myMetadata[$this->myCurrentRoutineName]['type']           = $this->myCurrentType;
+    $this->myMetadata[$this->myCurrentRoutineName]['table_name']     = $this->myCurrentTableName;
     $this->myMetadata[$this->myCurrentRoutineName]['argument_names'] = $argument_names;
     $this->myMetadata[$this->myCurrentRoutineName]['argument_types'] = $argument_types;
     $this->myMetadata[$this->myCurrentRoutineName]['columns']        = $this->myCurrentColumns;
     $this->myMetadata[$this->myCurrentRoutineName]['timestamp']      = $this->myCurrentMTime;
     $this->myMetadata[$this->myCurrentRoutineName]['replace']        = serialize( $this->myCurrentReplace );
+
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -685,16 +692,37 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
 
     if ($key!==false)
     {
-      $n = preg_match( '/^\s*--\s+type:\s*(\w+)\s*([a-zA-Z0-9_,]+)?\s*/', $this->myCurrentPsqlSourceCodeLines[$key - 1],
+      $n = preg_match( '/^\s*--\s+type:\s*(\w+)\s*(.+)?\s*$/', $this->myCurrentPsqlSourceCodeLines[$key - 1],
                        $matches );
+
       if ($n===false) set_assert_failed( "Internal error." );
 
       if ($n==1)
       {
         $this->myCurrentType = $matches[1];
-        if (isset($matches[2]))
+        switch ($this->myCurrentType)
         {
-          $this->myCurrentColumns = $matches[2];
+          case 'bulk_insert':
+            $m = preg_match('/(([a-zA-Z0-9_]+)\s+)?([a-zA-Z0-9_,]+)/', $matches[2], $info);
+            if($m==1)
+            {
+              $this->myCurrentTableName = $info[2];
+              $this->myCurrentColumns   = $info[3];
+            }
+            else
+            {
+              set_assert_failed( "Internal error." );
+            }
+            break;
+
+          case 'rows_with_key':
+          case 'rows_with_index':
+            $this->myCurrentColumns   = $matches[2];
+            break;
+
+          default:
+            if (isset($matches[2])) set_assert_failed( "Internal error." );
+            break;
         }
       }
       else
@@ -885,7 +913,8 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
     $handle = fopen( $this->myMetadataFilename, 'w' );
     if ($handle===false) set_assert_failed( "Unable to open file '%s'.", $this->myMetadataFilename );
 
-    $header = array('routine_name', 'type', 'argument_names', 'argument_types', 'columns', 'timestamp', 'replace');
+
+    $header = array('routine_name', 'type', 'table_name', 'argument_names', 'argument_types', 'columns', 'timestamp', 'replace');
 
     $n = fputcsv( $handle, $header );
     if ($n===false) set_assert_failed( "Error writing file '%s'.", $this->myMetadataFilename );
@@ -906,17 +935,18 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Loads all stored routines in a list into MySQL.
+
    *
-   * @param string $theConfigFilename The filename of the configuration file.
-   * @param array  $theFilenames      The list of files to be loaded.
+*@param string $theConfigFilename The filename of the configuration file.
+   * @param array $theFileNames      The list of files to be loaded.
    */
-  private function loadList( $theConfigFilename, $theFilenames )
+  private function loadList( $theConfigFilename, $theFileNames )
   {
     $this->readConfigFile( $theConfigFilename );
 
     DataLayer::connect( $this->myHostName, $this->myUserName, $this->myPassword, $this->myDatabase );
 
-    $this->findPsqlFilesFromList( $theFilenames );
+    $this->findPsqlFilesFromList( $theFileNames );
     $this->getColumnTypes();
     $this->readRoutineMetaData();
     $this->getConstants();

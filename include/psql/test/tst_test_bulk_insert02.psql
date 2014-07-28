@@ -1,6 +1,6 @@
 create procedure tst_test_bulk_insert02()
 modifies sql data
--- type: bulk_insert field1,_,_,field4,field5
+-- type: bulk_insert TST_TEMPO field1,_,_,field4,field5
 begin
   drop temporary table if exists TST_TEMPO;
 

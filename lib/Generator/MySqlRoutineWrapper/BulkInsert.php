@@ -108,12 +108,20 @@ class BulkInsert extends MySqlRoutineWrapper
 
     DataLayer::executeNone( $query );
 
-    $query = 'select table_name from information_schema.TEMPORARY_TABLES';
-    $rows  = DataLayer::executeRows( $query );
+    if($theRoutine['table_name'])
+    {
+      $this->myTableName = $theRoutine['table_name'];
+    }
+    else
+    {
+      // Works with percona server.
+      $query = 'select table_name from information_schema.TEMPORARY_TABLES';
+      $rows  = DataLayer::executeRows( $query );
 
-    if (count( $rows )!=1) set_assert_failed( "Error can't find temporary table." );
+      if (count( $rows )!=1) set_assert_failed( "Error can't find temporary table." );
 
-    $this->myTableName = $rows['0']['table_name'];
+      $this->myTableName = $rows['0']['table_name'];
+    }
 
     $query   = sprintf( "describe `%s`", $this->myTableName );
     $columns = DataLayer::executeRows( $query );
