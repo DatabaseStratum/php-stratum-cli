@@ -487,8 +487,8 @@ order by routine_name";
     $this->myCurrentRoutineName         = null;
     $this->myCurrentColumns             = null;
 
-    $this->myCurrentMTime               = null;
-    $this->myCurrentReplace             = array();
+    $this->myCurrentMTime   = null;
+    $this->myCurrentReplace = array();
 
     try
     {
@@ -703,8 +703,8 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
         switch ($this->myCurrentType)
         {
           case 'bulk_insert':
-            $m = preg_match('/(([a-zA-Z0-9_]+)\s+)?([a-zA-Z0-9_,]+)/', $matches[2], $info);
-            if($m==1)
+            $m = preg_match( '/(([a-zA-Z0-9_]+)\s+)?([a-zA-Z0-9_,]+)/', $matches[2], $info );
+            if ($m==1)
             {
               $this->myCurrentTableName = $info[2];
               $this->myCurrentColumns   = $info[3];
@@ -717,7 +717,7 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
 
           case 'rows_with_key':
           case 'rows_with_index':
-            $this->myCurrentColumns   = $matches[2];
+            $this->myCurrentColumns = $matches[2];
             break;
 
           default:
@@ -914,7 +914,14 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
     if ($handle===false) set_assert_failed( "Unable to open file '%s'.", $this->myMetadataFilename );
 
 
-    $header = array('routine_name', 'type', 'table_name', 'argument_names', 'argument_types', 'columns', 'timestamp', 'replace');
+    $header = array('routine_name',
+                    'type',
+                    'table_name',
+                    'argument_names',
+                    'argument_types',
+                    'columns',
+                    'timestamp',
+                    'replace');
 
     $n = fputcsv( $handle, $header );
     if ($n===false) set_assert_failed( "Error writing file '%s'.", $this->myMetadataFilename );
@@ -935,10 +942,9 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Loads all stored routines in a list into MySQL.
-
    *
-*@param string $theConfigFilename The filename of the configuration file.
-   * @param array $theFileNames      The list of files to be loaded.
+   * @param string $theConfigFilename The filename of the configuration file.
+   * @param array  $theFileNames      The list of files to be loaded.
    */
   private function loadList( $theConfigFilename, $theFileNames )
   {
