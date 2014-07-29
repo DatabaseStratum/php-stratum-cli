@@ -114,7 +114,7 @@ class BulkInsert extends MySqlRoutineWrapper
     }
     else
     {
-      // Works with percona server.
+      // Works with Percona Server 5.6.
       $query = 'select table_name from information_schema.TEMPORARY_TABLES';
       $rows  = DataLayer::executeRows( $query );
 
