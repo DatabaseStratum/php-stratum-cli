@@ -45,6 +45,13 @@ class StaticDataLayer
   protected static $ourChunkSize;
 
   /**
+   * True if method mysqli_result::fetch_all exists (i.e. we are using MySQL native driver).
+   *
+   * @var bool
+   */
+  protected static $ourHaveFetchAll;
+
+  /**
    * Value of variable max_allowed_packet
    *
    * @var int
@@ -142,6 +149,9 @@ class StaticDataLayer
     {
       self::executeNone( "SET SESSION tx_isolation = '".self::$ourTransactionIsolationLevel."'" );
     }
+
+    // Set flag to use method mysqli_result::fetch_all if we are using MySQL native driver.
+    self::$ourHaveFetchAll = method_exists( 'mysqli_result', 'fetch_all' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -315,10 +325,17 @@ class StaticDataLayer
   public static function executeRows( $theQuery )
   {
     $result = self::query( $theQuery );
-    $ret    = array();
-    while ($row = $result->fetch_array( MYSQLI_ASSOC ))
+    if (self::$ourHaveFetchAll)
     {
-      $ret[] = $row;
+      $ret = $result->fetch_all( MYSQLI_ASSOC );
+    }
+    else
+    {
+      $ret = array();
+      while ($row = $result->fetch_array( MYSQLI_ASSOC ))
+      {
+        $ret[] = $row;
+      }
     }
     $result->free();
 
