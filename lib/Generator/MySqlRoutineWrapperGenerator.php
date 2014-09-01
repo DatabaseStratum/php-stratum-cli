@@ -226,22 +226,24 @@ class MySqlRoutineWrapperGenerator
 
       // Test the number of fields in the row.
       $n = sizeof( $row );
-      if ($n!=8)
+      if ($n!=10)
       {
         set_assert_failed( "Error at line %d in file '%s'. Expecting %d fields but found %d fields.",
                            $line_number,
                            $theFilename,
-                           8,
+                           10,
                            $n );
       }
 
-      $routines[$line_number]['routine_name']   = $row[0];
-      $routines[$line_number]['type']           = $row[1];
-      $routines[$line_number]['table_name']     = $row[2];
+      $routines[$line_number]['routine_name'] = $row[0];
+      $routines[$line_number]['type']         = $row[1];
+      $routines[$line_number]['table_name']   = $row[2];
 
       $routines[$line_number]['argument_names'] = ($row[3]) ? explode( ',', $row[3] ) : array();
       $routines[$line_number]['argument_types'] = ($row[4]) ? explode( ',', $row[4] ) : array();
       $routines[$line_number]['columns']        = ($row[5]) ? explode( ',', $row[5] ) : array();
+      $routines[$line_number]['fields']         = ($row[6]) ? explode( ',', $row[6] ) : array();
+      $routines[$line_number]['column_types']   = ($row[7]) ? explode( ',', $row[7] ) : array();
     }
     if (!feof( $handle )) set_assert_failed( "Did not reach eof of '%s'.", $theFilename );
 

@@ -28,6 +28,16 @@ class MySqlRoutineLoader
   private $myCurrentColumns;
 
   /**
+   * @var string The column types of columns of the stored routine in the current .psql file.
+   */
+  private $myCurrentColumnsTypes;
+
+  /**
+   * @var string The field names in database corresponding to columns of the stored routine in the current .psql file.
+   */
+  private $myCurrentFields;
+
+  /**
    * @var int The last modification time of the current .psql file.
    */
   private $myCurrentMTime;
@@ -331,6 +341,57 @@ order by table_schema
     }
   }
 
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   *
+   */
+  private function getColumnsTypesForBulkInsert()
+  {
+    // Check if table is a temporary table or a permanent table.
+    $query       = sprintf( '
+select 1
+from   information_schema.TABLES
+where table_schema = database()
+and   table_name   = %s', DataLayer::quoteString( $this->myCurrentTableName ) );
+    $table_is_non_temporary = DataLayer::executeRow0( $query );
+
+    // Create temporary table if table is non-temporary.
+    if (!$table_is_non_temporary)
+    {
+      $query = 'call '.$this->myCurrentRoutineName.'()';
+      DataLayer::executeNone( $query );
+    }
+
+    // Get information about table.
+    $query   = sprintf( "describe `%s`", $this->myCurrentTableName );
+    $columns = DataLayer::executeRows( $query );
+
+    // Drop temporary table if table is non-temporary.
+    if (!$table_is_non_temporary)
+    {
+      $query = sprintf( "drop temporary table `%s`", $this->myCurrentTableName );
+      DataLayer::executeNone( $query );
+    }
+
+    // Check number of columns in the table match the number of fields given in the designation type.
+    $n1 = count( explode( ',', $this->myCurrentColumns ) );
+    $n2 = count( $columns );
+    if ($n1!=$n2) set_assert_failed( "Number of fields %d and number of columns %d don't match.", $n1, $n2 );
+
+    $tmp_column_types = array();
+    $tmp_fields       = array();
+    foreach ($columns as $column)
+    {
+      preg_match( "(\\w+)", $column['Type'], $type );
+      $tmp_column_types[] = $type['0'];
+      $tmp_fields[]       = $column['Field'];
+    }
+
+    $this->myCurrentColumnsTypes = implode( ',', $tmp_column_types );
+    $this->myCurrentFields       = implode( ',', $tmp_fields );
+  }
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Reads constants set in @c myTargetConfigFilename and adds them to @c myReplacePairs.
@@ -531,16 +592,12 @@ order by table_schema
         switch ($this->myCurrentType)
         {
           case 'bulk_insert':
-            $m = preg_match( '/(([a-zA-Z0-9_]+)\s+)?([a-zA-Z0-9_,]+)/', $matches[2], $info );
-            if ($m==1)
-            {
-              $this->myCurrentTableName = $info[2];
-              $this->myCurrentColumns   = $info[3];
-            }
-            else
-            {
-              set_assert_failed( "Internal error." );
-            }
+            $m = preg_match( '/^([a-zA-Z0-9_]+)\s+([a-zA-Z0-9_,]+)$/', $matches[2], $info );
+            if ($m===false) set_assert_failed( "Internal error." );
+            if ($m==0) set_assert_failed( sprintf( "Error: Expected: -- type: bulk_insert <table_name> <columns> in file '%s'.\n",
+                                                   $this->myCurrentPsqlFilename ) );
+            $this->myCurrentTableName           = $info[1];
+            $this->myCurrentColumns             = $info[2];
             break;
 
           case 'rows_with_key':
@@ -664,7 +721,7 @@ order by routine_name";
       $err = $this->loadPsqlFile();
       if ($err===false)
       {
-        $this->myErrorFileNames = $this->myCurrentPsqlFilename;
+        $this->myErrorFileNames[] = $this->myCurrentPsqlFilename;
         unset($this->myMetadata[$this->myCurrentRoutineName]);
       }
     }
@@ -745,7 +802,7 @@ order by routine_name";
       $err = $this->loadPsqlFile();
       if ($err===false)
       {
-        $this->myErrorFileNames = $this->myCurrentPsqlFilename;
+        $this->myErrorFileNames[] = $this->myCurrentPsqlFilename;
         unset($this->myMetadata[$this->myCurrentRoutineName]);
       }
     }
@@ -774,6 +831,8 @@ order by routine_name";
     $this->myCurrentRoutineType         = null;
     $this->myCurrentRoutineName         = null;
     $this->myCurrentColumns             = null;
+    $this->myCurrentFields              = null;
+    $this->myCurrentColumnsTypes        = null;
 
     $this->myCurrentMTime   = null;
     $this->myCurrentReplace = array();
@@ -824,6 +883,12 @@ order by routine_name";
 
         // Load the routine into MySQL.
         $this->loadCurrentPsqlFile();
+
+        // If the routine is a bulk insert routine, enhance metadata with table columns information.
+        if ($this->myCurrentType=='bulk_insert')
+        {
+          $this->getColumnsTypesForBulkInsert();
+        }
 
         // Update current Metadata;
         $this->updateCurrentMetadata();
@@ -889,8 +954,10 @@ order by routine_name";
                                            'argument_names' => $row[3],
                                            'argument_types' => $row[4],
                                            'columns'        => $row[5],
-                                           'timestamp'      => $row[6],
-                                           'replace'        => $row[7]);
+                                           'fields'         => $row[6],
+                                           'column_types'   => $row[7],
+                                           'timestamp'      => $row[8],
+                                           'replace'        => $row[9]);
       }
       if (!feof( $handle )) set_assert_failed( "Did not reach eof of '%s'", $this->myMetadataFilename );
 
@@ -970,6 +1037,8 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
     $this->myMetadata[$this->myCurrentRoutineName]['argument_names'] = $argument_names;
     $this->myMetadata[$this->myCurrentRoutineName]['argument_types'] = $argument_types;
     $this->myMetadata[$this->myCurrentRoutineName]['columns']        = $this->myCurrentColumns;
+    $this->myMetadata[$this->myCurrentRoutineName]['fields']         = $this->myCurrentFields;
+    $this->myMetadata[$this->myCurrentRoutineName]['column_types']   = $this->myCurrentColumnsTypes;
     $this->myMetadata[$this->myCurrentRoutineName]['timestamp']      = $this->myCurrentMTime;
     $this->myMetadata[$this->myCurrentRoutineName]['replace']        = serialize( $this->myCurrentReplace );
   }
@@ -990,6 +1059,8 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
                     'argument_names',
                     'argument_types',
                     'columns',
+                    'fields',
+                    'column_types',
                     'timestamp',
                     'replace');
 
