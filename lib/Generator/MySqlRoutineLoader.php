@@ -28,12 +28,12 @@ class MySqlRoutineLoader
   private $myCurrentColumns;
 
   /**
-   * @var string The column types of columns of the stored routine in the current .psql file.
+   * @var string The column types of columns of the table for bulk insert of the stored routine in the current .psql file.
    */
   private $myCurrentColumnsTypes;
 
   /**
-   * @var string The field names in database corresponding to columns of the stored routine in the current .psql file.
+   * @var string The keys in the PHP array for bulk insert in the current .psql file.
    */
   private $myCurrentFields;
 
@@ -300,6 +300,58 @@ class MySqlRoutineLoader
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   *  Gets the column names and column types of the current table for bulk insert.
+   */
+  private function getBulkInsertTableColumnsInfo()
+  {
+    // Check if table is a temporary table or a non-temporary table.
+    $query                  = sprintf( '
+select 1
+from   information_schema.TABLES
+where table_schema = database()
+and   table_name   = %s', DataLayer::quoteString( $this->myCurrentTableName ) );
+    $table_is_non_temporary = DataLayer::executeRow0( $query );
+
+    // Create temporary table if table is non-temporary table.
+    if (!$table_is_non_temporary)
+    {
+      $query = 'call '.$this->myCurrentRoutineName.'()';
+      DataLayer::executeNone( $query );
+    }
+
+    // Get information about the columns of the table.
+    $query   = sprintf( "describe `%s`", $this->myCurrentTableName );
+    $columns = DataLayer::executeRows( $query );
+
+    // Drop temporary table if table is non-temporary.
+    if (!$table_is_non_temporary)
+    {
+      $query = sprintf( "drop temporary table `%s`", $this->myCurrentTableName );
+      DataLayer::executeNone( $query );
+    }
+
+    // Check number of columns in the table match the number of fields given in the designation type.
+    $n1 = count( explode( ',', $this->myCurrentColumns ) );
+    $n2 = count( $columns );
+    if ($n1!=$n2) set_assert_failed( "Number of fields %d and number of columns %d don't match.", $n1, $n2 );
+
+    // Fill arrays with column names and column types.
+    $tmp_column_types = array();
+    $tmp_fields       = array();
+    foreach ($columns as $column)
+    {
+      preg_match( "(\\w+)", $column['Type'], $type );
+      $tmp_column_types[] = $type['0'];
+      $tmp_fields[]       = $column['Field'];
+    }
+
+    $this->myCurrentColumnsTypes = implode( ',', $tmp_column_types );
+    $this->myCurrentFields       = implode( ',', $tmp_fields );
+  }
+
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Selects schema, table, and column names and the column type from the MySQL and the column type placeholders
    * to @c myReplacePairs.
    */
@@ -339,57 +391,6 @@ order by table_schema
 
       $this->myReplacePairs[$key] = $value;
     }
-  }
-
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   *
-   */
-  private function getColumnsTypesForBulkInsert()
-  {
-    // Check if table is a temporary table or a permanent table.
-    $query       = sprintf( '
-select 1
-from   information_schema.TABLES
-where table_schema = database()
-and   table_name   = %s', DataLayer::quoteString( $this->myCurrentTableName ) );
-    $table_is_non_temporary = DataLayer::executeRow0( $query );
-
-    // Create temporary table if table is non-temporary.
-    if (!$table_is_non_temporary)
-    {
-      $query = 'call '.$this->myCurrentRoutineName.'()';
-      DataLayer::executeNone( $query );
-    }
-
-    // Get information about table.
-    $query   = sprintf( "describe `%s`", $this->myCurrentTableName );
-    $columns = DataLayer::executeRows( $query );
-
-    // Drop temporary table if table is non-temporary.
-    if (!$table_is_non_temporary)
-    {
-      $query = sprintf( "drop temporary table `%s`", $this->myCurrentTableName );
-      DataLayer::executeNone( $query );
-    }
-
-    // Check number of columns in the table match the number of fields given in the designation type.
-    $n1 = count( explode( ',', $this->myCurrentColumns ) );
-    $n2 = count( $columns );
-    if ($n1!=$n2) set_assert_failed( "Number of fields %d and number of columns %d don't match.", $n1, $n2 );
-
-    $tmp_column_types = array();
-    $tmp_fields       = array();
-    foreach ($columns as $column)
-    {
-      preg_match( "(\\w+)", $column['Type'], $type );
-      $tmp_column_types[] = $type['0'];
-      $tmp_fields[]       = $column['Field'];
-    }
-
-    $this->myCurrentColumnsTypes = implode( ',', $tmp_column_types );
-    $this->myCurrentFields       = implode( ',', $tmp_fields );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -596,8 +597,8 @@ and   table_name   = %s', DataLayer::quoteString( $this->myCurrentTableName ) );
             if ($m===false) set_assert_failed( "Internal error." );
             if ($m==0) set_assert_failed( sprintf( "Error: Expected: -- type: bulk_insert <table_name> <columns> in file '%s'.\n",
                                                    $this->myCurrentPsqlFilename ) );
-            $this->myCurrentTableName           = $info[1];
-            $this->myCurrentColumns             = $info[2];
+            $this->myCurrentTableName = $info[1];
+            $this->myCurrentColumns   = $info[2];
             break;
 
           case 'rows_with_key':
@@ -887,7 +888,7 @@ order by routine_name";
         // If the routine is a bulk insert routine, enhance metadata with table columns information.
         if ($this->myCurrentType=='bulk_insert')
         {
-          $this->getColumnsTypesForBulkInsert();
+          $this->getBulkInsertTableColumnsInfo();
         }
 
         // Update current Metadata;

@@ -34,7 +34,7 @@ class BulkInsert extends MySqlRoutineWrapper
    */
   protected function writeResultHandler( $theRoutine )
   {
-    // Validate count of columns and column types for equal.
+    // Validate number of column names and number of column types are equal.
     $n1 = count( $theRoutine['columns'] );
     $n2 = count( $theRoutine['column_types'] );
     if ($n1!=$n2) set_assert_failed( "Number of fields %d and number of columns %d don't match.", $n1, $n2 );
