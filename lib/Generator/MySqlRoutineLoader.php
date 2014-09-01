@@ -176,7 +176,15 @@ class MySqlRoutineLoader
       $this->loadList( $theConfigFilename, $theFileNames );
     }
 
-    return 0;
+    if ($this->myErrorFileNames)
+    {
+      foreach ($this->myErrorFileNames as $filename)
+      {
+        echo sprintf( "Error loading file '%s'.\n", $filename );
+      }
+    }
+
+    return ($this->myErrorFileNames) ? 1 : 0;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -607,8 +615,7 @@ order by table_schema
             break;
 
           default:
-            if (isset($matches[2])) set_assert_failed( "Internal error." );
-            break;
+            if (isset($matches[2])) $ret = false;
         }
       }
       else
@@ -899,7 +906,7 @@ order by routine_name";
     }
     catch (\Exception $e)
     {
-      echo $e->getMessage();
+      echo $e->getMessage(), "\n";
 
       $this->myErrorFileNames[] = $this->myCurrentPsqlFilename;
 
