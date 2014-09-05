@@ -478,7 +478,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
     $result = self::query( 'CALL tst_test_rows_with_index1('.self::quoteNum( $p_count ).')');
     $ret = array();
     while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret[$row['tst_c01']][$row['tst_c02']][] = $row;
-    $result->close();
+    $result->free();
     if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
     return $ret;
   }
@@ -540,7 +540,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
     $result = self::query( 'CALL tst_test_rows_with_key1('.self::quoteNum( $p_count ).')');
     $ret = array();
     while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret[$row['tst_c01']][$row['tst_c02']][$row['tst_c03']] = $row;
-    $result->close();
+    $result->free();
     if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
     return  $ret;
   }
