@@ -424,7 +424,7 @@ class StaticDataLayer
         {
           $columns[$str_num]['header'] = $column->name;
           $columns[$str_num]['type']   = $column->type;
-          $columns[$str_num]['length'] = max( 4, $column->max_length, strlen( $column->name ));
+          $columns[$str_num]['length'] = max( 4, $column->max_length, strlen( $column->name ) );
         }
 
         // Show the table header.
@@ -433,11 +433,19 @@ class StaticDataLayer
         // Show for all rows all columns.
         while ($row = $result->fetch_row())
         {
-          echo " ";
+          // First row separator.
+          echo "|";
+
+          $last_column = (count($columns) - 1);
+
           foreach ($row as $i => $value)
           {
             self::executeTableShowTableColumn( $columns[$i], $value );
+
+            if($last_column == $i) echo "|";
+            else echo " ";
           }
+
           echo "\n";
         }
 
@@ -686,6 +694,8 @@ class StaticDataLayer
    */
   private static function executeTableShowTableColumn( $theColumn, $theValue )
   {
+    $spaces = str_repeat( " ", $theColumn['length'] - strlen( $theValue ) );
+
     switch ($theColumn['type'])
     {
       case 1: // tinyint
@@ -696,8 +706,7 @@ class StaticDataLayer
       case 8: // bigint
       case 9: // mediumint
 
-        $spaces = str_repeat( " ", (($theColumn['length'] + 2) - strlen( $theValue )) - 1 );
-      echo $spaces.$theValue."  ";
+        echo " ".$spaces.$theValue." ";
         break;
 
       case 7: // timestamp
@@ -710,14 +719,12 @@ class StaticDataLayer
       case 253: // varchar
       case 254: // char
 
-        $spaces = str_repeat( " ", (($theColumn['length'] + 2) - strlen( $theValue )) );
-      echo " ".$theValue.$spaces;
+        echo " ".$theValue.$spaces." ";
         break;
 
       case 246: // decimal
 
-        $spaces = str_repeat( " ", (($theColumn['length'] + 2) - strlen( $theValue )));
-        echo " ".$theValue.$spaces;
+        echo " ".$theValue.$spaces." ";
         break;
 
       default:
