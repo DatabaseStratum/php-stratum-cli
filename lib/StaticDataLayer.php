@@ -436,14 +436,10 @@ class StaticDataLayer
           // First row separator.
           echo "|";
 
-          $last_column = (count($columns) - 1);
-
           foreach ($row as $i => $value)
           {
             self::executeTableShowTableColumn( $columns[$i], $value );
-
-            if($last_column == $i) echo "|";
-            else echo " ";
+            echo "|";
           }
 
           echo "\n";
