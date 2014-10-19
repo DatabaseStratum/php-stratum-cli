@@ -10,6 +10,7 @@ namespace SetBased\DataLayer;
  */
 class StaticDataLayer
 {
+
   /**
    * The default character set et to be used when sending data from and to the MySQL instance.
    *
@@ -92,7 +93,7 @@ class StaticDataLayer
     $i = 0;
     while ($field = $data->fetch_field())
     {
-      $fields[$i] = & $out[$field->name];
+      $fields[$i] = &$out[$field->name];
       $i++;
     }
 
@@ -128,7 +129,7 @@ class StaticDataLayer
    */
   public static function connect( $theHostName, $theUserName, $thePassWord, $theDatabase, $thePort = 3306 )
   {
-    self::$ourMySql = new \mysqli($theHostName, $theUserName, $thePassWord, $theDatabase, $thePort);
+    self::$ourMySql = new \mysqli( $theHostName, $theUserName, $thePassWord, $theDatabase, $thePort );
     if (!self::$ourMySql) self::sqlError( 'mysqli::__construct' );
 
     // Set the default character set.
@@ -617,7 +618,7 @@ class StaticDataLayer
     $format  = array_shift( $args );
     $message = vsprintf( $format, $args );
 
-    throw new \Exception($message);
+    throw new \Exception( $message );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -631,7 +632,7 @@ class StaticDataLayer
     $message .= "\n";
     $message .= $theText."\n";
 
-    throw new \Exception($message);
+    throw new \Exception( $message );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -648,7 +649,7 @@ class StaticDataLayer
     {
       $separator .= str_repeat( '-', $column['length'] + 2 )."+";
     }
-    echo $separator."\n";
+    echo $separator, "\n";
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -676,9 +677,9 @@ class StaticDataLayer
       $header .= $l_spaces.$column['header'].$r_spaces.'|';
     }
 
-    echo "\n".$separator."\n";
-    echo $header."\n";
-    echo $separator."\n";
+    echo "\n", $separator, "\n";
+    echo $header, "\n";
+    echo $separator, "\n";
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -702,7 +703,7 @@ class StaticDataLayer
       case 8: // bigint
       case 9: // mediumint
 
-        echo " ".$spaces.$theValue." ";
+        echo ' ', $spaces.$theValue, ' ';
         break;
 
       case 7: // timestamp
@@ -715,16 +716,16 @@ class StaticDataLayer
       case 253: // varchar
       case 254: // char
 
-        echo " ".$theValue.$spaces." ";
+        echo ' ', $theValue.$spaces, ' ';
         break;
 
       case 246: // decimal
 
-        echo " ".$theValue.$spaces." ";
+        echo ' ', $theValue.$spaces, ' ';
         break;
 
       default:
-        self::assertFailed( "Unknown data type id %s.\n", $theColumn['type'] );
+        self::assertFailed( "Unknown data type id '%s'.", $theColumn['type'] );
     }
   }
 

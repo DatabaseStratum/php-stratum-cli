@@ -1,3 +1,4 @@
+bin/phpunit
 vendor/
 composer.lock
 etc/test_routines.csv
