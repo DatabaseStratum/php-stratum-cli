@@ -54,7 +54,7 @@ abstract class MySqlRoutineWrapper
    *
    * @return MySqlRoutineWrapper
    */
-  static public function createRoutineWrapper( $theRoutine, $theLobAsStringFlag )
+  public static function createRoutineWrapper( $theRoutine, $theLobAsStringFlag )
   {
     switch ($theRoutine['type'])
     {

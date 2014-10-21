@@ -225,7 +225,7 @@ class MySqlRoutineWrapperGenerator
       $line_number++;
 
       // Test the number of fields in the row.
-      $n = sizeof( $row );
+      $n = count( $row );
       if ($n!=10)
       {
         set_assert_failed( "Error at line %d in file '%s'. Expecting %d fields but found %d fields.",
