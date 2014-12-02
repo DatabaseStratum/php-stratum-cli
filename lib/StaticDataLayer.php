@@ -600,6 +600,33 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * Returns the key of the first row in a row set for which a column has a specific value. Returns null if no row is
+   * found.
+   *
+   * @param string  $theColumnName The column name (or in PHP terms the key in an row (i.e. array) in the row set).
+   * @param string  $theValue      The value to be found.
+   * @param array[] $theRowSet     The row set.
+   *
+   * @return int|null|string
+   */
+  public static function searchInRowSet( $theColumnName, $theValue, $theRowSet )
+  {
+    if (is_array( $theRowSet ))
+    {
+      foreach ($theRowSet as $key => $row)
+      {
+        if ($row[$theColumnName]===$theValue)
+        {
+          return $key;
+        }
+      }
+    }
+
+    return null;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Logs the warnings of the last executed SQL statement.
    * Wrapper around the SQL statement 'show warnings'.
    */
