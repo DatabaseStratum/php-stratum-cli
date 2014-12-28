@@ -1,21 +1,28 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
+/**
+ * myStratumPhp
+ *
+ * @copyright 2003-2014 Paul Water / Set Based IT Consultancy (https://www.setbased.nl)
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
+ * @link
+ */
+//----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\DataLayer\Generator\MySqlRoutineWrapper;
 
 use SetBased\DataLayer\Generator\MySqlRoutineWrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class RowsWithKey
- *
- * @package SetBased\DataLayer\Generator\MySqlRoutineWrapper
- *
- * Class for generating a wrapper function around a stored procedure that selects 0 or more rows. The rows are
+ * Class for generating a wrapper method for a stored procedure that selects 0 or more rows. The rows are
  * returned as nested arrays.
  */
 class RowsWithKey extends MySqlRoutineWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * {@inheritdoc}
+   */
   protected function writeResultHandler( $theRoutine )
   {
     $routine_args = $this->getRoutineArgs( $theRoutine );
@@ -35,6 +42,9 @@ class RowsWithKey extends MySqlRoutineWrapper
   }
 
   //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * {@inheritdoc}
+   */
   protected function writeRoutineFunctionLobFetchData( $theRoutine )
   {
     $key = '';
@@ -60,6 +70,9 @@ class RowsWithKey extends MySqlRoutineWrapper
   }
 
   //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * {@inheritdoc}
+   */
   protected function writeRoutineFunctionLobReturnData()
   {
     $this->writeLine( 'if ($b===false) self::sqlError( \'mysqli_stmt::fetch\' );' );

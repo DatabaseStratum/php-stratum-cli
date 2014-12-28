@@ -1,6 +1,14 @@
 #!/usr/bin/php
 <?php
 //----------------------------------------------------------------------------------------------------------------------
+/**
+ * myStratumPhp
+ *
+ * @copyright 2003-2014 Paul Water / Set Based IT Consultancy (https://www.setbased.nl)
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
+ * @link
+ */
+//----------------------------------------------------------------------------------------------------------------------
 use SetBased\DataLayer\Generator\MySqlConfigConstants;
 use SetBased\DataLayer\Generator\MySqlRoutineLoader;
 use SetBased\DataLayer\Generator\MySqlRoutineWrapperGenerator;
@@ -22,7 +30,9 @@ foreach ($files as $file)
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Throws an exception. Arguments similar to @c printf.
+ * Throws an exception. Arguments similar to printf.
+ *
+ * @throws Exception
  */
 function set_assert_failed()
 {
@@ -34,6 +44,9 @@ function set_assert_failed()
 }
 
 //----------------------------------------------------------------------------------------------------------------------
+/**
+ * Prints the synopsis of this program and terminates this program.
+ */
 function synopsis()
 {
   echo "Synopsis: dlgen [-f] -c <configuration file> [routine.psql] ... \n";
@@ -43,6 +56,14 @@ function synopsis()
 }
 
 //----------------------------------------------------------------------------------------------------------------------
+/**
+ * Parses the arguments of this program.
+ *
+ * @param array $options The arguments of this programs (i.e. $argv).
+ *
+ * @return array  The parameters.
+ * @throws Exception
+ */
 function getSetting( $options )
 {
   // skip first key with current file name.
@@ -88,6 +109,11 @@ function getSetting( $options )
 }
 
 //----------------------------------------------------------------------------------------------------------------------
+/**
+ * Starts the execution of this program.
+ *
+ * @param $options array $options The arguments of this programs (i.e. $argv).
+ */
 function main( $options )
 {
   $setting = getSetting( $options );
@@ -96,18 +122,18 @@ function main( $options )
   {
     // Fast mode: only load stored routines.
     $loader = new MySqlRoutineLoader;
-    $ret = $loader->run( $setting['config'], $setting['psql_files'] );
+    $ret = $loader->main( $setting['config'], $setting['psql_files'] );
     if ($ret!=0) exit( $ret );
   }
   else
   {
     // Normal mode: create constants, config file, load routines, and create routine wrapper class.
     $constants = new MySqlConfigConstants;
-    $ret = $constants->run( $setting['config'] );
+    $ret = $constants->main( $setting['config'] );
     if ($ret!=0) exit( $ret );
 
     $loader = new MySqlRoutineLoader;
-    $ret = $loader->run( $setting['config'], $setting['psql_files'] );
+    $ret = $loader->main( $setting['config'], $setting['psql_files'] );
     if ($ret!=0) exit( $ret );
 
     $wrapper = new MySqlRoutineWrapperGenerator;

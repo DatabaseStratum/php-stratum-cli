@@ -1,21 +1,27 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
+/**
+ * myStratumPhp
+ *
+ * @copyright 2003-2014 Paul Water / Set Based IT Consultancy (https://www.setbased.nl)
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
+ * @link
+ */
+//----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\DataLayer\Generator\MySqlRoutineWrapper;
 
 use SetBased\DataLayer\Generator\MySqlRoutineWrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class Log
- *
- * @package SetBased\DataLayer\Generator\MySqlRoutineWrapper
- *
- * Class for generating a wrapper function around a stored procedure that logs the result sets of the wrapped
- * stored procedure.
+ * Class for generating a wrapper method for logging the result sets of a store procedure.
  */
 class Log extends MySqlRoutineWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * {@inheritdoc}
+   */
   protected function writeResultHandler( $theRoutine )
   {
     $routine_args = $this->getRoutineArgs( $theRoutine );
@@ -23,12 +29,18 @@ class Log extends MySqlRoutineWrapper
   }
 
   //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * {@inheritdoc}
+   */
   protected function writeRoutineFunctionLobFetchData( $theRoutine )
   {
     // Nothing to do.
   }
 
   //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * {@inheritdoc}
+   */
   protected function writeRoutineFunctionLobReturnData()
   {
     // Nothing to do.

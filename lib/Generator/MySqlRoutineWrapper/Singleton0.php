@@ -1,21 +1,27 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
+/**
+ * myStratumPhp
+ *
+ * @copyright 2003-2014 Paul Water / Set Based IT Consultancy (https://www.setbased.nl)
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
+ * @link
+ */
+//----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\DataLayer\Generator\MySqlRoutineWrapper;
 
 use SetBased\DataLayer\Generator\MySqlRoutineWrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class Singleton0
- *
- * @package SetBased\DataLayer\Generator\MySqlRoutineWrapper
- *
- * Class for generating a wrapper function around a stored procedure that selects 0 or 1 row with only one
- * column.
+ * Class for generating a wrapper method for a stored procedure that selects 0 or 1 row with only one column.
  */
 class Singleton0 extends MySqlRoutineWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * {@inheritdoc}
+   */
   protected function writeResultHandler( $theRoutine )
   {
     $routine_args = $this->getRoutineArgs( $theRoutine );
@@ -23,6 +29,9 @@ class Singleton0 extends MySqlRoutineWrapper
   }
 
   //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * {@inheritdoc}
+   */
   protected function writeRoutineFunctionLobFetchData( $theRoutine )
   {
     $this->writeLine( '$row = array();' );
@@ -42,6 +51,9 @@ class Singleton0 extends MySqlRoutineWrapper
   }
 
   //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * {@inheritdoc}
+   */
   protected function writeRoutineFunctionLobReturnData()
   {
     $this->writeLine( 'if ($b===false) self::sqlError( \'mysqli_stmt::fetch\' );' );

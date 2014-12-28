@@ -1,13 +1,19 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
+/**
+ * myStratumPhp
+ *
+ * @copyright 2003-2014 Paul Water / Set Based IT Consultancy (https://www.setbased.nl)
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
+ * @link
+ */
+//----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\DataLayer\Generator;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class MySqlRoutineWrapper
- *
- * @package SetBased\DataLayer
- *          abstract supper class for generation stored routine wrapper methods based on the type of the stored routine.
+ * Abstract supper class for generating stored routine wrapper methods based on the designation type of the stored
+ * routine.
  */
 abstract class MySqlRoutineWrapper
 {
@@ -52,68 +58,67 @@ abstract class MySqlRoutineWrapper
    * @param bool  $theLobAsStringFlag  If set BLOBs and CLOBs are treated as string. Otherwise, BLOBs and CLOBs will be
    *                                   send as long data.
    *
-   * @return MySqlRoutineWrapper
+   * @return MySqlRoutineWrapper The routine wrapper object.
    */
   public static function createRoutineWrapper( $theRoutine, $theLobAsStringFlag )
   {
     switch ($theRoutine['type'])
     {
       case 'bulk':
-        $wrapper = new MySqlRoutineWrapper\Bulk($theLobAsStringFlag);
+        $wrapper = new MySqlRoutineWrapper\Bulk( $theLobAsStringFlag );
         break;
 
       case 'bulk_insert':
-        $wrapper = new MySqlRoutineWrapper\BulkInsert($theLobAsStringFlag);
+        $wrapper = new MySqlRoutineWrapper\BulkInsert( $theLobAsStringFlag );
         break;
 
       case 'log':
-        $wrapper = new MySqlRoutineWrapper\Log($theLobAsStringFlag);
+        $wrapper = new MySqlRoutineWrapper\Log( $theLobAsStringFlag );
         break;
 
       case 'none':
-        $wrapper = new MySqlRoutineWrapper\None($theLobAsStringFlag);
+        $wrapper = new MySqlRoutineWrapper\None( $theLobAsStringFlag );
         break;
 
       case 'row0':
-        $wrapper = new MySqlRoutineWrapper\Row0($theLobAsStringFlag);
+        $wrapper = new MySqlRoutineWrapper\Row0( $theLobAsStringFlag );
         break;
 
       case 'row1':
-        $wrapper = new MySqlRoutineWrapper\Row1($theLobAsStringFlag);
+        $wrapper = new MySqlRoutineWrapper\Row1( $theLobAsStringFlag );
         break;
 
       case 'rows':
-        $wrapper = new MySqlRoutineWrapper\Rows($theLobAsStringFlag);
+        $wrapper = new MySqlRoutineWrapper\Rows( $theLobAsStringFlag );
         break;
 
       case 'rows_with_key':
-        $wrapper = new MySqlRoutineWrapper\RowsWithKey($theLobAsStringFlag);
+        $wrapper = new MySqlRoutineWrapper\RowsWithKey( $theLobAsStringFlag );
         break;
 
       case 'rows_with_index':
-        $wrapper = new MySqlRoutineWrapper\RowsWithIndex($theLobAsStringFlag);
+        $wrapper = new MySqlRoutineWrapper\RowsWithIndex( $theLobAsStringFlag );
         break;
 
       case 'singleton0':
-        $wrapper = new MySqlRoutineWrapper\Singleton0($theLobAsStringFlag);
+        $wrapper = new MySqlRoutineWrapper\Singleton0( $theLobAsStringFlag );
         break;
 
       case 'singleton1':
-        $wrapper = new MySqlRoutineWrapper\Singleton1($theLobAsStringFlag);
+        $wrapper = new MySqlRoutineWrapper\Singleton1( $theLobAsStringFlag );
         break;
 
       case 'function':
-        $wrapper = new MySqlRoutineWrapper\Functions($theLobAsStringFlag);
+        $wrapper = new MySqlRoutineWrapper\Functions( $theLobAsStringFlag );
         break;
 
       case 'table':
-        $wrapper = new MySqlRoutineWrapper\Table($theLobAsStringFlag);
+        $wrapper = new MySqlRoutineWrapper\Table( $theLobAsStringFlag );
         break;
 
       default:
         set_assert_failed( "Unknown routine type '%s'.", $theRoutine['type']."\n" );
-        // Prevent warnings from IDE.
-        $wrapper = null;
+        $wrapper = null; // Keep our IDE happy.
     }
 
     return $wrapper;
@@ -121,9 +126,9 @@ abstract class MySqlRoutineWrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns @c true if one of the arguments is a BLOB or CLOB.
+   * Returns true if one of the arguments is a BLOB or CLOB.
    *
-   * @param $theArgumentsType array|null The argument types.
+   * @param array|null $theArgumentsType The argument types.
    *
    * @return bool
    */
@@ -189,7 +194,7 @@ abstract class MySqlRoutineWrapper
    *
    * @param $theRoutine array Metadata of the stored routine.
    *
-   * @return string
+   * @return string PHP code with a routine wrapper.
    */
   public function writeRoutineFunction( $theRoutine )
   {
@@ -207,9 +212,9 @@ abstract class MySqlRoutineWrapper
   /**
    * Generates a complete wrapper method for a stored routine with a LOB parameter.
    *
-   * @param $theRoutine array The metadata of the stored routine.
+   * @param array $theRoutine The metadata of the stored routine.
    *
-   * @return string
+   * @return string PHP code with a routine wrapper.
    */
   public function writeRoutineFunctionWithLob( $theRoutine )
   {
@@ -288,7 +293,7 @@ abstract class MySqlRoutineWrapper
    *
    * @param $theRoutine array The metadata of the stored routine.
    *
-   * @return string
+   * @return string PHP code with a routine wrapper.
    */
   public function writeRoutineFunctionWithoutLob( $theRoutine )
   {
@@ -311,7 +316,9 @@ abstract class MySqlRoutineWrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns the type of the corresponding bind variable. @sa http://php.net/manual/en/mysqli-stmt.bind-param.php
+   * Returns the type of the corresponding bind variable.
+   *
+   * @see http://php.net/manual/en/mysqli-stmt.bind-param.php
    *
    * @param string $theType The argument type of on argument of a stored routine.
    *
