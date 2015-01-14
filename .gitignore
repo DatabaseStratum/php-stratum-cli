@@ -1,4 +1,8 @@
 bin/phpunit
+bin/phing
+bin/phpcbf
+bin/phpcs
+bin/yuicompressor.jar
 vendor/
 composer.lock
 etc/test_routines.csv

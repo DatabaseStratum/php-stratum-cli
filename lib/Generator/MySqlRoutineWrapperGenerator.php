@@ -2,7 +2,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\DataLayer\Generator;
 
-use SetBased\DataLayer\Generator\MySqlRoutineWrapper;
+use SetBased\DataLayer\Generator\Wrapper\Wrapper;
 use SetBased\DataLayer\StaticDataLayer as DataLayer;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -272,12 +272,12 @@ class MySqlRoutineWrapperGenerator
     }
 
     $this->myCode .= "<?php\n";
-    $this->myCode .= '//'.str_repeat( '-', MySqlRoutineWrapper::C_PAGE_WIDTH - 2 )."\n";
+    $this->myCode .= '//'.str_repeat( '-', Wrapper::C_PAGE_WIDTH - 2 )."\n";
     if ($namespace)
     {
       $this->myCode .= "namespace ${namespace};\n";
       $this->myCode .= "\n";
-      $this->myCode .= '//'.str_repeat( '-', MySqlRoutineWrapper::C_PAGE_WIDTH - 2 )."\n";
+      $this->myCode .= '//'.str_repeat( '-', Wrapper::C_PAGE_WIDTH - 2 )."\n";
     }
     $this->myCode .= 'class '.$class_name.' extends '.$this->myParentClassName."\n";
     $this->myCode .= "{\n";
@@ -289,10 +289,10 @@ class MySqlRoutineWrapperGenerator
    */
   private function writeClassTrailer()
   {
-    $this->myCode .= '  //'.str_repeat( '-', MySqlRoutineWrapper::C_PAGE_WIDTH - 4 )."\n";
+    $this->myCode .= '  //'.str_repeat( '-', Wrapper::C_PAGE_WIDTH - 4 )."\n";
     $this->myCode .= "}\n";
     $this->myCode .= "\n";
-    $this->myCode .= '//'.str_repeat( '-', MySqlRoutineWrapper::C_PAGE_WIDTH - 2 )."\n";
+    $this->myCode .= '//'.str_repeat( '-', Wrapper::C_PAGE_WIDTH - 2 )."\n";
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -303,7 +303,7 @@ class MySqlRoutineWrapperGenerator
    */
   private function writeRoutineFunction( $theRoutine )
   {
-    $wrapper = MySqlRoutineWrapper::createRoutineWrapper( $theRoutine, $this->myLobAsStringFlag );
+    $wrapper = Wrapper::createRoutineWrapper( $theRoutine, $this->myLobAsStringFlag );
     $this->myCode .= $wrapper->writeRoutineFunction( $theRoutine );
   }
 

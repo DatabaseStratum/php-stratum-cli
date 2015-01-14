@@ -1,37 +1,49 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\DataLayer\Generator\MySqlRoutineWrapper;
-
-use SetBased\DataLayer\Generator\MySqlRoutineWrapper;
+namespace SetBased\DataLayer\Generator\Wrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class Table
+ * Class RowsWrapper
  *
- * @package SetBased\DataLayer\Generator\MySqlRoutineWrapper
+ * @package SetBased\DataLayer\Generator\Wrapper
  *
- * Class for generating a wrapper function around a stored procedure that table the result sets of the wrapped
- * stored procedure.
+ * Class for generating a wrapper function around a stored procedure that selects 0 or more rows.
  */
-class Table extends MySqlRoutineWrapper
+class RowsWrapper extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   protected function writeResultHandler( $theRoutine )
   {
     $routine_args = $this->getRoutineArgs( $theRoutine );
-    $this->writeLine( 'return self::executeTable( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\' );' );
+    $this->writeLine( 'return self::executeRows( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\' );' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   protected function writeRoutineFunctionLobFetchData( $theRoutine )
   {
-    // Nothing to do.
+    $this->writeLine( '$row = array();' );
+    $this->writeLine( 'self::bindAssoc( $stmt, $row );' );
+    $this->writeLine();
+    $this->writeLine( '$tmp = array();' );
+    $this->writeLine( 'while (($b = $stmt->fetch()))' );
+    $this->writeLine( '{' );
+    $this->writeLine( '$new = array();' );
+    $this->writeLine( 'foreach( $row as $key => $value )' );
+    $this->writeLine( '{' );
+    $this->writeLine( '$new[$key] = $value;' );
+    $this->writeLine( '}' );
+    $this->writeLine( ' $tmp[] = $new;' );
+    $this->writeLine( '}' );
+    $this->writeLine();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   protected function writeRoutineFunctionLobReturnData()
   {
-    // Nothing to do.
+    $this->writeLine( 'if ($b===false) self::sqlError( \'mysqli_stmt::fetch\' );' );
+    $this->writeLine();
+    $this->writeLine( 'return $tmp;' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

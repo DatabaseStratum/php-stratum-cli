@@ -1,24 +1,23 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\DataLayer\Generator\MySqlRoutineWrapper;
-
-use SetBased\DataLayer\Generator\MySqlRoutineWrapper;
+namespace SetBased\DataLayer\Generator\Wrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class Rows
+ * Class Singleton0Wrapper
  *
- * @package SetBased\DataLayer\Generator\MySqlRoutineWrapper
+ * @package SetBased\DataLayer\Generator\Wrapper
  *
- * Class for generating a wrapper function around a stored procedure that selects 0 or more rows.
+ * Class for generating a wrapper function around a stored procedure that selects 0 or 1 row with only one
+ * column.
  */
-class Rows extends MySqlRoutineWrapper
+class Singleton0Wrapper extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   protected function writeResultHandler( $theRoutine )
   {
     $routine_args = $this->getRoutineArgs( $theRoutine );
-    $this->writeLine( 'return self::executeRows( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\' );' );
+    $this->writeLine( 'return self::executeSingleton0( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -31,11 +30,11 @@ class Rows extends MySqlRoutineWrapper
     $this->writeLine( 'while (($b = $stmt->fetch()))' );
     $this->writeLine( '{' );
     $this->writeLine( '$new = array();' );
-    $this->writeLine( 'foreach( $row as $key => $value )' );
+    $this->writeLine( 'foreach( $row as $value )' );
     $this->writeLine( '{' );
-    $this->writeLine( '$new[$key] = $value;' );
+    $this->writeLine( '$new[] = $value;' );
     $this->writeLine( '}' );
-    $this->writeLine( ' $tmp[] = $new;' );
+    $this->writeLine( '$tmp[] = $new;' );
     $this->writeLine( '}' );
     $this->writeLine();
   }
@@ -44,8 +43,9 @@ class Rows extends MySqlRoutineWrapper
   protected function writeRoutineFunctionLobReturnData()
   {
     $this->writeLine( 'if ($b===false) self::sqlError( \'mysqli_stmt::fetch\' );' );
+    $this->writeLine( 'if (sizeof($tmp)>1) self::assertFailed( \'Expected 0 or 1 row found %d rows.\', sizeof($tmp) );' );
     $this->writeLine();
-    $this->writeLine( 'return $tmp;' );
+    $this->writeLine( 'return ($tmp) ? $tmp[0][0] : null;' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

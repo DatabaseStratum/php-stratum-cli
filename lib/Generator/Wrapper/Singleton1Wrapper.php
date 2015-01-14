@@ -1,60 +1,40 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\DataLayer\Generator\MySqlRoutineWrapper;
-
-use SetBased\DataLayer\Generator\MySqlRoutineWrapper;
+namespace SetBased\DataLayer\Generator\Wrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class RowsWithKey
+ * Class Singleton1Wrapper
  *
- * @package SetBased\DataLayer\Generator\MySqlRoutineWrapper
+ * @package SetBased\DataLayer\Generator\Wrapper
  *
- * Class for generating a wrapper function around a stored procedure that selects 0 or more rows. The rows are
- * returned as nested arrays.
+ * Class for generating a wrapper function around a stored procedure selects 1 and only 1 row with only one
+ * column.
  */
-class RowsWithKey extends MySqlRoutineWrapper
+class Singleton1Wrapper extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   protected function writeResultHandler( $theRoutine )
   {
     $routine_args = $this->getRoutineArgs( $theRoutine );
-
-    $key = '';
-    foreach ($theRoutine['columns'] as $column)
-    {
-      $key .= '[$row[\''.$column.'\']]';
-    }
-
-    $this->writeLine( '$result = self::query( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
-    $this->writeLine( '$ret = array();' );
-    $this->writeLine( 'while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret'.$key.' = $row;' );
-    $this->writeLine( '$result->free();' );
-    $this->writeLine( 'if(self::$ourMySql->more_results()) self::$ourMySql->next_result();' );
-    $this->writeLine( 'return  $ret;' );
+    $this->writeLine( 'return self::executeSingleton1( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   protected function writeRoutineFunctionLobFetchData( $theRoutine )
   {
-    $key = '';
-    foreach ($theRoutine['columns'] as $column)
-    {
-      $key .= '[$new[\''.$column.'\']]';
-    }
-
     $this->writeLine( '$row = array();' );
     $this->writeLine( 'self::bindAssoc( $stmt, $row );' );
     $this->writeLine();
-    $this->writeLine( '$ret = array();' );
+    $this->writeLine( '$tmp = array();' );
     $this->writeLine( 'while (($b = $stmt->fetch()))' );
     $this->writeLine( '{' );
     $this->writeLine( '$new = array();' );
-    $this->writeLine( 'foreach( $row as $key => $value )' );
+    $this->writeLine( 'foreach( $row as $value )' );
     $this->writeLine( '{' );
-    $this->writeLine( '$new[$key] = $value;' );
+    $this->writeLine( '$new[] = $value;' );
     $this->writeLine( '}' );
-    $this->writeLine( '$ret'.$key.' = $new;' );
+    $this->writeLine( '$tmp[] = $new;' );
     $this->writeLine( '}' );
     $this->writeLine();
   }
@@ -63,8 +43,9 @@ class RowsWithKey extends MySqlRoutineWrapper
   protected function writeRoutineFunctionLobReturnData()
   {
     $this->writeLine( 'if ($b===false) self::sqlError( \'mysqli_stmt::fetch\' );' );
+    $this->writeLine( 'if (sizeof($tmp)!=1) self::assertFailed( \'Expected 1 row found %d rows.\', sizeof($tmp) );' );
     $this->writeLine();
-    $this->writeLine( 'return $ret;' );
+    $this->writeLine( 'return $tmp[0][0];' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

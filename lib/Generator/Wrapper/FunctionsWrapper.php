@@ -1,37 +1,35 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\DataLayer\Generator\MySqlRoutineWrapper;
-
-use SetBased\DataLayer\Generator\MySqlRoutineWrapper;
+namespace SetBased\DataLayer\Generator\Wrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class Log
+ * Class FunctionsWrapper
  *
- * @package SetBased\DataLayer\Generator\MySqlRoutineWrapper
+ * @package SetBased\DataLayer\Generator\Wrapper
  *
- * Class for generating a wrapper function around a stored procedure that logs the result sets of the wrapped
- * stored procedure.
+ * Class for generating a wrapper function around a stored procedure that does't return anything.
  */
-class Log extends MySqlRoutineWrapper
+class FunctionsWrapper extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   protected function writeResultHandler( $theRoutine )
   {
     $routine_args = $this->getRoutineArgs( $theRoutine );
-    $this->writeLine( 'return self::executeLog( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\' );' );
+    $this->writeLine( 'return self::executeSingleton0( \'SELECT '.$theRoutine['routine_name'].'('.$routine_args.') \' );' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   protected function writeRoutineFunctionLobFetchData( $theRoutine )
   {
-    // Nothing to do.
+    $this->writeLine( '$ret = self::$ourMySql->affected_rows;' );
+    $this->writeLine();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   protected function writeRoutineFunctionLobReturnData()
   {
-    // Nothing to do.
+    $this->writeLine( 'return $ret;' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

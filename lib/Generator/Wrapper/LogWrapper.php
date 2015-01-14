@@ -1,24 +1,23 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\DataLayer\Generator\MySqlRoutineWrapper;
-
-use SetBased\DataLayer\Generator\MySqlRoutineWrapper;
+namespace SetBased\DataLayer\Generator\Wrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class Bulk
+ * Class LogWrapper
  *
- * @package SetBased\DataLayer\Generator\MySqlRoutineWrapper
+ * @package SetBased\DataLayer\Generator\Wrapper
  *
- * Class for generating a wrapper function around a stored procedure with a large result set.
+ * Class for generating a wrapper function around a stored procedure that logs the result sets of the wrapped
+ * stored procedure.
  */
-class Bulk extends MySqlRoutineWrapper
+class LogWrapper extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   protected function writeResultHandler( $theRoutine )
   {
     $routine_args = $this->getRoutineArgs( $theRoutine );
-    $this->writeLine( 'self::executeBulk( $theBulkHandler, \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
+    $this->writeLine( 'return self::executeLog( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\' );' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

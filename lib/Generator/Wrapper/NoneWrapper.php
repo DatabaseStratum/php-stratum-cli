@@ -1,24 +1,22 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\DataLayer\Generator\MySqlRoutineWrapper;
-
-use SetBased\DataLayer\Generator\MySqlRoutineWrapper;
+namespace SetBased\DataLayer\Generator\Wrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class Functions
+ * Class NoneWrapper
  *
- * @package SetBased\DataLayer\Generator\MySqlRoutineWrapper
+ * @package SetBased\DataLayer\Generator\Wrapper
  *
- * Class for generating a wrapper function around a stored procedure that does't return anything.
+ * Class for generating a wrapper function around a stored procedure without result set.
  */
-class Functions extends MySqlRoutineWrapper
+class NoneWrapper extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   protected function writeResultHandler( $theRoutine )
   {
     $routine_args = $this->getRoutineArgs( $theRoutine );
-    $this->writeLine( 'return self::executeSingleton0( \'SELECT '.$theRoutine['routine_name'].'('.$routine_args.') \' );' );
+    $this->writeLine( 'return self::executeNone( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\' );' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

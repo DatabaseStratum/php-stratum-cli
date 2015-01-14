@@ -1,17 +1,16 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\DataLayer\Generator\MySqlRoutineWrapper;
+namespace SetBased\DataLayer\Generator\Wrapper;
 
-use SetBased\DataLayer\Generator\MySqlRoutineWrapper;
-
+//----------------------------------------------------------------------------------------------------------------------
 /**
- * Class BulkInsert
+ * Class BulkInsertWrapper
  *
- * @package SetBased\DataLayer\Generator\MySqlRoutineWrapper
+ * @package SetBased\DataLayer\Generator\Wrapper
  *
  * Class for generating a wrapper function around a stored procedure that ...
  */
-class BulkInsert extends MySqlRoutineWrapper
+class BulkInsertWrapper extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
