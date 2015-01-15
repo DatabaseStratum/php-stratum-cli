@@ -12,6 +12,7 @@ namespace SetBased\DataLayer\Generator;
 
 use SetBased\DataLayer\StaticDataLayer as DataLayer;
 
+//----------------------------------------------------------------------------------------------------------------------
 /**
  * Class for loading stored routines into a MySQL instance from pseudo SQL files (.psql).
  */
@@ -164,7 +165,7 @@ class MySqlRoutineLoader
    *
    * @var array
    */
-  private $myMetadata = array();
+  private $myMetadata;
 
   /**
    * The filename of the file with the metadata of all stored routines.
@@ -519,7 +520,6 @@ order by table_schema
    * Returns true if the current .psql file must be load or reloaded. Otherwise returns false.
    *
    * @see $myCurrentRoutineName The name of the current stored routine name.
-   *
    * @return bool
    */
   private function getCurrentMustReload()
@@ -531,7 +531,7 @@ order by table_schema
     if ($this->myCurrentOldMetadata['timestamp']!=$this->myCurrentMTime) return true;
 
     // Get the old replace pairs
-    $old_replace_pairs = unserialize( $this->myCurrentOldMetadata['replace'] );
+    $old_replace_pairs = $this->myCurrentOldMetadata['replace'];
     if ($old_replace_pairs===false)
     {
       set_assert_failed( "Unable to unserialize replace pairs for stored routine '%s'.\n", $this->myCurrentRoutineName );
@@ -570,9 +570,7 @@ order by table_schema
    * @see  $myCurrentPsqlSourceCode The source of the current stored routine.
    * @see  $myCurrentRoutineType The property where the type of the routine is stored.
    * @see  $myCurrentRoutineName. The property where the name of the routine is stored.
-   *
    * @todo Skip comments and string literals.
-   *
    * @return bool Returns true on success, false otherwise.
    */
   private function getCurrentName()
@@ -614,7 +612,6 @@ order by table_schema
    *
    * @see $myCurrentPsqlSourceCode The source of the current stored routine.
    * @see $myCurrentReplace The property where the place holders are stored.
-   *
    * @return bool Returns true if all placeholders are defined, false otherwise.
    */
   private function getCurrentPlaceholders()
@@ -661,7 +658,6 @@ order by table_schema
    *
    * @see myCurrentType    The property were the designation type is stored.
    * @see myCurrentColumns The property were the columns (to be used by the wrapper) is stored.
-   *
    * @return bool Returns true on success. Otherwise returns false.
    */
   private function getCurrentType()
@@ -912,7 +908,6 @@ order by routine_name";
    * Loads a single stored routine into MySQL.
    *
    * @see $myCurrentPsqlFilename The filename with the stored routine to be loaded.
-   *
    * @return bool Returns true on success, false otherwise.
    */
   private function loadPsqlFile()
@@ -1031,33 +1026,13 @@ order by routine_name";
    */
   private function readRoutineMetaData()
   {
-    $this->myMetadata = array();
-
     if (file_exists( $this->myMetadataFilename ))
     {
-      $handle = fopen( $this->myMetadataFilename, 'r' );
-      if ($handle===null) set_assert_failed( "Unable to open file '%s'.", $this->myMetadataFilename );
+      $data = file_get_contents( $this->myMetadataFilename );
+      if ($data===false) set_assert_failed( "Error read of file '%s'.", $this->myMetadataFilename );
 
-      // Skip header row.
-      fgetcsv( $handle, 0, ',' );
-
-      while (($row = fgetcsv( $handle, 0, ',' ))!==false)
-      {
-        $this->myMetadata[$row[0]] = array('routine_name'   => $row[0],
-                                           'type'           => $row[1],
-                                           'table_name'     => $row[2],
-                                           'argument_names' => $row[3],
-                                           'argument_types' => $row[4],
-                                           'columns'        => $row[5],
-                                           'fields'         => $row[6],
-                                           'column_types'   => $row[7],
-                                           'timestamp'      => $row[8],
-                                           'replace'        => $row[9]);
-      }
-      if (!feof( $handle )) set_assert_failed( "Did not reach eof of '%s'", $this->myMetadataFilename );
-
-      $err = fclose( $handle );
-      if ($err===false) set_assert_failed( "Error closing file '%s'.", $this->myMetadataFilename );
+      $this->myMetadata = json_decode( $data, true );
+      if (json_last_error()!=JSON_ERROR_NONE) set_assert_failed( 'Error of decode data from JSON format with code "'.json_last_error().'".' );
     }
   }
 
@@ -1128,13 +1103,13 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
     $this->myMetadata[$this->myCurrentRoutineName]['routine_name']   = $this->myCurrentRoutineName;
     $this->myMetadata[$this->myCurrentRoutineName]['type']           = $this->myCurrentType;
     $this->myMetadata[$this->myCurrentRoutineName]['table_name']     = $this->myCurrentTableName;
-    $this->myMetadata[$this->myCurrentRoutineName]['argument_names'] = $argument_names;
-    $this->myMetadata[$this->myCurrentRoutineName]['argument_types'] = $argument_types;
-    $this->myMetadata[$this->myCurrentRoutineName]['columns']        = $this->myCurrentColumns;
-    $this->myMetadata[$this->myCurrentRoutineName]['fields']         = $this->myCurrentFields;
-    $this->myMetadata[$this->myCurrentRoutineName]['column_types']   = $this->myCurrentColumnsTypes;
+    $this->myMetadata[$this->myCurrentRoutineName]['argument_names'] = ($argument_names) ? explode( ',', $argument_names ) : array();
+    $this->myMetadata[$this->myCurrentRoutineName]['argument_types'] = ($argument_types) ? explode( ',', $argument_types ) : array();
+    $this->myMetadata[$this->myCurrentRoutineName]['columns']        = ($this->myCurrentColumns) ? explode( ',', $this->myCurrentColumns ) : array();
+    $this->myMetadata[$this->myCurrentRoutineName]['fields']         = ($this->myCurrentFields) ? explode( ',', $this->myCurrentFields ) : array();
+    $this->myMetadata[$this->myCurrentRoutineName]['column_types']   = ($this->myCurrentColumnsTypes) ? explode( ',', $this->myCurrentColumnsTypes ) : array();
     $this->myMetadata[$this->myCurrentRoutineName]['timestamp']      = $this->myCurrentMTime;
-    $this->myMetadata[$this->myCurrentRoutineName]['replace']        = serialize( $this->myCurrentReplace );
+    $this->myMetadata[$this->myCurrentRoutineName]['replace']        = $this->myCurrentReplace;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -1143,35 +1118,11 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
    */
   private function writeRoutineMetadata()
   {
-    $handle = fopen( $this->myMetadataFilename, 'w' );
-    if ($handle===false) set_assert_failed( "Unable to open file '%s'.", $this->myMetadataFilename );
+    $json_data = json_encode( $this->myMetadata, JSON_PRETTY_PRINT );
+    if (json_last_error()!=JSON_ERROR_NONE) set_assert_failed( 'Error of encode data to JSON format with code "'.json_last_error().'".' );
 
-
-    $header = array('routine_name',
-                    'type',
-                    'table_name',
-                    'argument_names',
-                    'argument_types',
-                    'columns',
-                    'fields',
-                    'column_types',
-                    'timestamp',
-                    'replace');
-
-    $n = fputcsv( $handle, $header );
-    if ($n===false) set_assert_failed( "Error writing file '%s'.", $this->myMetadataFilename );
-
-    $ok = ksort( $this->myMetadata );
-    if ($ok===false) set_assert_failed( 'Internal error.' );
-
-    foreach ($this->myMetadata as $routine_properties)
-    {
-      $n = fputcsv( $handle, $routine_properties );
-      if ($n===false) set_assert_failed( "Error writing file '%s'.", $this->myMetadataFilename );
-    }
-
-    $err = fclose( $handle );
-    if ($err===false) set_assert_failed( "Error closing file '%s'.", $this->myMetadataFilename );
+    $bytes = file_put_contents( $this->myMetadataFilename, $json_data );
+    if ($bytes===false) set_assert_failed( "Error writing file '%s'.", $this->myMetadataFilename );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

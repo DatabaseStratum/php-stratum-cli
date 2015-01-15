@@ -35,14 +35,6 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   }
 
   //-------------------------------------------------------------------------------------------------------------------
-  /** @sa Stored Routine tst_magic_constant05.
-   */
-  public static function magicConstant05(  )
-  {
-    return self::executeSingleton1( 'CALL tst_magic_constant05()');
-  }
-
-  //-------------------------------------------------------------------------------------------------------------------
   /** @sa Stored Routine tst_test01.
    */
   public static function test01( $p_param00, $p_param01, $p_param02, $p_param03, $p_param04, $p_param05, $p_param06, $p_param07, $p_param08, $p_param09, $p_param10, $p_param11, $p_param12, $p_param13, $p_param14, $p_param15, $p_param16, $p_param17, $p_param26, $p_param27 )
@@ -716,6 +708,14 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   public static function testTable(  )
   {
     return self::executeTable( 'CALL tst_test_table()' );
+  }
+
+  //-------------------------------------------------------------------------------------------------------------------
+  /** @sa Stored Routine tst_magic_constant05.
+   */
+  public static function magicConstant05(  )
+  {
+    return self::executeSingleton1( 'CALL tst_magic_constant05()');
   }
 
   //--------------------------------------------------------------------------------------------------------------------

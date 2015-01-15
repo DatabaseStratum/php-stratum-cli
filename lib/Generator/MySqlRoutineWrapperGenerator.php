@@ -232,46 +232,11 @@ class MySqlRoutineWrapperGenerator
    */
   private function readRoutineMetaData()
   {
-    $theFilename = $this->myMetadataFilename;
+    $data = file_get_contents( $this->myMetadataFilename );
+    if ($data===false) set_assert_failed( "Error read of file '%s'.", $this->myMetadataFilename );
 
-    $handle = fopen( $theFilename, 'r' );
-    if ($handle===null) set_assert_failed( "Unable to open file '%s'.", $theFilename );
-
-    $routines = '';
-
-    // Skip header row.
-    fgetcsv( $handle, 0, ',' );
-    $line_number = 1;
-
-    while (($row = fgetcsv( $handle, 0, ',' ))!==false)
-    {
-      $line_number++;
-
-      // Test the number of fields in the row.
-      $n = count( $row );
-      if ($n!=10)
-      {
-        set_assert_failed( "Error at line %d in file '%s'. Expecting %d fields but found %d fields.",
-                           $line_number,
-                           $theFilename,
-                           10,
-                           $n );
-      }
-
-      $routines[$line_number]['routine_name'] = $row[0];
-      $routines[$line_number]['type']         = $row[1];
-      $routines[$line_number]['table_name']   = $row[2];
-
-      $routines[$line_number]['argument_names'] = ($row[3]) ? explode( ',', $row[3] ) : array();
-      $routines[$line_number]['argument_types'] = ($row[4]) ? explode( ',', $row[4] ) : array();
-      $routines[$line_number]['columns']        = ($row[5]) ? explode( ',', $row[5] ) : array();
-      $routines[$line_number]['fields']         = ($row[6]) ? explode( ',', $row[6] ) : array();
-      $routines[$line_number]['column_types']   = ($row[7]) ? explode( ',', $row[7] ) : array();
-    }
-    if (!feof( $handle )) set_assert_failed( "Did not reach eof of '%s'.", $theFilename );
-
-    $err = fclose( $handle );
-    if ($err===false) set_assert_failed( "Error closing file '%s'.", $theFilename );
+    $routines = json_decode($data, true);
+    if(json_last_error() != JSON_ERROR_NONE) set_assert_failed('Error of decode data from JSON format with code "'.json_last_error().'".');
 
     return $routines;
   }
