@@ -1,14 +1,18 @@
 <?php
+//----------------------------------------------------------------------------------------------------------------------
+/**
+ * myStratumPhp
+ *
+ * @copyright 2003-2014 Paul Water / Set Based IT Consultancy (https://www.setbased.nl)
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
+ * @link
+ */
 // ---------------------------------------------------------------------------------------------------------------------
 namespace SetBased\DataLayer;
 
 // ---------------------------------------------------------------------------------------------------------------------
 /**
- * Interface BulkHandler
- *
  * Interface for defining classes for handling large result sets.
- *
- * @package SetBased\DataLayer
  */
 interface BulkHandler
 {

@@ -1,5 +1,13 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
+/**
+ * myStratumPhp
+ *
+ * @copyright 2003-2014 Paul Water / Set Based IT Consultancy (https://www.setbased.nl)
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
+ * @link
+ */
+//----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\DataLayer\Generator;
 
 use SetBased\DataLayer\Generator\MySqlRoutineWrapper;
@@ -7,39 +15,50 @@ use SetBased\DataLayer\StaticDataLayer as DataLayer;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class for generating a  class with wrappers for stored routines.
- *
- * @package SetBased\DataLayer
+ * Class for generating a class with wrapper methods for calling stored routines in a MySQL database.
  */
 class MySqlRoutineWrapperGenerator
 {
+  //--------------------------------------------------------------------------------------------------------------------
   /**
-   * @var string The generated PHP code.
+   * The generated PHP code.
+   *
+   * @var string
    */
   private $myCode = '';
 
   /**
-   * @var string The filename of the configuration file.
+   * The filename of the configuration file.
+   *
+   * @var string
    */
   private $myConfigurationFilename;
 
   /**
-   * @var string The schema name.
+   * The schema name.
+   *
+   * @var string
    */
   private $myDatabase;
 
   /**
-   * @var string Host name or address.
+   * Host name or address.
+   *
+   * @var string
    */
   private $myHostName;
 
   /**
-   * @var bool If true BLOBs and CLOBs must be treated as strings.
+   * If true BLOBs and CLOBs must be treated as strings.
+   *
+   * @var bool
    */
   private $myLobAsStringFlag;
 
   /**
-   * @var string The filename of the file with the metadata of all stored procedures.
+   * The filename of the file with the metadata of all stored procedures.
+   *
+   * @var string
    */
   private $myMetadataFilename;
 
@@ -84,7 +103,7 @@ class MySqlRoutineWrapperGenerator
    *
    * @param $theConfigurationFilename string The name of the configuration file.
    *
-   * @return int
+   * @return int Returns 0 on success, 1 if one or more errors occured.
    */
   public function run( $theConfigurationFilename )
   {
@@ -125,7 +144,7 @@ class MySqlRoutineWrapperGenerator
     if (file_exists( $this->myWrapperFilename ))
     {
       $old_code = file_get_contents( $this->myWrapperFilename );
-      if ($old_code===false) set_assert_failed( "Unable to read file '%s'.", $this->myWrapperFilename );
+      if ($old_code===false) set_assert_failed( "Error reading file '%s'.", $this->myWrapperFilename );
       if ($this->myCode==$old_code) $write_wrapper_file_flag = false;
     }
 
@@ -145,11 +164,11 @@ class MySqlRoutineWrapperGenerator
   /**
    * Returns the value of a setting.
    *
-   * @param $theSettings    array  The settings
-   * @param $theSectionName string The section name of the requested setting.
-   * @param $theSettingName string The name of the requested setting.
+   * @param array  $theSettings    The settings.
+   * @param string $theSectionName The section name of the requested setting.
+   * @param string $theSettingName The name of the requested setting.
    *
-   * @return string
+   * @return string The value of a setting.
    */
   private function getSetting( $theSettings, $theSectionName, $theSettingName )
   {
@@ -175,7 +194,9 @@ class MySqlRoutineWrapperGenerator
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Reads parameters from the configuration file @c $myConfigurationFilename.
+   * Reads parameters from the configuration file.
+   *
+   * @see $myConfigurationFilename The property with the filename of the configuration file.
    */
   private function readConfigurationFile()
   {
@@ -203,7 +224,9 @@ class MySqlRoutineWrapperGenerator
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns the metadata of stored routines stored in the metadata file $myMetadataFilename.
+   * Returns the metadata of stored routines.
+   *
+   * @see $myMetadataFilename The property with filename of the file with the metadata.
    *
    * @return array
    */
@@ -255,7 +278,7 @@ class MySqlRoutineWrapperGenerator
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Generate a class header for stored routines.
+   * Generate a class header for stored routine wrapper.
    */
   private function writeClassHeader()
   {
@@ -285,7 +308,7 @@ class MySqlRoutineWrapperGenerator
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   *
+   * Generate a class trailer for stored routine wrapper.
    */
   private function writeClassTrailer()
   {
@@ -299,7 +322,7 @@ class MySqlRoutineWrapperGenerator
   /**
    * Generates a complete wrapper method for a stored routine.
    *
-   * @param $theRoutine array The metadata of the stored routine.
+   * @param array $theRoutine The metadata of the stored routine.
    */
   private function writeRoutineFunction( $theRoutine )
   {

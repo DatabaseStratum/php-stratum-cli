@@ -1,6 +1,7 @@
 {
-  "name": "setbased/dlgen",
-  "description": "todo",
+  "name": "setbased/my-stratum-php",
+  "description": "A stored routine loader, wrapper generator and more for MySQL in PHP.",
+  "keywords": ["MySQL","Stored Routines","Stored Procedures","Stored Functions","Wrapper","Loader","PHP"],
   "repositories": [
     {
       "type": "composer",

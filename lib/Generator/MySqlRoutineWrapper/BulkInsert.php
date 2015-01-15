@@ -1,25 +1,26 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
+/**
+ * myStratumPhp
+ *
+ * @copyright 2003-2014 Paul Water / Set Based IT Consultancy (https://www.setbased.nl)
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
+ * @link
+ */
+//----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\DataLayer\Generator\MySqlRoutineWrapper;
 
 use SetBased\DataLayer\Generator\MySqlRoutineWrapper;
 
 /**
- * Class BulkInsert
- *
- * @package SetBased\DataLayer\Generator\MySqlRoutineWrapper
- *
- * Class for generating a wrapper function around a stored procedure that ...
+ * Class for generating a wrapper method for a stored procedure that prepares a table to be used with a bulk SQL
+ * statement.
  */
 class BulkInsert extends MySqlRoutineWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Generates code for the arguments of the wrapper method for a stored routine.
-   *
-   * @param $theRoutine array The metadata of the stored routine.
-   *
-   * @return string
+   * {@inheritdoc}
    */
   protected function getWrapperArgs( $theRoutine )
   {
@@ -28,9 +29,7 @@ class BulkInsert extends MySqlRoutineWrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Generates code for calling the stored routine in the wrapper method.
-   *
-   * @param $theRoutine array The metadata of the stored routine.
+   * {@inheritdoc}
    */
   protected function writeResultHandler( $theRoutine )
   {
@@ -73,6 +72,9 @@ class BulkInsert extends MySqlRoutineWrapper
   }
 
   //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * {@inheritdoc}
+   */
   protected function writeRoutineFunctionLobFetchData( $theRoutine )
   {
     // Nothing to do.
@@ -80,6 +82,9 @@ class BulkInsert extends MySqlRoutineWrapper
 
 
   //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * {@inheritdoc}
+   */
   protected function writeRoutineFunctionLobReturnData()
   {
     // Nothing to do.
@@ -87,15 +92,14 @@ class BulkInsert extends MySqlRoutineWrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Sets shielding special characters for the field @a $fieldName, depends on the type value @a $theValueType
-   * in this field.
+   * Generates code for escaping data.
    *
-   * @param string $theValueType
-   * @param string $fieldName
+   * @param string $theValueType       The column type.
+   * @param string $theFieldExpression The expression of the field in the PHP array, e.g. $row['first_name'].
    *
-   * @return string
+   * @return string The generated PHP code.
    */
-  private function writeEscapesValue( $theValueType, $fieldName )
+  private function writeEscapesValue( $theValueType, $theFieldExpression )
   {
     $ret = '';
     switch ($theValueType)
@@ -111,7 +115,7 @@ class BulkInsert extends MySqlRoutineWrapper
       case 'decimal':
       case 'float':
       case 'double':
-        $ret = '\'.self::quoteNum('.$fieldName.').\'';
+        $ret = '\'.self::quoteNum('.$theFieldExpression.').\'';
         break;
 
       case 'varbinary':
@@ -119,7 +123,7 @@ class BulkInsert extends MySqlRoutineWrapper
 
       case 'char':
       case 'varchar':
-        $ret = '\'.self::quoteString('.$fieldName.').\'';
+        $ret = '\'.self::quoteString('.$theFieldExpression.').\'';
         break;
 
       case 'time':
@@ -127,16 +131,16 @@ class BulkInsert extends MySqlRoutineWrapper
 
       case 'date':
       case 'datetime':
-        $ret = '\'.self::quoteString('.$fieldName.').\'';
+        $ret = '\'.self::quoteString('.$theFieldExpression.').\'';
         break;
 
       case 'enum':
       case 'set':
-        $ret = '\'.self::quoteString('.$fieldName.').\'';
+        $ret = '\'.self::quoteString('.$theFieldExpression.').\'';
         break;
 
       case 'bit':
-        $ret = '\'.self::quoteBit('.$fieldName.').\'';
+        $ret = '\'.self::quoteBit('.$theFieldExpression.').\'';
         break;
 
       case 'tinytext':

@@ -1,16 +1,22 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
+/**
+ * myStratumPhp
+ *
+ * @copyright 2003-2014 Paul Water / Set Based IT Consultancy (https://www.setbased.nl)
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
+ * @link
+ */
+//----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\DataLayer;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class StaticDataLayer
- *
- * @package SetBased\DataLayer
+ * Supper class for a static stored routine wrapper class.
  */
 class StaticDataLayer
 {
-
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * The default character set et to be used when sending data from and to the MySQL instance.
    *
@@ -170,7 +176,7 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Runs a query using a bulk handler.
+   * Executes a query using a bulk handler.
    *
    * @param BulkHandler $theBulkHandler The bulk handler.
    * @param string      $theQuery       The SQL statement.
@@ -195,11 +201,11 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Executes a query and logs the result set and returns the total number of rows selected.
+   * Executes a query and logs the result set.
    *
    * @param string $theQuery The query or multi query.
    *
-   * @return int
+   * @return int The total number of rows selected/logged.
    */
   public static function executeLog( $theQuery )
   {
@@ -242,11 +248,11 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Runs a query that does not select any rows and returns the number of affected rows (if any).
+   * Executes a query that does not select any rows.
    *
    * @param string $theQuery The SQL statement.
    *
-   * @return int
+   * @return int The number of affected rows (if any).
    */
   public static function executeNone( $theQuery )
   {
@@ -261,12 +267,12 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Runs a query that returns 0 or 1 row and returns that row.
+   * Executes a query that returns 0 or 1 row.
    * Throws an exception if the query selects 2 or more rows.
    *
    * @param string $theQuery The SQL statement.
    *
-   * @return array|null
+   * @return array|null The selected row.
    */
   public static function executeRow0( $theQuery )
   {
@@ -289,12 +295,12 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Runs a query that returns 1 and only 1 row and returns that row.
+   * Executes a query that returns 1 and only 1 row.
    * Throws an exception if the query selects none, 2 or more rows.
    *
    * @param string $theQuery The SQL statement.
    *
-   * @return array
+   * @return array The selected row.
    */
   public static function executeRow1( $theQuery )
   {
@@ -317,11 +323,11 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Runs a query that returns 0 or more rows and returns those rows.
+   * Executes a query that returns 0 or more rows.
    *
    * @param string $theQuery The SQL statement.
    *
-   * @return array
+   * @return array[] The selected rows.
    */
   public static function executeRows( $theQuery )
   {
@@ -347,12 +353,12 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Runs a query that returns 0 or 1 row with one column and returns the value of that column.
+   * Executes a query that returns 0 or 1 row with one column.
    * Throws an exception if the query selects 2 or more rows.
    *
    * @param string $theQuery The SQL statement.
    *
-   * @return string|int
+   * @return string|int The selected value.
    */
   public static function executeSingleton0( $theQuery )
   {
@@ -375,12 +381,12 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Runs a query that returns 1 and only 1 row with 1 column and returns the value of that column.
+   * Executes a query that returns 1 and only 1 row with 1 column.
    * Throws an exception if the query selects none, 2 or more rows.
    *
    * @param string $theQuery The SQL statement.
    *
-   * @return string|int
+   * @return string|int The selected value.
    */
   public static function executeSingleton1( $theQuery )
   {
@@ -650,7 +656,11 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * Throws an exception with error information provided by MySQL.
    *
+   * @param string $theText Additional text for the exception message.
+   *
+   * @throws \Exception
    */
   protected static function sqlError( $theText )
   {
@@ -664,7 +674,8 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Show table footer.
+   * Helper method for method executeTable.
+   * Shows table footer.
    *
    * @param array $theColumns
    */
@@ -681,7 +692,8 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Show table header.
+   * Helper method for method executeTable.
+   * Shows table header.
    *
    * @param array $theColumns
    */
@@ -711,7 +723,8 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Show table cell with data.
+   * Helper method for method executeTable.
+   * Shows table cell with data.
    *
    * @param array  $theColumn
    * @param string $theValue
