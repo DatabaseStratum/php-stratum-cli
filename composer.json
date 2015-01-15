@@ -1,5 +1,5 @@
 {
-  "name": "setbased/my-stratum-php",
+  "name": "setbased/php-stratum",
   "description": "A stored routine loader, wrapper generator and more for MySQL in PHP.",
   "keywords": ["MySQL","Stored Routines","Stored Procedures","Stored Functions","Wrapper","Loader","PHP"],
   "type": "tool",
@@ -9,15 +9,14 @@
   },
   "require-dev": {
     "phpunit/phpunit": "3.*",
-    "setbased/phing": "0.9.*",
-    "setbased/php-coding-standards": "0.*"
+    "setbased/phing": "0.9.*"
   },
   "bin": [
     "bin/stratum"
   ],
   "autoload": {
     "psr-4": {
-      "SetBased\\DataLayer\\": "lib/"
+      "SetBased\\Stratum\\": "lib/"
     }
   },
   "config": {
