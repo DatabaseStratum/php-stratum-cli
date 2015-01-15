@@ -1,21 +1,21 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * myStratumPhp
+ * phpStratum
  *
- * @copyright 2003-2014 Paul Water / Set Based IT Consultancy (https://www.setbased.nl)
+ * @copyright 2005-2015 Paul Water / Set Based IT Consultancy (https://www.setbased.nl)
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @link
  */
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\DataLayer\Generator;
+namespace SetBased\DataLayer\Generator\Wrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Abstract supper class for generating stored routine wrapper methods based on the designation type of the stored
+ * Class Wrapper
  * routine.
  */
-abstract class MySqlRoutineWrapper
+abstract class Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -58,62 +58,62 @@ abstract class MySqlRoutineWrapper
    * @param bool  $theLobAsStringFlag  If set BLOBs and CLOBs are treated as string. Otherwise, BLOBs and CLOBs will be
    *                                   send as long data.
    *
-   * @return MySqlRoutineWrapper The routine wrapper object.
+   * @return Wrapper
    */
   public static function createRoutineWrapper( $theRoutine, $theLobAsStringFlag )
   {
     switch ($theRoutine['type'])
     {
       case 'bulk':
-        $wrapper = new MySqlRoutineWrapper\Bulk( $theLobAsStringFlag );
+        $wrapper = new BulkWrapper( $theLobAsStringFlag );
         break;
 
       case 'bulk_insert':
-        $wrapper = new MySqlRoutineWrapper\BulkInsert( $theLobAsStringFlag );
+        $wrapper = new BulkInsertWrapper( $theLobAsStringFlag );
         break;
 
       case 'log':
-        $wrapper = new MySqlRoutineWrapper\Log( $theLobAsStringFlag );
+        $wrapper = new LogWrapper( $theLobAsStringFlag );
         break;
 
       case 'none':
-        $wrapper = new MySqlRoutineWrapper\None( $theLobAsStringFlag );
+        $wrapper = new NoneWrapper( $theLobAsStringFlag );
         break;
 
       case 'row0':
-        $wrapper = new MySqlRoutineWrapper\Row0( $theLobAsStringFlag );
+        $wrapper = new Row0Wrapper( $theLobAsStringFlag );
         break;
 
       case 'row1':
-        $wrapper = new MySqlRoutineWrapper\Row1( $theLobAsStringFlag );
+        $wrapper = new Row1Wrapper( $theLobAsStringFlag );
         break;
 
       case 'rows':
-        $wrapper = new MySqlRoutineWrapper\Rows( $theLobAsStringFlag );
+        $wrapper = new RowsWrapper( $theLobAsStringFlag );
         break;
 
       case 'rows_with_key':
-        $wrapper = new MySqlRoutineWrapper\RowsWithKey( $theLobAsStringFlag );
+        $wrapper = new RowsWithKey( $theLobAsStringFlag );
         break;
 
       case 'rows_with_index':
-        $wrapper = new MySqlRoutineWrapper\RowsWithIndex( $theLobAsStringFlag );
+        $wrapper = new RowsWithIndex( $theLobAsStringFlag );
         break;
 
       case 'singleton0':
-        $wrapper = new MySqlRoutineWrapper\Singleton0( $theLobAsStringFlag );
+        $wrapper = new Singleton0Wrapper( $theLobAsStringFlag );
         break;
 
       case 'singleton1':
-        $wrapper = new MySqlRoutineWrapper\Singleton1( $theLobAsStringFlag );
+        $wrapper = new Singleton1Wrapper( $theLobAsStringFlag );
         break;
 
       case 'function':
-        $wrapper = new MySqlRoutineWrapper\Functions( $theLobAsStringFlag );
+        $wrapper = new FunctionsWrapper( $theLobAsStringFlag );
         break;
 
       case 'table':
-        $wrapper = new MySqlRoutineWrapper\Table( $theLobAsStringFlag );
+        $wrapper = new TableWrapper( $theLobAsStringFlag );
         break;
 
       default:

@@ -8,41 +8,35 @@
  * @link
  */
 //----------------------------------------------------------------------------------------------------------------------
-class Singleton0Test extends DataLayerTestCase
+namespace SetBased\DataLayer\Generator\Wrapper;
+
+//----------------------------------------------------------------------------------------------------------------------
+/**
+ * Class BulkWrapper
+ * @package SetBased\DataLayer\Generator\MySqlRoutineWrapper
+ */
+class BulkWrapper extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Stored routine with designation type singleton0 must return null.
-   */
-  public function test1()
+  protected function writeResultHandler( $theRoutine )
   {
-    $ret = DataLayer::testSingleton0a( 0 );
-    $this->assertInternalType( 'null', $ret );
+    $routine_args = $this->getRoutineArgs( $theRoutine );
+    $this->writeLine( 'self::executeBulk( $theBulkHandler, \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Stored routine with designation type singleton0 must return 1 value.
-   */
-  public function test2()
+  protected function writeRoutineFunctionLobFetchData( $theRoutine )
   {
-    $ret = DataLayer::testSingleton0a( 1 );
-    $this->assertInternalType( 'string', $ret );
+    // Nothing to do.
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * An exception must be thrown when a stored routine with designation type singleton0 returns more than 1 values.
-   *
-   * @expectedException Exception
-   */
-  public function test3()
+  protected function writeRoutineFunctionLobReturnData()
   {
-    DataLayer::testSingleton0a( 2 );
+    // Nothing to do.
   }
 
   //--------------------------------------------------------------------------------------------------------------------
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-

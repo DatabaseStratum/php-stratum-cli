@@ -1,23 +1,22 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * myStratumPhp
+ * phpStratum
  *
- * @copyright 2003-2014 Paul Water / Set Based IT Consultancy (https://www.setbased.nl)
+ * @copyright 2005-2015 Paul Water / Set Based IT Consultancy (https://www.setbased.nl)
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @link
  */
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\DataLayer\Generator\MySqlRoutineWrapper;
-
-use SetBased\DataLayer\Generator\MySqlRoutineWrapper;
+namespace SetBased\DataLayer\Generator\Wrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
  * Class for generating a wrapper method for a stored procedure that selects 0 or more rows. The rows are
+ * @package SetBased\DataLayer\Generator\Wrapper
  * returned as nested arrays.
  */
-class RowsWithKey extends MySqlRoutineWrapper
+class RowsWithKey extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**

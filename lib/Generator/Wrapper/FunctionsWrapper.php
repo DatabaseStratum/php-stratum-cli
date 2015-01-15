@@ -1,22 +1,21 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * myStratumPhp
+ * phpStratum
  *
- * @copyright 2003-2014 Paul Water / Set Based IT Consultancy (https://www.setbased.nl)
+ * @copyright 2005-2015 Paul Water / Set Based IT Consultancy (https://www.setbased.nl)
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @link
  */
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\DataLayer\Generator\MySqlRoutineWrapper;
-
-use SetBased\DataLayer\Generator\MySqlRoutineWrapper;
+namespace SetBased\DataLayer\Generator\Wrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class for generating a wrapper method for a stored procedure that selects 0 or 1 row with only one column.
+ * Class for generating a wrapper method for a stored function.
+ * @package SetBased\DataLayer\Generator\Wrapper
  */
-class Singleton0 extends MySqlRoutineWrapper
+class FunctionsWrapper extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -25,7 +24,7 @@ class Singleton0 extends MySqlRoutineWrapper
   protected function writeResultHandler( $theRoutine )
   {
     $routine_args = $this->getRoutineArgs( $theRoutine );
-    $this->writeLine( 'return self::executeSingleton0( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
+    $this->writeLine( 'return self::executeSingleton0( \'SELECT '.$theRoutine['routine_name'].'('.$routine_args.') \' );' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -34,19 +33,7 @@ class Singleton0 extends MySqlRoutineWrapper
    */
   protected function writeRoutineFunctionLobFetchData( $theRoutine )
   {
-    $this->writeLine( '$row = array();' );
-    $this->writeLine( 'self::bindAssoc( $stmt, $row );' );
-    $this->writeLine();
-    $this->writeLine( '$tmp = array();' );
-    $this->writeLine( 'while (($b = $stmt->fetch()))' );
-    $this->writeLine( '{' );
-    $this->writeLine( '$new = array();' );
-    $this->writeLine( 'foreach( $row as $value )' );
-    $this->writeLine( '{' );
-    $this->writeLine( '$new[] = $value;' );
-    $this->writeLine( '}' );
-    $this->writeLine( '$tmp[] = $new;' );
-    $this->writeLine( '}' );
+    $this->writeLine( '$ret = self::$ourMySql->affected_rows;' );
     $this->writeLine();
   }
 
@@ -56,10 +43,7 @@ class Singleton0 extends MySqlRoutineWrapper
    */
   protected function writeRoutineFunctionLobReturnData()
   {
-    $this->writeLine( 'if ($b===false) self::sqlError( \'mysqli_stmt::fetch\' );' );
-    $this->writeLine( 'if (sizeof($tmp)>1) self::assertFailed( \'Expected 0 or 1 row found %d rows.\', sizeof($tmp) );' );
-    $this->writeLine();
-    $this->writeLine( 'return ($tmp) ? $tmp[0][0] : null;' );
+    $this->writeLine( 'return $ret;' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
