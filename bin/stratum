@@ -2,9 +2,9 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * myStratumPhp
+ * phpStratum
  *
- * @copyright 2003-2014 Paul Water / Set Based IT Consultancy (https://www.setbased.nl)
+ * @copyright 2005-2015 Paul Water / Set Based IT Consultancy (https://www.setbased.nl)
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @link
  */
@@ -49,8 +49,8 @@ function set_assert_failed()
  */
 function synopsis()
 {
-  echo "Synopsis: dlgen [-f] -c <configuration file> [routine.psql] ... \n";
-  echo "          dlgen -h\n";
+  echo "Synopsis: stratum [-f] -c <configuration file> [routine.psql] ... \n";
+  echo "          stratum -h\n";
 
   exit( 1 );
 }
@@ -112,7 +112,7 @@ function getSetting( $options )
 /**
  * Starts the execution of this program.
  *
- * @param $options array $options The arguments of this programs (i.e. $argv).
+ * @param array $options The arguments of this programs (i.e. $argv).
  */
 function main( $options )
 {

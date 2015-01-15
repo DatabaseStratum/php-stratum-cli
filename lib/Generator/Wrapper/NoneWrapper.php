@@ -1,14 +1,22 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\DataLayer\Generator\MySqlRoutineWrapper;
-
-use SetBased\DataLayer\Generator\MySqlRoutineWrapper;
+/**
+ * phpStratum
+ *
+ * @copyright 2005-2015 Paul Water / Set Based IT Consultancy (https://www.setbased.nl)
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
+ * @link
+ */
+//----------------------------------------------------------------------------------------------------------------------
+namespace SetBased\DataLayer\Generator\Wrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class for generating a wrapper method for showing the result sets of a store procedure in a table format.
+ * Class for generating a wrapper method for a stored procedure without result set.
+ *
+ * @package SetBased\DataLayer\Generator\Wrapper
  */
-class Table extends MySqlRoutineWrapper
+class NoneWrapper extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -17,7 +25,7 @@ class Table extends MySqlRoutineWrapper
   protected function writeResultHandler( $theRoutine )
   {
     $routine_args = $this->getRoutineArgs( $theRoutine );
-    $this->writeLine( 'return self::executeTable( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\' );' );
+    $this->writeLine( 'return self::executeNone( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\' );' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -26,7 +34,8 @@ class Table extends MySqlRoutineWrapper
    */
   protected function writeRoutineFunctionLobFetchData( $theRoutine )
   {
-    // Nothing to do.
+    $this->writeLine( '$ret = self::$ourMySql->affected_rows;' );
+    $this->writeLine();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -35,7 +44,7 @@ class Table extends MySqlRoutineWrapper
    */
   protected function writeRoutineFunctionLobReturnData()
   {
-    // Nothing to do.
+    $this->writeLine( 'return $ret;' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

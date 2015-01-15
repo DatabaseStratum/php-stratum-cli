@@ -1,9 +1,9 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * myStratumPhp
+ * phpStratum
  *
- * @copyright 2003-2014 Paul Water / Set Based IT Consultancy (https://www.setbased.nl)
+ * @copyright 2005-2015 Paul Water / Set Based IT Consultancy (https://www.setbased.nl)
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @link
  */
@@ -12,6 +12,7 @@ namespace SetBased\DataLayer\Generator;
 
 use SetBased\DataLayer\StaticDataLayer as DataLayer;
 
+//----------------------------------------------------------------------------------------------------------------------
 /**
  * Class for loading stored routines into a MySQL instance from pseudo SQL files (.psql).
  */
