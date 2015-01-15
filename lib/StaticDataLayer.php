@@ -18,7 +18,7 @@ class StaticDataLayer
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * The default character set et to be used when sending data from and to the MySQL instance.
+   * The default character set to be used when sending data from and to the MySQL instance.
    *
    * @var string
    */
