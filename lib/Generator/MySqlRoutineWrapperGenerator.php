@@ -233,10 +233,10 @@ class MySqlRoutineWrapperGenerator
   private function readRoutineMetaData()
   {
     $data = file_get_contents( $this->myMetadataFilename );
-    if ($data===false) set_assert_failed( "Error read of file '%s'.", $this->myMetadataFilename );
+    if ($data===false) set_assert_failed( "Error reading file '%s'.", $this->myMetadataFilename );
 
-    $routines = json_decode($data, true);
-    if(json_last_error() != JSON_ERROR_NONE) set_assert_failed('Error of decode data from JSON format with code "'.json_last_error().'".');
+    $routines = json_decode( $data, true );
+    if (json_last_error()!=JSON_ERROR_NONE) set_assert_failed( "Error decoding JSON: '%s'.", json_last_error_msg() );
 
     return $routines;
   }

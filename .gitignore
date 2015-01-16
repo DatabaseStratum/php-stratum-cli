@@ -6,5 +6,5 @@ bin/phpunit
 bin/yuicompressor.jar
 composer.lock
 doc/
-etc/test_routines.csv
+etc/test_routines.json
 vendor/

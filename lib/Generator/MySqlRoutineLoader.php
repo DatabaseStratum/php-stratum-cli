@@ -530,15 +530,8 @@ order by table_schema
     // If the .psql has changed the current .psql file is must be loaded.
     if ($this->myCurrentOldMetadata['timestamp']!=$this->myCurrentMTime) return true;
 
-    // Get the old replace pairs
-    $old_replace_pairs = $this->myCurrentOldMetadata['replace'];
-    if ($old_replace_pairs===false)
-    {
-      set_assert_failed( "Unable to unserialize replace pairs for stored routine '%s'.\n", $this->myCurrentRoutineName );
-    }
-
     // If the value of a placeholder has changed the current .psql file is must be loaded.
-    foreach ($old_replace_pairs as $place_holder => $old_value)
+    foreach ($this->myCurrentOldMetadata['replace'] as $place_holder => $old_value)
     {
       if (!isset($this->myReplacePairs[strtoupper( $place_holder )]) ||
         $this->myReplacePairs[strtoupper( $place_holder )]!==$old_value
@@ -1029,10 +1022,10 @@ order by routine_name";
     if (file_exists( $this->myMetadataFilename ))
     {
       $data = file_get_contents( $this->myMetadataFilename );
-      if ($data===false) set_assert_failed( "Error read of file '%s'.", $this->myMetadataFilename );
+      if ($data===false) set_assert_failed( "Error reading file '%s'.", $this->myMetadataFilename );
 
       $this->myMetadata = json_decode( $data, true );
-      if (json_last_error()!=JSON_ERROR_NONE) set_assert_failed( 'Error of decode data from JSON format with code "'.json_last_error().'".' );
+      if (json_last_error()!=JSON_ERROR_NONE) set_assert_failed( "Error decoding JSON: '%s'.", json_last_error_msg() );
     }
   }
 
@@ -1118,8 +1111,12 @@ and   t1.routine_name   = '%s'", $this->myCurrentRoutineName );
    */
   private function writeRoutineMetadata()
   {
-    $json_data = json_encode( $this->myMetadata, JSON_PRETTY_PRINT );
-    if (json_last_error()!=JSON_ERROR_NONE) set_assert_failed( 'Error of encode data to JSON format with code "'.json_last_error().'".' );
+    // Note: Constant JSON_PRETTY_PRINT was introduced in php 5.4 while we want to be compatible with php 5.3.
+    $options = 0;
+    if (defined( 'JSON_PRETTY_PRINT' )) $options = $options | constant( 'JSON_PRETTY_PRINT' );
+
+    $json_data = json_encode( $this->myMetadata, $options );
+    if (json_last_error()!=JSON_ERROR_NONE) set_assert_failed( "Error of encoding to JSON: '%s'.", json_last_error_msg() );
 
     $bytes = file_put_contents( $this->myMetadataFilename, $json_data );
     if ($bytes===false) set_assert_failed( "Error writing file '%s'.", $this->myMetadataFilename );
