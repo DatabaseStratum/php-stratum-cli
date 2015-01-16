@@ -1,6 +1,10 @@
+.idea
+bin/phing
+bin/phpcbf
+bin/phpcs
 bin/phpunit
-vendor/
+bin/yuicompressor.jar
 composer.lock
-etc/test_routines.csv
-*~
 doc/
+etc/test_routines.csv
+vendor/

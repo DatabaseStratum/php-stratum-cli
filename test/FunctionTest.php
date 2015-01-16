@@ -1,5 +1,12 @@
 <?php
-
+//----------------------------------------------------------------------------------------------------------------------
+/**
+ * phpStratum
+ *
+ * @copyright 2005-2015 Paul Water / Set Based IT Consultancy (https://www.setbased.nl)
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
+ * @link
+ */
 //----------------------------------------------------------------------------------------------------------------------
 class FunctionTest extends DataLayerTestCase
 {
@@ -22,7 +29,6 @@ class FunctionTest extends DataLayerTestCase
     $ret = DataLayer::testFunction( 3, 4 );
     $this->assertNotEquals( 5, $ret );
   }
-
 
   //--------------------------------------------------------------------------------------------------------------------
 }

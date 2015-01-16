@@ -1,22 +1,22 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * myStratumPhp
+ * phpStratum
  *
- * @copyright 2003-2014 Paul Water / Set Based IT Consultancy (https://www.setbased.nl)
+ * @copyright 2005-2015 Paul Water / Set Based IT Consultancy (https://www.setbased.nl)
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @link
  */
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\DataLayer\Generator\MySqlRoutineWrapper;
+namespace SetBased\DataLayer\Generator\Wrapper;
 
-use SetBased\DataLayer\Generator\MySqlRoutineWrapper;
-
+//----------------------------------------------------------------------------------------------------------------------
 /**
  * Class for generating a wrapper method for a stored procedure that prepares a table to be used with a bulk SQL
  * statement.
+ * @package SetBased\DataLayer\Generator\Wrapper
  */
-class BulkInsert extends MySqlRoutineWrapper
+class BulkInsertWrapper extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
