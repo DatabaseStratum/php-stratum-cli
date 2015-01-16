@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="php-mysql-data-layer" default="build" basedir=".">
-    <taskdef name="readSemanticVersion" classname="vendor.setbased.phing.lib.Task.readSemanticVersionTask"/>
+    <taskdef name="readSemanticVersion" classname="vendor.setbased.phing-extensions.lib.Task.readSemanticVersionTask"/>
     <property name ="VERSION" value="0.0.0"/>
 
     <target name="build">
