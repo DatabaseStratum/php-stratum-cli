@@ -1,8 +1,10 @@
-/** Test for desgination type row1.
-    @param p_count The number of rows selected.
-                   * 1 For a valid test.
-                   * 0 For a invalid test.
-                   * 2 For a invalid test.
+/**
+ * Test for designation type row1.
+ *
+ * @param p_count The number of rows selected.
+ *                * 0 For a invalid test.
+ *                * 1 For a valid test.
+ *                * 2 For a invalid test.
  */
 create procedure tst_test_row1a( p_count int )
 reads sql data

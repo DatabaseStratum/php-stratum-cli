@@ -1,22 +1,32 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\DataLayer\Generator\Wrapper;
-/**
- * phpStratum
- *
- * @copyright 2005-2015 Paul Water / Set Based IT Consultancy (https://www.setbased.nl)
- * @license   http://www.opensource.org/licenses/mit-license.php MIT
- * @link
- */
+  /**
+   * phpStratum
+   *
+   * @copyright 2005-2015 Paul Water / Set Based IT Consultancy (https://www.setbased.nl)
+   * @license   http://www.opensource.org/licenses/mit-license.php MIT
+   * @link
+   */
 //----------------------------------------------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
  * Class LogWrapper
+ *
  * @package SetBased\DataLayer\Generator\Wrapper
  */
 class LogWrapper extends Wrapper
 {
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * @return string
+   */
+  protected function getPhpDocReturnType()
+  {
+    return 'int';
+  }
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * {@inheritdoc}

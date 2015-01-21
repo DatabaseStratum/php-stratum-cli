@@ -3,7 +3,10 @@
 class DataLayer extends \SetBased\DataLayer\StaticDataLayer
 {
   //-------------------------------------------------------------------------------------------------------------------
-  /** @sa Stored Routine tst_magic_constant01.
+  /**
+   * Test for magic constant.
+   *
+   * @return string
    */
   public static function magicConstant01(  )
   {
@@ -11,7 +14,10 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   }
 
   //-------------------------------------------------------------------------------------------------------------------
-  /** @sa Stored Routine tst_magic_constant02.
+  /**
+   * Test for magic constant.
+   *
+   * @return string
    */
   public static function magicConstant02(  )
   {
@@ -19,7 +25,10 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   }
 
   //-------------------------------------------------------------------------------------------------------------------
-  /** @sa Stored Routine tst_magic_constant03.
+  /**
+   * Test for magic constant.
+   *
+   * @return string
    */
   public static function magicConstant03(  )
   {
@@ -27,7 +36,10 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   }
 
   //-------------------------------------------------------------------------------------------------------------------
-  /** @sa Stored Routine tst_magic_constant04.
+  /**
+   * Test for magic constant.
+   *
+   * @return string
    */
   public static function magicConstant04(  )
   {
@@ -35,7 +47,51 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   }
 
   //-------------------------------------------------------------------------------------------------------------------
-  /** @sa Stored Routine tst_test01.
+  /**
+   * Test for all possible types of arguments without LOB's.
+   *
+   * @param int    $p_param00 Test parameter 00.
+   *                          int(11)
+   * @param int    $p_param01 Test parameter 01.
+   *                          smallint(6)
+   * @param int    $p_param02 Test parameter 02.
+   *                          tinyint(4)
+   * @param int    $p_param03 Test parameter 03.
+   *                          mediumint(9)
+   * @param int    $p_param04 Test parameter 04.
+   *                          bigint(20)
+   * @param float  $p_param05 Test parameter 05.
+   *                          decimal(10,2)
+   * @param float  $p_param06 Test parameter 06.
+   *                          float
+   * @param float  $p_param07 Test parameter 07.
+   *                          double
+   * @param int    $p_param08 Test parameter 08.
+   *                          bit(8)
+   * @param string $p_param09 Test parameter 09.
+   *                          date
+   * @param string $p_param10 Test parameter 10.
+   *                          datetime
+   * @param string $p_param11 Test parameter 11.
+   *                          timestamp
+   * @param string $p_param12 Test parameter 12.
+   *                          time
+   * @param int    $p_param13 Test parameter 13.
+   *                          year(4)
+   * @param string $p_param14 Test parameter 14.
+   *                          char(10)
+   * @param string $p_param15 Test parameter 15.
+   *                          varchar(10)
+   * @param string $p_param16 Test parameter 16.
+   *                          binary(10)
+   * @param string $p_param17 Test parameter 17.
+   *                          varbinary(10)
+   * @param string $p_param26 Test parameter 26.
+   *                          enum('a','b')
+   * @param string $p_param27 Test parameter 27.
+   *                          set('a','b')
+   *
+   * @return int
    */
   public static function test01( $p_param00, $p_param01, $p_param02, $p_param03, $p_param04, $p_param05, $p_param06, $p_param07, $p_param08, $p_param09, $p_param10, $p_param11, $p_param12, $p_param13, $p_param14, $p_param15, $p_param16, $p_param17, $p_param26, $p_param27 )
   {
@@ -43,7 +99,67 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   }
 
   //-------------------------------------------------------------------------------------------------------------------
-  /** @sa Stored Routine tst_test02.
+  /**
+   * Test for all possible types of arguments with LOB's.
+   *
+   * @param int    $p_param00 Test parameter 00.
+   *                          int(11)
+   * @param int    $p_param01 Test parameter 01.
+   *                          smallint(6)
+   * @param int    $p_param02 Test parameter 02.
+   *                          tinyint(4)
+   * @param int    $p_param03 Test parameter 03.
+   *                          mediumint(9)
+   * @param int    $p_param04 Test parameter 04.
+   *                          bigint(20)
+   * @param float  $p_param05 Test parameter 05.
+   *                          decimal(10,2)
+   * @param float  $p_param06 Test parameter 06.
+   *                          float
+   * @param float  $p_param07 Test parameter 07.
+   *                          double
+   * @param int    $p_param08 Test parameter 08.
+   *                          bit(8)
+   * @param string $p_param09 Test parameter 09.
+   *                          date
+   * @param string $p_param10 Test parameter 10.
+   *                          datetime
+   * @param string $p_param11 Test parameter 11.
+   *                          timestamp
+   * @param string $p_param12 Test parameter 12.
+   *                          time
+   * @param int    $p_param13 Test parameter 13.
+   *                          year(4)
+   * @param string $p_param14 Test parameter 14.
+   *                          char(10)
+   * @param string $p_param15 Test parameter 15.
+   *                          varchar(10)
+   * @param string $p_param16 Test parameter 16.
+   *                          binary(10)
+   * @param string $p_param17 Test parameter 17.
+   *                          varbinary(10)
+   * @param string $p_param18 Test parameter 18.
+   *                          tinyblob
+   * @param string $p_param19 Test parameter 19.
+   *                          blob
+   * @param string $p_param20 Test parameter 20.
+   *                          mediumblob
+   * @param string $p_param21 Test parameter 21.
+   *                          longblob
+   * @param string $p_param22 Test parameter 22.
+   *                          tinytext
+   * @param string $p_param23 Test parameter 23.
+   *                          text
+   * @param string $p_param24 Test parameter 24.
+   *                          mediumtext
+   * @param string $p_param25 Test parameter 25.
+   *                          longtext
+   * @param string $p_param26 Test parameter 26.
+   *                          enum('a','b')
+   * @param string $p_param27 Test parameter 27.
+   *                          set('a','b')
+   *
+   * @return int
    */
   public static function test02( $p_param00, $p_param01, $p_param02, $p_param03, $p_param04, $p_param05, $p_param06, $p_param07, $p_param08, $p_param09, $p_param10, $p_param11, $p_param12, $p_param13, $p_param14, $p_param15, $p_param16, $p_param17, $p_param18, $p_param19, $p_param20, $p_param21, $p_param22, $p_param23, $p_param24, $p_param25, $p_param26, $p_param27 )
   {
@@ -141,7 +257,9 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   }
 
   //-------------------------------------------------------------------------------------------------------------------
-  /** @sa Stored Routine tst_test_bulk_insert01.
+  /**
+   * Test for designation bulk_insert.
+   * @param array $theData
    */
   public static function testBulkInsert01( $theData )
   {
@@ -161,7 +279,9 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   }
 
   //-------------------------------------------------------------------------------------------------------------------
-  /** @sa Stored Routine tst_test_bulk_insert02.
+  /**
+   * Test for designation bulk_insert.
+   * @param array $theData
    */
   public static function testBulkInsert02( $theData )
   {
@@ -181,7 +301,15 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   }
 
   //-------------------------------------------------------------------------------------------------------------------
-  /** @sa Stored Routine tst_test_function.
+  /**
+   * Test for stored function wrapper.
+   *
+   * @param int $p_a Parameter A.
+   *                 int(11)
+   * @param int $p_b Parameter B.
+   *                 int(11)
+   *
+   * @return string
    */
   public static function testFunction( $p_a, $p_b )
   {
@@ -189,7 +317,10 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   }
 
   //-------------------------------------------------------------------------------------------------------------------
-  /** @sa Stored Routine tst_test_log.
+  /**
+   * Test for designation type log.
+   *
+   * @return int
    */
   public static function testLog(  )
   {
@@ -197,7 +328,13 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   }
 
   //-------------------------------------------------------------------------------------------------------------------
-  /** @sa Stored Routine tst_test_max_allowed_packet.
+  /**
+   * Test for sending data larger than max_allowed_packet.
+   *
+   * @param string $p_tmp_blob The BLOB larger than max_allowed_packet.
+   *                           longblob
+   *
+   * @return string
    */
   public static function testMaxAllowedPacket( $p_tmp_blob )
   {
@@ -247,7 +384,13 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   }
 
   //-------------------------------------------------------------------------------------------------------------------
-  /** @sa Stored Routine tst_test_none.
+  /**
+   * Test for designation type none.
+   *
+   * @param int $p_count The number of iterations.
+   *                     bigint(20)
+   *
+   * @return int
    */
   public static function testNone( $p_count )
   {
@@ -255,7 +398,15 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   }
 
   //-------------------------------------------------------------------------------------------------------------------
-  /** @sa Stored Routine tst_test_none_with_lob.
+  /**
+   * Test for designation type none with BLOB.
+   *
+   * @param int    $p_count The number of iterations.
+   *                        bigint(20)
+   * @param string $p_blob  The BLOB.
+   *                        blob
+   *
+   * @return int
    */
   public static function testNoneWithLob( $p_count, $p_blob )
   {
@@ -290,7 +441,16 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   }
 
   //-------------------------------------------------------------------------------------------------------------------
-  /** @sa Stored Routine tst_test_row0a.
+  /**
+   * Test for designation type row0.
+   *
+   * @param int $p_count The number of rows selected.
+   *                                    * 0 For a valid test.
+   *                                    * 1 For a valid test.
+   *                                    * 2 For a invalid test.
+   *                     int(11)
+   *
+   * @return array
    */
   public static function testRow0a( $p_count )
   {
@@ -298,7 +458,18 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   }
 
   //-------------------------------------------------------------------------------------------------------------------
-  /** @sa Stored Routine tst_test_row0a_with_lob.
+  /**
+   * Test for designation type row0 with BLOB.
+   *
+   * @param int    $p_count The number of rows selected.
+   *                                       * 0 For a valid test.
+   *                                       * 1 For a valid test.
+   *                                       * 2 For a invalid test.
+   *                        int(11)
+   * @param string $p_blob  The BLOB.
+   *                        blob
+   *
+   * @return array
    */
   public static function testRow0aWithLob( $p_count, $p_blob )
   {
@@ -348,7 +519,16 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   }
 
   //-------------------------------------------------------------------------------------------------------------------
-  /** @sa Stored Routine tst_test_row1a.
+  /**
+   * Test for designation type row1.
+   *
+   * @param int $p_count The number of rows selected.
+   *                                    * 0 For a invalid test.
+   *                                    * 1 For a valid test.
+   *                                    * 2 For a invalid test.
+   *                     int(11)
+   *
+   * @return array
    */
   public static function testRow1a( $p_count )
   {
@@ -356,7 +536,18 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   }
 
   //-------------------------------------------------------------------------------------------------------------------
-  /** @sa Stored Routine tst_test_row1a_with_lob.
+  /**
+   * Test for designation type row1 with BLOB.
+   *
+   * @param int    $p_count The number of rows selected.
+   *                                       * 0 For a invalid test.
+   *                                       * 1 For a valid test.
+   *                                       * 2 For a invalid test.
+   *                        int(11)
+   * @param string $p_blob  The BLOB.
+   *                        blob
+   *
+   * @return array
    */
   public static function testRow1aWithLob( $p_count, $p_blob )
   {
@@ -406,7 +597,16 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   }
 
   //-------------------------------------------------------------------------------------------------------------------
-  /** @sa Stored Routine tst_test_rows1.
+  /**
+   * Test for designation type row1.
+   *
+   * @param int $p_count The number of rows selected.
+   *                                    * 0 For a invalid test.
+   *                                    * 1 For a valid test.
+   *                                    * 2 For a invalid test.
+   *                     int(11)
+   *
+   * @return array[]
    */
   public static function testRows1( $p_count )
   {
@@ -414,7 +614,15 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   }
 
   //-------------------------------------------------------------------------------------------------------------------
-  /** @sa Stored Routine tst_test_rows1_with_lob.
+  /**
+   * Test for designation type rows.
+   *
+   * @param int    $p_count The number of rows selected.
+   *                        int(11)
+   * @param string $p_blob  The BLOB.
+   *                        blob
+   *
+   * @return array[]
    */
   public static function testRows1WithLob( $p_count, $p_blob )
   {
@@ -463,7 +671,13 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   }
 
   //-------------------------------------------------------------------------------------------------------------------
-  /** @sa Stored Routine tst_test_rows_with_index1.
+  /**
+   * Test for designation type rows_with_index.
+   *
+   * @param int $p_count The number of rows selected.
+   *                     int(11)
+   *
+   * @return array[]
    */
   public static function testRowsWithIndex1( $p_count )
   {
@@ -476,7 +690,16 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   }
 
   //-------------------------------------------------------------------------------------------------------------------
-  /** @sa Stored Routine tst_test_rows_with_index1_with_lob.
+  /**
+   * Test for designation type rows_with_index with BLOB.
+   * .
+   *
+   * @param int    $p_count The number of rows selected.
+   *                        int(11)
+   * @param string $p_blob  The BLOB.
+   *                        blob
+   *
+   * @return array[]
    */
   public static function testRowsWithIndex1WithLob( $p_count, $p_blob )
   {
@@ -525,7 +748,13 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   }
 
   //-------------------------------------------------------------------------------------------------------------------
-  /** @sa Stored Routine tst_test_rows_with_key1.
+  /**
+   * Test for designation type rows_with_key.
+   *
+   * @param int $p_count Number of rows selected.
+   *                     int(11)
+   *
+   * @return array[]
    */
   public static function testRowsWithKey1( $p_count )
   {
@@ -538,7 +767,15 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   }
 
   //-------------------------------------------------------------------------------------------------------------------
-  /** @sa Stored Routine tst_test_rows_with_key1_with_lob.
+  /**
+   * Test for designation type rows_with_key with BLOB.
+   *
+   * @param int    $p_count The number of rows selected.
+   *                        int(11)
+   * @param string $p_blob  The BLOB.
+   *                        blob
+   *
+   * @return array[]
    */
   public static function testRowsWithKey1WithLob( $p_count, $p_blob )
   {
@@ -587,7 +824,16 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   }
 
   //-------------------------------------------------------------------------------------------------------------------
-  /** @sa Stored Routine tst_test_singleton0a.
+  /**
+   * Test for designation type singleton0.
+   *
+   * @param int $p_count The number of rows selected.
+   *                                    * 0 For a valid test.
+   *                                    * 1 For a valid test.
+   *                                    * 2 For a invalid test.
+   *                     int(11)
+   *
+   * @return string
    */
   public static function testSingleton0a( $p_count )
   {
@@ -595,7 +841,19 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   }
 
   //-------------------------------------------------------------------------------------------------------------------
-  /** @sa Stored Routine tst_test_singleton0a_with_lob.
+  /**
+   * Test for designation type singleton0 with BLOB.
+   * .
+   *
+   * @param int    $p_count The number of rows selected.
+   *                                       * 0 For a valid test.
+   *                                       * 1 For a valid test.
+   *                                       * 2 For a invalid test.
+   *                        int(11)
+   * @param string $p_blob  The BLOB.
+   *                        blob
+   *
+   * @return string
    */
   public static function testSingleton0aWithLob( $p_count, $p_blob )
   {
@@ -645,7 +903,16 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   }
 
   //-------------------------------------------------------------------------------------------------------------------
-  /** @sa Stored Routine tst_test_singleton1a.
+  /**
+   * Test for designation type singleton1.
+   *
+   * @param int $p_count The number of rows selected.
+   *                                    * 0 For a invalid test.
+   *                                    * 1 For a valid test.
+   *                                    * 2 For a invalid test.
+   *                     int(11)
+   *
+   * @return string
    */
   public static function testSingleton1a( $p_count )
   {
@@ -653,7 +920,18 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   }
 
   //-------------------------------------------------------------------------------------------------------------------
-  /** @sa Stored Routine tst_test_singleton1a_with_lob.
+  /**
+   * Test for designation type singleton1 with BLOB.
+   *
+   * @param int    $p_count The number of rows selected.
+   *                                       * 0 For a invalid test.
+   *                                       * 1 For a valid test.
+   *                                       * 2 For a invalid test.
+   *                        int(11)
+   * @param string $p_blob  The BLOB.
+   *                        blob
+   *
+   * @return string
    */
   public static function testSingleton1aWithLob( $p_count, $p_blob )
   {
@@ -703,7 +981,10 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   }
 
   //-------------------------------------------------------------------------------------------------------------------
-  /** @sa Stored Routine tst_test_table.
+  /**
+   * Test for designation type table.
+   *
+   * @return int
    */
   public static function testTable(  )
   {
@@ -711,7 +992,10 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
   }
 
   //-------------------------------------------------------------------------------------------------------------------
-  /** @sa Stored Routine tst_magic_constant05.
+  /**
+   * Test for magic constant.
+   *
+   * @return string
    */
   public static function magicConstant05(  )
   {

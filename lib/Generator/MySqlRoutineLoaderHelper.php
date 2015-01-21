@@ -10,6 +10,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\DataLayer\Generator;
 
+use phpDocumentor\Reflection\DocBlock;
 use SetBased\DataLayer\StaticDataLayer as DataLayer;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -104,11 +105,39 @@ class MySqlRoutineLoaderHelper
   private $myReplacePairs = array();
 
   /**
-   * The name of the stored routine.
+   * The database types of the arguments of the stored routines.
+   *
+   * @var array
+   */
+  private $myRoutineArgumentColumnTypes = array();
+
+  /**
+   * The names of arguments of the stored routine.
+   *
+   * @var array
+   */
+  private $myRoutineArgumentNames = array();
+
+  /**
+   * The PHP types of the arguments of the stored routine.
+   *
+   * @var array
+   */
+  private $myRoutineArgumentTypes = array();
+
+  /**
+   * The routine filename.
    *
    * @var string
    */
   private $myRoutineName;
+
+  /**
+   * The tags for the PhpDoc block for the wrapper of this stored routine.
+   *
+   * @var array
+   */
+  private $myRoutinePhpDoc = array();
 
   /**
    * The source code as a single string of the stored routine.
@@ -120,7 +149,7 @@ class MySqlRoutineLoaderHelper
   /**
    * The source code as an array of lines string of the stored routine.
    *
-   * @var string
+   * @var array
    */
   private $myRoutineSourceCodeLines;
 
@@ -193,7 +222,7 @@ class MySqlRoutineLoaderHelper
     $this->myCollate        = $theCollate;
   }
 
-  //--------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------------------
   /**
    * Loads the stored routine into the instance of MySQL.
    *
@@ -251,7 +280,13 @@ class MySqlRoutineLoaderHelper
           $this->getBulkInsertTableColumnsInfo();
         }
 
-        // Update Metadata of the routine.
+        // Get the argument types of the stored routine from metadata of MySQL.
+        $this->getRoutineArgumentsInfo();
+
+        // Get the stored routine documentation from the source file.
+        $this->getRoutineDescription();
+
+        // Update Metadata of the stored routine.
         $this->updateMetadata();
       }
 
@@ -263,6 +298,73 @@ class MySqlRoutineLoaderHelper
 
       return false;
     }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Converts MySQL data type to the PHP data type.
+   *
+   * @param string $theType
+   *
+   * @return string
+   * @throws \Exception
+   */
+  private function columnTypeToPhpType( $theType )
+  {
+    $php_type = '';
+
+    switch ($theType)
+    {
+      case 'tinyint':
+      case 'smallint':
+      case 'mediumint':
+      case 'int':
+      case 'bigint':
+
+      case 'year':
+
+      case 'bit':
+        $php_type = 'int';
+        break;
+
+      case 'decimal':
+      case 'float':
+      case 'double':
+        $php_type = 'float';
+        break;
+
+      case 'varbinary':
+      case 'binary':
+
+      case 'char':
+      case 'varchar':
+
+      case 'time':
+      case 'timestamp':
+
+      case 'date':
+      case 'datetime':
+
+      case 'enum':
+      case 'set':
+
+      case 'tinytext':
+      case 'text':
+      case 'mediumtext':
+      case 'longtext':
+
+      case 'tinyblob':
+      case 'blob':
+      case 'mediumblob':
+      case 'longblob':
+        $php_type = 'string';
+        break;
+
+      default:
+        set_assert_failed( "Unknown arg type '%s'.", $theType );
+    }
+
+    return $php_type;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -459,6 +561,90 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * Gets routine arguments info.
+   */
+  private function getRoutineArgumentsInfo()
+  {
+    $query = sprintf( "
+select t2.parameter_name   argument_names
+,      t2.data_type        argument_types
+,      t2.dtd_identifier   column_type
+from            information_schema.ROUTINES   t1
+left outer join information_schema.PARAMETERS t2  on  t2.specific_schema = t1.routine_schema and
+                                                      t2.specific_name   = t1.routine_name and
+                                                      t2.parameter_mode   is not null
+where t1.routine_schema = database()
+and   t1.routine_name   = '%s'", $this->myRoutineName );
+
+    $routine_parameters = DataLayer::executeRows( $query );
+
+    foreach ($routine_parameters as $routine_parameter)
+    {
+      if ($routine_parameter['argument_names'])
+      {
+        $this->myRoutineArgumentNames[]       = $routine_parameter['argument_names'];
+        $this->myRoutineArgumentTypes[]       = $routine_parameter['argument_types'];
+        $this->myRoutineArgumentColumnTypes[] = $routine_parameter['column_type'];
+      }
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   *  Gets description of routine from routine file.
+   */
+  private function getRoutineDescription()
+  {
+    // Gets doc block of the routine.
+    $tmp = '';
+    foreach ($this->myRoutineSourceCodeLines as $line)
+    {
+      $n = preg_match( "/create\\s+(procedure|function)\\s+([a-zA-Z0-9_]+)/i", $line );
+      if ($n) break;
+      else $tmp .= $line."\n";
+    }
+
+    $phpdoc = new DocBlock( $tmp );
+
+    // Gets short description.
+    $this->myRoutinePhpDoc['sort_description'] = $phpdoc->getShortDescription();
+
+    // Gets long description.
+    $this->myRoutinePhpDoc['long_description'] = $phpdoc->getLongDescription()->getContents();
+
+    // Gets description for each parameter of the routine.
+    foreach ($phpdoc->getTags() as $tag)
+    {
+      if ($tag->getName()=='param')
+      {
+        $content     = $tag->getContent();
+        $description = $tag->getDescription();
+        $name        = trim( substr( $content, 0, strlen( $content ) - strlen( $description ) ) );
+
+        $key = array_search( $name, $this->myRoutineArgumentNames );
+        if ($key!==false)
+        {
+          $this->myRoutinePhpDoc['parameters'][] = array('name'        => $name,
+                                                         'php_type'    => $this->columnTypeToPhpType( $this->myRoutineArgumentTypes[$key] ),
+                                                         'column_type' => $this->myRoutineArgumentColumnTypes[$key],
+                                                         'description' => $description);
+        }
+        else
+        {
+          $this->myRoutinePhpDoc['parameters'][] = array('name'        => $name,
+                                                         'php_type'    => '',
+                                                         'column_type' => '',
+                                                         'description' => $description);
+        }
+      }
+    }
+
+    // Compare parameters.
+    $this->validateParameterLists();
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Extracts the designation type of the stored routine.
    *
    * @return bool True on success. Otherwise returns false.
@@ -540,6 +726,9 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
     }
     $routine_source = implode( "\n", $routine_source );
 
+    // Unset magic constants specific for this stored routine.
+    $this->unsetMagicConstants();
+
     // Drop the stored procedure or function if its exists.
     $this->dropRoutine();
 
@@ -570,36 +759,71 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * Removes magic constants from current replace list.
+   */
+  private function unsetMagicConstants()
+  {
+    unset($this->myReplace['__FILE__']);
+    unset($this->myReplace['__ROUTINE__']);
+    unset($this->myReplace['__DIR__']);
+    unset($this->myReplace['__LINE__']);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Updates the metadata for the routine.
    */
   private function updateMetadata()
   {
-    $query = sprintf( "
-select group_concat( t2.parameter_name order by t2.ordinal_position separator ',' ) 'argument_names'
-,      group_concat( t2.data_type      order by t2.ordinal_position separator ',' ) 'argument_types'
-from            information_schema.ROUTINES   t1
-left outer join information_schema.PARAMETERS t2  on  t2.specific_schema = t1.routine_schema and
-                                                      t2.specific_name   = t1.routine_name and
-                                                      t2.parameter_mode   is not null
-where t1.routine_schema = database()
-and   t1.routine_name   = '%s'", $this->myRoutineName );
-
-    $tmp = DataLayer::executeRows( $query );
-    /** @todo replace with execute singleton */
-
-    $argument_names = $tmp[0]['argument_names'];
-    $argument_types = $tmp[0]['argument_types'];
-
     $this->myMetadata['routine_name']   = $this->myRoutineName;
     $this->myMetadata['type']           = $this->myType;
     $this->myMetadata['table_name']     = $this->myTableName;
-    $this->myMetadata['argument_names'] = ($argument_names) ? explode( ',', $argument_names ) : array();
-    $this->myMetadata['argument_types'] = ($argument_types) ? explode( ',', $argument_types ) : array();
+    $this->myMetadata['argument_names'] = $this->myRoutineArgumentNames;
+    $this->myMetadata['argument_types'] = $this->myRoutineArgumentTypes;
     $this->myMetadata['columns']        = $this->myColumns;
     $this->myMetadata['fields']         = $this->myFields;
     $this->myMetadata['column_types']   = $this->myColumnsTypes;
     $this->myMetadata['timestamp']      = $this->myMTime;
     $this->myMetadata['replace']        = $this->myReplace;
+    $this->myMetadata['phpdoc']         = $this->myRoutinePhpDoc;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   *  Compares lists of routine parameters and parameters from doc block.
+   */
+  private function validateParameterLists()
+  {
+    if (isset($this->myRoutinePhpDoc['parameters']))
+    {
+      $parameters_name = array();
+      foreach ($this->myRoutinePhpDoc['parameters'] as $parameter)
+      {
+        $parameters_name[] = $parameter['name'];
+      }
+
+      $tmp = array_diff( $this->myRoutineArgumentNames, $parameters_name );
+      foreach ($tmp as $name)
+      {
+        echo sprintf( "  Missing parameter: '%s'.\n", $name );
+      }
+
+      $tmp = array_diff( $parameters_name, $this->myRoutineArgumentNames );
+      foreach ($tmp as $name)
+      {
+        echo sprintf( "  Bogus parameter: '%s'.\n", $name );
+      }
+    }
+    else
+    {
+      if (!empty($this->myRoutineArgumentNames))
+      {
+        foreach ($this->myRoutineArgumentNames as $name)
+        {
+          echo sprintf( "  Missing parameter: '%s'.\n", $name );
+        }
+      }
+    }
   }
 
   //--------------------------------------------------------------------------------------------------------------------

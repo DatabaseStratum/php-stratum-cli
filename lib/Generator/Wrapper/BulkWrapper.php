@@ -13,10 +13,20 @@ namespace SetBased\DataLayer\Generator\Wrapper;
 //----------------------------------------------------------------------------------------------------------------------
 /**
  * Class BulkWrapper
+ *
  * @package SetBased\DataLayer\Generator\MySqlRoutineWrapper
  */
 class BulkWrapper extends Wrapper
 {
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * @return string
+   */
+  protected function getPhpDocReturnType()
+  {
+    return '';
+  }
+
   //--------------------------------------------------------------------------------------------------------------------
   protected function writeResultHandler( $theRoutine )
   {

@@ -239,8 +239,7 @@ abstract class Wrapper
     }
 
     $this->writeSeparator();
-    $this->writeLine( '/** @sa Stored Routine '.$theRoutine['routine_name'].'.' );
-    $this->writeLine( ' */' );
+    $this->generatePhpDoc( $theRoutine );
     $this->writeLine( 'public static function '.$wrapper_function_name.'( '.$wrapper_args.' )' );
     $this->writeLine( '{' );
     $this->writeLine( '$query = \'CALL '.$theRoutine['routine_name'].'( '.$routine_args.' )\';' );
@@ -302,8 +301,7 @@ abstract class Wrapper
     $wrapper_args = $this->getWrapperArgs( $theRoutine );
 
     $this->writeSeparator();
-    $this->writeLine( '/** @sa Stored Routine '.$theRoutine['routine_name'].'.' );
-    $this->writeLine( ' */' );
+    $this->generatePhpDoc( $theRoutine );
     $this->writeLine( 'public static function '.$wrapper_function_name.'( '.$wrapper_args.' )' );
     $this->writeLine( '{' );
 
@@ -375,6 +373,12 @@ abstract class Wrapper
 
     return $ret;
   }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns the return type for phpDoc.
+   */
+  abstract protected function getPhpDocReturnType();
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -563,6 +567,82 @@ abstract class Wrapper
       $this->write( '-' );
     }
     $this->writeLine();
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * @param array $theRoutine
+   */
+  private function generatePhpDoc( $theRoutine )
+  {
+    $this->writeLine( '/**' );
+
+    // Generate phpdoc with short description of routine wrapper.
+    if ($theRoutine['phpdoc']['sort_description'])
+    {
+      $this->writeLine( ' * '.$theRoutine['phpdoc']['sort_description'] );
+    }
+
+    // Generate phpdoc with long description of routine wrapper.
+    if ($theRoutine['phpdoc']['long_description'])
+    {
+      $this->writeLine( ' * '.$theRoutine['phpdoc']['long_description'] );
+    }
+
+    // Generate phpDoc with parameters and descriptions of parameters.
+    if (isset($theRoutine['phpdoc']['parameters']))
+    {
+      $this->writeLine( ' *' );
+
+      // Compute the max lengths of parameter names and the PHP types of the parameters.
+      $max_name_length = 0;
+      $max_type_length = 0;
+      foreach ($theRoutine['phpdoc']['parameters'] as $parameter)
+      {
+        $max_name_length = max( $max_name_length, strlen( $parameter['name'] ) );
+        $max_type_length = max( $max_type_length, strlen( $parameter['php_type'] ) );
+      }
+      # Add 1 character for $.
+      $max_name_length++;
+
+      // Generate phpDoc for the arguments of the wrapper method.
+      foreach ($theRoutine['phpdoc']['parameters'] as $parameter)
+      {
+        $format = sprintf( " * %%-%ds %%-%ds %%-%ds %%s", strlen( '@param' ), $max_type_length, $max_name_length );
+
+        $lines = explode( "\n", $parameter['description'] );
+        if ($lines)
+        {
+          $line = array_shift( $lines );
+          $this->writeLine( sprintf( $format, '@param', $parameter['php_type'], '$'.$parameter['name'], $line ) );
+          foreach ($lines as $line)
+          {
+            $this->writeLine( sprintf( $format, ' ', ' ', ' ', $line ) );
+          }
+        }
+        else
+        {
+          $this->writeLine( sprintf( $format, '@param', $parameter['php_type'], '$'.$parameter['name'], '' ) );
+        }
+
+        $this->writeLine( sprintf( $format, ' ', ' ', ' ', $parameter['column_type'] ) );
+      }
+    }
+    elseif ($theRoutine['type']==='bulk_insert')
+    {
+      // Generate parameter for bulk_insert routine type.
+      $this->writeLine( ' * @param array $theData' );
+    }
+
+    // Generate return parameter doc.
+    $return = $this->getPhpDocReturnType();
+    if ($return)
+    {
+      $this->writeLine( ' *' );
+      $this->writeLine( ' * @return '.$return );
+    }
+
+    $this->writeLine( ' */' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

@@ -1,3 +1,6 @@
+/**
+ * Test for designation type table.
+ */
 create procedure tst_test_table()
 reads sql data
 -- type: table

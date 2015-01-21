@@ -1,5 +1,7 @@
-/** Test for designation type rows_with_key.
-    @param p_count Bogus.
+/**
+ * Test for designation type rows_with_key.
+ *
+ * @param p_count Number of rows selected.
  */
 create procedure tst_test_rows_with_key1( p_count int )
 reads sql data

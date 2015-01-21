@@ -13,10 +13,20 @@ namespace SetBased\DataLayer\Generator\Wrapper;
 //----------------------------------------------------------------------------------------------------------------------
 /**
  * Class Singleton0Wrapper
+ *
  * @package SetBased\DataLayer\Generator\Wrapper
  */
 class Singleton0Wrapper extends Wrapper
 {
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * @return string
+   */
+  protected function getPhpDocReturnType()
+  {
+    return 'string';
+  }
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * {@inheritdoc}

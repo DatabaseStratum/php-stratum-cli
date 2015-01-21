@@ -1,4 +1,5 @@
-/** Test for magic constant.
+/**
+ * Test for magic constant.
  */
 create procedure tst_magic_constant03()
 reads sql data

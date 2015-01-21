@@ -13,10 +13,20 @@ namespace SetBased\DataLayer\Generator\Wrapper;
 //----------------------------------------------------------------------------------------------------------------------
 /**
  * Class TableWrapper
+ *
  * @package SetBased\DataLayer\Generator\Wrapper
  */
 class TableWrapper extends Wrapper
 {
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * @return string
+   */
+  protected function getPhpDocReturnType()
+  {
+    return 'int';
+  }
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * {@inheritdoc}

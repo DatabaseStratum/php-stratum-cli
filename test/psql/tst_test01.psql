@@ -1,4 +1,26 @@
-/** Test for all possible types of arguments without LOB's.
+/**
+ * Test for all possible types of arguments without LOB's.
+ *
+ * @param p_param00 Test parameter 00.
+ * @param p_param01 Test parameter 01.
+ * @param p_param02 Test parameter 02.
+ * @param p_param03 Test parameter 03.
+ * @param p_param04 Test parameter 04.
+ * @param p_param05 Test parameter 05.
+ * @param p_param06 Test parameter 06.
+ * @param p_param07 Test parameter 07.
+ * @param p_param08 Test parameter 08.
+ * @param p_param09 Test parameter 09.
+ * @param p_param10 Test parameter 10.
+ * @param p_param11 Test parameter 11.
+ * @param p_param12 Test parameter 12.
+ * @param p_param13 Test parameter 13.
+ * @param p_param14 Test parameter 14.
+ * @param p_param15 Test parameter 15.
+ * @param p_param16 Test parameter 16.
+ * @param p_param17 Test parameter 17.
+ * @param p_param26 Test parameter 26.
+ * @param p_param27 Test parameter 27.
  */
 create procedure tst_test01( p_param00 @tst_foo1.tst_c00%type@,
                              p_param01 @tst_foo1.tst_c01%type@,

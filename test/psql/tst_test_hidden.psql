@@ -1,4 +1,5 @@
-/** Test for desgination type hidden.
+/**
+ * Test for designation type hidden.
  */
 create procedure tst_test_hidden()
 reads sql data

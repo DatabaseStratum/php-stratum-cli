@@ -13,11 +13,21 @@ namespace SetBased\DataLayer\Generator\Wrapper;
 //----------------------------------------------------------------------------------------------------------------------
 /**
  * Class for generating a wrapper method for a stored procedure that selects 0 or more rows. The rows are
+ *
  * @package SetBased\DataLayer\Generator\Wrapper
- * returned as nested arrays.
+ *          returned as nested arrays.
  */
 class RowsWithKey extends Wrapper
 {
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * @return string
+   */
+  protected function getPhpDocReturnType()
+  {
+    return 'array[]';
+  }
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * {@inheritdoc}

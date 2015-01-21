@@ -18,6 +18,15 @@ class Row0Wrapper extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * @return string
+   */
+  protected function getPhpDocReturnType()
+  {
+    return 'array';
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * {@inheritdoc}
    */
   protected function writeResultHandler( $theRoutine )

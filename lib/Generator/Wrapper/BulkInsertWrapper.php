@@ -14,10 +14,20 @@ namespace SetBased\DataLayer\Generator\Wrapper;
 /**
  * Class for generating a wrapper method for a stored procedure that prepares a table to be used with a bulk SQL
  * statement.
+ *
  * @package SetBased\DataLayer\Generator\Wrapper
  */
 class BulkInsertWrapper extends Wrapper
 {
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * @return string
+   */
+  protected function getPhpDocReturnType()
+  {
+    return '';
+  }
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * {@inheritdoc}
@@ -71,24 +81,6 @@ class BulkInsertWrapper extends Wrapper
     $this->writeLine( '}' );
   }
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * {@inheritdoc}
-   */
-  protected function writeRoutineFunctionLobFetchData( $theRoutine )
-  {
-    // Nothing to do.
-  }
-
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * {@inheritdoc}
-   */
-  protected function writeRoutineFunctionLobReturnData()
-  {
-    // Nothing to do.
-  }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -160,6 +152,24 @@ class BulkInsertWrapper extends Wrapper
     }
 
     return $ret;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * {@inheritdoc}
+   */
+  protected function writeRoutineFunctionLobFetchData( $theRoutine )
+  {
+    // Nothing to do.
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * {@inheritdoc}
+   */
+  protected function writeRoutineFunctionLobReturnData()
+  {
+    // Nothing to do.
   }
 
   //--------------------------------------------------------------------------------------------------------------------

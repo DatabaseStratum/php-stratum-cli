@@ -1,5 +1,8 @@
-/** Test for desgination type rows_with_index.
-    @param p_count Bogus.
+/**
+ * Test for designation type rows_with_index with BLOB..
+ *
+ * @param p_count The number of rows selected.
+ * @param p_blob  The BLOB.
  */
 create procedure tst_test_rows_with_index1_with_lob( p_count int,
                                                      p_blob  blob )

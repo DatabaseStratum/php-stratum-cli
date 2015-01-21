@@ -135,10 +135,8 @@ class MySqlRoutineWrapperGenerator
       echo "No files with stored routines found.\n";
     }
 
-
     // Write the trailer of the wrapper class.
     $this->writeClassTrailer();
-
 
     $write_wrapper_file_flag = true;
     if (file_exists( $this->myWrapperFilename ))

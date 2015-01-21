@@ -20,6 +20,15 @@ class NoneWrapper extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * @return string
+   */
+  protected function getPhpDocReturnType()
+  {
+    return 'int';
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * {@inheritdoc}
    */
   protected function writeResultHandler( $theRoutine )

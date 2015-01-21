@@ -1,5 +1,8 @@
-/** Test for desgination type row1.
-    @param p_count The number of rows selected.
+/**
+ * Test for designation type rows.
+ *
+ * @param p_count The number of rows selected.
+ * @param p_blob  The BLOB.
  */
 create procedure tst_test_rows1_with_lob( p_count int,
                                           p_blob  blob )
