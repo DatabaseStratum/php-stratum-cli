@@ -142,7 +142,7 @@ class MySqlConfigConstants
   /**
    * Returns the width of a field based on column.
    *
-   * @param $theColumn array The column of which the field is based.
+   * @param array $theColumn The column of which the field is based.
    *
    * @returns int|null The width of the column.
    */
@@ -316,8 +316,6 @@ union all
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Gets all primary key labels from the MySQL database.
-   *
-   * @see $myLabels The property where the labels are stored..
    */
   private function getLabels()
   {
@@ -407,11 +405,11 @@ where   nullif(`%s`,'') is not null";
   /**
    * Returns the value of a setting.
    *
-   * @param $theSettings      array  The settings as returned by parse_ini_file.
-   * @param $theMandatoryFlag bool   If set and setting $theSettingName is not found in section $theSectionName
-   *                          an exception will be thrown.
-   * @param $theSectionName   string The name of the section of the requested setting.
-   * @param $theSettingName   string The name of the setting of the requested setting.
+   * @param array  $theSettings      The settings as returned by parse_ini_file.
+   * @param bool   $theMandatoryFlag If set and setting $theSettingName is not found in section $theSectionName
+   *                                 an exception will be thrown.
+   * @param string $theSectionName   The name of the section of the requested setting.
+   * @param string $theSettingName   The name of the setting of the requested setting.
    *
    * @return array|null
    */
@@ -550,8 +548,6 @@ where   nullif(`%s`,'') is not null";
    * Creates a PHP configuration file from the configuration template file. In the configuration template file the
    * place holder for constants is replaced with the constants definition.
    *
-   * @see $myConfigFilename Property with the name of the configuration file.
-   * @see $myTemplateConfigFilename Property with the name of the configuration template file.
    */
   private function writeTargetConfigFile()
   {

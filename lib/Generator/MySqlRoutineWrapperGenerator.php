@@ -113,7 +113,7 @@ class MySqlRoutineWrapperGenerator
 
     DataLayer::connect( $this->myHostName, $this->myUserName, $this->myPassword, $this->myDatabase );
 
-    $routines = $this->readRoutineMetaData();
+    $routines = $this->readRoutineMetadata();
 
     // Write the header of the wrapper class.
     $this->writeClassHeader();
@@ -195,8 +195,6 @@ class MySqlRoutineWrapperGenerator
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Reads parameters from the configuration file.
-   *
-   * @see $myConfigurationFilename The property with the filename of the configuration file.
    */
   private function readConfigurationFile()
   {
@@ -226,11 +224,9 @@ class MySqlRoutineWrapperGenerator
   /**
    * Returns the metadata of stored routines.
    *
-   * @see $myMetadataFilename The property with filename of the file with the metadata.
-   *
    * @return array
    */
-  private function readRoutineMetaData()
+  private function readRoutineMetadata()
   {
     $data = file_get_contents( $this->myMetadataFilename );
     if ($data===false) set_assert_failed( "Error reading file '%s'.", $this->myMetadataFilename );

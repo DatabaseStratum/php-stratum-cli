@@ -76,11 +76,11 @@ class MySqlRoutineLoader
   private $myMetadataFilename;
 
   /**
-   * Metadata about old routines.
+   * Old metadata about all stored routines.
    *
    * @var array
    */
-  private $myOldRoutinesInfo;
+  private $myOldStoredRoutinesInfo;
 
   /**
    * User password.
@@ -90,18 +90,18 @@ class MySqlRoutineLoader
   private $myPassword;
 
   /**
-   * All found routines files.
-   *
-   * @var array
-   */
-  private $myRouteFileNames = array();
-
-  /**
    * A map from placeholders to their actual values.
    *
    * @var array
    */
   private $myReplacePairs = array();
+
+  /**
+   * All found stored routines source files.
+   *
+   * @var array
+   */
+  private $mySourceFileNames = array();
 
   /**
    * The SQL mode under which the stored routine will be loaded and run.
@@ -160,59 +160,214 @@ class MySqlRoutineLoader
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Loads all stored routines into MySQL.
-   *
-   * @param string $theConfigFilename The filename of the configuration file.
+   * Drops obsolete stored routines (i.e. routines that exits in the current schema but for which we don't have a
+   * source file).
    */
-  private function loadAll( $theConfigFilename )
+  private function dropObsoleteRoutines()
   {
-    $this->readConfigFile( $theConfigFilename );
+    foreach ($this->myOldStoredRoutinesInfo as $old_routine)
+    {
+      if (!isset($this->mySourceFileNames[$old_routine['routine_name']]))
+      {
+        echo sprintf( "Dropping %s %s\n",
+                      strtolower( $old_routine['routine_type'] ),
+                      $old_routine['routine_name'] );
 
-    DataLayer::connect( $this->myHostName, $this->myUserName, $this->myPassword, $this->myDatabase );
-
-    $this->findPsqlFiles();
-    $this->getColumnTypes();
-    $this->readRoutineMetaData();
-    $this->getConstants();
-    $this->getOldRoutines();
-    $this->getCorrectSqlMode();
-
-    $this->loadRoutineFiles();
-
-    // Drop obsolete stored routines.
-    $this->dropObsoleteRoutines();
-
-    // Remove metadata of stored routines that have been removed.
-    $this->removeObsoleteMetadata();
-
-    // Write the metadata to file.
-    $this->writeRoutineMetadata();
-
-    DataLayer::disconnect();
+        $sql = sprintf( "drop %s if exists %s", $old_routine['routine_type'], $old_routine['routine_name'] );
+        DataLayer::executeNone( $sql );
+      }
+    }
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Reads parameters from the configuration file.
+   * Searches recursively for all .psql files in a directory.
    *
-   * @param string $theConfigFilename
+   * @param string $theSourceDir The directory.
    */
-  private function readConfigFile( $theConfigFilename )
+  private function findSourceFiles( $theSourceDir = null )
   {
-    $settings = parse_ini_file( $theConfigFilename, true );
-    if ($settings===false) set_assert_failed( "Unable open configuration file." );
+    if ($theSourceDir===null) $theSourceDir = $this->myIncludePath;
 
-    $this->myHostName = $this->getSetting( $settings, true, 'database', 'host_name' );
-    $this->myUserName = $this->getSetting( $settings, true, 'database', 'user_name' );
-    $this->myPassword = $this->getSetting( $settings, true, 'database', 'password' );
-    $this->myDatabase = $this->getSetting( $settings, true, 'database', 'database_name' );
+    $psql_filenames = glob( "$theSourceDir/*.psql" );
+    foreach ($psql_filenames as $psql_filename)
+    {
+      $base_name = basename( $psql_filename, '.psql' );
+      if (!isset($this->mySourceFileNames[$base_name]))
+      {
+        $this->mySourceFileNames[$base_name] = $psql_filename;
+      }
+      else
+      {
+        echo sprintf( "Error: Files '%s' and '%s' have the same basename.\n",
+                      $this->mySourceFileNames[$base_name],
+                      $psql_filename );
+        $this->myErrorFileNames[] = $psql_filename;
+      }
+    }
 
-    $this->myMetadataFilename     = $this->getSetting( $settings, true, 'wrapper', 'metadata' );
-    $this->myIncludePath          = $this->getSetting( $settings, true, 'loader', 'psql' );
-    $this->myTargetConfigFilename = $this->getSetting( $settings, false, 'loader', 'config' );
-    $this->mySqlMode              = $this->getSetting( $settings, true, 'loader', 'sql_mode' );
-    $this->myCharacterSet         = $this->getSetting( $settings, true, 'loader', 'character_set' );
-    $this->myCollate              = $this->getSetting( $settings, true, 'loader', 'collate' );
+    if (is_dir( $theSourceDir ))
+    {
+      $filenames = scandir( $theSourceDir );
+      $dir_names = array();
+      foreach ($filenames as $filename)
+      {
+        if (is_dir( $theSourceDir.'/'.$filename ))
+        {
+          if ($filename!='.' && $filename!='..')
+          {
+            $dir_names[] = $theSourceDir.'/'.$filename;
+          }
+        }
+      }
+
+      foreach ($dir_names as $dir_name)
+      {
+        $this->findSourceFiles( $dir_name );
+      }
+    }
+    else
+    {
+      echo sprintf( "Error: Directory '%s' not exist.\n", $theSourceDir );
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Finds all source files that actually exists from a list of filenames.
+   *
+   * @param array $theFileNames The list of filenames.
+   */
+  private function findSourceFilesFromList( $theFileNames )
+  {
+    foreach ($theFileNames as $psql_filename)
+    {
+      if (file_exists( $psql_filename ))
+      {
+        $base_name = basename( $psql_filename, '.psql' );
+        if (!isset($this->mySourceFileNames[$base_name]))
+        {
+          $this->mySourceFileNames[$base_name] = $psql_filename;
+        }
+        else
+        {
+          echo sprintf( "Error: Files '%s' and '%s' have the same basename.\n",
+                        $this->mySourceFileNames[$base_name],
+                        $psql_filename );
+          $this->myErrorFileNames[] = $psql_filename;
+        }
+      }
+      else
+      {
+        echo sprintf( "File not exists: '%s'.\n", $psql_filename );
+      }
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Selects schema, table, column names and the column type from MySQL and saves them as replace pairs.
+   */
+  private function getColumnTypes()
+  {
+    $query = '
+select table_name                                    table_name
+,      column_name                                   column_name
+,      column_type                                   column_type
+,      character_set_name                            character_set_name
+,      null                                          table_schema
+from   information_schema.COLUMNS
+where  table_schema = database()
+union all
+select table_name                                    table_name
+,      column_name                                   column_name
+,      column_type                                   column_type
+,      character_set_name                            character_set_name
+,      table_schema                                  table_schema
+from   information_schema.COLUMNS
+order by table_schema
+,        table_name
+,        column_name';
+
+    $rows = DataLayer::executeRows( $query );
+    foreach ($rows as $row)
+    {
+      $key = '@';
+      if (isset($row['table_schema'])) $key .= $row['table_schema'].'.';
+      $key .= $row['table_name'].'.'.$row['column_name'].'%type@';
+      $key = strtoupper( $key );
+
+      $value = $row['column_type'];
+      if (isset($row['character_set_name'])) $value .= ' character set '.$row['character_set_name'];
+
+      $this->myReplacePairs[$key] = $value;
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Reads constants set the PHP configuration file and  adds them to the replace pairs.
+   */
+  private function getConstants()
+  {
+    // If myTargetConfigFilename is not set return immediately.
+    if (!isset($this->myTargetConfigFilename)) return;
+
+    if (!is_readable( $this->myTargetConfigFilename ))
+    {
+      set_assert_failed( "Configuration file is not readable '%s'.",
+                         $this->myTargetConfigFilename );
+    }
+
+    require_once($this->myTargetConfigFilename);
+    $constants    = get_defined_constants( true );
+    $user_defined = (isset($constants['user'])) ? $constants['user'] : array();
+
+    foreach ($user_defined as $name => $value)
+    {
+      if (!is_numeric( $value )) $value = "'$value'";
+
+      $this->myReplacePairs['@'.$name.'@'] = $value;
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Gets the SQL mode in the order as preferred by MySQL.
+   */
+  private function getCorrectSqlMode()
+  {
+    $sql = sprintf( "set sql_mode ='%s'", $this->mySqlMode );
+    DataLayer::executeNone( $sql );
+
+    $query           = "select @@sql_mode;";
+    $tmp             = DataLayer::executeRows( $query );
+    $this->mySqlMode = $tmp[0]['@@sql_mode'];
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Retrieves information about all stored routines in the current schema.
+   */
+  private function getOldStoredRoutinesInfo()
+  {
+    $query = "
+select routine_name
+,      routine_type
+,      sql_mode
+,      character_set_client
+,      collation_connection
+from  information_schema.ROUTINES
+where ROUTINE_SCHEMA = database()
+order by routine_name";
+
+    $rows = DataLayer::executeRows( $query );
+
+    $this->myOldStoredRoutinesInfo = array();
+    foreach ($rows as $row)
+    {
+      $this->myOldStoredRoutinesInfo[$row['routine_name']] = $row;
+    }
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -261,272 +416,35 @@ class MySqlRoutineLoader
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Searches recursively for all .psql files in a directory.
+   * Loads all stored routines into MySQL.
    *
-   * @param string $theSourceDir The directory.
+   * @param string $theConfigFilename The filename of the configuration file.
    */
-  private function findPsqlFiles( $theSourceDir = null )
+  private function loadAll( $theConfigFilename )
   {
-    if ($theSourceDir===null) $theSourceDir = $this->myIncludePath;
+    $this->readConfigFile( $theConfigFilename );
 
-    $psql_filenames = glob( "$theSourceDir/*.psql" );
-    foreach ($psql_filenames as $psql_filename)
-    {
-      $base_name = basename( $psql_filename, '.psql' );
-      if (!isset($this->myRouteFileNames[$base_name]))
-      {
-        $this->myRouteFileNames[$base_name] = $psql_filename;
-      }
-      else
-      {
-        echo sprintf( "Error: Files '%s' and '%s' have the same basename.\n",
-                      $this->myRouteFileNames[$base_name],
-                      $psql_filename );
-        $this->myErrorFileNames[] = $psql_filename;
-      }
-    }
+    DataLayer::connect( $this->myHostName, $this->myUserName, $this->myPassword, $this->myDatabase );
 
-    if (is_dir( $theSourceDir ))
-    {
-      $filenames = scandir( $theSourceDir );
-      $dir_names = array();
-      foreach ($filenames as $filename)
-      {
-        if (is_dir( $theSourceDir.'/'.$filename ))
-        {
-          if ($filename!='.' && $filename!='..')
-          {
-            $dir_names[] = $theSourceDir.'/'.$filename;
-          }
-        }
-      }
+    $this->findSourceFiles();
+    $this->getColumnTypes();
+    $this->readStoredRoutineMetadata();
+    $this->getConstants();
+    $this->getOldStoredRoutinesInfo();
+    $this->getCorrectSqlMode();
 
-      foreach ($dir_names as $dir_name)
-      {
-        $this->findPsqlFiles( $dir_name );
-      }
-    }
-    else
-    {
-      echo sprintf( "Error: Directory '%s' not exist.\n", $theSourceDir );
-    }
-  }
+    $this->loadStoredRoutines();
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Selects schema, table, column names and the column type from MySQL and saves them as replace pairs.
-   *
-   * @see $myReplacePairs The property were the replace pairs are stored.
-   */
-  private function getColumnTypes()
-  {
-    $query = '
-select table_name                                    table_name
-,      column_name                                   column_name
-,      column_type                                   column_type
-,      character_set_name                            character_set_name
-,      null                                          table_schema
-from   information_schema.COLUMNS
-where  table_schema = database()
-union all
-select table_name                                    table_name
-,      column_name                                   column_name
-,      column_type                                   column_type
-,      character_set_name                            character_set_name
-,      table_schema                                  table_schema
-from   information_schema.COLUMNS
-order by table_schema
-,        table_name
-,        column_name';
+    // Drop obsolete stored routines.
+    $this->dropObsoleteRoutines();
 
-    $rows = DataLayer::executeRows( $query );
-    foreach ($rows as $row)
-    {
-      $key = '@';
-      if (isset($row['table_schema'])) $key .= $row['table_schema'].'.';
-      $key .= $row['table_name'].'.'.$row['column_name'].'%type@';
-      $key = strtoupper( $key );
+    // Remove metadata of stored routines that have been removed.
+    $this->removeObsoleteMetadata();
 
-      $value = $row['column_type'];
-      if (isset($row['character_set_name'])) $value .= ' character set '.$row['character_set_name'];
+    // Write the metadata to file.
+    $this->writeStoredRoutineMetadata();
 
-      $this->myReplacePairs[$key] = $value;
-    }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Reads the metadata of stored routines from file.
-   *
-   * @see $myMetadataFilename The filename with the metadata is stored.
-   * @see $myMetadata The proeprty were the metadata is stored.
-   */
-  private function readRoutineMetaData()
-  {
-    if (file_exists( $this->myMetadataFilename ))
-    {
-      $data = file_get_contents( $this->myMetadataFilename );
-      if ($data===false) set_assert_failed( "Error reading file '%s'.", $this->myMetadataFilename );
-
-      $this->myMetadata = json_decode( $data, true );
-      if (json_last_error()!=JSON_ERROR_NONE) set_assert_failed( "Error decoding JSON: '%s'.", json_last_error_msg() );
-    }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Reads constants set the PHP configuration file and  adds them to the replace pairs.
-   *
-   * @see $myTargetConfigFilename The property with HP configuration filename.
-   * @see $myReplacePairs The property were the replace pairs are stored.
-   */
-  private function getConstants()
-  {
-    // If myTargetConfigFilename is not set return immediately.
-    if (!isset($this->myTargetConfigFilename)) return;
-
-    if (!is_readable( $this->myTargetConfigFilename ))
-    {
-      set_assert_failed( "Configuration file is not readable '%s'.",
-                         $this->myTargetConfigFilename );
-    }
-
-    require_once($this->myTargetConfigFilename);
-    $constants    = get_defined_constants( true );
-    $user_defined = (isset($constants['user'])) ? $constants['user'] : array();
-
-    foreach ($user_defined as $name => $value)
-    {
-      if (!is_numeric( $value )) $value = "'$value'";
-
-      $this->myReplacePairs['@'.$name.'@'] = $value;
-    }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Retrieves information about all stored routines in the current schema.
-   *
-   * @see $myOldRoutines The property where the information is stored.
-   */
-  private function getOldRoutines()
-  {
-    $query = "
-select routine_name
-,      routine_type
-,      sql_mode
-,      character_set_client
-,      collation_connection
-from  information_schema.ROUTINES
-where ROUTINE_SCHEMA = database()
-order by routine_name";
-
-    $rows = DataLayer::executeRows( $query );
-
-    $this->myOldRoutinesInfo = array();
-    foreach ($rows as $row)
-    {
-      $this->myOldRoutinesInfo[$row['routine_name']] = $row;
-    }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Gets the SQL mode in the order as preferred by MySQL.
-   */
-  private function getCorrectSqlMode()
-  {
-    $sql = sprintf( "set sql_mode ='%s'", $this->mySqlMode );
-    DataLayer::executeNone( $sql );
-
-    $query           = "select @@sql_mode;";
-    $tmp             = DataLayer::executeRows( $query );
-    $this->mySqlMode = $tmp[0]['@@sql_mode'];
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Loads all found routines.
-   */
-  private function loadRoutineFiles()
-  {
-    foreach ($this->myRouteFileNames as $filename)
-    {
-      $routine_name = basename( $filename, '.psql' );
-
-      $routine = new MySqlRoutineLoaderHelper( $filename,
-                                               isset($this->myMetadata[$routine_name]) ? $this->myMetadata[$routine_name] : null,
-                                               $this->myReplacePairs,
-                                               isset($this->myOldRoutinesInfo[$routine_name]) ? $this->myOldRoutinesInfo[$routine_name] : null,
-                                               $this->mySqlMode,
-                                               $this->myCharacterSet,
-                                               $this->myCollate );
-
-      $meta_data = $routine->loadRoutine();
-      if ($meta_data===false)
-      {
-        $this->myErrorFileNames[] = $filename;
-        unset($this->myMetadata[$routine_name]);
-      }
-      else
-      {
-        $this->myMetadata[$routine_name] = $meta_data;
-      }
-    }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Drops obsolete routines (i.e. routines that exits in the current schema but for which we don't have a source file).
-   */
-  private function dropObsoleteRoutines()
-  {
-    foreach ($this->myOldRoutinesInfo as $old_routine)
-    {
-      if (!isset($this->myRouteFileNames[$old_routine['routine_name']]))
-      {
-        echo sprintf( "Dropping %s %s\n",
-                      strtolower( $old_routine['routine_type'] ),
-                      $old_routine['routine_name'] );
-
-        $sql = sprintf( "drop %s if exists %s", $old_routine['routine_type'], $old_routine['routine_name'] );
-        DataLayer::executeNone( $sql );
-      }
-    }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Removes obsolete entries from the metadata.
-   *
-   * @see $myMetadata The proeprty were the metadata is stored.
-   */
-  private function removeObsoleteMetadata()
-  {
-    $clean = array();
-    foreach ($this->myRouteFileNames as $myPsqlFilename)
-    {
-      $tmp = basename( $myPsqlFilename, '.psql' );
-      if (isset($this->myMetadata[$tmp])) $clean[$tmp] = $this->myMetadata[$tmp];
-    }
-    $this->myMetadata = $clean;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Writes the stored routines metadata @c myMetadata to file @c myMetadataFilename.
-   */
-  private function writeRoutineMetadata()
-  {
-    // Note: Constant JSON_PRETTY_PRINT was introduced in php 5.4 while we want to be compatible with php 5.3.
-    $options = 0;
-    if (defined( 'JSON_PRETTY_PRINT' )) $options = $options | constant( 'JSON_PRETTY_PRINT' );
-
-    $json_data = json_encode( $this->myMetadata, $options );
-    if (json_last_error()!=JSON_ERROR_NONE) set_assert_failed( "Error of encoding to JSON: '%s'.", json_last_error_msg() );
-
-    $bytes = file_put_contents( $this->myMetadataFilename, $json_data );
-    if ($bytes===false) set_assert_failed( "Error writing file '%s'.", $this->myMetadataFilename );
+    DataLayer::disconnect();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -542,52 +460,124 @@ order by routine_name";
 
     DataLayer::connect( $this->myHostName, $this->myUserName, $this->myPassword, $this->myDatabase );
 
-    $this->findPsqlFilesFromList( $theFileNames );
+    $this->findSourceFilesFromList( $theFileNames );
     $this->getColumnTypes();
-    $this->readRoutineMetaData();
+    $this->readStoredRoutineMetadata();
     $this->getConstants();
-    $this->getOldRoutines();
+    $this->getOldStoredRoutinesInfo();
     $this->getCorrectSqlMode();
 
-    $this->loadRoutineFiles();
+    $this->loadStoredRoutines();
 
     // Write the metadata to @c $myMetadataFilename.
-    $this->writeRoutineMetadata();
+    $this->writeStoredRoutineMetadata();
 
     DataLayer::disconnect();
   }
 
-
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Finds all .psql files that actually exists from a list of filenames.
-   *
-   * @param array $theFilenames The list of filenames.
+   * Loads all stored routines.
    */
-  private function findPsqlFilesFromList( $theFilenames )
+  private function loadStoredRoutines()
   {
-    foreach ($theFilenames as $psql_filename)
+    foreach ($this->mySourceFileNames as $filename)
     {
-      if (file_exists( $psql_filename ))
+      $routine_name = basename( $filename, '.psql' );
+
+      $helper = new MySqlRoutineLoaderHelper( $filename,
+                                              isset($this->myMetadata[$routine_name]) ? $this->myMetadata[$routine_name] : null,
+                                              $this->myReplacePairs,
+                                              isset($this->myOldStoredRoutinesInfo[$routine_name]) ? $this->myOldStoredRoutinesInfo[$routine_name] : null,
+                                              $this->mySqlMode,
+                                              $this->myCharacterSet,
+                                              $this->myCollate );
+
+      $meta_data = $helper->loadStoredRoutine();
+      if ($meta_data===false)
       {
-        $base_name = basename( $psql_filename, '.psql' );
-        if (!isset($this->myRouteFileNames[$base_name]))
-        {
-          $this->myRouteFileNames[$base_name] = $psql_filename;
-        }
-        else
-        {
-          echo sprintf( "Error: Files '%s' and '%s' have the same basename.\n",
-                        $this->myRouteFileNames[$base_name],
-                        $psql_filename );
-          $this->myErrorFileNames[] = $psql_filename;
-        }
+        # An error occurred during the loading og the stored routine.
+        $this->myErrorFileNames[] = $filename;
+        unset($this->myMetadata[$routine_name]);
       }
       else
       {
-        echo sprintf( "File not exists: '%s'.\n", $psql_filename );
+        # Stored routine is successfully loaded.
+        $this->myMetadata[$routine_name] = $meta_data;
       }
     }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Reads parameters from the configuration file.
+   *
+   * @param string $theConfigFilename
+   */
+  private function readConfigFile( $theConfigFilename )
+  {
+    $settings = parse_ini_file( $theConfigFilename, true );
+    if ($settings===false) set_assert_failed( "Unable open configuration file." );
+
+    $this->myHostName = $this->getSetting( $settings, true, 'database', 'host_name' );
+    $this->myUserName = $this->getSetting( $settings, true, 'database', 'user_name' );
+    $this->myPassword = $this->getSetting( $settings, true, 'database', 'password' );
+    $this->myDatabase = $this->getSetting( $settings, true, 'database', 'database_name' );
+
+    $this->myMetadataFilename     = $this->getSetting( $settings, true, 'wrapper', 'metadata' );
+    $this->myIncludePath          = $this->getSetting( $settings, true, 'loader', 'psql' );
+    $this->myTargetConfigFilename = $this->getSetting( $settings, false, 'loader', 'config' );
+    $this->mySqlMode              = $this->getSetting( $settings, true, 'loader', 'sql_mode' );
+    $this->myCharacterSet         = $this->getSetting( $settings, true, 'loader', 'character_set' );
+    $this->myCollate              = $this->getSetting( $settings, true, 'loader', 'collate' );
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Reads the metadata of stored routines from the metadata file.
+   */
+  private function readStoredRoutineMetadata()
+  {
+    if (file_exists( $this->myMetadataFilename ))
+    {
+      $data = file_get_contents( $this->myMetadataFilename );
+      if ($data===false) set_assert_failed( "Error reading file '%s'.", $this->myMetadataFilename );
+
+      $this->myMetadata = json_decode( $data, true );
+      if (json_last_error()!=JSON_ERROR_NONE) set_assert_failed( "Error decoding JSON: '%s'.", json_last_error_msg() );
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Removes obsolete entries from the metadata of all stored routines.
+   */
+  private function removeObsoleteMetadata()
+  {
+    $clean = array();
+    foreach ($this->mySourceFileNames as $myPsqlFilename)
+    {
+      $tmp = basename( $myPsqlFilename, '.psql' );
+      if (isset($this->myMetadata[$tmp])) $clean[$tmp] = $this->myMetadata[$tmp];
+    }
+    $this->myMetadata = $clean;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Writes the metadata of all stored routines to the metadata file.
+   */
+  private function writeStoredRoutineMetadata()
+  {
+    // Note: Constant JSON_PRETTY_PRINT was introduced in php 5.4 while we want to be compatible with php 5.3.
+    $options = 0;
+    if (defined( 'JSON_PRETTY_PRINT' )) $options = $options | constant( 'JSON_PRETTY_PRINT' );
+
+    $json_data = json_encode( $this->myMetadata, $options );
+    if (json_last_error()!=JSON_ERROR_NONE) set_assert_failed( "Error of encoding to JSON: '%s'.", json_last_error_msg() );
+
+    $bytes = file_put_contents( $this->myMetadataFilename, $json_data );
+    if ($bytes===false) set_assert_failed( "Error writing file '%s'.", $this->myMetadataFilename );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
