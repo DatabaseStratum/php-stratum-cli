@@ -14,7 +14,7 @@ use SetBased\DataLayer\StaticDataLayer as DataLayer;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class for loading stored routines into a MySQL instance from pseudo SQL files (.psql).
+ * Class for loading stored routines into a MySQL instance from pseudo SQL files.
  */
 class MySqlRoutineLoader
 {
@@ -41,7 +41,7 @@ class MySqlRoutineLoader
   private $myDatabase;
 
   /**
-   * An array with psql filename that are not loaded into MySQL.
+   * An array with routine filename that are not loaded into MySQL.
    *
    * @var array
    */
@@ -55,11 +55,11 @@ class MySqlRoutineLoader
   private $myHostName;
 
   /**
-   * Path where .psql files can be found.
+   * Path where routine files can be found.
    *
    * @var string
    */
-  private $myIncludePath;
+  private $mySourceDirectory;
 
   /**
    * The metadata of all stored routines.
@@ -96,6 +96,8 @@ class MySqlRoutineLoader
    */
   private $myReplacePairs = array();
 
+  private $mySourceFileExtension;
+
   /**
    * All found stored routines source files.
    *
@@ -129,7 +131,7 @@ class MySqlRoutineLoader
    * Loads stored routines into the current schema.
    *
    * @param string   $theConfigFilename The name of the configuration file of the current project
-   * @param string[] $theFileNames      The filenames with stored routines that mus be loaded. If empty all stored
+   * @param string[] $theFileNames      The file names with stored routines that mus be loaded. If empty all stored
    *                                    routines (if required) will loaded.
    *
    * @return int Returns 0 on success, 1 if one or more errors occurred.
@@ -181,18 +183,18 @@ class MySqlRoutineLoader
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Searches recursively for all .psql files in a directory.
+   * Searches recursively for all routine files in a directory.
    *
    * @param string $theSourceDir The directory.
    */
   private function findSourceFiles( $theSourceDir = null )
   {
-    if ($theSourceDir===null) $theSourceDir = $this->myIncludePath;
+    if ($theSourceDir===null) $theSourceDir = $this->mySourceDirectory;
 
-    $psql_filenames = glob( "$theSourceDir/*.psql" );
+    $psql_filenames = glob( $theSourceDir.'/*'.$this->mySourceFileExtension );
     foreach ($psql_filenames as $psql_filename)
     {
-      $base_name = basename( $psql_filename, '.psql' );
+      $base_name = basename( $psql_filename, $this->mySourceFileExtension );
       if (!isset($this->mySourceFileNames[$base_name]))
       {
         $this->mySourceFileNames[$base_name] = $psql_filename;
@@ -244,7 +246,7 @@ class MySqlRoutineLoader
     {
       if (file_exists( $psql_filename ))
       {
-        $base_name = basename( $psql_filename, '.psql' );
+        $base_name = basename( $psql_filename, $this->mySourceFileExtension );
         if (!isset($this->mySourceFileNames[$base_name]))
         {
           $this->mySourceFileNames[$base_name] = $psql_filename;
@@ -483,9 +485,10 @@ order by routine_name";
   {
     foreach ($this->mySourceFileNames as $filename)
     {
-      $routine_name = basename( $filename, '.psql' );
+      $routine_name = basename( $filename, $this->mySourceFileExtension );
 
       $helper = new MySqlRoutineLoaderHelper( $filename,
+                                              $this->mySourceFileExtension,
                                               isset($this->myMetadata[$routine_name]) ? $this->myMetadata[$routine_name] : null,
                                               $this->myReplacePairs,
                                               isset($this->myOldStoredRoutinesInfo[$routine_name]) ? $this->myOldStoredRoutinesInfo[$routine_name] : null,
@@ -525,7 +528,8 @@ order by routine_name";
     $this->myDatabase = $this->getSetting( $settings, true, 'database', 'database_name' );
 
     $this->myMetadataFilename     = $this->getSetting( $settings, true, 'wrapper', 'metadata' );
-    $this->myIncludePath          = $this->getSetting( $settings, true, 'loader', 'psql' );
+    $this->mySourceDirectory          = $this->getSetting( $settings, true, 'loader', 'source_directory' );
+    $this->mySourceFileExtension  = $this->getSetting( $settings, true, 'loader', 'extension' );
     $this->myTargetConfigFilename = $this->getSetting( $settings, false, 'loader', 'config' );
     $this->mySqlMode              = $this->getSetting( $settings, true, 'loader', 'sql_mode' );
     $this->myCharacterSet         = $this->getSetting( $settings, true, 'loader', 'character_set' );
@@ -557,7 +561,7 @@ order by routine_name";
     $clean = array();
     foreach ($this->mySourceFileNames as $myPsqlFilename)
     {
-      $tmp = basename( $myPsqlFilename, '.psql' );
+      $tmp = basename( $myPsqlFilename, $this->mySourceFileExtension );
       if (isset($this->myMetadata[$tmp])) $clean[$tmp] = $this->myMetadata[$tmp];
     }
     $this->myMetadata = $clean;
