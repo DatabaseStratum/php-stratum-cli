@@ -1,6 +1,6 @@
 {
   "name": "setbased/php-stratum",
-  "description": "A stored routine loader, wrapper generator and more for MySQL in PHP.",
+  "description": "A stored procedure and function loader, wrapper generator and more for MySQL in PHP.",
   "keywords": ["MySQL","Stored Routines","Stored Procedures","Stored Functions","Wrapper","Loader","PHP"],
   "type": "tool",
   "license": "MIT",
