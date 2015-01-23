@@ -700,7 +700,7 @@ and   t1.routine_name   = '%s'", $this->myRoutineName );
       {
         $this->myRoutineParameterNames[]       = $routine_parameter['parameter_name'];
         $this->myRoutineParameterTypes[]       = $routine_parameter['parameter_type'];
-        $this->myRoutineParameterColumnTypes[] = $routine_parameter['mysql_type'];
+        $this->myRoutineParameterColumnTypes[] = $routine_parameter['column_type'];
       }
     }
   }
