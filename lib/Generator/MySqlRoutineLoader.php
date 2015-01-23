@@ -96,6 +96,10 @@ class MySqlRoutineLoader
    */
   private $mySourceDirectory;
 
+  /**
+   * The extension of the source files.
+   * @var string
+   */
   private $mySourceFileExtension;
 
   /**
