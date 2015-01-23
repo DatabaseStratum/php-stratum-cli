@@ -41,7 +41,7 @@ class MySqlRoutineLoader
   private $myDatabase;
 
   /**
-   * An array with routine filename that are not loaded into MySQL.
+   * An array with source filenames that are not loaded into MySQL.
    *
    * @var array
    */
@@ -53,13 +53,6 @@ class MySqlRoutineLoader
    * @var string
    */
   private $myHostName;
-
-  /**
-   * Path where routine files can be found.
-   *
-   * @var string
-   */
-  private $mySourceDirectory;
 
   /**
    * The metadata of all stored routines.
@@ -96,10 +89,17 @@ class MySqlRoutineLoader
    */
   private $myReplacePairs = array();
 
+  /**
+   * Path where source files can be found.
+   *
+   * @var string
+   */
+  private $mySourceDirectory;
+
   private $mySourceFileExtension;
 
   /**
-   * All found stored routines source files.
+   * All found source files.
    *
    * @var array
    */
@@ -131,8 +131,8 @@ class MySqlRoutineLoader
    * Loads stored routines into the current schema.
    *
    * @param string   $theConfigFilename The name of the configuration file of the current project
-   * @param string[] $theFileNames      The file names with stored routines that mus be loaded. If empty all stored
-   *                                    routines (if required) will loaded.
+   * @param string[] $theFileNames      The source filenames that must be loaded. If empty all sources (if required)
+   *                                    will loaded.
    *
    * @return int Returns 0 on success, 1 if one or more errors occurred.
    */
@@ -162,8 +162,8 @@ class MySqlRoutineLoader
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Drops obsolete stored routines (i.e. routines that exits in the current schema but for which we don't have a
-   * source file).
+   * Drops obsolete stored routines (i.e. stored routines that exits in the current schema but for which we don't have
+   * a source file).
    */
   private function dropObsoleteRoutines()
   {
@@ -183,7 +183,7 @@ class MySqlRoutineLoader
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Searches recursively for all routine files in a directory.
+   * Searches recursively for all source files in a directory.
    *
    * @param string $theSourceDir The directory.
    */
@@ -528,7 +528,7 @@ order by routine_name";
     $this->myDatabase = $this->getSetting( $settings, true, 'database', 'database_name' );
 
     $this->myMetadataFilename     = $this->getSetting( $settings, true, 'wrapper', 'metadata' );
-    $this->mySourceDirectory          = $this->getSetting( $settings, true, 'loader', 'source_directory' );
+    $this->mySourceDirectory      = $this->getSetting( $settings, true, 'loader', 'source_directory' );
     $this->mySourceFileExtension  = $this->getSetting( $settings, true, 'loader', 'extension' );
     $this->myTargetConfigFilename = $this->getSetting( $settings, false, 'loader', 'config' );
     $this->mySqlMode              = $this->getSetting( $settings, true, 'loader', 'sql_mode' );

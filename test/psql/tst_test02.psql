@@ -1,5 +1,5 @@
 /**
- * Test for all possible types of arguments with LOB's.
+ * Test for all possible types of parameters including LOB's.
  *
  * @param p_param00 Test parameter 00.
  * @param p_param01 Test parameter 01.

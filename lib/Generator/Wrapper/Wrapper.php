@@ -62,7 +62,7 @@ abstract class Wrapper
    */
   public static function createRoutineWrapper( $theRoutine, $theLobAsStringFlag )
   {
-    switch ($theRoutine['type'])
+    switch ($theRoutine['designation'])
     {
       case 'bulk':
         $wrapper = new BulkWrapper( $theLobAsStringFlag );
@@ -117,7 +117,7 @@ abstract class Wrapper
         break;
 
       default:
-        set_assert_failed( "Unknown routine type '%s'.", $theRoutine['type']."\n" );
+        set_assert_failed( "Unknown routine type '%s'.", $theRoutine['designation']."\n" );
         $wrapper = null; // Keep our IDE happy.
     }
 
@@ -126,21 +126,21 @@ abstract class Wrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns true if one of the arguments is a BLOB or CLOB.
+   * Returns true if one of the parameters is a BLOB or CLOB.
    *
-   * @param array|null $theArgumentsType The argument types.
+   * @param array|null $theParametersTypes The types of the parameter.
    *
    * @return bool
    */
-  public function isBlobArgument( $theArgumentsType )
+  public function isBlobParameter( $theParametersTypes )
   {
     $has_blob = false;
 
-    if ($theArgumentsType)
+    if ($theParametersTypes)
     {
-      foreach ($theArgumentsType as $argument_type)
+      foreach ($theParametersTypes as $parameter_type)
       {
-        switch ($argument_type)
+        switch ($parameter_type)
         {
           case 'tinytext':
           case 'text':
@@ -180,7 +180,7 @@ abstract class Wrapper
             break;
 
           default:
-            set_assert_failed( "Unknown argument type '%s'.", $argument_type );
+            set_assert_failed( "Unknown MySQL type '%s'.", $parameter_type );
         }
       }
     }
@@ -198,7 +198,7 @@ abstract class Wrapper
    */
   public function writeRoutineFunction( $theRoutine )
   {
-    if (!$this->myLobAsStringFlag && $this->isBlobArgument( $theRoutine['argument_types'] ))
+    if (!$this->myLobAsStringFlag && $this->isBlobParameter( $theRoutine['parameter_types'] ))
     {
       return $this->writeRoutineFunctionWithLob( $theRoutine );
     }
@@ -225,14 +225,14 @@ abstract class Wrapper
     $routine_args = $this->getRoutineArgs( $theRoutine );
 
 
-    $types = '';
+    $bindings = '';
     $nulls = '';
-    foreach ($theRoutine['argument_types'] as $theType)
+    foreach ($theRoutine['parameter_types'] as $type)
     {
-      $type = $this->getBindVariableType( $theType );
-      if ($type=='b')
+      $binding = $this->getBindVariableType( $type );
+      if ($binding=='b')
       {
-        $types .= 'b';
+        $bindings .= 'b';
         if ($nulls) $nulls .= ',';
         $nulls .= '$null';
       }
@@ -247,22 +247,22 @@ abstract class Wrapper
     $this->writeLine( 'if (!$stmt) self::sqlError( \'mysqli::prepare\' );' );
     $this->writeLine();
     $this->writeLine( '$null = null;' );
-    $this->writeLine( '$b = $stmt->bind_param( \''.$types.'\', '.$nulls.' );' );
+    $this->writeLine( '$b = $stmt->bind_param( \''.$bindings.'\', '.$nulls.' );' );
     $this->writeLine( 'if (!$b) self::sqlError( \'mysqli_stmt::bind_param\' );' );
     $this->writeLine();
     $this->writeLine( 'self::getMaxAllowedPacket();' );
     $this->writeLine();
 
     $blob_argument_index = 0;
-    foreach ($theRoutine['argument_types'] as $i => $argument)
+    foreach ($theRoutine['parameter_types'] as $i => $type)
     {
-      if ($this->getBindVariableType( $argument )=='b')
+      if ($this->getBindVariableType( $type )=='b')
       {
-        $this->writeLine( '$n = strlen( $'.$theRoutine['argument_names'][$i].' );' );
+        $this->writeLine( '$n = strlen( $'.$theRoutine['parameter_names'][$i].' );' );
         $this->writeLine( '$p = 0;' );
         $this->writeLine( 'while ($p<$n)' );
         $this->writeLine( '{' );
-        $this->writeLine( '$b = $stmt->send_long_data( '.$blob_argument_index.', substr( $'.$theRoutine['argument_names'][$i].', $p, self::$ourChunkSize ) );' );
+        $this->writeLine( '$b = $stmt->send_long_data( '.$blob_argument_index.', substr( $'.$theRoutine['parameter_names'][$i].', $p, self::$ourChunkSize ) );' );
         $this->writeLine( 'if (!$b) self::sqlError( \'mysqli_stmt::send_long_data\' );' );
         $this->writeLine( '$p += self::$ourChunkSize;' );
         $this->writeLine( '}' );
@@ -305,7 +305,7 @@ abstract class Wrapper
     $this->writeLine( 'public static function '.$wrapper_function_name.'( '.$wrapper_args.' )' );
     $this->writeLine( '{' );
 
-    $this->writeResultHandler( $theRoutine, $theRoutine['argument_types'] );
+    $this->writeResultHandler( $theRoutine, $theRoutine['parameter_types'] );
     $this->writeLine( '}' );
     $this->writeLine();
 
@@ -318,7 +318,7 @@ abstract class Wrapper
    *
    * @see http://php.net/manual/en/mysqli-stmt.bind-param.php
    *
-   * @param string $theType The argument type of on argument of a stored routine.
+   * @param string $theType The parameter type of a parameter of a stored routine.
    *
    * @return string
    */
@@ -368,7 +368,7 @@ abstract class Wrapper
         break;
 
       default:
-        set_assert_failed( "Unknown argument type '%s'.", $theType );
+        set_assert_failed( "Unknown MySQL type '%s'.", $theType );
     }
 
     return $ret;
@@ -392,12 +392,12 @@ abstract class Wrapper
   {
     $ret = '';
 
-    if ($theRoutine['argument_types'])
+    if ($theRoutine['parameter_types'])
     {
-      foreach ($theRoutine['argument_types'] as $i => $arg_type)
+      foreach ($theRoutine['parameter_types'] as $i => $arg_type)
       {
         if ($ret) $ret .= ',';
-        $ret .= $this->writeEscapedArgs( $arg_type, $theRoutine['argument_names'][$i] );
+        $ret .= $this->writeEscapedArgs( $arg_type, $theRoutine['parameter_names'][$i] );
       }
     }
 
@@ -406,7 +406,7 @@ abstract class Wrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns code for the arguments of the wrapper method for the stored routine.
+   * Returns code for the parameters of the wrapper method for the stored routine.
    *
    * @param $theRoutine array The metadata of the stored routine.
    *
@@ -414,7 +414,7 @@ abstract class Wrapper
    */
   protected function getWrapperArgs( $theRoutine )
   {
-    if ($theRoutine['type']=='bulk')
+    if ($theRoutine['designation']=='bulk')
     {
       $ret = '$theBulkHandler';
     }
@@ -423,9 +423,9 @@ abstract class Wrapper
       $ret = '';
     }
 
-    if (isset($theRoutine['argument_types']))
+    if (isset($theRoutine['parameter_types']))
     {
-      foreach ($theRoutine['argument_types'] as $i => $arg_type)
+      foreach ($theRoutine['parameter_types'] as $i => $arg_type)
       {
         if ($ret) $ret .= ', ';
         switch ($arg_type)
@@ -441,7 +441,7 @@ abstract class Wrapper
           case 'decimal':
           case 'float':
           case 'double':
-            $ret .= '$'.$theRoutine['argument_names'][$i];
+            $ret .= '$'.$theRoutine['parameter_names'][$i];
             break;
 
           case 'varbinary':
@@ -449,7 +449,7 @@ abstract class Wrapper
 
           case 'char':
           case 'varchar':
-            $ret .= '$'.$theRoutine['argument_names'][$i];
+            $ret .= '$'.$theRoutine['parameter_names'][$i];
             break;
 
           case 'time':
@@ -457,31 +457,31 @@ abstract class Wrapper
 
           case 'date':
           case 'datetime':
-            $ret .= '$'.$theRoutine['argument_names'][$i];
+            $ret .= '$'.$theRoutine['parameter_names'][$i];
             break;
 
           case 'enum':
           case 'bit':
           case 'set':
-            $ret .= '$'.$theRoutine['argument_names'][$i];
+            $ret .= '$'.$theRoutine['parameter_names'][$i];
             break;
 
           case 'tinytext':
           case 'text':
           case 'mediumtext':
           case 'longtext':
-            $ret .= '$'.$theRoutine['argument_names'][$i];
+            $ret .= '$'.$theRoutine['parameter_names'][$i];
             break;
 
           case 'tinyblob':
           case 'blob':
           case 'mediumblob':
           case 'longblob':
-            $ret .= '$'.$theRoutine['argument_names'][$i];
+            $ret .= '$'.$theRoutine['parameter_names'][$i];
             break;
 
           default:
-            set_assert_failed( "Unknown argument type '%s'.", $arg_type );
+            set_assert_failed( "Unknown MySQL type '%s'.", $arg_type );
         }
       }
     }
@@ -537,7 +537,7 @@ abstract class Wrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Generates code for fetching data of a stored routine with one or more LOB arguments.
+   * Generates code for fetching data of a stored routine with one or more LOB parameters.
    *
    * @param $theRoutine array The metadata of the stored routine.
    */
@@ -545,7 +545,7 @@ abstract class Wrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Generates code for retuning the data returned by a stored routine with one or more LOB arguments.
+   * Generates code for retuning the data returned by a stored routine with one or more LOB parameters.
    */
   abstract protected function writeRoutineFunctionLobReturnData();
 
@@ -605,7 +605,7 @@ abstract class Wrapper
       # Add 1 character for $.
       $max_name_length++;
 
-      // Generate phpDoc for the arguments of the wrapper method.
+      // Generate phpDoc for the parameters of the wrapper method.
       foreach ($theRoutine['phpdoc']['parameters'] as $parameter)
       {
         $format = sprintf( " * %%-%ds %%-%ds %%-%ds %%s", strlen( '@param' ), $max_type_length, $max_name_length );
@@ -625,10 +625,10 @@ abstract class Wrapper
           $this->writeLine( sprintf( $format, '@param', $parameter['php_type'], '$'.$parameter['name'], '' ) );
         }
 
-        $this->writeLine( sprintf( $format, ' ', ' ', ' ', $parameter['column_type'] ) );
+        $this->writeLine( sprintf( $format, ' ', ' ', ' ', $parameter['mysql_type'] ) );
       }
     }
-    elseif ($theRoutine['type']==='bulk_insert')
+    elseif ($theRoutine['designation']==='bulk_insert')
     {
       // Generate parameter for bulk_insert routine type.
       $this->writeLine( ' * @param array $theData' );
@@ -663,15 +663,15 @@ abstract class Wrapper
   /**
    * Return code for escaping the arguments of a stored routine.
    *
-   * @param $theArgType string The type argument of a stored routine.
-   * @param $argName    string The name argument of a stored routine.
+   * @param $theParameterType string The parameter type of a stored routine.
+   * @param $theParameterName    string The parameter name of a stored routine.
    *
    * @return string
    */
-  private function writeEscapedArgs( $theArgType, $argName )
+  private function writeEscapedArgs( $theParameterType, $theParameterName )
   {
     $ret = '';
-    switch ($theArgType)
+    switch ($theParameterType)
     {
       case 'tinyint':
       case 'smallint':
@@ -684,7 +684,7 @@ abstract class Wrapper
       case 'decimal':
       case 'float':
       case 'double':
-        $ret = '\'.self::quoteNum( $'.$argName.' ).\'';
+        $ret = '\'.self::quoteNum( $'.$theParameterName.' ).\'';
         break;
 
       case 'varbinary':
@@ -692,7 +692,7 @@ abstract class Wrapper
 
       case 'char':
       case 'varchar':
-        $ret = '\'.self::quoteString( $'.$argName.' ).\'';
+        $ret = '\'.self::quoteString( $'.$theParameterName.' ).\'';
         break;
 
       case 'time':
@@ -700,16 +700,16 @@ abstract class Wrapper
 
       case 'date':
       case 'datetime':
-        $ret = '\'.self::quoteString( $'.$argName.' ).\'';
+        $ret = '\'.self::quoteString( $'.$theParameterName.' ).\'';
         break;
 
       case 'enum':
       case 'set':
-        $ret = '\'.self::quoteString( $'.$argName.' ).\'';
+        $ret = '\'.self::quoteString( $'.$theParameterName.' ).\'';
         break;
 
       case 'bit':
-        $ret = '\'.self::quoteBit( $'.$argName.' ).\'';
+        $ret = '\'.self::quoteBit( $'.$theParameterName.' ).\'';
         break;
 
       case 'tinytext':
@@ -721,11 +721,11 @@ abstract class Wrapper
       case 'blob':
       case 'mediumblob':
       case 'longblob':
-        $ret = ($this->myLobAsStringFlag) ? $ret = '\'.self::quoteString( $'.$argName.' ).\'' : '?';
+        $ret = ($this->myLobAsStringFlag) ? $ret = '\'.self::quoteString( $'.$theParameterName.' ).\'' : '?';
         break;
 
       default:
-        set_assert_failed( "Unknown arg type '%s'.", $theArgType );
+        set_assert_failed( "Unknown arg type '%s'.", $theParameterType );
     }
 
     return $ret;
