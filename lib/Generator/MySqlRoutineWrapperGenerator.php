@@ -8,10 +8,10 @@
  * @link
  */
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\DataLayer\Generator;
+namespace SetBased\Stratum\Generator;
 
-use SetBased\DataLayer\Generator\Wrapper\Wrapper;
-use SetBased\DataLayer\StaticDataLayer as DataLayer;
+use SetBased\Stratum\Generator\Wrapper\Wrapper;
+use SetBased\Stratum\StaticDataLayer as DataLayer;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**

@@ -9,9 +9,9 @@
  * @link
  */
 //----------------------------------------------------------------------------------------------------------------------
-use SetBased\DataLayer\Generator\MySqlConfigConstants;
-use SetBased\DataLayer\Generator\MySqlRoutineLoader;
-use SetBased\DataLayer\Generator\MySqlRoutineWrapperGenerator;
+use SetBased\Stratum\Generator\MySqlConfigConstants;
+use SetBased\Stratum\Generator\MySqlRoutineLoader;
+use SetBased\Stratum\Generator\MySqlRoutineWrapperGenerator;
 
 //----------------------------------------------------------------------------------------------------------------------
 $files = array(__DIR__.'/../vendor/autoload.php',

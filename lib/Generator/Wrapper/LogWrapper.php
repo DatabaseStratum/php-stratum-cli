@@ -1,6 +1,6 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\DataLayer\Generator\Wrapper;
+namespace SetBased\Stratum\Generator\Wrapper;
   /**
    * phpStratum
    *

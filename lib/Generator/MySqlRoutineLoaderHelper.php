@@ -8,10 +8,10 @@
  * @link
  */
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\DataLayer\Generator;
+namespace SetBased\Stratum\Generator;
 
 use phpDocumentor\Reflection\DocBlock;
-use SetBased\DataLayer\StaticDataLayer as DataLayer;
+use SetBased\Stratum\StaticDataLayer as DataLayer;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
@@ -203,7 +203,7 @@ class MySqlRoutineLoaderHelper
    * @param string $theCollate              The key or index columns (depending on the designation type) of the stored
    *                                        routine.
    *
-   * @return \SetBased\DataLayer\Generator\MySqlRoutineLoaderHelper
+   * @return \SetBased\Stratum\Generator\MySqlRoutineLoaderHelper
    */
   public function __construct( $theRoutineFilename,
                                $theRoutineFileExtension,

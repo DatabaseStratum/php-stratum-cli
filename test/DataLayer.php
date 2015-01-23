@@ -1,6 +1,6 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-class DataLayer extends \SetBased\DataLayer\StaticDataLayer
+class DataLayer extends \SetBased\Stratum\StaticDataLayer
 {
   //-------------------------------------------------------------------------------------------------------------------
   /**
@@ -51,45 +51,45 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
    * Test for all possible types of parameters excluding LOB's.
    *
    * @param int    $p_param00 Test parameter 00.
-   *                          
+   *                          int(11)
    * @param int    $p_param01 Test parameter 01.
-   *                          
+   *                          smallint(6)
    * @param int    $p_param02 Test parameter 02.
-   *                          
+   *                          tinyint(4)
    * @param int    $p_param03 Test parameter 03.
-   *                          
+   *                          mediumint(9)
    * @param int    $p_param04 Test parameter 04.
-   *                          
+   *                          bigint(20)
    * @param float  $p_param05 Test parameter 05.
-   *                          
+   *                          decimal(10,2)
    * @param float  $p_param06 Test parameter 06.
-   *                          
+   *                          float
    * @param float  $p_param07 Test parameter 07.
-   *                          
+   *                          double
    * @param int    $p_param08 Test parameter 08.
-   *                          
+   *                          bit(8)
    * @param string $p_param09 Test parameter 09.
-   *                          
+   *                          date
    * @param string $p_param10 Test parameter 10.
-   *                          
+   *                          datetime
    * @param string $p_param11 Test parameter 11.
-   *                          
+   *                          timestamp
    * @param string $p_param12 Test parameter 12.
-   *                          
+   *                          time
    * @param int    $p_param13 Test parameter 13.
-   *                          
+   *                          year(4)
    * @param string $p_param14 Test parameter 14.
-   *                          
+   *                          char(10)
    * @param string $p_param15 Test parameter 15.
-   *                          
+   *                          varchar(10)
    * @param string $p_param16 Test parameter 16.
-   *                          
+   *                          binary(10)
    * @param string $p_param17 Test parameter 17.
-   *                          
+   *                          varbinary(10)
    * @param string $p_param26 Test parameter 26.
-   *                          
+   *                          enum('a','b')
    * @param string $p_param27 Test parameter 27.
-   *                          
+   *                          set('a','b')
    *
    * @return int
    */
@@ -103,61 +103,61 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
    * Test for all possible types of parameters including LOB's.
    *
    * @param int    $p_param00 Test parameter 00.
-   *                          
+   *                          int(11)
    * @param int    $p_param01 Test parameter 01.
-   *                          
+   *                          smallint(6)
    * @param int    $p_param02 Test parameter 02.
-   *                          
+   *                          tinyint(4)
    * @param int    $p_param03 Test parameter 03.
-   *                          
+   *                          mediumint(9)
    * @param int    $p_param04 Test parameter 04.
-   *                          
+   *                          bigint(20)
    * @param float  $p_param05 Test parameter 05.
-   *                          
+   *                          decimal(10,2)
    * @param float  $p_param06 Test parameter 06.
-   *                          
+   *                          float
    * @param float  $p_param07 Test parameter 07.
-   *                          
+   *                          double
    * @param int    $p_param08 Test parameter 08.
-   *                          
+   *                          bit(8)
    * @param string $p_param09 Test parameter 09.
-   *                          
+   *                          date
    * @param string $p_param10 Test parameter 10.
-   *                          
+   *                          datetime
    * @param string $p_param11 Test parameter 11.
-   *                          
+   *                          timestamp
    * @param string $p_param12 Test parameter 12.
-   *                          
+   *                          time
    * @param int    $p_param13 Test parameter 13.
-   *                          
+   *                          year(4)
    * @param string $p_param14 Test parameter 14.
-   *                          
+   *                          char(10)
    * @param string $p_param15 Test parameter 15.
-   *                          
+   *                          varchar(10)
    * @param string $p_param16 Test parameter 16.
-   *                          
+   *                          binary(10)
    * @param string $p_param17 Test parameter 17.
-   *                          
+   *                          varbinary(10)
    * @param string $p_param18 Test parameter 18.
-   *                          
+   *                          tinyblob
    * @param string $p_param19 Test parameter 19.
-   *                          
+   *                          blob
    * @param string $p_param20 Test parameter 20.
-   *                          
+   *                          mediumblob
    * @param string $p_param21 Test parameter 21.
-   *                          
+   *                          longblob
    * @param string $p_param22 Test parameter 22.
-   *                          
+   *                          tinytext
    * @param string $p_param23 Test parameter 23.
-   *                          
+   *                          text
    * @param string $p_param24 Test parameter 24.
-   *                          
+   *                          mediumtext
    * @param string $p_param25 Test parameter 25.
-   *                          
+   *                          longtext
    * @param string $p_param26 Test parameter 26.
-   *                          
+   *                          enum('a','b')
    * @param string $p_param27 Test parameter 27.
-   *                          
+   *                          set('a','b')
    *
    * @return int
    */
@@ -305,9 +305,9 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
    * Test for stored function wrapper.
    *
    * @param int $p_a Parameter A.
-   *                 
+   *                 int(11)
    * @param int $p_b Parameter B.
-   *                 
+   *                 int(11)
    *
    * @return string
    */
@@ -332,7 +332,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
    * Test for sending data larger than max_allowed_packet.
    *
    * @param string $p_tmp_blob The BLOB larger than max_allowed_packet.
-   *                           
+   *                           longblob
    *
    * @return string
    */
@@ -388,7 +388,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
    * Test for designation type none.
    *
    * @param int $p_count The number of iterations.
-   *                     
+   *                     bigint(20)
    *
    * @return int
    */
@@ -402,9 +402,9 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
    * Test for designation type none with BLOB.
    *
    * @param int    $p_count The number of iterations.
-   *                        
+   *                        bigint(20)
    * @param string $p_blob  The BLOB.
-   *                        
+   *                        blob
    *
    * @return int
    */
@@ -448,7 +448,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
    *                                    * 0 For a valid test.
    *                                    * 1 For a valid test.
    *                                    * 2 For a invalid test.
-   *                     
+   *                     int(11)
    *
    * @return array
    */
@@ -465,9 +465,9 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
    *                                       * 0 For a valid test.
    *                                       * 1 For a valid test.
    *                                       * 2 For a invalid test.
-   *                        
+   *                        int(11)
    * @param string $p_blob  The BLOB.
-   *                        
+   *                        blob
    *
    * @return array
    */
@@ -526,7 +526,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
    *                                    * 0 For a invalid test.
    *                                    * 1 For a valid test.
    *                                    * 2 For a invalid test.
-   *                     
+   *                     int(11)
    *
    * @return array
    */
@@ -543,9 +543,9 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
    *                                       * 0 For a invalid test.
    *                                       * 1 For a valid test.
    *                                       * 2 For a invalid test.
-   *                        
+   *                        int(11)
    * @param string $p_blob  The BLOB.
-   *                        
+   *                        blob
    *
    * @return array
    */
@@ -604,7 +604,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
    *                                    * 0 For a invalid test.
    *                                    * 1 For a valid test.
    *                                    * 2 For a invalid test.
-   *                     
+   *                     int(11)
    *
    * @return array[]
    */
@@ -618,9 +618,9 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
    * Test for designation type rows.
    *
    * @param int    $p_count The number of rows selected.
-   *                        
+   *                        int(11)
    * @param string $p_blob  The BLOB.
-   *                        
+   *                        blob
    *
    * @return array[]
    */
@@ -675,7 +675,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
    * Test for designation type rows_with_index.
    *
    * @param int $p_count The number of rows selected.
-   *                     
+   *                     int(11)
    *
    * @return array[]
    */
@@ -695,9 +695,9 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
    * .
    *
    * @param int    $p_count The number of rows selected.
-   *                        
+   *                        int(11)
    * @param string $p_blob  The BLOB.
-   *                        
+   *                        blob
    *
    * @return array[]
    */
@@ -752,7 +752,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
    * Test for designation type rows_with_key.
    *
    * @param int $p_count Number of rows selected.
-   *                     
+   *                     int(11)
    *
    * @return array[]
    */
@@ -771,9 +771,9 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
    * Test for designation type rows_with_key with BLOB.
    *
    * @param int    $p_count The number of rows selected.
-   *                        
+   *                        int(11)
    * @param string $p_blob  The BLOB.
-   *                        
+   *                        blob
    *
    * @return array[]
    */
@@ -831,7 +831,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
    *                                    * 0 For a valid test.
    *                                    * 1 For a valid test.
    *                                    * 2 For a invalid test.
-   *                     
+   *                     int(11)
    *
    * @return string
    */
@@ -849,9 +849,9 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
    *                                       * 0 For a valid test.
    *                                       * 1 For a valid test.
    *                                       * 2 For a invalid test.
-   *                        
+   *                        int(11)
    * @param string $p_blob  The BLOB.
-   *                        
+   *                        blob
    *
    * @return string
    */
@@ -910,7 +910,7 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
    *                                    * 0 For a invalid test.
    *                                    * 1 For a valid test.
    *                                    * 2 For a invalid test.
-   *                     
+   *                     int(11)
    *
    * @return string
    */
@@ -927,9 +927,9 @@ class DataLayer extends \SetBased\DataLayer\StaticDataLayer
    *                                       * 0 For a invalid test.
    *                                       * 1 For a valid test.
    *                                       * 2 For a invalid test.
-   *                        
+   *                        int(11)
    * @param string $p_blob  The BLOB.
-   *                        
+   *                        blob
    *
    * @return string
    */
