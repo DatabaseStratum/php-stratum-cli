@@ -808,7 +808,7 @@ and   t1.routine_name   = '%s'", $this->myRoutineName );
     $tmp = array_diff( $this->myRoutineParameterNames, $parameters_names );
     foreach ($tmp as $name)
     {
-      echo sprintf( "  Warning: parameter '%s' is missing in doc block.\n", $name );
+      echo sprintf( "  Warning: parameter '%s' is missing from doc block.\n", $name );
     }
 
     $tmp = array_diff( $parameters_names, $this->myRoutineParameterNames );
