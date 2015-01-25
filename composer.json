@@ -9,7 +9,9 @@
   },
   "require-dev": {
     "phpunit/phpunit": "3.*",
-    "setbased/phing-extensions": "1.*",
+    "setbased/phing-extensions": "1.*"
+  },
+  "require": {
     "phpdocumentor/reflection-docblock": "2.*"
   },
   "bin": [
