@@ -614,7 +614,7 @@ abstract class Wrapper
           $this->writeLine( sprintf( $format, '@param', $parameter['php_type'], '$'.$parameter['name'], $line ) );
           foreach ($lines as $line)
           {
-            $this->writeLine( sprintf( $format, ' ', ' ', ' ', $line ) );
+            $this->writeLine( sprintf( $format, ' ', ' ', ' ', trim($line) ) );
           }
         }
         else
