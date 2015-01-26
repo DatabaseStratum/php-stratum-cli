@@ -79,17 +79,17 @@ class DataLayer extends \SetBased\Stratum\StaticDataLayer
    * @param int    $p_param13 Test parameter 13.
    *                          year(4)
    * @param string $p_param14 Test parameter 14.
-   *                          char(10)
+   *                          char(10) character set utf8 collation utf8_general_ci
    * @param string $p_param15 Test parameter 15.
-   *                          varchar(10)
+   *                          varchar(10) character set utf8 collation utf8_general_ci
    * @param string $p_param16 Test parameter 16.
    *                          binary(10)
    * @param string $p_param17 Test parameter 17.
    *                          varbinary(10)
    * @param string $p_param26 Test parameter 26.
-   *                          enum('a','b')
+   *                          enum('a','b') character set utf8 collation utf8_general_ci
    * @param string $p_param27 Test parameter 27.
-   *                          set('a','b')
+   *                          set('a','b') character set utf8 collation utf8_general_ci
    *
    * @return int
    */
@@ -131,9 +131,9 @@ class DataLayer extends \SetBased\Stratum\StaticDataLayer
    * @param int    $p_param13 Test parameter 13.
    *                          year(4)
    * @param string $p_param14 Test parameter 14.
-   *                          char(10)
+   *                          char(10) character set utf8 collation utf8_general_ci
    * @param string $p_param15 Test parameter 15.
-   *                          varchar(10)
+   *                          varchar(10) character set utf8 collation utf8_general_ci
    * @param string $p_param16 Test parameter 16.
    *                          binary(10)
    * @param string $p_param17 Test parameter 17.
@@ -147,17 +147,17 @@ class DataLayer extends \SetBased\Stratum\StaticDataLayer
    * @param string $p_param21 Test parameter 21.
    *                          longblob
    * @param string $p_param22 Test parameter 22.
-   *                          tinytext
+   *                          tinytext character set utf8 collation utf8_general_ci
    * @param string $p_param23 Test parameter 23.
-   *                          text
+   *                          text character set utf8 collation utf8_general_ci
    * @param string $p_param24 Test parameter 24.
-   *                          mediumtext
+   *                          mediumtext character set utf8 collation utf8_general_ci
    * @param string $p_param25 Test parameter 25.
-   *                          longtext
+   *                          longtext character set utf8 collation utf8_general_ci
    * @param string $p_param26 Test parameter 26.
-   *                          enum('a','b')
+   *                          enum('a','b') character set utf8 collation utf8_general_ci
    * @param string $p_param27 Test parameter 27.
-   *                          set('a','b')
+   *                          set('a','b') character set utf8 collation utf8_general_ci
    *
    * @return int
    */
