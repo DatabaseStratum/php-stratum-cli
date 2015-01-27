@@ -91,6 +91,13 @@ class MySqlRoutineLoaderHelper
   private $myOldRoutineInfo;
 
   /**
+   * The information about the parameters of the stored routine.
+   *
+   * @var array[]
+   */
+  private $myParameters = array();
+
+  /**
    * The placeholders in the source file.
    *
    * @var array
@@ -117,16 +124,9 @@ class MySqlRoutineLoaderHelper
    * @var string
    */
   private $myRoutineName;
-  
-  /**
-   * The routine parameters info.
-   *
-   * @var array
-   */
-  private $myRoutineParameters = array();
 
   /**
-   * The tags for the PhpDoc block for the wrapper of this stored routine.
+   * The tags for the PhpDoc block for the wrapper of the stored routine.
    *
    * @var array
    */
@@ -291,252 +291,69 @@ class MySqlRoutineLoaderHelper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns true if the source file must be load or reloaded. Otherwise returns false.
+   * Converts MySQL data type to the PHP data type.
    *
-   * @return bool
-   */
-  private function getMustReload()
-  {
-    // If this is the first time we see the source file it must be loaded.
-    if (!isset($this->myOldMetadata)) return true;
-
-    // If the source file has changed the source file must be loaded.
-    if ($this->myOldMetadata['timestamp']!=$this->myMTime) return true;
-
-    // If the value of a placeholder has changed the source file must be loaded.
-    foreach ($this->myOldMetadata['replace'] as $place_holder => $old_value)
-    {
-      if (!isset($this->myReplacePairs[strtoupper( $place_holder )]) ||
-        $this->myReplacePairs[strtoupper( $place_holder )]!==$old_value
-      )
-      {
-        return true;
-      }
-    }
-
-    // If stored routine not exists in database the source file must be loaded.
-    if (!isset($this->myOldRoutineInfo)) return true;
-
-    // If current sql-mode is different the source file must reload.
-    if ($this->myOldRoutineInfo['sql_mode']!=$this->mySqlMode) return true;
-
-    // If current character is different the source file must reload.
-    if ($this->myOldRoutineInfo['character_set_client']!=$this->myCharacterSet) return true;
-
-    // If current collation is different the source file must reload.
-    if ($this->myOldRoutineInfo['collation_connection']!=$this->myCollate) return true;
-
-    return false;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Extracts the placeholders from the stored routine source and stored them.
+   * @param string $theType
    *
-   * @return bool True if all placeholders are defined, false otherwise.
+   * @return string
+   * @throws \Exception
    */
-  private function getPlaceholders()
+  private function columnTypeToPhpType( $theType )
   {
-    $err = preg_match_all( '(@[A-Za-z0-9\_\.]+(\%type)?@)', $this->myRoutineSourceCode, $matches );
-    if ($err===false) set_assert_failed( "Internal error." );
+    $php_type = '';
 
-    $ret                  = true;
-    $this->myPlaceholders = array();
-
-    if (!empty($matches[0]))
+    switch ($theType)
     {
-      foreach ($matches[0] as $placeholder)
-      {
-        if (!isset($this->myReplacePairs[strtoupper( $placeholder )]))
-        {
-          echo sprintf( "Error: Unknown placeholder '%s' in file '%s'.\n", $placeholder, $this->mySourceFilename );
-          $ret = false;
-        }
+      case 'tinyint':
+      case 'smallint':
+      case 'mediumint':
+      case 'int':
+      case 'bigint':
 
-        if (!isset($this->myPlaceholders[$placeholder]))
-        {
-          $this->myPlaceholders[$placeholder] = $placeholder;
-        }
-      }
+      case 'year':
+
+      case 'bit':
+        $php_type = 'int';
+        break;
+
+      case 'decimal':
+      case 'float':
+      case 'double':
+        $php_type = 'float';
+        break;
+
+      case 'varbinary':
+      case 'binary':
+
+      case 'char':
+      case 'varchar':
+
+      case 'time':
+      case 'timestamp':
+
+      case 'date':
+      case 'datetime':
+
+      case 'enum':
+      case 'set':
+
+      case 'tinytext':
+      case 'text':
+      case 'mediumtext':
+      case 'longtext':
+
+      case 'tinyblob':
+      case 'blob':
+      case 'mediumblob':
+      case 'longblob':
+        $php_type = 'string';
+        break;
+
+      default:
+        set_assert_failed( "Unknown MySQL type '%s'.", $theType );
     }
 
-    if ($ret===true)
-    {
-      foreach ($this->myPlaceholders as $placeholder)
-      {
-        $this->myReplace[$placeholder] = $this->myReplacePairs[strtoupper( $placeholder )];
-      }
-      $ok = ksort( $this->myReplace );
-      if ($ok===false) set_assert_failed( "Internal error." );
-    }
-
-    return $ret;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Extracts the designation type of the stored routine.
-   *
-   * @return bool True on success. Otherwise returns false.
-   */
-  private function getDesignationType()
-  {
-    $ret = true;
-    $key = array_search( 'begin', $this->myRoutineSourceCodeLines );
-
-    if ($key!==false)
-    {
-      $n = preg_match( '/^\s*--\s+type:\s*(\w+)\s*(.+)?\s*$/', $this->myRoutineSourceCodeLines[$key - 1],
-                       $matches );
-
-      if ($n===false) set_assert_failed( "Internal error." );
-
-      if ($n==1)
-      {
-        $this->myDesignationType = $matches[1];
-        switch ($this->myDesignationType)
-        {
-          case 'bulk_insert':
-            $m = preg_match( '/^([a-zA-Z0-9_]+)\s+([a-zA-Z0-9_,]+)$/', $matches[2], $info );
-            if ($m===false) set_assert_failed( "Internal error." );
-            if ($m==0) set_assert_failed( sprintf( "Error: Expected: -- type: bulk_insert <table_name> <columns> in file '%s'.\n",
-                                                   $this->mySourceFilename ) );
-            $this->myTableName = $info[1];
-            $this->myColumns   = explode( ',', $info[2] );
-            break;
-
-          case 'rows_with_key':
-          case 'rows_with_index':
-            $this->myColumns = explode( ',', $matches[2] );
-            break;
-
-          default:
-            if (isset($matches[2])) $ret = false;
-        }
-      }
-      else
-      {
-        $ret = false;
-      }
-    }
-    else
-    {
-      $ret = false;
-    }
-
-    if ($ret===false)
-    {
-      echo sprintf( "Error: Unable to find the designation type of the stored routine in file '%s'.\n",
-                    $this->mySourceFilename );
-    }
-
-    return $ret;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Extracts the name of the stored routine and the stored routine type (i.e. procedure or function) source.
-   *
-   * @todo Skip comments and string literals.
-   * @return bool Returns true on success, false otherwise.
-   */
-  private function getName()
-  {
-    $ret = true;
-
-    $n = preg_match( "/create\\s+(procedure|function)\\s+([a-zA-Z0-9_]+)/i", $this->myRoutineSourceCode, $matches );
-    if ($n===false) set_assert_failed( "Internal error." );
-
-    if ($n==1)
-    {
-      $this->myRoutineType = strtolower( $matches[1] );
-
-      if ($this->myRoutineName!=$matches[2])
-      {
-        echo sprintf( "Error: Stored routine name '%s' does not match filename in file '%s'.\n",
-                      $matches[2],
-                      $this->mySourceFilename );
-        $ret = false;
-      }
-    }
-    else
-    {
-      $ret = false;
-    }
-
-    if (!isset($this->myRoutineType))
-    {
-      echo sprintf( "Error: Unable to find the stored routine name and type in file '%s'.\n",
-                    $this->mySourceFilename );
-    }
-
-    return $ret;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Loads the stored routine into the database.
-   */
-  private function loadRoutineFile()
-  {
-    echo sprintf( "Loading %s %s\n",
-                  $this->myRoutineType,
-                  $this->myRoutineName );
-
-    // Set magic constants specific for this stored routine.
-    $this->setMagicConstants();
-
-    // Replace all place holders with their values.
-    $lines          = explode( "\n", $this->myRoutineSourceCode );
-    $routine_source = array();
-    foreach ($lines as $i => &$line)
-    {
-      $this->myReplace['__LINE__'] = $i + 1;
-      $routine_source[$i]          = strtr( $line, $this->myReplace );
-    }
-    $routine_source = implode( "\n", $routine_source );
-
-    // Unset magic constants specific for this stored routine.
-    $this->unsetMagicConstants();
-
-    // Drop the stored procedure or function if its exists.
-    $this->dropRoutine();
-
-    // Set the SQL-mode under which the stored routine will run.
-    $sql = sprintf( "set sql_mode ='%s'", $this->mySqlMode );
-    DataLayer::executeNone( $sql );
-
-    // Set the default character set and collate under which the store routine will run.
-    $sql = sprintf( "set names '%s' collate '%s'", $this->myCharacterSet, $this->myCollate );
-    DataLayer::executeNone( $sql );
-
-    // Finally, execute the SQL code for loading the stored routine.
-    DataLayer::executeNone( $routine_source );
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Add magic constants to replace list.
-   */
-  private function setMagicConstants()
-  {
-    $real_path = realpath( $this->mySourceFilename );
-
-    $this->myReplace['__FILE__']    = "'".DataLayer::realEscapeString( $real_path )."'";
-    $this->myReplace['__ROUTINE__'] = "'".$this->myRoutineName."'";
-    $this->myReplace['__DIR__']     = "'".DataLayer::realEscapeString( dirname( $real_path ) )."'";
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Removes magic constants from current replace list.
-   */
-  private function unsetMagicConstants()
-  {
-    unset($this->myReplace['__FILE__']);
-    unset($this->myReplace['__ROUTINE__']);
-    unset($this->myReplace['__DIR__']);
-    unset($this->myReplace['__LINE__']);
+    return $php_type;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -608,44 +425,184 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Gets the parameters of the stored routine.
+   * Extracts the designation type of the stored routine.
+   *
+   * @return bool True on success. Otherwise returns false.
    */
-  private function getRoutineParametersInfo()
+  private function getDesignationType()
   {
-    $query = sprintf( "
-select t2.parameter_name      parameter_name
-,      t2.data_type           parameter_type
-,      t2.dtd_identifier      column_type
-,      t2.character_set_name  character_set_name
-,      t2.collation_name      collation
-from            information_schema.ROUTINES   t1
-left outer join information_schema.PARAMETERS t2  on  t2.specific_schema = t1.routine_schema and
-                                                      t2.specific_name   = t1.routine_name and
-                                                      t2.parameter_mode   is not null
-where t1.routine_schema = database()
-and   t1.routine_name   = '%s'", $this->myRoutineName );
+    $ret = true;
+    $key = array_search( 'begin', $this->myRoutineSourceCodeLines );
 
-    $routine_parameters = DataLayer::executeRows( $query );
-
-    foreach ($routine_parameters as $key => $routine_parameter)
+    if ($key!==false)
     {
-      if ($routine_parameter['parameter_name'])
-      {
-        $value = $routine_parameter['column_type'];
-        if (isset($routine_parameter['character_set_name']))
-        {
-          $value .= ' character set '.$routine_parameter['character_set_name'];
-        }
-        if (isset($routine_parameter['collation']))
-        {
-          $value .= ' collation '.$routine_parameter['collation'];
-        }
+      $n = preg_match( '/^\s*--\s+type:\s*(\w+)\s*(.+)?\s*$/', $this->myRoutineSourceCodeLines[$key - 1],
+                       $matches );
 
-        $this->myRoutineParameters[$key]['name']                 = $routine_parameter['parameter_name'];
-        $this->myRoutineParameters[$key]['data_type']            = $routine_parameter['parameter_type'];
-        $this->myRoutineParameters[$key]['data_type_descriptor'] = $value;
+      if ($n===false) set_assert_failed( "Internal error." );
+
+      if ($n==1)
+      {
+        $this->myDesignationType = $matches[1];
+        switch ($this->myDesignationType)
+        {
+          case 'bulk_insert':
+            $m = preg_match( '/^([a-zA-Z0-9_]+)\s+([a-zA-Z0-9_,]+)$/', $matches[2], $info );
+            if ($m===false) set_assert_failed( "Internal error." );
+            if ($m==0) set_assert_failed( sprintf( "Error: Expected: -- type: bulk_insert <table_name> <columns> in file '%s'.\n",
+                                                   $this->mySourceFilename ) );
+            $this->myTableName = $info[1];
+            $this->myColumns   = explode( ',', $info[2] );
+            break;
+
+          case 'rows_with_key':
+          case 'rows_with_index':
+            $this->myColumns = explode( ',', $matches[2] );
+            break;
+
+          default:
+            if (isset($matches[2])) $ret = false;
+        }
+      }
+      else
+      {
+        $ret = false;
       }
     }
+    else
+    {
+      $ret = false;
+    }
+
+    if ($ret===false)
+    {
+      echo sprintf( "Error: Unable to find the designation type of the stored routine in file '%s'.\n",
+                    $this->mySourceFilename );
+    }
+
+    return $ret;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Return array with information about parameter.
+   *
+   * @param DocBlock\Tag $theParameter
+   *
+   * @return array
+   */
+  private function getDocBlockParameterDescription( $theParameter )
+  {
+    $content     = $theParameter->getContent();
+    $description = $theParameter->getDescription();
+    $name        = trim( substr( $content, 0, strlen( $content ) - strlen( $description ) ) );
+
+    $key = false;
+    foreach ($this->myParameters as $i => $parameter_info)
+    {
+      if ($name==$parameter_info['name'])
+      {
+        $key = $i;
+        break;
+      }
+    }
+
+    if ($key!==false)
+    {
+      return array('name'                 => $name,
+                   'php_type'             => $this->columnTypeToPhpType( $this->myParameters[$key]['data_type'] ),
+                   'data_type'            => $this->myParameters[$key]['data_type'],
+                   'data_type_descriptor' => $this->myParameters[$key]['data_type_descriptor'],
+                   'description'          => $description);
+    }
+    else
+    {
+      return array('name'                 => $name,
+                   'php_type'             => '',
+                   'mysql_type'           => '',
+                   'data_type_descriptor' => '',
+                   'description'          => $description);
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns true if the source file must be load or reloaded. Otherwise returns false.
+   *
+   * @return bool
+   */
+  private function getMustReload()
+  {
+    // If this is the first time we see the source file it must be loaded.
+    if (!isset($this->myOldMetadata)) return true;
+
+    // If the source file has changed the source file must be loaded.
+    if ($this->myOldMetadata['timestamp']!=$this->myMTime) return true;
+
+    // If the value of a placeholder has changed the source file must be loaded.
+    foreach ($this->myOldMetadata['replace'] as $place_holder => $old_value)
+    {
+      if (!isset($this->myReplacePairs[strtoupper( $place_holder )]) ||
+        $this->myReplacePairs[strtoupper( $place_holder )]!==$old_value
+      )
+      {
+        return true;
+      }
+    }
+
+    // If stored routine not exists in database the source file must be loaded.
+    if (!isset($this->myOldRoutineInfo)) return true;
+
+    // If current sql-mode is different the source file must reload.
+    if ($this->myOldRoutineInfo['sql_mode']!=$this->mySqlMode) return true;
+
+    // If current character is different the source file must reload.
+    if ($this->myOldRoutineInfo['character_set_client']!=$this->myCharacterSet) return true;
+
+    // If current collation is different the source file must reload.
+    if ($this->myOldRoutineInfo['collation_connection']!=$this->myCollate) return true;
+
+    return false;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Extracts the name of the stored routine and the stored routine type (i.e. procedure or function) source.
+   *
+   * @todo Skip comments and string literals.
+   * @return bool Returns true on success, false otherwise.
+   */
+  private function getName()
+  {
+    $ret = true;
+
+    $n = preg_match( "/create\\s+(procedure|function)\\s+([a-zA-Z0-9_]+)/i", $this->myRoutineSourceCode, $matches );
+    if ($n===false) set_assert_failed( "Internal error." );
+
+    if ($n==1)
+    {
+      $this->myRoutineType = strtolower( $matches[1] );
+
+      if ($this->myRoutineName!=$matches[2])
+      {
+        echo sprintf( "Error: Stored routine name '%s' does not match filename in file '%s'.\n",
+                      $matches[2],
+                      $this->mySourceFilename );
+        $ret = false;
+      }
+    }
+    else
+    {
+      $ret = false;
+    }
+
+    if (!isset($this->myRoutineType))
+    {
+      echo sprintf( "Error: Unable to find the stored routine name and type in file '%s'.\n",
+                    $this->mySourceFilename );
+    }
+
+    return $ret;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -686,111 +643,172 @@ and   t1.routine_name   = '%s'", $this->myRoutineName );
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Return array with information about parameter.
+   * Extracts the placeholders from the stored routine source and stored them.
    *
-   * @param DocBlock\Tag $theParameter
-   *
-   * @return array
+   * @return bool True if all placeholders are defined, false otherwise.
    */
-  private function getDocBlockParameterDescription( $theParameter )
+  private function getPlaceholders()
   {
-    $content     = $theParameter->getContent();
-    $description = $theParameter->getDescription();
-    $name        = trim( substr( $content, 0, strlen( $content ) - strlen( $description ) ) );
+    $err = preg_match_all( '(@[A-Za-z0-9\_\.]+(\%type)?@)', $this->myRoutineSourceCode, $matches );
+    if ($err===false) set_assert_failed( "Internal error." );
 
-    $key = false;
-    foreach ($this->myRoutineParameters as $i => $parameter_info)
+    $ret                  = true;
+    $this->myPlaceholders = array();
+
+    if (!empty($matches[0]))
     {
-      if ($name==$parameter_info['name'])
+      foreach ($matches[0] as $placeholder)
       {
-        $key = $i;
-        break;
+        if (!isset($this->myReplacePairs[strtoupper( $placeholder )]))
+        {
+          echo sprintf( "Error: Unknown placeholder '%s' in file '%s'.\n", $placeholder, $this->mySourceFilename );
+          $ret = false;
+        }
+
+        if (!isset($this->myPlaceholders[$placeholder]))
+        {
+          $this->myPlaceholders[$placeholder] = $placeholder;
+        }
       }
     }
 
-    if ($key!==false)
+    if ($ret===true)
     {
-      return array('name'                 => $name,
-                   'php_type'             => $this->columnTypeToPhpType( $this->myRoutineParameters[$key]['data_type'] ),
-                   'data_type'            => $this->myRoutineParameters[$key]['data_type'],
-                   'data_type_descriptor' => $this->myRoutineParameters[$key]['data_type_descriptor'],
-                   'description'          => $description);
+      foreach ($this->myPlaceholders as $placeholder)
+      {
+        $this->myReplace[$placeholder] = $this->myReplacePairs[strtoupper( $placeholder )];
+      }
+      $ok = ksort( $this->myReplace );
+      if ($ok===false) set_assert_failed( "Internal error." );
     }
-    else
+
+    return $ret;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Gets the parameters of the stored routine.
+   */
+  private function getRoutineParametersInfo()
+  {
+    $query = sprintf( "
+select t2.parameter_name      parameter_name
+,      t2.data_type           parameter_type
+,      t2.dtd_identifier      column_type
+,      t2.character_set_name  character_set_name
+,      t2.collation_name      collation
+from            information_schema.ROUTINES   t1
+left outer join information_schema.PARAMETERS t2  on  t2.specific_schema = t1.routine_schema and
+                                                      t2.specific_name   = t1.routine_name and
+                                                      t2.parameter_mode   is not null
+where t1.routine_schema = database()
+and   t1.routine_name   = '%s'", $this->myRoutineName );
+
+    $routine_parameters = DataLayer::executeRows( $query );
+
+    foreach ($routine_parameters as $key => $routine_parameter)
     {
-      return array('name'                 => $name,
-                   'php_type'             => '',
-                   'mysql_type'           => '',
-                   'data_type_descriptor' => '',
-                   'description'          => $description);
+      if ($routine_parameter['parameter_name'])
+      {
+        $value = $routine_parameter['column_type'];
+        if (isset($routine_parameter['character_set_name']))
+        {
+          $value .= ' character set '.$routine_parameter['character_set_name'];
+        }
+        if (isset($routine_parameter['collation']))
+        {
+          $value .= ' collation '.$routine_parameter['collation'];
+        }
+
+        $this->myParameters[$key]['name']                 = $routine_parameter['parameter_name'];
+        $this->myParameters[$key]['data_type']            = $routine_parameter['parameter_type'];
+        $this->myParameters[$key]['data_type_descriptor'] = $value;
+      }
     }
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Converts MySQL data type to the PHP data type.
-   *
-   * @param string $theType
-   *
-   * @return string
-   * @throws \Exception
+   * Loads the stored routine into the database.
    */
-  private function columnTypeToPhpType( $theType )
+  private function loadRoutineFile()
   {
-    $php_type = '';
+    echo sprintf( "Loading %s %s\n",
+                  $this->myRoutineType,
+                  $this->myRoutineName );
 
-    switch ($theType)
+    // Set magic constants specific for this stored routine.
+    $this->setMagicConstants();
+
+    // Replace all place holders with their values.
+    $lines          = explode( "\n", $this->myRoutineSourceCode );
+    $routine_source = array();
+    foreach ($lines as $i => &$line)
     {
-      case 'tinyint':
-      case 'smallint':
-      case 'mediumint':
-      case 'int':
-      case 'bigint':
-
-      case 'year':
-
-      case 'bit':
-        $php_type = 'int';
-        break;
-
-      case 'decimal':
-      case 'float':
-      case 'double':
-        $php_type = 'float';
-        break;
-
-      case 'varbinary':
-      case 'binary':
-
-      case 'char':
-      case 'varchar':
-
-      case 'time':
-      case 'timestamp':
-
-      case 'date':
-      case 'datetime':
-
-      case 'enum':
-      case 'set':
-
-      case 'tinytext':
-      case 'text':
-      case 'mediumtext':
-      case 'longtext':
-
-      case 'tinyblob':
-      case 'blob':
-      case 'mediumblob':
-      case 'longblob':
-        $php_type = 'string';
-        break;
-
-      default:
-        set_assert_failed( "Unknown MySQL type '%s'.", $theType );
+      $this->myReplace['__LINE__'] = $i + 1;
+      $routine_source[$i]          = strtr( $line, $this->myReplace );
     }
+    $routine_source = implode( "\n", $routine_source );
 
-    return $php_type;
+    // Unset magic constants specific for this stored routine.
+    $this->unsetMagicConstants();
+
+    // Drop the stored procedure or function if its exists.
+    $this->dropRoutine();
+
+    // Set the SQL-mode under which the stored routine will run.
+    $sql = sprintf( "set sql_mode ='%s'", $this->mySqlMode );
+    DataLayer::executeNone( $sql );
+
+    // Set the default character set and collate under which the store routine will run.
+    $sql = sprintf( "set names '%s' collate '%s'", $this->myCharacterSet, $this->myCollate );
+    DataLayer::executeNone( $sql );
+
+    // Finally, execute the SQL code for loading the stored routine.
+    DataLayer::executeNone( $routine_source );
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Add magic constants to replace list.
+   */
+  private function setMagicConstants()
+  {
+    $real_path = realpath( $this->mySourceFilename );
+
+    $this->myReplace['__FILE__']    = "'".DataLayer::realEscapeString( $real_path )."'";
+    $this->myReplace['__ROUTINE__'] = "'".$this->myRoutineName."'";
+    $this->myReplace['__DIR__']     = "'".DataLayer::realEscapeString( dirname( $real_path ) )."'";
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Removes magic constants from current replace list.
+   */
+  private function unsetMagicConstants()
+  {
+    unset($this->myReplace['__FILE__']);
+    unset($this->myReplace['__ROUTINE__']);
+    unset($this->myReplace['__DIR__']);
+    unset($this->myReplace['__LINE__']);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Updates the metadata for the stored routine.
+   */
+  private function updateMetadata()
+  {
+    $this->myMetadata['routine_name'] = $this->myRoutineName;
+    $this->myMetadata['designation']  = $this->myDesignationType;
+    $this->myMetadata['table_name']   = $this->myTableName;
+    $this->myMetadata['parameters']   = $this->myParameters;
+    $this->myMetadata['columns']      = $this->myColumns;
+    $this->myMetadata['fields']       = $this->myFields;
+    $this->myMetadata['column_types'] = $this->myColumnsTypes;
+    $this->myMetadata['timestamp']    = $this->myMTime;
+    $this->myMetadata['replace']      = $this->myReplace;
+    $this->myMetadata['phpdoc']       = $this->myRoutinePhpDoc;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -801,7 +819,7 @@ and   t1.routine_name   = '%s'", $this->myRoutineName );
   {
     // Make list with names of parameters used in database.
     $database_parameters_names = array();
-    foreach ($this->myRoutineParameters as $parameter_info)
+    foreach ($this->myParameters as $parameter_info)
     {
       $database_parameters_names[] = $parameter_info['name'];
     }
@@ -829,24 +847,6 @@ and   t1.routine_name   = '%s'", $this->myRoutineName );
     {
       echo sprintf( "  Warning: unknown parameter '%s' found in doc block.\n", $name );
     }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Updates the metadata for the stored routine.
-   */
-  private function updateMetadata()
-  {
-    $this->myMetadata['routine_name'] = $this->myRoutineName;
-    $this->myMetadata['designation']  = $this->myDesignationType;
-    $this->myMetadata['table_name']   = $this->myTableName;
-    $this->myMetadata['parameters']   = $this->myRoutineParameters;
-    $this->myMetadata['columns']      = $this->myColumns;
-    $this->myMetadata['fields']       = $this->myFields;
-    $this->myMetadata['column_types'] = $this->myColumnsTypes;
-    $this->myMetadata['timestamp']    = $this->myMTime;
-    $this->myMetadata['replace']      = $this->myReplace;
-    $this->myMetadata['phpdoc']       = $this->myRoutinePhpDoc;
   }
 
   //--------------------------------------------------------------------------------------------------------------------

@@ -126,27 +126,6 @@ abstract class Wrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Generates a complete wrapper method.
-   *
-   * @param array $theRoutine Metadata of the stored routine.
-   *
-   * @return string PHP code with a routine wrapper.
-   */
-  public function writeRoutineFunction( $theRoutine )
-  {
-
-    if (!$this->myLobAsStringFlag && $this->isBlobParameter( $theRoutine['parameters'] ))
-    {
-      return $this->writeRoutineFunctionWithLob( $theRoutine );
-    }
-    else
-    {
-      return $this->writeRoutineFunctionWithoutLob( $theRoutine );
-    }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
    * Returns true if one of the parameters is a BLOB or CLOB.
    *
    * @param array|null $theParameters The parameters info (name, type, description).
@@ -207,6 +186,27 @@ abstract class Wrapper
     }
 
     return $has_blob;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Generates a complete wrapper method.
+   *
+   * @param array $theRoutine Metadata of the stored routine.
+   *
+   * @return string PHP code with a routine wrapper.
+   */
+  public function writeRoutineFunction( $theRoutine )
+  {
+
+    if (!$this->myLobAsStringFlag && $this->isBlobParameter( $theRoutine['parameters'] ))
+    {
+      return $this->writeRoutineFunctionWithLob( $theRoutine );
+    }
+    else
+    {
+      return $this->writeRoutineFunctionWithoutLob( $theRoutine );
+    }
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -289,196 +289,28 @@ abstract class Wrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns @a $theStoredRoutineName after the first underscore in camel case.
-   * E.g. set_foo_foo => fooFoo.
-   *
-   * @param $theStoredRoutineName string The name of the stored routine.
-   *
-   * @return string
-   */
-  private function getWrapperRoutineName( $theStoredRoutineName )
-  {
-    return lcfirst( preg_replace( '/(_)([a-z])/e', "strtoupper('\\2')", stristr( $theStoredRoutineName, '_' ) ) );
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns code for the parameters of the wrapper method for the stored routine.
+   * Returns a wrapper method for a stored routine without LOB parameters.
    *
    * @param $theRoutine array The metadata of the stored routine.
    *
-   * @return string
+   * @return string PHP code with a routine wrapper.
    */
-  protected function getWrapperArgs( $theRoutine )
+  public function writeRoutineFunctionWithoutLob( $theRoutine )
   {
-    if ($theRoutine['designation']=='bulk')
-    {
-      $ret = '$theBulkHandler';
-    }
-    else
-    {
-      $ret = '';
-    }
+    $wrapper_function_name = $this->getWrapperRoutineName( $theRoutine['routine_name'] );
 
-    if (isset($theRoutine['parameters']))
-    {
-      foreach ($theRoutine['parameters'] as $i => $parameter_info)
-      {
-        if ($ret) $ret .= ', ';
-        switch ($parameter_info['data_type'])
-        {
-          case 'tinyint':
-          case 'smallint':
-          case 'mediumint':
-          case 'int':
-          case 'bigint':
+    $wrapper_args = $this->getWrapperArgs( $theRoutine );
 
-          case 'year':
+    $this->writeSeparator();
+    $this->generatePhpDoc( $theRoutine );
+    $this->writeLine( 'public static function '.$wrapper_function_name.'( '.$wrapper_args.' )' );
+    $this->writeLine( '{' );
 
-          case 'decimal':
-          case 'float':
-          case 'double':
-            $ret .= '$'.$parameter_info['name'];
-            break;
+    $this->writeResultHandler( $theRoutine );
+    $this->writeLine( '}' );
+    $this->writeLine();
 
-          case 'varbinary':
-          case 'binary':
-
-          case 'char':
-          case 'varchar':
-            $ret .= '$'.$parameter_info['name'];
-            break;
-
-          case 'time':
-          case 'timestamp':
-
-          case 'date':
-          case 'datetime':
-            $ret .= '$'.$parameter_info['name'];
-            break;
-
-          case 'enum':
-          case 'bit':
-          case 'set':
-            $ret .= '$'.$parameter_info['name'];
-            break;
-
-          case 'tinytext':
-          case 'text':
-          case 'mediumtext':
-          case 'longtext':
-            $ret .= '$'.$parameter_info['name'];
-            break;
-
-          case 'tinyblob':
-          case 'blob':
-          case 'mediumblob':
-          case 'longblob':
-            $ret .= '$'.$parameter_info['name'];
-            break;
-
-          default:
-            set_assert_failed( "Unknown MySQL type '%s'.", $parameter_info['data_type'] );
-        }
-      }
-    }
-
-    return $ret;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns code for the arguments for calling the stored routine in a wrapper method.
-   *
-   * @param $theRoutine array The metadata of the stored routine.
-   *
-   * @return string
-   */
-  protected function getRoutineArgs( $theRoutine )
-  {
-    $ret = '';
-
-    if ($theRoutine['parameters'])
-    {
-      foreach ($theRoutine['parameters'] as $i => $parameter_info)
-      {
-        if ($ret) $ret .= ',';
-        $ret .= $this->writeEscapedArgs( $parameter_info );
-      }
-    }
-
-    return $ret;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Return code for escaping the arguments of a stored routine.
-   *
-   * @param array $theParameterInfo The parameter info contain name of parameter and data type of parameter.
-   *
-   * @return string
-   */
-  private function writeEscapedArgs( $theParameterInfo )
-  {
-    $ret = '';
-    switch ($theParameterInfo['data_type'])
-    {
-      case 'tinyint':
-      case 'smallint':
-      case 'mediumint':
-      case 'int':
-      case 'bigint':
-
-      case 'year':
-
-      case 'decimal':
-      case 'float':
-      case 'double':
-        $ret = '\'.self::quoteNum( $'.$theParameterInfo['name'].' ).\'';
-        break;
-
-      case 'varbinary':
-      case 'binary':
-
-      case 'char':
-      case 'varchar':
-        $ret = '\'.self::quoteString( $'.$theParameterInfo['name'].' ).\'';
-        break;
-
-      case 'time':
-      case 'timestamp':
-
-      case 'date':
-      case 'datetime':
-        $ret = '\'.self::quoteString( $'.$theParameterInfo['name'].' ).\'';
-        break;
-
-      case 'enum':
-      case 'set':
-        $ret = '\'.self::quoteString( $'.$theParameterInfo['name'].' ).\'';
-        break;
-
-      case 'bit':
-        $ret = '\'.self::quoteBit( $'.$theParameterInfo['name'].' ).\'';
-        break;
-
-      case 'tinytext':
-      case 'text':
-      case 'mediumtext':
-      case 'longtext':
-
-      case 'tinyblob':
-      case 'blob':
-      case 'mediumblob':
-      case 'longblob':
-        $ret = ($this->myLobAsStringFlag) ? $ret = '\'.self::quoteString( $'.$theParameterInfo['name'].' ).\'' : '?';
-        break;
-
-      default:
-        set_assert_failed( "Unknown arg type '%s'.", $theParameterInfo['data_type'] );
-    }
-
-    return $ret;
+    return $this->myCode;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -545,22 +377,111 @@ abstract class Wrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Appends a comment line to @c $myCode.
+   * Returns the return type for phpDoc.
    */
-  protected function writeSeparator()
+  abstract protected function getPhpDocReturnType();
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns code for the arguments for calling the stored routine in a wrapper method.
+   *
+   * @param $theRoutine array The metadata of the stored routine.
+   *
+   * @return string
+   */
+  protected function getRoutineArgs( $theRoutine )
   {
-    for ($i = 0; $i<2 * $this->myIndentLevel; $i++)
+    $ret = '';
+
+    foreach ($theRoutine['parameters'] as $i => $parameter_info)
     {
-      $this->write( ' ' );
+      if ($ret) $ret .= ',';
+      $ret .= $this->writeEscapedArgs( $parameter_info );
     }
 
-    $this->write( '//' );
+    return $ret;
+  }
 
-    for ($i = 0; $i<(self::C_PAGE_WIDTH - 2 * $this->myIndentLevel - 2 - 1); $i++)
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns code for the parameters of the wrapper method for the stored routine.
+   *
+   * @param $theRoutine array The metadata of the stored routine.
+   *
+   * @return string
+   */
+  protected function getWrapperArgs( $theRoutine )
+  {
+    if ($theRoutine['designation']=='bulk')
     {
-      $this->write( '-' );
+      $ret = '$theBulkHandler';
     }
-    $this->writeLine();
+    else
+    {
+      $ret = '';
+    }
+
+    foreach ($theRoutine['parameters'] as $i => $parameter_info)
+    {
+      if ($ret) $ret .= ', ';
+      switch ($parameter_info['data_type'])
+      {
+        case 'tinyint':
+        case 'smallint':
+        case 'mediumint':
+        case 'int':
+        case 'bigint':
+
+        case 'year':
+
+        case 'decimal':
+        case 'float':
+        case 'double':
+          $ret .= '$'.$parameter_info['name'];
+          break;
+
+        case 'varbinary':
+        case 'binary':
+
+        case 'char':
+        case 'varchar':
+          $ret .= '$'.$parameter_info['name'];
+          break;
+
+        case 'time':
+        case 'timestamp':
+
+        case 'date':
+        case 'datetime':
+          $ret .= '$'.$parameter_info['name'];
+          break;
+
+        case 'enum':
+        case 'bit':
+        case 'set':
+          $ret .= '$'.$parameter_info['name'];
+          break;
+
+        case 'tinytext':
+        case 'text':
+        case 'mediumtext':
+        case 'longtext':
+          $ret .= '$'.$parameter_info['name'];
+          break;
+
+        case 'tinyblob':
+        case 'blob':
+        case 'mediumblob':
+        case 'longblob':
+          $ret .= '$'.$parameter_info['name'];
+          break;
+
+        default:
+          set_assert_failed( "Unknown MySQL type '%s'.", $parameter_info['data_type'] );
+      }
+    }
+
+    return $ret;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -599,6 +520,48 @@ abstract class Wrapper
     {
       $this->myCode .= "\n";
     }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Generates code for calling the stored routine in the wrapper method.
+   *
+   * @param $theRoutine array The metadata of the stored routine.
+   */
+  abstract protected function writeResultHandler( $theRoutine );
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Generates code for fetching data of a stored routine with one or more LOB parameters.
+   *
+   * @param $theRoutine array The metadata of the stored routine.
+   */
+  abstract protected function writeRoutineFunctionLobFetchData( $theRoutine );
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Generates code for retuning the data returned by a stored routine with one or more LOB parameters.
+   */
+  abstract protected function writeRoutineFunctionLobReturnData();
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Appends a comment line to @c $myCode.
+   */
+  protected function writeSeparator()
+  {
+    for ($i = 0; $i<2 * $this->myIndentLevel; $i++)
+    {
+      $this->write( ' ' );
+    }
+
+    $this->write( '//' );
+
+    for ($i = 0; $i<(self::C_PAGE_WIDTH - 2 * $this->myIndentLevel - 2 - 1); $i++)
+    {
+      $this->write( '-' );
+    }
+    $this->writeLine();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -681,57 +644,88 @@ abstract class Wrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns the return type for phpDoc.
-   */
-  abstract protected function getPhpDocReturnType();
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Generates code for fetching data of a stored routine with one or more LOB parameters.
+   * Returns @a $theStoredRoutineName after the first underscore in camel case.
+   * E.g. set_foo_foo => fooFoo.
    *
-   * @param $theRoutine array The metadata of the stored routine.
-   */
-  abstract protected function writeRoutineFunctionLobFetchData( $theRoutine );
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Generates code for retuning the data returned by a stored routine with one or more LOB parameters.
-   */
-  abstract protected function writeRoutineFunctionLobReturnData();
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns a wrapper method for a stored routine without LOB parameters.
+   * @param $theStoredRoutineName string The name of the stored routine.
    *
-   * @param $theRoutine array The metadata of the stored routine.
-   *
-   * @return string PHP code with a routine wrapper.
+   * @return string
    */
-  public function writeRoutineFunctionWithoutLob( $theRoutine )
+  private function getWrapperRoutineName( $theStoredRoutineName )
   {
-    $wrapper_function_name = $this->getWrapperRoutineName( $theRoutine['routine_name'] );
-
-    $wrapper_args = $this->getWrapperArgs( $theRoutine );
-
-    $this->writeSeparator();
-    $this->generatePhpDoc( $theRoutine );
-    $this->writeLine( 'public static function '.$wrapper_function_name.'( '.$wrapper_args.' )' );
-    $this->writeLine( '{' );
-
-    $this->writeResultHandler( $theRoutine );
-    $this->writeLine( '}' );
-    $this->writeLine();
-
-    return $this->myCode;
+    return lcfirst( preg_replace( '/(_)([a-z])/e', "strtoupper('\\2')", stristr( $theStoredRoutineName, '_' ) ) );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Generates code for calling the stored routine in the wrapper method.
+   * Return code for escaping the arguments of a stored routine.
    *
-   * @param $theRoutine array The metadata of the stored routine.
+   * @param array[] $theParameters Information about the parameters of the stored routine.
+   *
+   * @return string
    */
-  abstract protected function writeResultHandler( $theRoutine );
+  private function writeEscapedArgs( $theParameters )
+  {
+    $ret = '';
+    switch ($theParameters['data_type'])
+    {
+      case 'tinyint':
+      case 'smallint':
+      case 'mediumint':
+      case 'int':
+      case 'bigint':
+
+      case 'year':
+
+      case 'decimal':
+      case 'float':
+      case 'double':
+        $ret = '\'.self::quoteNum( $'.$theParameters['name'].' ).\'';
+        break;
+
+      case 'varbinary':
+      case 'binary':
+
+      case 'char':
+      case 'varchar':
+        $ret = '\'.self::quoteString( $'.$theParameters['name'].' ).\'';
+        break;
+
+      case 'time':
+      case 'timestamp':
+
+      case 'date':
+      case 'datetime':
+        $ret = '\'.self::quoteString( $'.$theParameters['name'].' ).\'';
+        break;
+
+      case 'enum':
+      case 'set':
+        $ret = '\'.self::quoteString( $'.$theParameters['name'].' ).\'';
+        break;
+
+      case 'bit':
+        $ret = '\'.self::quoteBit( $'.$theParameters['name'].' ).\'';
+        break;
+
+      case 'tinytext':
+      case 'text':
+      case 'mediumtext':
+      case 'longtext':
+
+      case 'tinyblob':
+      case 'blob':
+      case 'mediumblob':
+      case 'longblob':
+        $ret = ($this->myLobAsStringFlag) ? $ret = '\'.self::quoteString( $'.$theParameters['name'].' ).\'' : '?';
+        break;
+
+      default:
+        set_assert_failed( "Unknown arg type '%s'.", $theParameters['data_type'] );
+    }
+
+    return $ret;
+  }
 
   //--------------------------------------------------------------------------------------------------------------------
 }
