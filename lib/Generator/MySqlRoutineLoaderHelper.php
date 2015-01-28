@@ -119,18 +119,20 @@ class MySqlRoutineLoaderHelper
   private $myReplacePairs = array();
 
   /**
+   * The tags for the PhpDoc block for the wrapper of the stored routine.
+   *
+   * @var array
+   */
+  private $myRoutineDocBlockInfo = array();
+
+  /**
    * The name of the stored routine.
    *
    * @var string
    */
   private $myRoutineName;
 
-  /**
-   * The tags for the PhpDoc block for the wrapper of the stored routine.
-   *
-   * @var array
-   */
-  private $myRoutinePhpDoc = array();
+  private $myRoutinePhpDocBlockMetaData;
 
   /**
    * The source code as a single string of the stored routine.
@@ -272,8 +274,8 @@ class MySqlRoutineLoaderHelper
         // Get the parameters types of the stored routine from metadata of MySQL.
         $this->getRoutineParametersInfo();
 
-        // Get the stored routine documentation from the source file.
-        $this->getPhpDocBlock();
+        // Get the metadata for data layer php doc methods of stored routine.
+        $this->getPhpDocBlockMetaData();
 
         // Update Metadata of the stored routine.
         $this->updateMetadata();
@@ -485,56 +487,6 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Return array with information about parameter.
-   *
-   * @param DocBlock\Tag $theParameter
-   *
-   * @return array
-   */
-  private function getDocBlockParameterDescription( $theParameter )
-  {
-    $content     = $theParameter->getContent();
-    $description = $theParameter->getDescription();
-    $name        = trim( substr( $content, 0, strlen( $content ) - strlen( $description ) ) );
-
-    $tmp   = array();
-    $lines = explode( "\n", $description );
-    foreach ($lines as $line)
-    {
-      $tmp[] = trim( $line );
-    }
-    $description = implode( "\n", $tmp );
-
-    $key = false;
-    foreach ($this->myParameters as $i => $parameter_info)
-    {
-      if ($name==$parameter_info['name'])
-      {
-        $key = $i;
-        break;
-      }
-    }
-
-    if ($key!==false)
-    {
-      return array('name'                 => $name,
-                   'php_type'             => $this->columnTypeToPhpType( $this->myParameters[$key]['data_type'] ),
-                   'data_type'            => $this->myParameters[$key]['data_type'],
-                   'data_type_descriptor' => $this->myParameters[$key]['data_type_descriptor'],
-                   'description'          => $description);
-    }
-    else
-    {
-      return array('name'                 => $name,
-                   'php_type'             => '',
-                   'mysql_type'           => '',
-                   'data_type_descriptor' => '',
-                   'description'          => $description);
-    }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
    * Returns true if the source file must be load or reloaded. Otherwise returns false.
    *
    * @return bool
@@ -613,37 +565,48 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
     return $ret;
   }
 
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   *  Gets the phpDoc block (in parts) of stored routine from the source file.
+   * Gets description by name of the parameter from the dock block routine info.
+   *
+   * @param string $theName Name of the parameter.
+   *
+   * @return null
    */
-  private function getPhpDocBlock()
+  private function getParameterDocDescription( $theName )
   {
-    // Gets phpDoc block for the source.
-    $tmp = '';
-    foreach ($this->myRoutineSourceCodeLines as $line)
+    foreach ($this->myRoutineDocBlockInfo['parameters'] as $parameter_doc_info)
     {
-      $n = preg_match( "/create\\s+(procedure|function)\\s+([a-zA-Z0-9_]+)/i", $line );
-      if ($n) break;
-      else $tmp .= $line."\n";
+      if ($parameter_doc_info['name']===$theName) return $parameter_doc_info['description'];
     }
 
-    $phpdoc = new DocBlock( $tmp );
+    return null;
+  }
 
-    // Gets short description.
-    $this->myRoutinePhpDoc['sort_description'] = $phpdoc->getShortDescription();
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   *  Gets meta data for php dock block.
+   */
+  private function getPhpDocBlockMetaData()
+  {
+    // Gets info about routine from the dock block of the source file of the routine.
+    $this->getRoutineDocBlockInfo();
 
-    // Gets long description.
-    $this->myRoutinePhpDoc['long_description'] = $phpdoc->getLongDescription()->getContents();
-
-    // Gets description for each parameter of the stored routine.
-    foreach ($phpdoc->getTags() as $tag)
+    // Gets meta data for each parameters of stored routine.
+    $parameters = array();
+    foreach ($this->myParameters as $key => $parameter_info)
     {
-      if ($tag->getName()=='param')
-      {
-        $this->myRoutinePhpDoc['parameters'][] = $this->getDocBlockParameterDescription( $tag );
-      }
+      $parameters[] = array('name'                 => $parameter_info['name'],
+                            'php_type'             => $this->columnTypeToPhpType( $parameter_info['data_type'] ),
+                            'data_type_descriptor' => $parameter_info['data_type_descriptor'],
+                            'description'          => $this->getParameterDocDescription( $parameter_info['name'] ));
     }
+
+    // Gets meta data for php dock block of the stored routine.
+    $this->myRoutinePhpDocBlockMetaData = array('sort_description' => $this->myRoutineDocBlockInfo['sort_description'],
+                                                'long_description' => $this->myRoutineDocBlockInfo['long_description'],
+                                                'parameters'       => $parameters);
 
     // Compare parameters.
     $this->validateParameterLists();
@@ -691,6 +654,54 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
     }
 
     return $ret;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   *  Gets the doc block (in parts) of teh stored routine from the source file.
+   */
+  private function getRoutineDocBlockInfo()
+  {
+    // Gets phpDoc block for the source.
+    $tmp = '';
+    foreach ($this->myRoutineSourceCodeLines as $line)
+    {
+      $n = preg_match( "/create\\s+(procedure|function)\\s+([a-zA-Z0-9_]+)/i", $line );
+      if ($n) break;
+      else $tmp .= $line."\n";
+    }
+
+    $phpdoc = new DocBlock( $tmp );
+
+    // Gets short description.
+    $this->myRoutineDocBlockInfo['sort_description'] = $phpdoc->getShortDescription();
+
+    // Gets long description.
+    $this->myRoutineDocBlockInfo['long_description'] = $phpdoc->getLongDescription()->getContents();
+
+    // Gets description for each parameter of the stored routine.
+    foreach ($phpdoc->getTags() as $key => $tag)
+    {
+      if ($tag->getName()=='param')
+      {
+        $content     = $tag->getContent();
+        $description = $tag->getDescription();
+
+        // Gets name of parameter from routine doc block.
+        $name = trim( substr( $content, 0, strlen( $content ) - strlen( $description ) ) );
+
+        $tmp   = array();
+        $lines = explode( "\n", $description );
+        foreach ($lines as $line)
+        {
+          $tmp[] = trim( $line );
+        }
+        $description = implode( "\n", $tmp );
+
+        $this->myRoutineDocBlockInfo['parameters'][$key] = array('name'        => $name,
+                                                                 'description' => $description);
+      }
+    }
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -816,7 +827,7 @@ and   t1.routine_name   = '%s'", $this->myRoutineName );
     $this->myMetadata['column_types'] = $this->myColumnsTypes;
     $this->myMetadata['timestamp']    = $this->myMTime;
     $this->myMetadata['replace']      = $this->myReplace;
-    $this->myMetadata['phpdoc']       = $this->myRoutinePhpDoc;
+    $this->myMetadata['phpdoc']       = $this->myRoutinePhpDocBlockMetaData;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -834,9 +845,9 @@ and   t1.routine_name   = '%s'", $this->myRoutineName );
 
     // Make list with names of parameters used in dock block of routine.
     $doc_block_parameters_names = array();
-    if (isset($this->myRoutinePhpDoc['parameters']))
+    if (isset($this->myRoutineDocBlockInfo['parameters']))
     {
-      foreach ($this->myRoutinePhpDoc['parameters'] as $parameter)
+      foreach ($this->myRoutineDocBlockInfo['parameters'] as $parameter)
       {
         $doc_block_parameters_names[] = $parameter['name'];
       }

@@ -6,6 +6,7 @@ class DataLayer extends \SetBased\Stratum\StaticDataLayer
   /**
    * Test for magic constant.
    *
+   *
    * @return string
    */
   public static function magicConstant01(  )
@@ -16,6 +17,7 @@ class DataLayer extends \SetBased\Stratum\StaticDataLayer
   //-------------------------------------------------------------------------------------------------------------------
   /**
    * Test for magic constant.
+   *
    *
    * @return string
    */
@@ -28,6 +30,7 @@ class DataLayer extends \SetBased\Stratum\StaticDataLayer
   /**
    * Test for magic constant.
    *
+   *
    * @return string
    */
   public static function magicConstant03(  )
@@ -38,6 +41,7 @@ class DataLayer extends \SetBased\Stratum\StaticDataLayer
   //-------------------------------------------------------------------------------------------------------------------
   /**
    * Test for magic constant.
+   *
    *
    * @return string
    */
@@ -260,7 +264,6 @@ class DataLayer extends \SetBased\Stratum\StaticDataLayer
   /**
    * Test for designation bulk_insert.
    *
-   * @param array $theData
    */
   public static function testBulkInsert01( $theData )
   {
@@ -283,7 +286,6 @@ class DataLayer extends \SetBased\Stratum\StaticDataLayer
   /**
    * Test for designation bulk_insert.
    *
-   * @param array $theData
    */
   public static function testBulkInsert02( $theData )
   {
@@ -321,6 +323,7 @@ class DataLayer extends \SetBased\Stratum\StaticDataLayer
   //-------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type log.
+   *
    *
    * @return int
    */
@@ -986,6 +989,7 @@ class DataLayer extends \SetBased\Stratum\StaticDataLayer
   /**
    * Test for designation type table.
    *
+   *
    * @return int
    */
   public static function testTable(  )
@@ -996,6 +1000,7 @@ class DataLayer extends \SetBased\Stratum\StaticDataLayer
   //-------------------------------------------------------------------------------------------------------------------
   /**
    * Test for magic constant.
+   *
    *
    * @return string
    */
