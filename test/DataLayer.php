@@ -259,6 +259,7 @@ class DataLayer extends \SetBased\Stratum\StaticDataLayer
   //-------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation bulk_insert.
+   *
    * @param array $theData
    */
   public static function testBulkInsert01( $theData )
@@ -281,6 +282,7 @@ class DataLayer extends \SetBased\Stratum\StaticDataLayer
   //-------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation bulk_insert.
+   *
    * @param array $theData
    */
   public static function testBulkInsert02( $theData )

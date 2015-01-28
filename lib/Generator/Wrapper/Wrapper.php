@@ -614,7 +614,7 @@ abstract class Wrapper
           $this->writeLine( sprintf( $format, '@param', $parameter['php_type'], '$'.$parameter['name'], $line ) );
           foreach ($lines as $line)
           {
-            $this->writeLine( sprintf( $format, ' ', ' ', ' ', trim($line) ) );
+            $this->writeLine( sprintf( $format, ' ', ' ', ' ', $line ) );
           }
         }
         else
@@ -628,6 +628,7 @@ abstract class Wrapper
     elseif ($theRoutine['designation']==='bulk_insert')
     {
       // Generate parameter for bulk_insert routine type.
+      $this->writeLine( ' *' );
       $this->writeLine( ' * @param array $theData' );
     }
 
