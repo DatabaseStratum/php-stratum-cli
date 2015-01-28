@@ -119,7 +119,7 @@ class MySqlRoutineLoaderHelper
   private $myReplacePairs = array();
 
   /**
-   * The tags for the PhpDoc block for the wrapper of the stored routine.
+   * Descriptions of the stored routine and parameters from the doc block of source file.
    *
    * @var array
    */
@@ -132,6 +132,11 @@ class MySqlRoutineLoaderHelper
    */
   private $myRoutineName;
 
+  /**
+   * The tags for the PhpDoc block for the wrapper of the stored routine.
+   *
+   * @var array
+   */
   private $myRoutinePhpDocBlockMetaData;
 
   /**
@@ -811,6 +816,7 @@ and   t1.routine_name   = '%s'", $this->myRoutineName );
     unset($this->myReplace['__DIR__']);
     unset($this->myReplace['__LINE__']);
   }
+
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
