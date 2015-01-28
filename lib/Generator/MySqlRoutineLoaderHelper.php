@@ -91,6 +91,13 @@ class MySqlRoutineLoaderHelper
   private $myOldRoutineInfo;
 
   /**
+   * The information about the parameters of the stored routine.
+   *
+   * @var array[]
+   */
+  private $myParameters = array();
+
+  /**
    * The placeholders in the source file.
    *
    * @var array
@@ -119,14 +126,7 @@ class MySqlRoutineLoaderHelper
   private $myRoutineName;
 
   /**
-   * The routine parameters info.
-   *
-   * @var array
-   */
-  private $myRoutineParameters = array();
-
-  /**
-   * The tags for the PhpDoc block for the wrapper of this stored routine.
+   * The tags for the PhpDoc block for the wrapper of the stored routine.
    *
    * @var array
    */
@@ -497,7 +497,6 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
     $description = $theParameter->getDescription();
     $name        = trim( substr( $content, 0, strlen( $content ) - strlen( $description ) ) );
 
-
     $tmp   = array();
     $lines = explode( "\n", $description );
     foreach ($lines as $line)
@@ -506,9 +505,8 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
     }
     $description = implode( "\n", $tmp );
 
-
     $key = false;
-    foreach ($this->myRoutineParameters as $i => $parameter_info)
+    foreach ($this->myParameters as $i => $parameter_info)
     {
       if ($name==$parameter_info['name'])
       {
@@ -520,9 +518,9 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
     if ($key!==false)
     {
       return array('name'                 => $name,
-                   'php_type'             => $this->columnTypeToPhpType( $this->myRoutineParameters[$key]['data_type'] ),
-                   'data_type'            => $this->myRoutineParameters[$key]['data_type'],
-                   'data_type_descriptor' => $this->myRoutineParameters[$key]['data_type_descriptor'],
+                   'php_type'             => $this->columnTypeToPhpType( $this->myParameters[$key]['data_type'] ),
+                   'data_type'            => $this->myParameters[$key]['data_type'],
+                   'data_type_descriptor' => $this->myParameters[$key]['data_type_descriptor'],
                    'description'          => $description);
     }
     else
@@ -730,9 +728,9 @@ and   t1.routine_name   = '%s'", $this->myRoutineName );
           $value .= ' collation '.$routine_parameter['collation'];
         }
 
-        $this->myRoutineParameters[$key]['name']                 = $routine_parameter['parameter_name'];
-        $this->myRoutineParameters[$key]['data_type']            = $routine_parameter['parameter_type'];
-        $this->myRoutineParameters[$key]['data_type_descriptor'] = $value;
+        $this->myParameters[$key]['name']                 = $routine_parameter['parameter_name'];
+        $this->myParameters[$key]['data_type']            = $routine_parameter['parameter_type'];
+        $this->myParameters[$key]['data_type_descriptor'] = $value;
       }
     }
   }
@@ -812,7 +810,7 @@ and   t1.routine_name   = '%s'", $this->myRoutineName );
     $this->myMetadata['routine_name'] = $this->myRoutineName;
     $this->myMetadata['designation']  = $this->myDesignationType;
     $this->myMetadata['table_name']   = $this->myTableName;
-    $this->myMetadata['parameters']   = $this->myRoutineParameters;
+    $this->myMetadata['parameters']   = $this->myParameters;
     $this->myMetadata['columns']      = $this->myColumns;
     $this->myMetadata['fields']       = $this->myFields;
     $this->myMetadata['column_types'] = $this->myColumnsTypes;
@@ -829,7 +827,7 @@ and   t1.routine_name   = '%s'", $this->myRoutineName );
   {
     // Make list with names of parameters used in database.
     $database_parameters_names = array();
-    foreach ($this->myRoutineParameters as $parameter_info)
+    foreach ($this->myParameters as $parameter_info)
     {
       $database_parameters_names[] = $parameter_info['name'];
     }
