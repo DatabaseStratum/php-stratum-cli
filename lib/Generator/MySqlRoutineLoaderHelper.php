@@ -585,9 +585,12 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
    */
   private function getParameterDocDescription( $theName )
   {
-    foreach ($this->myDocBlockPartsSource['parameters'] as $parameter_doc_info)
+    if (isset($this->myDocBlockPartsSource['parameters']))
     {
-      if ($parameter_doc_info['name']===$theName) return $parameter_doc_info['description'];
+      foreach ($this->myDocBlockPartsSource['parameters'] as $parameter_doc_info)
+      {
+        if ($parameter_doc_info['name']===$theName) return $parameter_doc_info['description'];
+      }
     }
 
     return null;
