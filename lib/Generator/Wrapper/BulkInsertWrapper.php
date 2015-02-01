@@ -23,7 +23,7 @@ class BulkInsertWrapper extends Wrapper
   /**
    * @return string
    */
-  protected function getPhpDocReturnType()
+  protected function getDocBlockReturnType()
   {
     return '';
   }
@@ -81,6 +81,24 @@ class BulkInsertWrapper extends Wrapper
     $this->writeLine( '}' );
   }
 
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * {@inheritdoc}
+   */
+  protected function writeRoutineFunctionLobFetchData( $theRoutine )
+  {
+    // Nothing to do.
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * {@inheritdoc}
+   */
+  protected function writeRoutineFunctionLobReturnData()
+  {
+    // Nothing to do.
+  }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -152,24 +170,6 @@ class BulkInsertWrapper extends Wrapper
     }
 
     return $ret;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * {@inheritdoc}
-   */
-  protected function writeRoutineFunctionLobFetchData( $theRoutine )
-  {
-    // Nothing to do.
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * {@inheritdoc}
-   */
-  protected function writeRoutineFunctionLobReturnData()
-  {
-    // Nothing to do.
   }
 
   //--------------------------------------------------------------------------------------------------------------------

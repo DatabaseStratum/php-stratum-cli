@@ -22,7 +22,7 @@ class TableWrapper extends Wrapper
   /**
    * @return string
    */
-  protected function getPhpDocReturnType()
+  protected function getDocBlockReturnType()
   {
     return 'int';
   }

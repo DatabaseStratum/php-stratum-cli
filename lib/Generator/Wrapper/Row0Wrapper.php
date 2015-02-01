@@ -20,7 +20,7 @@ class Row0Wrapper extends Wrapper
   /**
    * @return string
    */
-  protected function getPhpDocReturnType()
+  protected function getDocBlockReturnType()
   {
     return 'array';
   }

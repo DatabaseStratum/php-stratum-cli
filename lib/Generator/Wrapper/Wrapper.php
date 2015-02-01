@@ -377,9 +377,9 @@ abstract class Wrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns the return type for phpDoc.
+   * Returns the return type the be used in the DocBlock.
    */
-  abstract protected function getPhpDocReturnType();
+  abstract protected function getDocBlockReturnType();
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -587,7 +587,7 @@ abstract class Wrapper
     }
 
     // Generate phpDoc with parameters and descriptions of parameters.
-    if (isset($theRoutine['phpdoc']['parameters']))
+    if ($theRoutine['phpdoc']['parameters'])
     {
       $this->writeLine( ' *' );
 
@@ -633,7 +633,7 @@ abstract class Wrapper
     }
 
     // Generate return parameter doc.
-    $return = $this->getPhpDocReturnType();
+    $return = $this->getDocBlockReturnType();
     if ($return)
     {
       $this->writeLine( ' *' );
