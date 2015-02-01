@@ -279,12 +279,12 @@ class MySqlRoutineLoaderHelper
         // Get the parameters types of the stored routine from metadata of MySQL.
         $this->getRoutineParametersInfo();
 
+        // Compose the DocBlock parts to be used by the wrapper generator.
+        $this->getDocBlockPartsWrapper();
+
         // Validate the parameters found the DocBlock in the source of the stored routine against the parameters from
         // the metadata of MySQL.
         $this->validateParameterLists();
-
-        // Compose the DocBlock parts to be used by the wrapper generator.
-        $this->getDocBlockPartsWrapper();
 
         // Update Metadata of the stored routine.
         $this->updateMetadata();

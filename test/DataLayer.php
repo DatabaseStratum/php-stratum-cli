@@ -447,9 +447,9 @@ class DataLayer extends \SetBased\Stratum\StaticDataLayer
    * Test for designation type row0.
    *
    * @param int $p_count The number of rows selected.
-   *                                    * 0 For a valid test.
-   *                                    * 1 For a valid test.
-   *                                    * 2 For a invalid test.
+   *                     * 0 For a valid test.
+   *                     * 1 For a valid test.
+   *                     * 2 For a invalid test.
    *                     int(11)
    *
    * @return array
@@ -464,9 +464,9 @@ class DataLayer extends \SetBased\Stratum\StaticDataLayer
    * Test for designation type row0 with BLOB.
    *
    * @param int    $p_count The number of rows selected.
-   *                                       * 0 For a valid test.
-   *                                       * 1 For a valid test.
-   *                                       * 2 For a invalid test.
+   *                        * 0 For a valid test.
+   *                        * 1 For a valid test.
+   *                        * 2 For a invalid test.
    *                        int(11)
    * @param string $p_blob  The BLOB.
    *                        blob
@@ -525,9 +525,9 @@ class DataLayer extends \SetBased\Stratum\StaticDataLayer
    * Test for designation type row1.
    *
    * @param int $p_count The number of rows selected.
-   *                                    * 0 For a invalid test.
-   *                                    * 1 For a valid test.
-   *                                    * 2 For a invalid test.
+   *                     * 0 For a invalid test.
+   *                     * 1 For a valid test.
+   *                     * 2 For a invalid test.
    *                     int(11)
    *
    * @return array
@@ -542,9 +542,9 @@ class DataLayer extends \SetBased\Stratum\StaticDataLayer
    * Test for designation type row1 with BLOB.
    *
    * @param int    $p_count The number of rows selected.
-   *                                       * 0 For a invalid test.
-   *                                       * 1 For a valid test.
-   *                                       * 2 For a invalid test.
+   *                        * 0 For a invalid test.
+   *                        * 1 For a valid test.
+   *                        * 2 For a invalid test.
    *                        int(11)
    * @param string $p_blob  The BLOB.
    *                        blob
@@ -603,9 +603,9 @@ class DataLayer extends \SetBased\Stratum\StaticDataLayer
    * Test for designation type row1.
    *
    * @param int $p_count The number of rows selected.
-   *                                    * 0 For a invalid test.
-   *                                    * 1 For a valid test.
-   *                                    * 2 For a invalid test.
+   *                     * 0 For a invalid test.
+   *                     * 1 For a valid test.
+   *                     * 2 For a invalid test.
    *                     int(11)
    *
    * @return array[]
@@ -830,9 +830,9 @@ class DataLayer extends \SetBased\Stratum\StaticDataLayer
    * Test for designation type singleton0.
    *
    * @param int $p_count The number of rows selected.
-   *                                    * 0 For a valid test.
-   *                                    * 1 For a valid test.
-   *                                    * 2 For a invalid test.
+   *                     * 0 For a valid test.
+   *                     * 1 For a valid test.
+   *                     * 2 For a invalid test.
    *                     int(11)
    *
    * @return string
@@ -848,9 +848,9 @@ class DataLayer extends \SetBased\Stratum\StaticDataLayer
    * .
    *
    * @param int    $p_count The number of rows selected.
-   *                                       * 0 For a valid test.
-   *                                       * 1 For a valid test.
-   *                                       * 2 For a invalid test.
+   *                        * 0 For a valid test.
+   *                        * 1 For a valid test.
+   *                        * 2 For a invalid test.
    *                        int(11)
    * @param string $p_blob  The BLOB.
    *                        blob
@@ -909,9 +909,9 @@ class DataLayer extends \SetBased\Stratum\StaticDataLayer
    * Test for designation type singleton1.
    *
    * @param int $p_count The number of rows selected.
-   *                                    * 0 For a invalid test.
-   *                                    * 1 For a valid test.
-   *                                    * 2 For a invalid test.
+   *                     * 0 For a invalid test.
+   *                     * 1 For a valid test.
+   *                     * 2 For a invalid test.
    *                     int(11)
    *
    * @return string
@@ -926,9 +926,9 @@ class DataLayer extends \SetBased\Stratum\StaticDataLayer
    * Test for designation type singleton1 with BLOB.
    *
    * @param int    $p_count The number of rows selected.
-   *                                       * 0 For a invalid test.
-   *                                       * 1 For a valid test.
-   *                                       * 2 For a invalid test.
+   *                        * 0 For a invalid test.
+   *                        * 1 For a valid test.
+   *                        * 2 For a invalid test.
    *                        int(11)
    * @param string $p_blob  The BLOB.
    *                        blob
