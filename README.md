@@ -57,8 +57,8 @@ The constants based on the length/size of the data type of a column, especially 
 the size of an input element in a form. A rudimentary example of creating an input element for the user name in a login 
 form is shown in the below.         
 ![sample_usage_constant](https://raw.githubusercontent.com/SetBased/php-stratum/gh-pages/images/samples/sample01-constant.png)  
-This example generates an input element with length 20 in which the end-user cannot enter more than 20 characters.
-![sample_usage_constant_html1](https://raw.githubusercontent.com/SetBased/php-stratum/gh-pages/images/samples/sample01-constant-html1.png)
+This example generates an input element with length 20 in which the end-user cannot enter more than 20 characters.  
+![sample_usage_constant_html1](https://raw.githubusercontent.com/SetBased/php-stratum/gh-pages/images/samples/sample01-constant-html1.png)  
 Suppose new requirements of your web application state the maximum length of user names is 40 characters. With 
 PhpStratum you need the modify column `usr_name` and rerun `stratum`.  
 ![alter_table](https://raw.githubusercontent.com/SetBased/php-stratum/gh-pages/images/samples/sample01-alter-table.png)  
