@@ -9,6 +9,7 @@
  * @link
  */
 //----------------------------------------------------------------------------------------------------------------------
+use SetBased\Affirm\Affirm;
 use SetBased\Stratum\Generator\MySqlConfigConstants;
 use SetBased\Stratum\Generator\MySqlRoutineLoader;
 use SetBased\Stratum\Generator\MySqlRoutineWrapperGenerator;
@@ -26,21 +27,6 @@ foreach ($files as $file)
     require $file;
     break;
   }
-}
-
-//----------------------------------------------------------------------------------------------------------------------
-/**
- * Throws an exception. Arguments similar to printf.
- *
- * @throws Exception
- */
-function set_assert_failed()
-{
-  $args    = func_get_args();
-  $format  = array_shift( $args );
-  $message = vsprintf( $format,  $args );
-
-  throw new Exception( $message );
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -90,7 +76,6 @@ function getSetting( $options )
 
     default:
       $n = preg_match( '([A-Za-z0-9\_/]+.psql)', $param, $regs );
-      if ($n===false) set_assert_failed( 'Internal error.' );
       if ($n==1)
       {
         $setting['psql_files'][]= $regs[0];
@@ -137,6 +122,10 @@ if (!function_exists('json_last_error_msg')) {
  */
 function main( $options )
 {
+  // Throw exceptions on warnings and errors.
+  Affirm::setErrorHandler();
+
+  // Read the ini file.
   $setting = getSetting( $options );
 
   if (isset($setting['fast']))

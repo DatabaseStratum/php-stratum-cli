@@ -10,7 +10,9 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\Generator;
 
+use SetBased\Affirm\Affirm;
 use SetBased\Stratum\StaticDataLayer as DataLayer;
+use SetBased\Stratum\Util;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
@@ -206,7 +208,7 @@ class MySqlConfigConstants
         break;
 
       default:
-        set_assert_failed( "Unknown type '%s'.", $theColumn['data_type'] );
+        Affirm::assertFailed( "Unknown type '%s'.", $theColumn['data_type'] );
     }
 
     return $ret;
@@ -264,7 +266,7 @@ class MySqlConfigConstants
     }
 
     $ok = ksort( $this->myConstants );
-    if ($ok===false) set_assert_failed( "Internal error." );
+    if ($ok===false) Affirm::assertFailed( "Internal error." );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -358,7 +360,6 @@ where   nullif(`%s`,'') is not null";
     if (file_exists( $this->myConstantsFilename ))
     {
       $handle = fopen( $this->myConstantsFilename, 'r' );
-      if ($handle===null) set_assert_failed( "Unable to open file '%s'.", $this->myConstantsFilename );
 
       $line_number = 0;
       while ($line = fgets( $handle ))
@@ -367,11 +368,9 @@ where   nullif(`%s`,'') is not null";
         if ($line!="\n")
         {
           $n = preg_match( '/^\s*(([a-zA-Z0-9_]+)\.)?([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s+(\d+)\s*(\*|[a-zA-Z0-9_]+)?\s*$/', $line, $matches );
-          if ($n===false) set_assert_failed( "Internal error." );
-
           if ($n==0)
           {
-            set_assert_failed( "Illegal format at line %d in file '%s'.", $line_number, $this->myConstantsFilename );
+            Affirm::assertFailed( "Illegal format at line %d in file '%s'.", $line_number, $this->myConstantsFilename );
           }
 
           if (isset($matches[6]))
@@ -394,55 +393,11 @@ where   nullif(`%s`,'') is not null";
           }
         }
       }
-      if (!feof( $handle )) set_assert_failed( "Error reading from file '%s'.", $this->myConstantsFilename );
+      if (!feof( $handle )) Affirm::assertFailed( "Error reading from file '%s'.", $this->myConstantsFilename );
 
       $ok = fclose( $handle );
-      if ($ok===false) set_assert_failed( "Error closing file '%s'.", $this->myConstantsFilename );
+      if ($ok===false) Affirm::assertFailed( "Error closing file '%s'.", $this->myConstantsFilename );
     }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns the value of a setting.
-   *
-   * @param array  $theSettings      The settings as returned by parse_ini_file.
-   * @param bool   $theMandatoryFlag If set and setting $theSettingName is not found in section $theSectionName
-   *                                 an exception will be thrown.
-   * @param string $theSectionName   The name of the section of the requested setting.
-   * @param string $theSettingName   The name of the setting of the requested setting.
-   *
-   * @return array|null
-   */
-  private function getSetting( $theSettings, $theMandatoryFlag, $theSectionName, $theSettingName )
-  {
-    // Test if the section exists.
-    if (!array_key_exists( $theSectionName, $theSettings ))
-    {
-      if ($theMandatoryFlag)
-      {
-        set_assert_failed( "Section '%s' not found in configuration file.", $theSectionName );
-      }
-      else
-      {
-        return null;
-      }
-    }
-
-    // Test if the setting in the section exists.
-    if (!array_key_exists( $theSettingName, $theSettings[$theSectionName] ))
-    {
-      if ($theMandatoryFlag)
-      {
-        set_assert_failed( "Setting '%s' not found in section '%s' configuration file.", $theSettingName,
-                           $theSectionName );
-      }
-      else
-      {
-        return null;
-      }
-    }
-
-    return $theSettings[$theSectionName][$theSettingName];
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -472,17 +427,16 @@ where   nullif(`%s`,'') is not null";
   private function readConfigFile( $theConfigFilename )
   {
     $settings = parse_ini_file( $theConfigFilename, true );
-    if ($settings===false) set_assert_failed( "Unable open configuration file." );
 
-    $this->myHostName = $this->getSetting( $settings, true, 'database', 'host_name' );
-    $this->myUserName = $this->getSetting( $settings, true, 'database', 'user_name' );
-    $this->myPassword = $this->getSetting( $settings, true, 'database', 'password' );
-    $this->myDatabase = $this->getSetting( $settings, true, 'database', 'database_name' );
+    $this->myHostName = Util::getSetting( $settings, true, 'database', 'host_name' );
+    $this->myUserName = Util::getSetting( $settings, true, 'database', 'user_name' );
+    $this->myPassword = Util::getSetting( $settings, true, 'database', 'password' );
+    $this->myDatabase = Util::getSetting( $settings, true, 'database', 'database_name' );
 
-    $this->myConstantsFilename      = $this->getSetting( $settings, true, 'constants', 'columns' );
-    $this->myPrefix                 = $this->getSetting( $settings, true, 'constants', 'prefix' );
-    $this->myTemplateConfigFilename = $this->getSetting( $settings, true, 'constants', 'config_template' );
-    $this->myConfigFilename         = $this->getSetting( $settings, true, 'constants', 'config' );
+    $this->myConstantsFilename      = Util::getSetting( $settings, true, 'constants', 'columns' );
+    $this->myPrefix                 = Util::getSetting( $settings, true, 'constants', 'prefix' );
+    $this->myTemplateConfigFilename = Util::getSetting( $settings, true, 'constants', 'config_template' );
+    $this->myConfigFilename         = Util::getSetting( $settings, true, 'constants', 'config' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -492,10 +446,7 @@ where   nullif(`%s`,'') is not null";
    */
   private function writeColumns()
   {
-    $temp_filename = $this->myConstantsFilename.'.tmp';
-    $handle        = fopen( $temp_filename, 'w' );
-    if ($handle===null) set_assert_failed( "Unable to open file '%s'.", $this->myConstantsFilename );
-
+    $content = '';
     foreach ($this->myColumns as $table)
     {
       $width1 = 0;
@@ -506,6 +457,7 @@ where   nullif(`%s`,'') is not null";
         $width2 = max( strlen( $column['length'] ), $width2 );
       }
 
+
       foreach ($table as $column)
       {
         if (isset($column['length']))
@@ -513,34 +465,28 @@ where   nullif(`%s`,'') is not null";
           if (isset($column['constant_name']))
           {
             $line_format = sprintf( "%%s.%%-%ds %%%dd %%s\n", $width1, $width2 );
-            $n           = fprintf( $handle, $line_format, $column['table_name'],
-                                    $column['column_name'],
-                                    $column['length'],
-                                    $column['constant_name'] );
-            if ($n===false) set_assert_failed( "Error writing file '%s'.", $this->myConstantsFilename );
+            $content .= sprintf( $line_format,
+                                 $column['table_name'],
+                                 $column['column_name'],
+                                 $column['length'],
+                                 $column['constant_name'] );
           }
           else
           {
             $line_format = sprintf( "%%s.%%-%ds %%%dd\n", $width1, $width2 );
-            $n           = fprintf( $handle, $line_format, $column['table_name'], $column['column_name'], $column['length'] );
-            if ($n===false) set_assert_failed( "Error writing file '%s'.", $this->myConstantsFilename );
+            $content .= sprintf( $line_format,
+                                 $column['table_name'],
+                                 $column['column_name'],
+                                 $column['length'] );
           }
         }
       }
 
-      $n = fprintf( $handle, "\n" );
-      if ($n===false) set_assert_failed( "Error writing file '%s'.", $this->myConstantsFilename );
+      $content .= "\n";
     }
 
-    $err = fclose( $handle );
-    if ($err===false) set_assert_failed( "Error closing file '%s'.", $this->myConstantsFilename );
-
-    $err = rename( $this->myConstantsFilename.'.tmp', $this->myConstantsFilename );
-    if ($err===false)
-    {
-      set_assert_failed( "Error: can't rename file '%s' to '%s'.", $temp_filename,
-                         $this->myConstantsFilename );
-    }
+    // Save the columns, width and constants to the filesystem.
+    Util::writeTwoPhases( $this->myConstantsFilename, $content );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -551,9 +497,7 @@ where   nullif(`%s`,'') is not null";
    */
   private function writeTargetConfigFile()
   {
-    $source = file_get_contents( $this->myTemplateConfigFilename );
-    if ($source===false) set_assert_failed( "Unable to read file '%s'.", $this->myTemplateConfigFilename );
-
+    $content   = file_get_contents( $this->myTemplateConfigFilename );
     $width1    = 0;
     $width2    = 0;
     $constants = '';
@@ -570,28 +514,16 @@ where   nullif(`%s`,'') is not null";
       $constants .= sprintf( $line_format, $constant, $value );
     }
 
-    $count_match = substr_count( $source, self::C_PLACEHOLDER );
+    $count_match = substr_count( $content, self::C_PLACEHOLDER );
     if ($count_match!=1)
     {
-      set_assert_failed( "Error expected 1 placeholder in file '%s', found %d.", $this->myTemplateConfigFilename, $count_match );
+      Affirm::assertFailed( "Error expected 1 placeholder in file '%s', found %d.", $this->myTemplateConfigFilename, $count_match );
     }
 
-    $source = str_replace( self::C_PLACEHOLDER, $constants, $source );
+    $content = str_replace( self::C_PLACEHOLDER, $constants, $content );
 
-    $write_config_file_flag = true;
-    if (file_exists( $this->myConfigFilename ))
-    {
-      $old_source = file_get_contents( $this->myConfigFilename );
-      if ($old_source===false) set_assert_failed( "Unable to read file '%s'.", $this->myConfigFilename );
-      if ($source==$old_source) $write_config_file_flag = false;
-    }
-
-    if ($write_config_file_flag)
-    {
-      $ok = file_put_contents( $this->myConfigFilename, $source );
-      if ($ok===false) set_assert_failed( "Unable to write to file '%s'.", $this->myConfigFilename );
-      echo "Created: '", $this->myConfigFilename, "'.\n";
-    }
+    // Save the configuration file.
+    Util::writeTwoPhases( $this->myConfigFilename, $content );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

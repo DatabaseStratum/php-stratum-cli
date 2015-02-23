@@ -11,6 +11,7 @@
 namespace SetBased\Stratum\Generator;
 
 use phpDocumentor\Reflection\DocBlock;
+use SetBased\Affirm\Affirm;
 use SetBased\Stratum\StaticDataLayer as DataLayer;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -237,8 +238,6 @@ class MySqlRoutineLoaderHelper
 
       // Get modification time of the source file.
       $this->myMTime = filemtime( $this->mySourceFilename );
-      if ($this->myMTime===false) set_assert_failed( "Unable to get mtime of file '%s'.",
-                                                     $this->mySourceFilename );
 
       // Load the stored routine into MySQL only if the source has changed or the value of a placeholder.
       $load = $this->getMustReload();
@@ -246,10 +245,6 @@ class MySqlRoutineLoaderHelper
       {
         // Read the stored routine source code.
         $this->myRoutineSourceCode = file_get_contents( $this->mySourceFilename );
-        if ($this->myRoutineSourceCode===false)
-        {
-          set_assert_failed( "Unable to read file '%s'.", $this->mySourceFilename );
-        }
 
         // Split the stored routine source code into lines.
         $this->myRoutineSourceCodeLines = explode( "\n", $this->myRoutineSourceCode );
@@ -361,7 +356,7 @@ class MySqlRoutineLoaderHelper
         break;
 
       default:
-        set_assert_failed( "Unknown MySQL type '%s'.", $theType );
+        Affirm::assertFailed( "Unknown MySQL type '%s'.", $theType );
     }
 
     return $php_type;
@@ -418,7 +413,7 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
     // Check number of columns in the table match the number of fields given in the designation type.
     $n1 = count( $this->myColumns );
     $n2 = count( $columns );
-    if ($n1!=$n2) set_assert_failed( "Number of fields %d and number of columns %d don't match.", $n1, $n2 );
+    if ($n1!=$n2) Affirm::assertFailed( "Number of fields %d and number of columns %d don't match.", $n1, $n2 );
 
     // Fill arrays with column names and column types.
     $tmp_column_types = array();
@@ -450,8 +445,6 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
       $n = preg_match( '/^\s*--\s+type:\s*(\w+)\s*(.+)?\s*$/', $this->myRoutineSourceCodeLines[$key - 1],
                        $matches );
 
-      if ($n===false) set_assert_failed( "Internal error." );
-
       if ($n==1)
       {
         $this->myDesignationType = $matches[1];
@@ -459,9 +452,11 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
         {
           case 'bulk_insert':
             $m = preg_match( '/^([a-zA-Z0-9_]+)\s+([a-zA-Z0-9_,]+)$/', $matches[2], $info );
-            if ($m===false) set_assert_failed( "Internal error." );
-            if ($m==0) set_assert_failed( sprintf( "Error: Expected: -- type: bulk_insert <table_name> <columns> in file '%s'.\n",
-                                                   $this->mySourceFilename ) );
+            if ($m==0)
+            {
+              Affirm::assertFailed( "Error: Expected: -- type: bulk_insert <table_name> <columns> in file '%s'.\n",
+                                    $this->mySourceFilename );
+            }
             $this->myTableName = $info[1];
             $this->myColumns   = explode( ',', $info[2] );
             break;
@@ -493,6 +488,80 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
 
     return $ret;
   }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   *  Extracts the DocBlock (in parts) from the source of the stored routine.
+   */
+  private function getDocBlockPartsSource()
+  {
+    // Get the DocBlock for the source.
+    $tmp = '';
+    foreach ($this->myRoutineSourceCodeLines as $line)
+    {
+      $n = preg_match( "/create\\s+(procedure|function)\\s+([a-zA-Z0-9_]+)/i", $line );
+      if ($n) break;
+      else $tmp .= $line."\n";
+    }
+
+    $phpdoc = new DocBlock( $tmp );
+
+    // Get the short description.
+    $this->myDocBlockPartsSource['sort_description'] = $phpdoc->getShortDescription();
+
+    // Get the long description.
+    $this->myDocBlockPartsSource['long_description'] = $phpdoc->getLongDescription()->getContents();
+
+    // Get the description for each parameter of the stored routine.
+    foreach ($phpdoc->getTags() as $key => $tag)
+    {
+      if ($tag->getName()=='param')
+      {
+        $content     = $tag->getContent();
+        $description = $tag->getDescription();
+
+        // Gets name of parameter from routine doc block.
+        $name = trim( substr( $content, 0, strlen( $content ) - strlen( $description ) ) );
+
+        $tmp   = array();
+        $lines = explode( "\n", $description );
+        foreach ($lines as $line)
+        {
+          $tmp[] = trim( $line );
+        }
+        $description = implode( "\n", $tmp );
+
+        $this->myDocBlockPartsSource['parameters'][$key] = array('name'        => $name,
+                                                                 'description' => $description);
+      }
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   *  Generates the DocBlock parts to be used by the wrapper generator.
+   */
+  private function getDocBlockPartsWrapper()
+  {
+    // Get the DocBlock parts from the source of the stored routine.
+    $this->getDocBlockPartsSource();
+
+    // Generate the parameters parts of the DocBlock to be used by the wrapper.
+    $parameters = array();
+    foreach ($this->myParameters as $key => $parameter_info)
+    {
+      $parameters[] = array('name'                 => $parameter_info['name'],
+                            'php_type'             => $this->columnTypeToPhpType( $parameter_info['data_type'] ),
+                            'data_type_descriptor' => $parameter_info['data_type_descriptor'],
+                            'description'          => $this->getParameterDocDescription( $parameter_info['name'] ));
+    }
+
+    // Compose all the DocBlock parts to be used by the wrapper generator.
+    $this->myDocBlockPartsWrapper = array('sort_description' => $this->myDocBlockPartsSource['sort_description'],
+                                          'long_description' => $this->myDocBlockPartsSource['long_description'],
+                                          'parameters'       => $parameters);
+  }
+
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -546,8 +615,6 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
     $ret = true;
 
     $n = preg_match( "/create\\s+(procedure|function)\\s+([a-zA-Z0-9_]+)/i", $this->myRoutineSourceCode, $matches );
-    if ($n===false) set_assert_failed( "Internal error." );
-
     if ($n==1)
     {
       $this->myRoutineType = strtolower( $matches[1] );
@@ -574,7 +641,6 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
     return $ret;
   }
 
-
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Gets description by name of the parameter as found in the DocBlock of the stored routine.
@@ -598,39 +664,13 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   *  Generates the DocBlock parts to be used by the wrapper generator.
-   */
-  private function getDocBlockPartsWrapper()
-  {
-    // Get the DocBlock parts from the source of the stored routine.
-    $this->getDocBlockPartsSource();
-
-    // Generate the parameters parts of the DocBlock to be used by the wrapper.
-    $parameters = array();
-    foreach ($this->myParameters as $key => $parameter_info)
-    {
-      $parameters[] = array('name'                 => $parameter_info['name'],
-                            'php_type'             => $this->columnTypeToPhpType( $parameter_info['data_type'] ),
-                            'data_type_descriptor' => $parameter_info['data_type_descriptor'],
-                            'description'          => $this->getParameterDocDescription( $parameter_info['name'] ));
-    }
-
-    // Compose all the DocBlock parts to be used by the wrapper generator.
-    $this->myDocBlockPartsWrapper = array('sort_description' => $this->myDocBlockPartsSource['sort_description'],
-                                          'long_description' => $this->myDocBlockPartsSource['long_description'],
-                                          'parameters'       => $parameters);
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
    * Extracts the placeholders from the stored routine source.
    *
    * @return bool True if all placeholders are defined, false otherwise.
    */
   private function getPlaceholders()
   {
-    $err = preg_match_all( '(@[A-Za-z0-9\_\.]+(\%type)?@)', $this->myRoutineSourceCode, $matches );
-    if ($err===false) set_assert_failed( "Internal error." );
+    preg_match_all( '(@[A-Za-z0-9\_\.]+(\%type)?@)', $this->myRoutineSourceCode, $matches );
 
     $ret                  = true;
     $this->myPlaceholders = array();
@@ -659,58 +699,10 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
         $this->myReplace[$placeholder] = $this->myReplacePairs[strtoupper( $placeholder )];
       }
       $ok = ksort( $this->myReplace );
-      if ($ok===false) set_assert_failed( "Internal error." );
+      if ($ok===false) Affirm::assertFailed( "Internal error." );
     }
 
     return $ret;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   *  Extracts the DocBlock (in parts) from the source of the stored routine.
-   */
-  private function getDocBlockPartsSource()
-  {
-    // Get the DocBlock for the source.
-    $tmp = '';
-    foreach ($this->myRoutineSourceCodeLines as $line)
-    {
-      $n = preg_match( "/create\\s+(procedure|function)\\s+([a-zA-Z0-9_]+)/i", $line );
-      if ($n) break;
-      else $tmp .= $line."\n";
-    }
-
-    $phpdoc = new DocBlock( $tmp );
-
-    // Get the short description.
-    $this->myDocBlockPartsSource['sort_description'] = $phpdoc->getShortDescription();
-
-    // Get the long description.
-    $this->myDocBlockPartsSource['long_description'] = $phpdoc->getLongDescription()->getContents();
-
-    // Get the description for each parameter of the stored routine.
-    foreach ($phpdoc->getTags() as $key => $tag)
-    {
-      if ($tag->getName()=='param')
-      {
-        $content     = $tag->getContent();
-        $description = $tag->getDescription();
-
-        // Gets name of parameter from routine doc block.
-        $name = trim( substr( $content, 0, strlen( $content ) - strlen( $description ) ) );
-
-        $tmp   = array();
-        $lines = explode( "\n", $description );
-        foreach ($lines as $line)
-        {
-          $tmp[] = trim( $line );
-        }
-        $description = implode( "\n", $tmp );
-
-        $this->myDocBlockPartsSource['parameters'][$key] = array('name'        => $name,
-                                                                 'description' => $description);
-      }
-    }
   }
 
   //--------------------------------------------------------------------------------------------------------------------

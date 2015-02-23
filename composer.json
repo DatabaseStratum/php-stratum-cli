@@ -12,7 +12,8 @@
     "setbased/phing-extensions": "1.*"
   },
   "require": {
-    "phpdocumentor/reflection-docblock": "2.*"
+    "phpdocumentor/reflection-docblock": "2.*",
+    "setbased/php-affirm": "*"
   },
   "bin": [
     "bin/stratum"

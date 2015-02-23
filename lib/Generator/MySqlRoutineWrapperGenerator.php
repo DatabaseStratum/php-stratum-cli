@@ -10,8 +10,10 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\Generator;
 
+use SetBased\Affirm\Affirm;
 use SetBased\Stratum\Generator\Wrapper\Wrapper;
 use SetBased\Stratum\StaticDataLayer as DataLayer;
+use SetBased\Stratum\Util;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
@@ -138,56 +140,12 @@ class MySqlRoutineWrapperGenerator
     // Write the trailer of the wrapper class.
     $this->writeClassTrailer();
 
-    $write_wrapper_file_flag = true;
-    if (file_exists( $this->myWrapperFilename ))
-    {
-      $old_code = file_get_contents( $this->myWrapperFilename );
-      if ($old_code===false) set_assert_failed( "Error reading file '%s'.", $this->myWrapperFilename );
-      if ($this->myCode==$old_code) $write_wrapper_file_flag = false;
-    }
-
-    if ($write_wrapper_file_flag)
-    {
-      $bytes = file_put_contents( $this->myWrapperFilename, $this->myCode );
-      if ($bytes===false) set_assert_failed( "Error writing file '%s'.", $this->myWrapperFilename );
-      echo "Created: '", $this->myWrapperFilename, "'.\n";
-    }
+    // Write the wrapper class tot the filesystem.
+    Util::writeTwoPhases( $this->myWrapperFilename, $this->myCode );
 
     DataLayer::disconnect();
 
     return 0;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns the value of a setting.
-   *
-   * @param array  $theSettings    The settings.
-   * @param string $theSectionName The section name of the requested setting.
-   * @param string $theSettingName The name of the requested setting.
-   *
-   * @return string The value of a setting.
-   */
-  private function getSetting( $theSettings, $theSectionName, $theSettingName )
-  {
-    // Test if the section exists.
-    if (!array_key_exists( $theSectionName, $theSettings ))
-    {
-      set_assert_failed( "Section '%s' not found in configuration file '%s'.",
-                         $theSectionName,
-                         $this->myConfigurationFilename );
-    }
-
-    // Test if the setting in the section exists.
-    if (!array_key_exists( $theSettingName, $theSettings[$theSectionName] ))
-    {
-      set_assert_failed( "Setting '%s' not found in section '%s' configuration file '%s'.",
-                         $theSettingName,
-                         $theSectionName,
-                         $this->myConfigurationFilename );
-    }
-
-    return $theSettings[$theSectionName][$theSettingName];
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -198,7 +156,6 @@ class MySqlRoutineWrapperGenerator
   {
     // Read the configuration file.
     $settings = parse_ini_file( $this->myConfigurationFilename, true );
-    if ($settings===false) set_assert_failed( "Unable open configuration file '%s'.", $this->myConfigurationFilename );
 
     // Set default values.
     if (!isset($settings['wrapper']['lob_as_string']))
@@ -206,16 +163,16 @@ class MySqlRoutineWrapperGenerator
       $settings['wrapper']['lob_as_string'] = false;
     }
 
-    $this->myHostName = $this->getSetting( $settings, 'database', 'host_name' );
-    $this->myUserName = $this->getSetting( $settings, 'database', 'user_name' );
-    $this->myPassword = $this->getSetting( $settings, 'database', 'password' );
-    $this->myDatabase = $this->getSetting( $settings, 'database', 'database_name' );
+    $this->myHostName = Util::getSetting( $settings, true, 'database', 'host_name' );
+    $this->myUserName = Util::getSetting( $settings, true, 'database', 'user_name' );
+    $this->myPassword = Util::getSetting( $settings, true, 'database', 'password' );
+    $this->myDatabase = Util::getSetting( $settings, true, 'database', 'database_name' );
 
-    $this->myParentClassName  = $this->getSetting( $settings, 'wrapper', 'parent_class' );
-    $this->myWrapperClassName = $this->getSetting( $settings, 'wrapper', 'wrapper_class' );
-    $this->myWrapperFilename  = $this->getSetting( $settings, 'wrapper', 'wrapper_file' );
-    $this->myMetadataFilename = $this->getSetting( $settings, 'wrapper', 'metadata' );
-    $this->myLobAsStringFlag  = ($this->getSetting( $settings, 'wrapper', 'lob_as_string' )) ? true : false;
+    $this->myParentClassName  = Util::getSetting( $settings, true, 'wrapper', 'parent_class' );
+    $this->myWrapperClassName = Util::getSetting( $settings, true, 'wrapper', 'wrapper_class' );
+    $this->myWrapperFilename  = Util::getSetting( $settings, true, 'wrapper', 'wrapper_file' );
+    $this->myMetadataFilename = Util::getSetting( $settings, true, 'wrapper', 'metadata' );
+    $this->myLobAsStringFlag  = (Util::getSetting( $settings, true, 'wrapper', 'lob_as_string' )) ? true : false;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -227,10 +184,9 @@ class MySqlRoutineWrapperGenerator
   private function readRoutineMetadata()
   {
     $data = file_get_contents( $this->myMetadataFilename );
-    if ($data===false) set_assert_failed( "Error reading file '%s'.", $this->myMetadataFilename );
 
     $routines = json_decode( $data, true );
-    if (json_last_error()!=JSON_ERROR_NONE) set_assert_failed( "Error decoding JSON: '%s'.", json_last_error_msg() );
+    if (json_last_error()!=JSON_ERROR_NONE) Affirm::assertFailed( "Error decoding JSON: '%s'.", json_last_error_msg() );
 
     return $routines;
   }

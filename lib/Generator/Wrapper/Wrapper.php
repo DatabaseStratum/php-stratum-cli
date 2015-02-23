@@ -11,6 +11,8 @@
 namespace SetBased\Stratum\Generator\Wrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
+use SetBased\Affirm\Affirm;
+
 /**
  * Class Wrapper
  * routine.
@@ -117,7 +119,7 @@ abstract class Wrapper
         break;
 
       default:
-        set_assert_failed( "Unknown routine type '%s'.", $theRoutine['designation']."\n" );
+        Affirm::assertFailed( "Unknown routine type '%s'.", $theRoutine['designation']."\n" );
         $wrapper = null; // Keep our IDE happy.
     }
 
@@ -180,7 +182,7 @@ abstract class Wrapper
             break;
 
           default:
-            set_assert_failed( "Unknown MySQL type '%s'.", $parameter_info['data_type'] );
+            Affirm::assertFailed( "Unknown MySQL type '%s'.", $parameter_info['data_type'] );
         }
       }
     }
@@ -369,7 +371,7 @@ abstract class Wrapper
         break;
 
       default:
-        set_assert_failed( "Unknown MySQL type '%s'.", $theType );
+        Affirm::assertFailed( "Unknown MySQL type '%s'.", $theType );
     }
 
     return $ret;
@@ -477,7 +479,7 @@ abstract class Wrapper
           break;
 
         default:
-          set_assert_failed( "Unknown MySQL type '%s'.", $parameter_info['data_type'] );
+          Affirm::assertFailed( "Unknown MySQL type '%s'.", $parameter_info['data_type'] );
       }
     }
 
@@ -722,7 +724,7 @@ abstract class Wrapper
         break;
 
       default:
-        set_assert_failed( "Unknown arg type '%s'.", $theParameters['data_type'] );
+        Affirm::assertFailed( "Unknown arg type '%s'.", $theParameters['data_type'] );
     }
 
     return $ret;

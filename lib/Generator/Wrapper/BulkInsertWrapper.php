@@ -11,6 +11,8 @@
 namespace SetBased\Stratum\Generator\Wrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
+use SetBased\Affirm\Affirm;
+
 /**
  * Class for generating a wrapper method for a stored procedure that prepares a table to be used with a bulk SQL
  * statement.
@@ -46,7 +48,7 @@ class BulkInsertWrapper extends Wrapper
     // Validate number of column names and number of column types are equal.
     $n1 = count( $theRoutine['columns'] );
     $n2 = count( $theRoutine['column_types'] );
-    if ($n1!=$n2) set_assert_failed( "Number of fields %d and number of columns %d don't match.", $n1, $n2 );
+    if ($n1!=$n2) Affirm::assertFailed( "Number of fields %d and number of columns %d don't match.", $n1, $n2 );
 
     $routine_args = $this->getRoutineArgs( $theRoutine );
     $this->writeLine( 'self::query( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
@@ -162,11 +164,11 @@ class BulkInsertWrapper extends Wrapper
       case 'blob':
       case 'mediumblob':
       case 'longblob':
-        set_assert_failed( "LOBs are not possible in temporary tables" );
+        Affirm::assertFailed( "LOBs are not possible in temporary tables" );
         break;
 
       default:
-        set_assert_failed( "Unknown type '%s'.", $theValueType );
+        Affirm::assertFailed( "Unknown type '%s'.", $theValueType );
     }
 
     return $ret;

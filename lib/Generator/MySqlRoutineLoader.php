@@ -10,7 +10,9 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\Generator;
 
+use SetBased\Affirm\Affirm;
 use SetBased\Stratum\StaticDataLayer as DataLayer;
+use SetBased\Stratum\Util;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
@@ -98,6 +100,7 @@ class MySqlRoutineLoader
 
   /**
    * The extension of the source files.
+   *
    * @var string
    */
   private $mySourceFileExtension;
@@ -212,29 +215,22 @@ class MySqlRoutineLoader
       }
     }
 
-    if (is_dir( $theSourceDir ))
+    $filenames = scandir( $theSourceDir );
+    $dir_names = array();
+    foreach ($filenames as $filename)
     {
-      $filenames = scandir( $theSourceDir );
-      $dir_names = array();
-      foreach ($filenames as $filename)
+      if (is_dir( $theSourceDir.'/'.$filename ))
       {
-        if (is_dir( $theSourceDir.'/'.$filename ))
+        if ($filename!='.' && $filename!='..')
         {
-          if ($filename!='.' && $filename!='..')
-          {
-            $dir_names[] = $theSourceDir.'/'.$filename;
-          }
+          $dir_names[] = $theSourceDir.'/'.$filename;
         }
       }
-
-      foreach ($dir_names as $dir_name)
-      {
-        $this->findSourceFiles( $dir_name );
-      }
     }
-    else
+
+    foreach ($dir_names as $dir_name)
     {
-      echo sprintf( "Error: Directory '%s' not exist.\n", $theSourceDir );
+      $this->findSourceFiles( $dir_name );
     }
   }
 
@@ -266,6 +262,7 @@ class MySqlRoutineLoader
       else
       {
         echo sprintf( "File not exists: '%s'.\n", $psql_filename );
+        $this->myErrorFileNames[] = $psql_filename;
       }
     }
   }
@@ -319,12 +316,6 @@ order by table_schema
     // If myTargetConfigFilename is not set return immediately.
     if (!isset($this->myTargetConfigFilename)) return;
 
-    if (!is_readable( $this->myTargetConfigFilename ))
-    {
-      set_assert_failed( "Configuration file is not readable '%s'.",
-                         $this->myTargetConfigFilename );
-    }
-
     require_once($this->myTargetConfigFilename);
     $constants    = get_defined_constants( true );
     $user_defined = (isset($constants['user'])) ? $constants['user'] : array();
@@ -374,50 +365,6 @@ order by routine_name";
     {
       $this->myOldStoredRoutinesInfo[$row['routine_name']] = $row;
     }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns the value of a setting.
-   *
-   * @param array  $theSettings      The settings as returned by parse_ini_file.
-   * @param bool   $theMandatoryFlag If set and setting $theSettingName is not found in section $theSectionName an
-   *                                 exception will be thrown.
-   * @param string $theSectionName   The name of the section of the requested setting.
-   * @param string $theSettingName   The name of the setting of the requested setting.
-   *
-   * @return array|null The value of the setting.
-   */
-  private function getSetting( $theSettings, $theMandatoryFlag, $theSectionName, $theSettingName )
-  {
-    // Test if the section exists.
-    if (!array_key_exists( $theSectionName, $theSettings ))
-    {
-      if ($theMandatoryFlag)
-      {
-        set_assert_failed( "Section '%s' not found in configuration file.", $theSectionName );
-      }
-      else
-      {
-        return null;
-      }
-    }
-
-    // Test if the setting in the section exists.
-    if (!array_key_exists( $theSettingName, $theSettings[$theSectionName] ))
-    {
-      if ($theMandatoryFlag)
-      {
-        set_assert_failed( "Setting '%s' not found in section '%s' configuration file.", $theSettingName,
-                           $theSectionName );
-      }
-      else
-      {
-        return null;
-      }
-    }
-
-    return $theSettings[$theSectionName][$theSettingName];
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -524,20 +471,19 @@ order by routine_name";
   private function readConfigFile( $theConfigFilename )
   {
     $settings = parse_ini_file( $theConfigFilename, true );
-    if ($settings===false) set_assert_failed( "Unable open configuration file." );
 
-    $this->myHostName = $this->getSetting( $settings, true, 'database', 'host_name' );
-    $this->myUserName = $this->getSetting( $settings, true, 'database', 'user_name' );
-    $this->myPassword = $this->getSetting( $settings, true, 'database', 'password' );
-    $this->myDatabase = $this->getSetting( $settings, true, 'database', 'database_name' );
+    $this->myHostName = Util::getSetting( $settings, true, 'database', 'host_name' );
+    $this->myUserName = Util::getSetting( $settings, true, 'database', 'user_name' );
+    $this->myPassword = Util::getSetting( $settings, true, 'database', 'password' );
+    $this->myDatabase = Util::getSetting( $settings, true, 'database', 'database_name' );
 
-    $this->myMetadataFilename     = $this->getSetting( $settings, true, 'wrapper', 'metadata' );
-    $this->mySourceDirectory      = $this->getSetting( $settings, true, 'loader', 'source_directory' );
-    $this->mySourceFileExtension  = $this->getSetting( $settings, true, 'loader', 'extension' );
-    $this->myTargetConfigFilename = $this->getSetting( $settings, false, 'loader', 'config' );
-    $this->mySqlMode              = $this->getSetting( $settings, true, 'loader', 'sql_mode' );
-    $this->myCharacterSet         = $this->getSetting( $settings, true, 'loader', 'character_set' );
-    $this->myCollate              = $this->getSetting( $settings, true, 'loader', 'collate' );
+    $this->myMetadataFilename     = Util::getSetting( $settings, true, 'wrapper', 'metadata' );
+    $this->mySourceDirectory      = Util::getSetting( $settings, true, 'loader', 'source_directory' );
+    $this->mySourceFileExtension  = Util::getSetting( $settings, true, 'loader', 'extension' );
+    $this->myTargetConfigFilename = Util::getSetting( $settings, false, 'loader', 'config' );
+    $this->mySqlMode              = Util::getSetting( $settings, true, 'loader', 'sql_mode' );
+    $this->myCharacterSet         = Util::getSetting( $settings, true, 'loader', 'character_set' );
+    $this->myCollate              = Util::getSetting( $settings, true, 'loader', 'collate' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -548,11 +494,8 @@ order by routine_name";
   {
     if (file_exists( $this->myMetadataFilename ))
     {
-      $data = file_get_contents( $this->myMetadataFilename );
-      if ($data===false) set_assert_failed( "Error reading file '%s'.", $this->myMetadataFilename );
-
-      $this->myMetadata = json_decode( $data, true );
-      if (json_last_error()!=JSON_ERROR_NONE) set_assert_failed( "Error decoding JSON: '%s'.", json_last_error_msg() );
+      $this->myMetadata = json_decode( file_get_contents( $this->myMetadataFilename ), true );
+      if (json_last_error()!=JSON_ERROR_NONE) Affirm::assertFailed( "Error decoding JSON: '%s'.", json_last_error_msg() );
     }
   }
 
@@ -582,10 +525,10 @@ order by routine_name";
     if (defined( 'JSON_PRETTY_PRINT' )) $options = $options | constant( 'JSON_PRETTY_PRINT' );
 
     $json_data = json_encode( $this->myMetadata, $options );
-    if (json_last_error()!=JSON_ERROR_NONE) set_assert_failed( "Error of encoding to JSON: '%s'.", json_last_error_msg() );
+    if (json_last_error()!=JSON_ERROR_NONE) Affirm::assertFailed( "Error of encoding to JSON: '%s'.", json_last_error_msg() );
 
-    $bytes = file_put_contents( $this->myMetadataFilename, $json_data );
-    if ($bytes===false) set_assert_failed( "Error writing file '%s'.", $this->myMetadataFilename );
+    // Save the metadata.
+    Util::writeTwoPhases( $this->myMetadataFilename, $json_data );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
