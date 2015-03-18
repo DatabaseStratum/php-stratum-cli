@@ -110,3 +110,21 @@ values( 'Hello'
 ;
 
 -- ---------------------------------------------------------------------------------------------------------------------
+drop table if exists TST_LABEL;
+
+create table TST_LABEL( tst_id   int unsigned not null auto_increment
+,                       tst_test varchar(40)
+,                       tst_label varchar(20)
+,  primary key(tst_id)
+) engine=myisam
+;
+
+insert into TST_LABEL( tst_test
+,                      tst_label )
+values( 'spam'
+,       'TST_ID_SPAM')
+,     ( 'eggs'
+,       'TST_ID_EGGS')
+;
+
+-- ---------------------------------------------------------------------------------------------------------------------

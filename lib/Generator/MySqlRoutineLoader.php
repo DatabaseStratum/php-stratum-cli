@@ -154,18 +154,10 @@ class MySqlRoutineLoader
       $this->loadList( $theConfigFilename, $theFileNames );
     }
 
-    if ($this->myErrorFileNames)
-    {
-      foreach ($this->myErrorFileNames as $filename)
-      {
-        echo sprintf( "Error loading file '%s'.\n", $filename );
-      }
-    }
+    $this->logOverviewErrors();
 
     return ($this->myErrorFileNames) ? 1 : 0;
   }
-
-
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -459,6 +451,15 @@ order by routine_name";
         # Stored routine is successfully loaded.
         $this->myMetadata[$routine_name] = $meta_data;
       }
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  private function logOverviewErrors()
+  {
+    foreach ($this->myErrorFileNames as $filename)
+    {
+      echo sprintf( "Error loading file '%s'.\n", $filename );
     }
   }
 
