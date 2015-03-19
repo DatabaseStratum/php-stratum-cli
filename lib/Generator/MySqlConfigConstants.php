@@ -142,7 +142,7 @@ class MySqlConfigConstants
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns the width of a field based on column.
+   * Returns the widths of a field based on column.
    *
    * @param array $theColumn The column of which the field is based.
    *

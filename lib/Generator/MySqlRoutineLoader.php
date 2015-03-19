@@ -455,6 +455,9 @@ order by routine_name";
   }
 
   //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Logs the source files that were not successfully loaded into MySQL.
+   */
   private function logOverviewErrors()
   {
     foreach ($this->myErrorFileNames as $filename)
