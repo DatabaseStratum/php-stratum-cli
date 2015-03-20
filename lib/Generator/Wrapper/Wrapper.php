@@ -178,6 +178,8 @@ abstract class Wrapper
           case 'datetime':
           case 'varbinary':
 
+          case 'list_of_int':
+
             // Nothing to do.
             break;
 
@@ -370,6 +372,10 @@ abstract class Wrapper
         $ret .= ($this->myLobAsStringFlag) ? 's' : 'b';
         break;
 
+      case 'list_of_int':
+        $ret = 's';
+        break;
+
       default:
         Affirm::assertFailed( "Unknown MySQL type '%s'.", $theType );
     }
@@ -475,6 +481,10 @@ abstract class Wrapper
         case 'blob':
         case 'mediumblob':
         case 'longblob':
+          $ret .= '$'.$parameter_info['name'];
+          break;
+
+        case 'list_of_int':
           $ret .= '$'.$parameter_info['name'];
           break;
 
@@ -721,6 +731,12 @@ abstract class Wrapper
       case 'mediumblob':
       case 'longblob':
         $ret = ($this->myLobAsStringFlag) ? $ret = '\'.self::quoteString( $'.$theParameters['name'].' ).\'' : '?';
+        break;
+
+      case 'list_of_int':
+        // todo improve escaping.
+        $ret = '\'.self::quoteListOfInt( $'.$theParameters['name'].', \''.addslashes( $theParameters['delimiter'] ).'\', '
+          .'\''.addslashes( $theParameters['enclosure'] ).'\', \''.addslashes( $theParameters['escape'] ).'\'  ).\'';
         break;
 
       default:

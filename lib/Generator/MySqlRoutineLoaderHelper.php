@@ -78,6 +78,13 @@ class MySqlRoutineLoaderHelper
   private $myFields;
 
   /**
+   * Information about parameters with specific format (string in csv format etc.) pass to the stored routine.
+   *
+   * @var array
+   */
+  private $mySpecificParameters;
+
+  /**
    * The last modification time of the source file.
    *
    * @var int
@@ -271,6 +278,9 @@ class MySqlRoutineLoaderHelper
           $this->getBulkInsertTableColumnsInfo();
         }
 
+        // Get info about parameters with specific layout like cvs string etc. form the stored routine.
+        $this->getSpecificParametersInfo();
+
         // Get the parameters types of the stored routine from metadata of MySQL.
         $this->getRoutineParametersInfo();
 
@@ -353,6 +363,10 @@ class MySqlRoutineLoaderHelper
       case 'mediumblob':
       case 'longblob':
         $php_type = 'string';
+        break;
+
+      case 'list_of_int':
+        $php_type = 'string|int[]';
         break;
 
       default:
@@ -442,37 +456,40 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
 
     if ($key!==false)
     {
-      $n = preg_match( '/^\s*--\s+type:\s*(\w+)\s*(.+)?\s*$/', $this->myRoutineSourceCodeLines[$key - 1],
-                       $matches );
-
-      if ($n==1)
+      for ($i = 1; $i<$key; $i++)
       {
-        $this->myDesignationType = $matches[1];
-        switch ($this->myDesignationType)
+        $n = preg_match( '/^\s*--\s+type:\s*(\w+)\s*(.+)?\s*$/',
+                         $this->myRoutineSourceCodeLines[$key - $i],
+                         $matches );
+        if ($n==1)
         {
-          case 'bulk_insert':
-            $m = preg_match( '/^([a-zA-Z0-9_]+)\s+([a-zA-Z0-9_,]+)$/', $matches[2], $info );
-            if ($m==0)
-            {
-              Affirm::assertFailed( "Error: Expected: -- type: bulk_insert <table_name> <columns> in file '%s'.\n",
-                                    $this->mySourceFilename );
-            }
-            $this->myTableName = $info[1];
-            $this->myColumns   = explode( ',', $info[2] );
-            break;
+          $this->myDesignationType = $matches[1];
+          switch ($this->myDesignationType)
+          {
+            case 'bulk_insert':
+              $m = preg_match( '/^([a-zA-Z0-9_]+)\s+([a-zA-Z0-9_,]+)$/',
+                               $matches[2],
+                               $info );
+              if ($m==0)
+              {
+                Affirm::assertFailed( "Error: Expected: -- type: bulk_insert <table_name> <columns> in file '%s'.\n",
+                                      $this->mySourceFilename );
+              }
+              $this->myTableName = $info[1];
+              $this->myColumns   = explode( ',', $info[2] );
+              break;
 
-          case 'rows_with_key':
-          case 'rows_with_index':
-            $this->myColumns = explode( ',', $matches[2] );
-            break;
+            case 'rows_with_key':
+            case 'rows_with_index':
+              $this->myColumns = explode( ',', $matches[2] );
+              break;
 
-          default:
-            if (isset($matches[2])) $ret = false;
+            default:
+              if (isset($matches[2])) $ret = false;
+          }
+          break;
         }
-      }
-      else
-      {
-        $ret = false;
+        if ($i==$key - 1) $ret = false;
       }
     }
     else
@@ -487,6 +504,65 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
     }
 
     return $ret;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  private function getSpecificParametersInfo()
+  {
+    $key = array_search( 'begin', $this->myRoutineSourceCodeLines );
+
+    if ($key!==false)
+    {
+      for ($i = 1; $i<$key; $i++)
+      {
+        $k = preg_match( '/^\s*--\s+param:(?:\s*(\w+)\s+(\w+)(?:(?:\s+([^\s-])\s+([^\s-])\s+([^\s-])\s*$)|(?:\s*$)))?/',
+                         $this->myRoutineSourceCodeLines[$key - $i + 1],
+                         $matches );
+
+        if ($k==1)
+        {
+          $count = count( $matches );
+          if ($count==3 || $count==6)
+          {
+            $parameter_name = $matches[1];
+            $data_type      = $matches[2];
+
+            if ($count==6)
+            {
+              $list_delimiter = $matches[3];
+              $list_enclosure = $matches[4];
+              $list_escape    = $matches[5];
+            }
+            else
+            {
+              $list_delimiter = ',';
+              $list_enclosure = '"';
+              $list_escape    = '\\';
+            }
+
+            if (!isset($this->mySpecificParameters[$parameter_name]))
+            {
+              $this->mySpecificParameters[$parameter_name] = array('name'      => $parameter_name,
+                                                                   'data_type' => $data_type,
+                                                                   'delimiter' => $list_delimiter,
+                                                                   'enclosure' => $list_enclosure,
+                                                                   'escape'    => $list_escape);
+            }
+            else
+            {
+              Affirm::assertFailed( "Duplicate parameter '%s' in file '%s'.",
+                                    $parameter_name,
+                                    $this->mySourceFilename );
+            }
+          }
+          else
+          {
+            Affirm::assertFailed( "Error: Expected: -- param: <field_name> <type_of_list> [delimiter enclosure escape]in file '%s'.\n",
+                                  $this->mySourceFilename );
+          }
+        }
+      }
+    }
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -745,6 +821,8 @@ and   t1.routine_name   = '%s'", $this->myRoutineName );
         $this->myParameters[$key]['data_type_descriptor'] = $value;
       }
     }
+
+    $this->updateParametersInfo();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -830,6 +908,39 @@ and   t1.routine_name   = '%s'", $this->myRoutineName );
     $this->myMetadata['timestamp']    = $this->myMTime;
     $this->myMetadata['replace']      = $this->myReplace;
     $this->myMetadata['phpdoc']       = $this->myDocBlockPartsWrapper;
+    $this->myMetadata['spec_params']  = $this->mySpecificParameters;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Update information about specific parameters of stored routine.
+   *
+   * @throws \Exception
+   */
+  private function updateParametersInfo()
+  {
+    if ($this->mySpecificParameters)
+    {
+      foreach ($this->mySpecificParameters as $spec_param_name => $spec_param_info)
+      {
+        $param_not_exist = true;
+        foreach ($this->myParameters as $kay => $param_info)
+        {
+          if ($param_info['name']==$spec_param_name)
+          {
+            $this->myParameters[$kay] = array_merge( $this->myParameters[$kay], $spec_param_info );
+            $param_not_exist          = false;
+            break;
+          }
+        }
+        if ($param_not_exist)
+        {
+          Affirm::assertFailed( "Specific parameter '%s' does not exist in file '%s'.",
+                                $spec_param_name,
+                                $this->mySourceFilename );
+        }
+      }
+    }
   }
 
   //--------------------------------------------------------------------------------------------------------------------

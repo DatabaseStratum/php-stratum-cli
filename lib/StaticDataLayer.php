@@ -10,6 +10,8 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum;
 
+use SetBased\Affirm\Affirm;
+
 //----------------------------------------------------------------------------------------------------------------------
 /**
  * Supper class for a static stored routine wrapper class.
@@ -667,6 +669,49 @@ class StaticDataLayer
     else
     {
       return "'".self::$ourMySql->real_escape_string( $theString )."'";
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  public static function quoteListOfInt( $theList, $theDelimiter, $theEnclosure, $tehEscape )
+  {
+    if ($theList===null || $theList===false || $theList==='' || $theList===array())
+    {
+      return 'NULL';
+    }
+    else
+    {
+      $ret  = '';
+      $list = array();
+      if (is_scalar( $theList ))
+      {
+        $list = str_getcsv( $theList, $theDelimiter, $theEnclosure, $tehEscape );
+      }
+      elseif (is_array( $theList ))
+      {
+        $list = $theList;
+      }
+      else
+      {
+        Affirm::assertFailed( "Unexpected parameter type '%s'. Array or scalor expected.", gettype( $theList ) );
+      }
+
+      foreach ($list as $number)
+      {
+        if ($theList===null || $theList===false || $theList==='')
+        {
+          self::assertFailed( "Empty values are not allowed.");
+        }
+        if (!is_numeric( $number ))
+        {
+          self::assertFailed( "Value '%s' is not a number.", $number );
+        }
+
+        if ($ret) $ret .= ',';
+        $ret .= $number;
+      }
+
+      return self::quoteString( $ret );
     }
   }
 

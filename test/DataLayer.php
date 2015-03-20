@@ -320,6 +320,24 @@ class DataLayer extends \SetBased\Stratum\StaticDataLayer
 
   //-------------------------------------------------------------------------------------------------------------------
   /**
+   *
+   * @param string|int[] $p_ids The id's in csv format.
+   *                            varchar(255) character set latin1 collation latin1_swedish_ci
+   *
+   * @return array[]
+   */
+  public static function testListOfInt( $p_ids )
+  {
+    $result = self::query( 'CALL tst_test_list_of_int('.self::quoteListOfInt( $p_ids, ',', '\"', '\\'  ).')');
+    $ret = array();
+    while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret[$row['tst_id']] = $row;
+    $result->free();
+    if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
+    return  $ret;
+  }
+
+  //-------------------------------------------------------------------------------------------------------------------
+  /**
    * Test for designation type log.
    *
    * @return int
