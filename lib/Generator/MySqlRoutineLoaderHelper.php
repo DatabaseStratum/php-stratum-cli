@@ -71,18 +71,18 @@ class MySqlRoutineLoaderHelper
   private $myDocBlockPartsWrapper;
 
   /**
+   * Information about parameters with specific format (string in CSV format etc.) pass to the stored routine.
+   *
+   * @var array
+   */
+  private $myExtendedParameters;
+
+  /**
    * The keys in the PHP array for bulk insert.
    *
    * @var string
    */
   private $myFields;
-
-  /**
-   * Information about parameters with specific format (string in csv format etc.) pass to the stored routine.
-   *
-   * @var array
-   */
-  private $mySpecificParameters;
 
   /**
    * The last modification time of the source file.
@@ -279,7 +279,7 @@ class MySqlRoutineLoaderHelper
         }
 
         // Get info about parameters with specific layout like cvs string etc. form the stored routine.
-        $this->getSpecificParametersInfo();
+        $this->getExtendedParametersInfo();
 
         // Get the parameters types of the stored routine from metadata of MySQL.
         $this->getRoutineParametersInfo();
@@ -507,65 +507,6 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  private function getSpecificParametersInfo()
-  {
-    $key = array_search( 'begin', $this->myRoutineSourceCodeLines );
-
-    if ($key!==false)
-    {
-      for ($i = 1; $i<$key; $i++)
-      {
-        $k = preg_match( '/^\s*--\s+param:(?:\s*(\w+)\s+(\w+)(?:(?:\s+([^\s-])\s+([^\s-])\s+([^\s-])\s*$)|(?:\s*$)))?/',
-                         $this->myRoutineSourceCodeLines[$key - $i + 1],
-                         $matches );
-
-        if ($k==1)
-        {
-          $count = count( $matches );
-          if ($count==3 || $count==6)
-          {
-            $parameter_name = $matches[1];
-            $data_type      = $matches[2];
-
-            if ($count==6)
-            {
-              $list_delimiter = $matches[3];
-              $list_enclosure = $matches[4];
-              $list_escape    = $matches[5];
-            }
-            else
-            {
-              $list_delimiter = ',';
-              $list_enclosure = '"';
-              $list_escape    = '\\';
-            }
-
-            if (!isset($this->mySpecificParameters[$parameter_name]))
-            {
-              $this->mySpecificParameters[$parameter_name] = array('name'      => $parameter_name,
-                                                                   'data_type' => $data_type,
-                                                                   'delimiter' => $list_delimiter,
-                                                                   'enclosure' => $list_enclosure,
-                                                                   'escape'    => $list_escape);
-            }
-            else
-            {
-              Affirm::assertFailed( "Duplicate parameter '%s' in file '%s'.",
-                                    $parameter_name,
-                                    $this->mySourceFilename );
-            }
-          }
-          else
-          {
-            Affirm::assertFailed( "Error: Expected: -- param: <field_name> <type_of_list> [delimiter enclosure escape]in file '%s'.\n",
-                                  $this->mySourceFilename );
-          }
-        }
-      }
-    }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
   /**
    *  Extracts the DocBlock (in parts) from the source of the stored routine.
    */
@@ -636,6 +577,70 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
     $this->myDocBlockPartsWrapper = array('sort_description' => $this->myDocBlockPartsSource['sort_description'],
                                           'long_description' => $this->myDocBlockPartsSource['long_description'],
                                           'parameters'       => $parameters);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Gets info of extended parameters.
+   *
+   * @throws \Exception
+   */
+  private function getExtendedParametersInfo()
+  {
+    $key = array_search( 'begin', $this->myRoutineSourceCodeLines );
+
+    if ($key!==false)
+    {
+      for ($i = 1; $i<$key; $i++)
+      {
+        $k = preg_match( '/^\s*--\s+param:(?:\s*(\w+)\s+(\w+)(?:(?:\s+([^\s-])\s+([^\s-])\s+([^\s-])\s*$)|(?:\s*$)))?/',
+                         $this->myRoutineSourceCodeLines[$key - $i + 1],
+                         $matches );
+
+        if ($k==1)
+        {
+          $count = count( $matches );
+          if ($count==3 || $count==6)
+          {
+            $parameter_name = $matches[1];
+            $data_type      = $matches[2];
+
+            if ($count==6)
+            {
+              $list_delimiter = $matches[3];
+              $list_enclosure = $matches[4];
+              $list_escape    = $matches[5];
+            }
+            else
+            {
+              $list_delimiter = ',';
+              $list_enclosure = '"';
+              $list_escape    = '\\';
+            }
+
+            if (!isset($this->myExtendedParameters[$parameter_name]))
+            {
+              $this->myExtendedParameters[$parameter_name] = array('name'      => $parameter_name,
+                                                                   'data_type' => $data_type,
+                                                                   'delimiter' => $list_delimiter,
+                                                                   'enclosure' => $list_enclosure,
+                                                                   'escape'    => $list_escape);
+            }
+            else
+            {
+              Affirm::assertFailed( "Duplicate parameter '%s' in file '%s'.",
+                                    $parameter_name,
+                                    $this->mySourceFilename );
+            }
+          }
+          else
+          {
+            Affirm::assertFailed( "Error: Expected: -- param: <field_name> <type_of_list> [delimiter enclosure escape] in file '%s'.\n",
+                                  $this->mySourceFilename );
+          }
+        }
+      }
+    }
   }
 
 
@@ -908,7 +913,7 @@ and   t1.routine_name   = '%s'", $this->myRoutineName );
     $this->myMetadata['timestamp']    = $this->myMTime;
     $this->myMetadata['replace']      = $this->myReplace;
     $this->myMetadata['phpdoc']       = $this->myDocBlockPartsWrapper;
-    $this->myMetadata['spec_params']  = $this->mySpecificParameters;
+    $this->myMetadata['spec_params']  = $this->myExtendedParameters;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -919,9 +924,9 @@ and   t1.routine_name   = '%s'", $this->myRoutineName );
    */
   private function updateParametersInfo()
   {
-    if ($this->mySpecificParameters)
+    if ($this->myExtendedParameters)
     {
-      foreach ($this->mySpecificParameters as $spec_param_name => $spec_param_info)
+      foreach ($this->myExtendedParameters as $spec_param_name => $spec_param_info)
       {
         $param_not_exist = true;
         foreach ($this->myParameters as $kay => $param_info)

@@ -47,6 +47,7 @@ class RowsWithKey extends Wrapper
     $this->writeLine( 'while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret'.$key.' = $row;' );
     $this->writeLine( '$result->free();' );
     $this->writeLine( 'if(self::$ourMySql->more_results()) self::$ourMySql->next_result();' );
+    $this->writeLine();
     $this->writeLine( 'return  $ret;' );
   }
 

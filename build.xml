@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="php-mysql-data-layer" default="build" basedir=".">
     <taskdef name="readSemanticVersion" classname="vendor.setbased.phing-extensions.lib.Task.readSemanticVersionTask"/>
-    <property name ="VERSION" value="0.0.0"/>
+    <property name="VERSION" value="0.0.0"/>
 
     <target name="build">
+        <echo message="noting to do."/>
     </target>
 
     <!-- Merges the current branch with a remote branch -->
@@ -46,5 +47,13 @@
         <gitpush repository="."/>
         <gittag repository="." name="${VERSION}"/>
         <gitpush repository="." refspec="${VERSION}" quiet="false"/>
+    </target>
+
+    <!-- Runs all unit tests -->
+    <target name="unit">
+        <delete file="etc/test_routines.json" quiet="true"/>
+        <exec command="cat test/create_test.sql | mysql -utest -ptest test" passthru="true" checkreturn="true"/>
+        <exec command="bin/stratum -c etc/test_stratum.cfg" passthru="true" checkreturn="true"/>
+        <exec command="bin/phpunit --bootstrap=test/bootstrap.php test" passthru="true" checkreturn="true"/>
     </target>
 </project>

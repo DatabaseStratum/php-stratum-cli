@@ -79,17 +79,17 @@ class DataLayer extends \SetBased\Stratum\StaticDataLayer
    * @param int    $p_param13 Test parameter 13.
    *                          year(4)
    * @param string $p_param14 Test parameter 14.
-   *                          char(10) character set utf8 collation utf8_general_ci
+   *                          char(10) character set latin1 collation latin1_swedish_ci
    * @param string $p_param15 Test parameter 15.
-   *                          varchar(10) character set utf8 collation utf8_general_ci
+   *                          varchar(10) character set latin1 collation latin1_swedish_ci
    * @param string $p_param16 Test parameter 16.
    *                          binary(10)
    * @param string $p_param17 Test parameter 17.
    *                          varbinary(10)
    * @param string $p_param26 Test parameter 26.
-   *                          enum('a','b') character set utf8 collation utf8_general_ci
+   *                          enum('a','b') character set latin1 collation latin1_swedish_ci
    * @param string $p_param27 Test parameter 27.
-   *                          set('a','b') character set utf8 collation utf8_general_ci
+   *                          set('a','b') character set latin1 collation latin1_swedish_ci
    *
    * @return int
    */
@@ -131,9 +131,9 @@ class DataLayer extends \SetBased\Stratum\StaticDataLayer
    * @param int    $p_param13 Test parameter 13.
    *                          year(4)
    * @param string $p_param14 Test parameter 14.
-   *                          char(10) character set utf8 collation utf8_general_ci
+   *                          char(10) character set latin1 collation latin1_swedish_ci
    * @param string $p_param15 Test parameter 15.
-   *                          varchar(10) character set utf8 collation utf8_general_ci
+   *                          varchar(10) character set latin1 collation latin1_swedish_ci
    * @param string $p_param16 Test parameter 16.
    *                          binary(10)
    * @param string $p_param17 Test parameter 17.
@@ -147,17 +147,17 @@ class DataLayer extends \SetBased\Stratum\StaticDataLayer
    * @param string $p_param21 Test parameter 21.
    *                          longblob
    * @param string $p_param22 Test parameter 22.
-   *                          tinytext character set utf8 collation utf8_general_ci
+   *                          tinytext character set latin1 collation latin1_swedish_ci
    * @param string $p_param23 Test parameter 23.
-   *                          text character set utf8 collation utf8_general_ci
+   *                          text character set latin1 collation latin1_swedish_ci
    * @param string $p_param24 Test parameter 24.
-   *                          mediumtext character set utf8 collation utf8_general_ci
+   *                          mediumtext character set latin1 collation latin1_swedish_ci
    * @param string $p_param25 Test parameter 25.
-   *                          longtext character set utf8 collation utf8_general_ci
+   *                          longtext character set latin1 collation latin1_swedish_ci
    * @param string $p_param26 Test parameter 26.
-   *                          enum('a','b') character set utf8 collation utf8_general_ci
+   *                          enum('a','b') character set latin1 collation latin1_swedish_ci
    * @param string $p_param27 Test parameter 27.
-   *                          set('a','b') character set utf8 collation utf8_general_ci
+   *                          set('a','b') character set latin1 collation latin1_swedish_ci
    *
    * @return int
    */
@@ -321,18 +321,19 @@ class DataLayer extends \SetBased\Stratum\StaticDataLayer
   //-------------------------------------------------------------------------------------------------------------------
   /**
    *
-   * @param string|int[] $p_ids The id's in csv format.
+   * @param string|int[] $p_ids The id's in CSV format.
    *                            varchar(255) character set latin1 collation latin1_swedish_ci
    *
    * @return array[]
    */
   public static function testListOfInt( $p_ids )
   {
-    $result = self::query( 'CALL tst_test_list_of_int('.self::quoteListOfInt( $p_ids, ',', '\"', '\\'  ).')');
+    $result = self::query( 'CALL tst_test_list_of_int('.self::quoteListOfInt( $p_ids, ',', '\"', '\\' ).')');
     $ret = array();
     while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret[$row['tst_id']] = $row;
     $result->free();
     if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
+
     return  $ret;
   }
 
@@ -706,6 +707,7 @@ class DataLayer extends \SetBased\Stratum\StaticDataLayer
     while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret[$row['tst_c01']][$row['tst_c02']][] = $row;
     $result->free();
     if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
+
     return $ret;
   }
 
@@ -783,6 +785,7 @@ class DataLayer extends \SetBased\Stratum\StaticDataLayer
     while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret[$row['tst_c01']][$row['tst_c02']][$row['tst_c03']] = $row;
     $result->free();
     if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
+
     return  $ret;
   }
 

@@ -734,9 +734,10 @@ abstract class Wrapper
         break;
 
       case 'list_of_int':
-        // todo improve escaping.
-        $ret = '\'.self::quoteListOfInt( $'.$theParameters['name'].', \''.addslashes( $theParameters['delimiter'] ).'\', '
-          .'\''.addslashes( $theParameters['enclosure'] ).'\', \''.addslashes( $theParameters['escape'] ).'\'  ).\'';
+        $ret = '\'.self::quoteListOfInt( $'.$theParameters['name'].", '".
+          addslashes( $theParameters['delimiter'] )."', '".
+          addslashes( $theParameters['enclosure'] )."', '".
+          addslashes( $theParameters['escape'] )."' ).'";
         break;
 
       default:
