@@ -16,7 +16,7 @@ namespace SetBased\PhpStratum\MySql\Wrapper;
  *
  * @package SetBased\DataLayer\Generator\MySqlWrapper
  */
-class Row1MySqlWrapper extends MySqlWrapper
+class Row1Wrapper extends MySqlWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**

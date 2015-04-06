@@ -67,55 +67,55 @@ abstract class MySqlWrapper
     switch ($theRoutine['designation'])
     {
       case 'bulk':
-        $wrapper = new BulkMySqlWrapper( $theLobAsStringFlag );
+        $wrapper = new BulkWrapper( $theLobAsStringFlag );
         break;
 
       case 'bulk_insert':
-        $wrapper = new BulkInsertMySqlWrapper( $theLobAsStringFlag );
+        $wrapper = new BulkInsertWrapper( $theLobAsStringFlag );
         break;
 
       case 'log':
-        $wrapper = new LogMySqlWrapper( $theLobAsStringFlag );
+        $wrapper = new LogWrapper( $theLobAsStringFlag );
         break;
 
       case 'none':
-        $wrapper = new NoneMySqlWrapper( $theLobAsStringFlag );
+        $wrapper = new NoneWrapper( $theLobAsStringFlag );
         break;
 
       case 'row0':
-        $wrapper = new Row0MySqlWrapper( $theLobAsStringFlag );
+        $wrapper = new Row0Wrapper( $theLobAsStringFlag );
         break;
 
       case 'row1':
-        $wrapper = new Row1MySqlWrapper( $theLobAsStringFlag );
+        $wrapper = new Row1Wrapper( $theLobAsStringFlag );
         break;
 
       case 'rows':
-        $wrapper = new RowsMySqlWrapper( $theLobAsStringFlag );
+        $wrapper = new RowsWrapper( $theLobAsStringFlag );
         break;
 
       case 'rows_with_key':
-        $wrapper = new RowsWithKey( $theLobAsStringFlag );
+        $wrapper = new RowsWithKeyWrapper( $theLobAsStringFlag );
         break;
 
       case 'rows_with_index':
-        $wrapper = new RowsWithIndex( $theLobAsStringFlag );
+        $wrapper = new RowsWithIndexWrapper( $theLobAsStringFlag );
         break;
 
       case 'singleton0':
-        $wrapper = new Singleton0MySqlWrapper( $theLobAsStringFlag );
+        $wrapper = new Singleton0Wrapper( $theLobAsStringFlag );
         break;
 
       case 'singleton1':
-        $wrapper = new Singleton1MySqlWrapper( $theLobAsStringFlag );
+        $wrapper = new Singleton1Wrapper( $theLobAsStringFlag );
         break;
 
       case 'function':
-        $wrapper = new FunctionsMySqlWrapper( $theLobAsStringFlag );
+        $wrapper = new FunctionsWrapper( $theLobAsStringFlag );
         break;
 
       case 'table':
-        $wrapper = new TableMySqlWrapper( $theLobAsStringFlag );
+        $wrapper = new TableWrapper( $theLobAsStringFlag );
         break;
 
       default:

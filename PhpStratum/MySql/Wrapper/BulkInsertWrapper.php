@@ -19,7 +19,7 @@ use SetBased\Affirm\Affirm;
  *
  * @package SetBased\DataLayer\Generator\MySqlWrapper
  */
-class BulkInsertMySqlWrapper extends MySqlWrapper
+class BulkInsertWrapper extends MySqlWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
