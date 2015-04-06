@@ -8,7 +8,7 @@
  * @link
  */
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\PhpStratum\MySql\Wrapper;
+namespace SetBased\Stratum\MySql\Wrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
@@ -17,7 +17,7 @@ namespace SetBased\PhpStratum\MySql\Wrapper;
  * @package SetBased\DataLayer\Generator\MySqlWrapper
  *          returned as nested arrays.
  */
-class RowsWithKeyWrapper extends MySqlWrapper
+class RowsWithIndexWrapper extends MySqlWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -36,19 +36,19 @@ class RowsWithKeyWrapper extends MySqlWrapper
   {
     $routine_args = $this->getRoutineArgs( $theRoutine );
 
-    $key = '';
+    $index = '';
     foreach ($theRoutine['columns'] as $column)
     {
-      $key .= '[$row[\''.$column.'\']]';
+      $index .= '[$row[\''.$column.'\']]';
     }
 
     $this->writeLine( '$result = self::query( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
     $this->writeLine( '$ret = array();' );
-    $this->writeLine( 'while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret'.$key.' = $row;' );
+    $this->writeLine( 'while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret'.$index.'[] = $row;' );
     $this->writeLine( '$result->free();' );
     $this->writeLine( 'if(self::$ourMySql->more_results()) self::$ourMySql->next_result();' );
     $this->writeLine();
-    $this->writeLine( 'return  $ret;' );
+    $this->writeLine( 'return $ret;' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -57,10 +57,10 @@ class RowsWithKeyWrapper extends MySqlWrapper
    */
   protected function writeRoutineFunctionLobFetchData( $theRoutine )
   {
-    $key = '';
+    $index = '';
     foreach ($theRoutine['columns'] as $column)
     {
-      $key .= '[$new[\''.$column.'\']]';
+      $index .= '[$new[\''.$column.'\']]';
     }
 
     $this->writeLine( '$row = array();' );
@@ -74,7 +74,7 @@ class RowsWithKeyWrapper extends MySqlWrapper
     $this->writeLine( '{' );
     $this->writeLine( '$new[$key] = $value;' );
     $this->writeLine( '}' );
-    $this->writeLine( '$ret'.$key.' = $new;' );
+    $this->writeLine( '$ret'.$index.'[] = $new;' );
     $this->writeLine( '}' );
     $this->writeLine();
   }

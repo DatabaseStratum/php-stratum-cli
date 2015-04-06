@@ -8,15 +8,15 @@
  * @link
  */
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\PhpStratum\MySql\Wrapper;
+namespace SetBased\Stratum\MySql\Wrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class for generating a wrapper method for a stored function.
+ * Class TableMySqlWrapper
  *
  * @package SetBased\DataLayer\Generator\MySqlWrapper
  */
-class FunctionsWrapper extends MySqlWrapper
+class TableWrapper extends MySqlWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -24,7 +24,7 @@ class FunctionsWrapper extends MySqlWrapper
    */
   protected function getDocBlockReturnType()
   {
-    return 'string';
+    return 'int';
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ class FunctionsWrapper extends MySqlWrapper
   protected function writeResultHandler( $theRoutine )
   {
     $routine_args = $this->getRoutineArgs( $theRoutine );
-    $this->writeLine( 'return self::executeSingleton0( \'SELECT '.$theRoutine['routine_name'].'('.$routine_args.') \' );' );
+    $this->writeLine( 'return self::executeTable( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\' );' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -43,8 +43,7 @@ class FunctionsWrapper extends MySqlWrapper
    */
   protected function writeRoutineFunctionLobFetchData( $theRoutine )
   {
-    $this->writeLine( '$ret = self::$ourMySql->affected_rows;' );
-    $this->writeLine();
+    // Nothing to do.
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -53,7 +52,7 @@ class FunctionsWrapper extends MySqlWrapper
    */
   protected function writeRoutineFunctionLobReturnData()
   {
-    $this->writeLine( 'return $ret;' );
+    // Nothing to do.
   }
 
   //--------------------------------------------------------------------------------------------------------------------

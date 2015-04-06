@@ -10,9 +10,9 @@
  */
 //----------------------------------------------------------------------------------------------------------------------
 use SetBased\Affirm\Affirm;
-use SetBased\PhpStratum\MySql\MySqlConstants;
-use SetBased\PhpStratum\MySql\MySqlRoutineLoader;
-use SetBased\PhpStratum\MySql\MySqlRoutineWrapperGenerator;
+use SetBased\Stratum\MySql\MySqlConstants;
+use SetBased\Stratum\MySql\MySqlRoutineLoader;
+use SetBased\Stratum\MySql\MySqlRoutineWrapperGenerator;
 
 //----------------------------------------------------------------------------------------------------------------------
 $files = array(__DIR__.'/../vendor/autoload.php',
