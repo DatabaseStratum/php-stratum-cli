@@ -8,16 +8,15 @@
  * @link
  */
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\PhpStratum\MySql\Wrapper;
+namespace SetBased\Stratum\MySql\Wrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class for generating a wrapper method for a stored procedure that selects 0 or more rows. The rows are
+ * Class for generating a wrapper method for a stored procedure without result set.
  *
  * @package SetBased\DataLayer\Generator\MySqlWrapper
- *          returned as nested arrays.
  */
-class RowsWithIndexWrapper extends MySqlWrapper
+class NoneWrapper extends MySqlWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -25,7 +24,7 @@ class RowsWithIndexWrapper extends MySqlWrapper
    */
   protected function getDocBlockReturnType()
   {
-    return 'array[]';
+    return 'int';
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -35,20 +34,7 @@ class RowsWithIndexWrapper extends MySqlWrapper
   protected function writeResultHandler( $theRoutine )
   {
     $routine_args = $this->getRoutineArgs( $theRoutine );
-
-    $index = '';
-    foreach ($theRoutine['columns'] as $column)
-    {
-      $index .= '[$row[\''.$column.'\']]';
-    }
-
-    $this->writeLine( '$result = self::query( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
-    $this->writeLine( '$ret = array();' );
-    $this->writeLine( 'while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret'.$index.'[] = $row;' );
-    $this->writeLine( '$result->free();' );
-    $this->writeLine( 'if(self::$ourMySql->more_results()) self::$ourMySql->next_result();' );
-    $this->writeLine();
-    $this->writeLine( 'return $ret;' );
+    $this->writeLine( 'return self::executeNone( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\' );' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -57,25 +43,7 @@ class RowsWithIndexWrapper extends MySqlWrapper
    */
   protected function writeRoutineFunctionLobFetchData( $theRoutine )
   {
-    $index = '';
-    foreach ($theRoutine['columns'] as $column)
-    {
-      $index .= '[$new[\''.$column.'\']]';
-    }
-
-    $this->writeLine( '$row = array();' );
-    $this->writeLine( 'self::bindAssoc( $stmt, $row );' );
-    $this->writeLine();
-    $this->writeLine( '$ret = array();' );
-    $this->writeLine( 'while (($b = $stmt->fetch()))' );
-    $this->writeLine( '{' );
-    $this->writeLine( '$new = array();' );
-    $this->writeLine( 'foreach( $row as $key => $value )' );
-    $this->writeLine( '{' );
-    $this->writeLine( '$new[$key] = $value;' );
-    $this->writeLine( '}' );
-    $this->writeLine( '$ret'.$index.'[] = $new;' );
-    $this->writeLine( '}' );
+    $this->writeLine( '$ret = self::$ourMySql->affected_rows;' );
     $this->writeLine();
   }
 
@@ -85,8 +53,6 @@ class RowsWithIndexWrapper extends MySqlWrapper
    */
   protected function writeRoutineFunctionLobReturnData()
   {
-    $this->writeLine( 'if ($b===false) self::sqlError( \'mysqli_stmt::fetch\' );' );
-    $this->writeLine();
     $this->writeLine( 'return $ret;' );
   }
 

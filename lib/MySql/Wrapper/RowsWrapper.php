@@ -8,15 +8,15 @@
  * @link
  */
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\PhpStratum\MySql\Wrapper;
+namespace SetBased\Stratum\MySql\Wrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class for generating a wrapper method for a stored procedure without result set.
+ * Class RowsMySqlWrapper
  *
  * @package SetBased\DataLayer\Generator\MySqlWrapper
  */
-class NoneWrapper extends MySqlWrapper
+class RowsWrapper extends MySqlWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -24,7 +24,7 @@ class NoneWrapper extends MySqlWrapper
    */
   protected function getDocBlockReturnType()
   {
-    return 'int';
+    return 'array[]';
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ class NoneWrapper extends MySqlWrapper
   protected function writeResultHandler( $theRoutine )
   {
     $routine_args = $this->getRoutineArgs( $theRoutine );
-    $this->writeLine( 'return self::executeNone( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\' );' );
+    $this->writeLine( 'return self::executeRows( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\' );' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -43,7 +43,19 @@ class NoneWrapper extends MySqlWrapper
    */
   protected function writeRoutineFunctionLobFetchData( $theRoutine )
   {
-    $this->writeLine( '$ret = self::$ourMySql->affected_rows;' );
+    $this->writeLine( '$row = array();' );
+    $this->writeLine( 'self::bindAssoc( $stmt, $row );' );
+    $this->writeLine();
+    $this->writeLine( '$tmp = array();' );
+    $this->writeLine( 'while (($b = $stmt->fetch()))' );
+    $this->writeLine( '{' );
+    $this->writeLine( '$new = array();' );
+    $this->writeLine( 'foreach( $row as $key => $value )' );
+    $this->writeLine( '{' );
+    $this->writeLine( '$new[$key] = $value;' );
+    $this->writeLine( '}' );
+    $this->writeLine( ' $tmp[] = $new;' );
+    $this->writeLine( '}' );
     $this->writeLine();
   }
 
@@ -53,7 +65,9 @@ class NoneWrapper extends MySqlWrapper
    */
   protected function writeRoutineFunctionLobReturnData()
   {
-    $this->writeLine( 'return $ret;' );
+    $this->writeLine( 'if ($b===false) self::sqlError( \'mysqli_stmt::fetch\' );' );
+    $this->writeLine();
+    $this->writeLine( 'return $tmp;' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

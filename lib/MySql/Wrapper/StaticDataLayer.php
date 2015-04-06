@@ -8,10 +8,10 @@
  * @link
  */
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\PhpStratum\MySql\Wrapper;
+namespace SetBased\Stratum\MySql\Wrapper;
 
 use SetBased\Affirm\Affirm;
-use SetBased\PhpStratum\BulkHandler;
+use SetBased\Stratum\BulkHandler;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
