@@ -14,7 +14,7 @@ namespace SetBased\PhpStratum\MySql\Wrapper;
 /**
  * Class for generating a wrapper method for a stored procedure that selects 0 or 1 row.
  */
-class Row0Wrapper extends Wrapper
+class Row0MySqlWrapper extends MySqlWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**

@@ -809,6 +809,16 @@ information_schema.INNODB_CHANGED_PAGES.page_id   10
 information_schema.INNODB_CHANGED_PAGES.start_lsn 20
 information_schema.INNODB_CHANGED_PAGES.end_lsn   20
 
+sample01.BAR_USER.usr_id            10
+sample01.BAR_USER.ust_id             3
+sample01.BAR_USER.usr_name          40
+sample01.BAR_USER.usr_password_hash 60
+sample01.BAR_USER.usr_email         80
+
+sample01.BAR_USER_STATUS.ust_id           3
+sample01.BAR_USER_STATUS.ust_description 40
+sample01.BAR_USER_STATUS.ust_label       20
+
 test.TST_FOO1.tst_c00         10
 test.TST_FOO1.tst_c01          5
 test.TST_FOO1.tst_c02          3

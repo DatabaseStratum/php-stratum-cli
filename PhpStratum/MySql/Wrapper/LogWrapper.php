@@ -12,11 +12,11 @@ namespace SetBased\PhpStratum\MySql\Wrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class LogWrapper
+ * Class LogMySqlWrapper
  *
- * @package SetBased\DataLayer\Generator\Wrapper
+ * @package SetBased\DataLayer\Generator\MySqlWrapper
  */
-class LogWrapper extends Wrapper
+class LogMySqlWrapper extends MySqlWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**

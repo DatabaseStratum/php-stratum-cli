@@ -10,14 +10,14 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\PhpStratum\MySql\Wrapper;
 
-//----------------------------------------------------------------------------------------------------------------------
 use SetBased\Affirm\Affirm;
 
+//----------------------------------------------------------------------------------------------------------------------
 /**
- * Class Wrapper
+ * Class MySqlWrapper
  * routine.
  */
-abstract class Wrapper
+abstract class MySqlWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -60,38 +60,38 @@ abstract class Wrapper
    * @param bool  $theLobAsStringFlag  If set BLOBs and CLOBs are treated as string. Otherwise, BLOBs and CLOBs will be
    *                                   send as long data.
    *
-   * @return Wrapper
+   * @return MySqlWrapper
    */
   public static function createRoutineWrapper( $theRoutine, $theLobAsStringFlag )
   {
     switch ($theRoutine['designation'])
     {
       case 'bulk':
-        $wrapper = new BulkWrapper( $theLobAsStringFlag );
+        $wrapper = new BulkMySqlWrapper( $theLobAsStringFlag );
         break;
 
       case 'bulk_insert':
-        $wrapper = new BulkInsertWrapper( $theLobAsStringFlag );
+        $wrapper = new BulkInsertMySqlWrapper( $theLobAsStringFlag );
         break;
 
       case 'log':
-        $wrapper = new LogWrapper( $theLobAsStringFlag );
+        $wrapper = new LogMySqlWrapper( $theLobAsStringFlag );
         break;
 
       case 'none':
-        $wrapper = new NoneWrapper( $theLobAsStringFlag );
+        $wrapper = new NoneMySqlWrapper( $theLobAsStringFlag );
         break;
 
       case 'row0':
-        $wrapper = new Row0Wrapper( $theLobAsStringFlag );
+        $wrapper = new Row0MySqlWrapper( $theLobAsStringFlag );
         break;
 
       case 'row1':
-        $wrapper = new Row1Wrapper( $theLobAsStringFlag );
+        $wrapper = new Row1MySqlWrapper( $theLobAsStringFlag );
         break;
 
       case 'rows':
-        $wrapper = new RowsWrapper( $theLobAsStringFlag );
+        $wrapper = new RowsMySqlWrapper( $theLobAsStringFlag );
         break;
 
       case 'rows_with_key':
@@ -103,19 +103,19 @@ abstract class Wrapper
         break;
 
       case 'singleton0':
-        $wrapper = new Singleton0Wrapper( $theLobAsStringFlag );
+        $wrapper = new Singleton0MySqlWrapper( $theLobAsStringFlag );
         break;
 
       case 'singleton1':
-        $wrapper = new Singleton1Wrapper( $theLobAsStringFlag );
+        $wrapper = new Singleton1MySqlWrapper( $theLobAsStringFlag );
         break;
 
       case 'function':
-        $wrapper = new FunctionsWrapper( $theLobAsStringFlag );
+        $wrapper = new FunctionsMySqlWrapper( $theLobAsStringFlag );
         break;
 
       case 'table':
-        $wrapper = new TableWrapper( $theLobAsStringFlag );
+        $wrapper = new TableMySqlWrapper( $theLobAsStringFlag );
         break;
 
       default:

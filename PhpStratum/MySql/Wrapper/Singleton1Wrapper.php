@@ -12,11 +12,11 @@ namespace SetBased\PhpStratum\MySql\Wrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class Singleton1Wrapper
+ * Class Singleton1MySqlWrapper
  *
- * @package SetBased\DataLayer\Generator\Wrapper
+ * @package SetBased\DataLayer\Generator\MySqlWrapper
  */
-class Singleton1Wrapper extends Wrapper
+class Singleton1MySqlWrapper extends MySqlWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**

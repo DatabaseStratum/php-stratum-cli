@@ -14,9 +14,9 @@ namespace SetBased\PhpStratum\MySql\Wrapper;
 /**
  * Class for generating a wrapper method for a stored function.
  *
- * @package SetBased\DataLayer\Generator\Wrapper
+ * @package SetBased\DataLayer\Generator\MySqlWrapper
  */
-class FunctionsWrapper extends Wrapper
+class FunctionsMySqlWrapper extends MySqlWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**

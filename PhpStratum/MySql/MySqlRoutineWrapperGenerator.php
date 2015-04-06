@@ -11,7 +11,7 @@
 namespace SetBased\PhpStratum\MySql;
 
 use SetBased\Affirm\Affirm;
-use SetBased\PhpStratum\MySql\Wrapper\Wrapper;
+use SetBased\PhpStratum\MySql\Wrapper\MySqlWrapper;
 use SetBased\PhpStratum\MySql\Wrapper\StaticDataLayer as DataLayer;
 use SetBased\PhpStratum\Util;
 
@@ -210,12 +210,12 @@ class MySqlRoutineWrapperGenerator
     }
 
     $this->myCode .= "<?php\n";
-    $this->myCode .= '//'.str_repeat( '-', Wrapper::C_PAGE_WIDTH - 2 )."\n";
+    $this->myCode .= '//'.str_repeat( '-', MySqlWrapper::C_PAGE_WIDTH - 2 )."\n";
     if ($namespace)
     {
       $this->myCode .= "namespace ${namespace};\n";
       $this->myCode .= "\n";
-      $this->myCode .= '//'.str_repeat( '-', Wrapper::C_PAGE_WIDTH - 2 )."\n";
+      $this->myCode .= '//'.str_repeat( '-', MySqlWrapper::C_PAGE_WIDTH - 2 )."\n";
     }
     $this->myCode .= 'class '.$class_name.' extends '.$this->myParentClassName."\n";
     $this->myCode .= "{\n";
@@ -227,10 +227,10 @@ class MySqlRoutineWrapperGenerator
    */
   private function writeClassTrailer()
   {
-    $this->myCode .= '  //'.str_repeat( '-', Wrapper::C_PAGE_WIDTH - 4 )."\n";
+    $this->myCode .= '  //'.str_repeat( '-', MySqlWrapper::C_PAGE_WIDTH - 4 )."\n";
     $this->myCode .= "}\n";
     $this->myCode .= "\n";
-    $this->myCode .= '//'.str_repeat( '-', Wrapper::C_PAGE_WIDTH - 2 )."\n";
+    $this->myCode .= '//'.str_repeat( '-', MySqlWrapper::C_PAGE_WIDTH - 2 )."\n";
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -241,7 +241,7 @@ class MySqlRoutineWrapperGenerator
    */
   private function writeRoutineFunction( $theRoutine )
   {
-    $wrapper = Wrapper::createRoutineWrapper( $theRoutine, $this->myLobAsStringFlag );
+    $wrapper = MySqlWrapper::createRoutineWrapper( $theRoutine, $this->myLobAsStringFlag );
     $this->myCode .= $wrapper->writeRoutineFunction( $theRoutine );
   }
 

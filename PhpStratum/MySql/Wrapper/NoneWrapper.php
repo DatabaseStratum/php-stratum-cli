@@ -14,9 +14,9 @@ namespace SetBased\PhpStratum\MySql\Wrapper;
 /**
  * Class for generating a wrapper method for a stored procedure without result set.
  *
- * @package SetBased\DataLayer\Generator\Wrapper
+ * @package SetBased\DataLayer\Generator\MySqlWrapper
  */
-class NoneWrapper extends Wrapper
+class NoneMySqlWrapper extends MySqlWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**

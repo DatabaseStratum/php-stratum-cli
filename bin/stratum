@@ -10,7 +10,7 @@
  */
 //----------------------------------------------------------------------------------------------------------------------
 use SetBased\Affirm\Affirm;
-use SetBased\PhpStratum\MySql\MySqlConfigConstants;
+use SetBased\PhpStratum\MySql\MySqlConstants;
 use SetBased\PhpStratum\MySql\MySqlRoutineLoader;
 use SetBased\PhpStratum\MySql\MySqlRoutineWrapperGenerator;
 
@@ -138,7 +138,7 @@ function main( $options )
   else
   {
     // Normal mode: create constants, config file, load routines, and create routine wrapper class.
-    $constants = new MySqlConfigConstants;
+    $constants = new MySqlConstants;
     $ret = $constants->main( $setting['config'] );
     if ($ret!=0) exit( $ret );
 

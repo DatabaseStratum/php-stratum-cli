@@ -78,7 +78,7 @@ class StaticDataLayer
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Starts a transaction.
-   * Wrapper around mysqli::autocommit, however on failure an exception is thrown.
+   * MySqlWrapper around mysqli::autocommit, however on failure an exception is thrown.
    */
   public static function begin()
   {
@@ -135,7 +135,7 @@ class StaticDataLayer
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Commits the current transaction (and starts a new transaction).
-   * Wrapper around mysqli::commit, however on failure an exception is thrown.
+   * MySqlWrapper around mysqli::commit, however on failure an exception is thrown.
    */
   public static function commit()
   {
@@ -146,7 +146,7 @@ class StaticDataLayer
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Connects to a MySQL instance.
-   * Wrapper around mysqli::__construct, however on failure an exception is thrown.
+   * MySqlWrapper around mysqli::__construct, however on failure an exception is thrown.
    *
    * @param string $theHostName The hostname.
    * @param string $theUserName The MySQL user name.
@@ -203,7 +203,7 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Wrapper around mysqli::query, however on failure an exception is thrown.
+   * MySqlWrapper around mysqli::query, however on failure an exception is thrown.
    *
    * @param string $theQuery The SQL statement.
    *
@@ -257,7 +257,7 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Wrapper around mysqli::query, however on failure an exception is thrown.
+   * MySqlWrapper around mysqli::query, however on failure an exception is thrown.
    *
    * @param string $theQuery The SQL statement.
    */
@@ -732,7 +732,7 @@ class StaticDataLayer
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Rollbacks the current transaction (and starts a new transaction).
-   * Wrapper around mysqli::rollback, however on failure an exception is thrown.
+   * MySqlWrapper around mysqli::rollback, however on failure an exception is thrown.
    */
   public static function rollback()
   {
@@ -770,7 +770,7 @@ class StaticDataLayer
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Logs the warnings of the last executed SQL statement.
-   * Wrapper around the SQL statement 'show warnings'.
+   * MySqlWrapper around the SQL statement 'show warnings'.
    */
   public static function showWarnings()
   {

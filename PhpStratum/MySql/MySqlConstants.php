@@ -18,7 +18,7 @@ use SetBased\PhpStratum\Util;
 /**
  * Class for creating PHP constants based on column widths, and auto increment columns and labels.
  */
-class MySqlConfigConstants
+class MySqlConstants
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
