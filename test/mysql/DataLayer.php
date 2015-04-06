@@ -1,6 +1,6 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-class DataLayer extends \SetBased\PhpStratum\MySql\Wrapper\StaticDataLayer
+class DataLayer extends \SetBased\PhpStratum\MySql\MySqlWrapper\StaticDataLayer
 {
   //-------------------------------------------------------------------------------------------------------------------
   /**

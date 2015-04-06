@@ -17,7 +17,7 @@ namespace SetBased\PhpStratum\MySql\Wrapper;
  * @package SetBased\DataLayer\Generator\MySqlWrapper
  *          returned as nested arrays.
  */
-class RowsWithIndex extends MySqlWrapper
+class RowsWithIndexWrapper extends MySqlWrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
