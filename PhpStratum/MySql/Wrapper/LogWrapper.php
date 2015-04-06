@@ -1,20 +1,22 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-/**
- * phpStratum
- *
- * @copyright 2005-2015 Paul Water / Set Based IT Consultancy (https://www.setbased.nl)
- * @license   http://www.opensource.org/licenses/mit-license.php MIT
- * @link
- */
+namespace SetBased\PhpStratum\MySql\Wrapper;
+  /**
+   * phpStratum
+   *
+   * @copyright 2005-2015 Paul Water / Set Based IT Consultancy (https://www.setbased.nl)
+   * @license   http://www.opensource.org/licenses/mit-license.php MIT
+   * @link
+   */
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\Stratum\Generator\Wrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class for generating a wrapper method for a stored procedure that selects 0 or 1 row.
+ * Class LogWrapper
+ *
+ * @package SetBased\DataLayer\Generator\Wrapper
  */
-class Row0Wrapper extends Wrapper
+class LogWrapper extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -22,7 +24,7 @@ class Row0Wrapper extends Wrapper
    */
   protected function getDocBlockReturnType()
   {
-    return 'array';
+    return 'int';
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -32,7 +34,7 @@ class Row0Wrapper extends Wrapper
   protected function writeResultHandler( $theRoutine )
   {
     $routine_args = $this->getRoutineArgs( $theRoutine );
-    $this->writeLine( 'return self::executeRow0( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
+    $this->writeLine( 'return self::executeLog( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\' );' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -41,20 +43,7 @@ class Row0Wrapper extends Wrapper
    */
   protected function writeRoutineFunctionLobFetchData( $theRoutine )
   {
-    $this->writeLine( '$row = array();' );
-    $this->writeLine( 'self::bindAssoc( $stmt, $row );' );
-    $this->writeLine();
-    $this->writeLine( '$tmp = array();' );
-    $this->writeLine( 'while (($b = $stmt->fetch()))' );
-    $this->writeLine( '{' );
-    $this->writeLine( '$new = array();' );
-    $this->writeLine( 'foreach( $row as $key => $value )' );
-    $this->writeLine( '{' );
-    $this->writeLine( '$new[$key] = $value;' );
-    $this->writeLine( '}' );
-    $this->writeLine( '$tmp[] = $new;' );
-    $this->writeLine( '}' );
-    $this->writeLine();
+    // Nothing to do.
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -63,10 +52,7 @@ class Row0Wrapper extends Wrapper
    */
   protected function writeRoutineFunctionLobReturnData()
   {
-    $this->writeLine( 'if ($b===false) self::sqlError( \'mysqli_stmt::fetch\' );' );
-    $this->writeLine( 'if (sizeof($tmp)>1) self::assertFailed( \'Expected 0 or 1 row found %d rows.\', sizeof($tmp) );' );
-    $this->writeLine();
-    $this->writeLine( 'return ($tmp) ? $tmp[0] : null;' );
+    // Nothing to do.
   }
 
   //--------------------------------------------------------------------------------------------------------------------

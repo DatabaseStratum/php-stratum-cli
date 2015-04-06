@@ -20,7 +20,7 @@
   ],
   "autoload": {
     "psr-4": {
-      "SetBased\\Stratum\\": "lib/"
+      "SetBased\\PhpStratum\\": "PhpStratum/"
     }
   },
   "config": {

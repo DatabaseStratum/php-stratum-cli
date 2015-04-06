@@ -51,7 +51,7 @@
 
     <!-- Runs all unit tests -->
     <target name="unit">
-        <delete file="etc/test_routines.json" quiet="true"/>
+        <delete file="etc/mysql/test_routines.json" quiet="true"/>
         <exec command="cat test/create_test.sql | mysql -utest -ptest test" passthru="true" checkreturn="true"/>
         <exec command="bin/stratum -c etc/test_stratum.cfg" passthru="true" checkreturn="true"/>
         <exec command="bin/phpunit --bootstrap=test/bootstrap.php test" passthru="true" checkreturn="true"/>

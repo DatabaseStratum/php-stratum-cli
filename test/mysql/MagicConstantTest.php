@@ -36,7 +36,7 @@ class MagicConstantTest extends DataLayerTestCase
    */
   public function test3()
   {
-    $filename = realpath( __DIR__.'/../test/psql/tst_magic_constant03.psql' );
+    $filename = realpath( __DIR__.'/../../test/mysql/psql/tst_magic_constant03.psql' );
 
     $ret = DataLayer::magicConstant03();
     $this->assertEquals( $filename, $ret );
@@ -48,7 +48,7 @@ class MagicConstantTest extends DataLayerTestCase
    */
   public function test4()
   {
-    $dir_name = realpath( __DIR__.'/../test/psql' );
+    $dir_name = realpath( __DIR__.'/../../test/mysql/psql' );
 
     $ret = DataLayer::magicConstant04();
     $this->assertEquals( $dir_name, $ret );
@@ -60,7 +60,7 @@ class MagicConstantTest extends DataLayerTestCase
    */
   public function test5()
   {
-    $dir_name = realpath( __DIR__.'/../test/psql/ test_escape \' " @ $ ! .' );
+    $dir_name = realpath( __DIR__.'/../../test/mysql/psql/ test_escape \' " @ $ ! .' );
 
     $ret = DataLayer::magicConstant05();
     $this->assertEquals( $dir_name, $ret );

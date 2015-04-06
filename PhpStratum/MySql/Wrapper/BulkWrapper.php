@@ -8,15 +8,15 @@
  * @link
  */
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\Stratum\Generator\Wrapper;
+namespace SetBased\PhpStratum\MySql\Wrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class TableWrapper
+ * Class BulkWrapper
  *
- * @package SetBased\DataLayer\Generator\Wrapper
+ * @package SetBased\DataLayer\Generator\MySqlRoutineWrapper
  */
-class TableWrapper extends Wrapper
+class BulkWrapper extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -24,32 +24,23 @@ class TableWrapper extends Wrapper
    */
   protected function getDocBlockReturnType()
   {
-    return 'int';
+    return '';
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * {@inheritdoc}
-   */
   protected function writeResultHandler( $theRoutine )
   {
     $routine_args = $this->getRoutineArgs( $theRoutine );
-    $this->writeLine( 'return self::executeTable( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\' );' );
+    $this->writeLine( 'self::executeBulk( $theBulkHandler, \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * {@inheritdoc}
-   */
   protected function writeRoutineFunctionLobFetchData( $theRoutine )
   {
     // Nothing to do.
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * {@inheritdoc}
-   */
   protected function writeRoutineFunctionLobReturnData()
   {
     // Nothing to do.

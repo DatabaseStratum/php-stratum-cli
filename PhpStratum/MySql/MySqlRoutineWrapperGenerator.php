@@ -8,12 +8,12 @@
  * @link
  */
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\Stratum\Generator;
+namespace SetBased\PhpStratum\MySql;
 
 use SetBased\Affirm\Affirm;
-use SetBased\Stratum\Generator\Wrapper\Wrapper;
-use SetBased\Stratum\StaticDataLayer as DataLayer;
-use SetBased\Stratum\Util;
+use SetBased\PhpStratum\MySql\Wrapper\Wrapper;
+use SetBased\PhpStratum\MySql\Wrapper\StaticDataLayer as DataLayer;
+use SetBased\PhpStratum\Util;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**

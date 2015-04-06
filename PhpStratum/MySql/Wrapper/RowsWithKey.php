@@ -8,15 +8,16 @@
  * @link
  */
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\Stratum\Generator\Wrapper;
+namespace SetBased\PhpStratum\MySql\Wrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class Singleton1Wrapper
+ * Class for generating a wrapper method for a stored procedure that selects 0 or more rows. The rows are
  *
  * @package SetBased\DataLayer\Generator\Wrapper
+ *          returned as nested arrays.
  */
-class Singleton1Wrapper extends Wrapper
+class RowsWithKey extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -24,7 +25,7 @@ class Singleton1Wrapper extends Wrapper
    */
   protected function getDocBlockReturnType()
   {
-    return 'string';
+    return 'array[]';
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -34,7 +35,20 @@ class Singleton1Wrapper extends Wrapper
   protected function writeResultHandler( $theRoutine )
   {
     $routine_args = $this->getRoutineArgs( $theRoutine );
-    $this->writeLine( 'return self::executeSingleton1( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
+
+    $key = '';
+    foreach ($theRoutine['columns'] as $column)
+    {
+      $key .= '[$row[\''.$column.'\']]';
+    }
+
+    $this->writeLine( '$result = self::query( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
+    $this->writeLine( '$ret = array();' );
+    $this->writeLine( 'while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret'.$key.' = $row;' );
+    $this->writeLine( '$result->free();' );
+    $this->writeLine( 'if(self::$ourMySql->more_results()) self::$ourMySql->next_result();' );
+    $this->writeLine();
+    $this->writeLine( 'return  $ret;' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -43,18 +57,24 @@ class Singleton1Wrapper extends Wrapper
    */
   protected function writeRoutineFunctionLobFetchData( $theRoutine )
   {
+    $key = '';
+    foreach ($theRoutine['columns'] as $column)
+    {
+      $key .= '[$new[\''.$column.'\']]';
+    }
+
     $this->writeLine( '$row = array();' );
     $this->writeLine( 'self::bindAssoc( $stmt, $row );' );
     $this->writeLine();
-    $this->writeLine( '$tmp = array();' );
+    $this->writeLine( '$ret = array();' );
     $this->writeLine( 'while (($b = $stmt->fetch()))' );
     $this->writeLine( '{' );
     $this->writeLine( '$new = array();' );
-    $this->writeLine( 'foreach( $row as $value )' );
+    $this->writeLine( 'foreach( $row as $key => $value )' );
     $this->writeLine( '{' );
-    $this->writeLine( '$new[] = $value;' );
+    $this->writeLine( '$new[$key] = $value;' );
     $this->writeLine( '}' );
-    $this->writeLine( '$tmp[] = $new;' );
+    $this->writeLine( '$ret'.$key.' = $new;' );
     $this->writeLine( '}' );
     $this->writeLine();
   }
@@ -66,9 +86,8 @@ class Singleton1Wrapper extends Wrapper
   protected function writeRoutineFunctionLobReturnData()
   {
     $this->writeLine( 'if ($b===false) self::sqlError( \'mysqli_stmt::fetch\' );' );
-    $this->writeLine( 'if (sizeof($tmp)!=1) self::assertFailed( \'Expected 1 row found %d rows.\', sizeof($tmp) );' );
     $this->writeLine();
-    $this->writeLine( 'return $tmp[0][0];' );
+    $this->writeLine( 'return $ret;' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

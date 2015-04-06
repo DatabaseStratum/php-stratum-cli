@@ -8,15 +8,15 @@
  * @link
  */
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\Stratum\Generator\Wrapper;
+namespace SetBased\PhpStratum\MySql\Wrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class Row1Wrapper
+ * Class Singleton1Wrapper
  *
  * @package SetBased\DataLayer\Generator\Wrapper
  */
-class Row1Wrapper extends Wrapper
+class Singleton1Wrapper extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -24,7 +24,7 @@ class Row1Wrapper extends Wrapper
    */
   protected function getDocBlockReturnType()
   {
-    return 'array';
+    return 'string';
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ class Row1Wrapper extends Wrapper
   protected function writeResultHandler( $theRoutine )
   {
     $routine_args = $this->getRoutineArgs( $theRoutine );
-    $this->writeLine( 'return self::executeRow1( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
+    $this->writeLine( 'return self::executeSingleton1( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -50,9 +50,9 @@ class Row1Wrapper extends Wrapper
     $this->writeLine( 'while (($b = $stmt->fetch()))' );
     $this->writeLine( '{' );
     $this->writeLine( '$new = array();' );
-    $this->writeLine( 'foreach( $row as $key => $value )' );
+    $this->writeLine( 'foreach( $row as $value )' );
     $this->writeLine( '{' );
-    $this->writeLine( '$new[$key] = $value;' );
+    $this->writeLine( '$new[] = $value;' );
     $this->writeLine( '}' );
     $this->writeLine( '$tmp[] = $new;' );
     $this->writeLine( '}' );
@@ -68,7 +68,7 @@ class Row1Wrapper extends Wrapper
     $this->writeLine( 'if ($b===false) self::sqlError( \'mysqli_stmt::fetch\' );' );
     $this->writeLine( 'if (sizeof($tmp)!=1) self::assertFailed( \'Expected 1 row found %d rows.\', sizeof($tmp) );' );
     $this->writeLine();
-    $this->writeLine( 'return $row;' );
+    $this->writeLine( 'return $tmp[0][0];' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
