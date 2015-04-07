@@ -18,7 +18,7 @@ use SetBased\Stratum\Util;
 /**
  * Class for creating PHP constants based on column widths, and auto increment columns and labels.
  */
-class MySqlConstants
+class MySqlConstants extends MySqlConnector
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -53,20 +53,6 @@ class MySqlConstants
   private $myConstantsFilename;
 
   /**
-   * Name used database.
-   *
-   * @var string
-   */
-  private $myDatabase;
-
-  /**
-   * Host name or address.
-   *
-   * @var string
-   */
-  private $myHostName;
-
-  /**
    * All primary key labels, their widths and constant names.
    *
    * @var array
@@ -82,13 +68,6 @@ class MySqlConstants
   private $myOldColumns = array();
 
   /**
-   * User password.
-   *
-   * @var string
-   */
-  private $myPassword;
-
-  /**
    * The prefix used for designations a unknown constants.
    *
    * @var string
@@ -102,11 +81,6 @@ class MySqlConstants
    */
   private $myTemplateConfigFilename;
 
-  /**
-   * @var string User name.
-   */
-  private $myUserName;
-
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * @param string $theConfigFilename
@@ -117,7 +91,7 @@ class MySqlConstants
   {
     $this->readConfigFile( $theConfigFilename );
 
-    DataLayer::connect( $this->myHostName, $this->myUserName, $this->myPassword, $this->myDatabase );
+    $this->connect();
 
     $this->getOldColumns();
 
@@ -135,7 +109,7 @@ class MySqlConstants
 
     $this->writeTargetConfigFile();
 
-    DataLayer::disconnect();
+    $this->disconnect();
 
     return 0;
   }
@@ -424,14 +398,11 @@ where   nullif(`%s`,'') is not null";
    *
    * @param string $theConfigFilename
    */
-  private function readConfigFile( $theConfigFilename )
+  protected function readConfigFile( $theConfigFilename )
   {
-    $settings = parse_ini_file( $theConfigFilename, true );
+    parent::readConfigFile( $theConfigFilename );
 
-    $this->myHostName = Util::getSetting( $settings, true, 'database', 'host_name' );
-    $this->myUserName = Util::getSetting( $settings, true, 'database', 'user_name' );
-    $this->myPassword = Util::getSetting( $settings, true, 'database', 'password' );
-    $this->myDatabase = Util::getSetting( $settings, true, 'database', 'database_name' );
+    $settings = parse_ini_file( $theConfigFilename, true );
 
     $this->myConstantsFilename      = Util::getSetting( $settings, true, 'constants', 'columns' );
     $this->myPrefix                 = Util::getSetting( $settings, true, 'constants', 'prefix' );

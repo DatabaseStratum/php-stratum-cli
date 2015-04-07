@@ -12,14 +12,13 @@ namespace SetBased\Stratum\MySql;
 
 use SetBased\Affirm\Affirm;
 use SetBased\Stratum\MySql\Wrapper\MySqlWrapper;
-use SetBased\Stratum\MySql\Wrapper\StaticDataLayer as DataLayer;
 use SetBased\Stratum\Util;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
  * Class for generating a class with wrapper methods for calling stored routines in a MySQL database.
  */
-class MySqlRoutineWrapperGenerator
+class MySqlRoutineWrapperGenerator extends MySqlConnector
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -28,27 +27,6 @@ class MySqlRoutineWrapperGenerator
    * @var string
    */
   private $myCode = '';
-
-  /**
-   * The filename of the configuration file.
-   *
-   * @var string
-   */
-  private $myConfigurationFilename;
-
-  /**
-   * The schema name.
-   *
-   * @var string
-   */
-  private $myDatabase;
-
-  /**
-   * Host name or address.
-   *
-   * @var string
-   */
-  private $myHostName;
 
   /**
    * If true BLOBs and CLOBs must be treated as strings.
@@ -70,20 +48,6 @@ class MySqlRoutineWrapperGenerator
    * @var string
    */
   private $myParentClassName;
-
-  /**
-   * The password.
-   *
-   * @var string
-   */
-  private $myPassword;
-
-  /**
-   * The user name.
-   *
-   * @var string
-   */
-  private $myUserName;
 
   /**
    * The class name (including namespace) of the routine wrapper.
@@ -109,11 +73,11 @@ class MySqlRoutineWrapperGenerator
    */
   public function run( $theConfigurationFilename )
   {
-    $this->myConfigurationFilename = $theConfigurationFilename;
+    $config_filename = $theConfigurationFilename;
 
-    $this->readConfigurationFile();
+    $this->readConfigurationFile( $config_filename );
 
-    DataLayer::connect( $this->myHostName, $this->myUserName, $this->myPassword, $this->myDatabase );
+    $this->connect();
 
     $routines = $this->readRoutineMetadata();
 
@@ -143,7 +107,7 @@ class MySqlRoutineWrapperGenerator
     // Write the wrapper class tot the filesystem.
     Util::writeTwoPhases( $this->myWrapperFilename, $this->myCode );
 
-    DataLayer::disconnect();
+    $this->disconnect();
 
     return 0;
   }
@@ -151,22 +115,21 @@ class MySqlRoutineWrapperGenerator
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Reads parameters from the configuration file.
+   *
+   * @param string $theConfigFilename The filename of the configuration file.
    */
-  private function readConfigurationFile()
+  private function readConfigurationFile( $theConfigFilename )
   {
+    parent::readConfigFile( $theConfigFilename );
+
     // Read the configuration file.
-    $settings = parse_ini_file( $this->myConfigurationFilename, true );
+    $settings = parse_ini_file( $theConfigFilename, true );
 
     // Set default values.
     if (!isset($settings['wrapper']['lob_as_string']))
     {
       $settings['wrapper']['lob_as_string'] = false;
     }
-
-    $this->myHostName = Util::getSetting( $settings, true, 'database', 'host_name' );
-    $this->myUserName = Util::getSetting( $settings, true, 'database', 'user_name' );
-    $this->myPassword = Util::getSetting( $settings, true, 'database', 'password' );
-    $this->myDatabase = Util::getSetting( $settings, true, 'database', 'database_name' );
 
     $this->myParentClassName  = Util::getSetting( $settings, true, 'wrapper', 'parent_class' );
     $this->myWrapperClassName = Util::getSetting( $settings, true, 'wrapper', 'wrapper_class' );
