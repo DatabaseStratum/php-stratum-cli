@@ -14,10 +14,10 @@ use SetBased\Affirm\Affirm;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class MySqlWrapper
+ * Class Wrapper
  * routine.
  */
-abstract class MySqlWrapper
+abstract class Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -60,7 +60,7 @@ abstract class MySqlWrapper
    * @param bool  $theLobAsStringFlag  If set BLOBs and CLOBs are treated as string. Otherwise, BLOBs and CLOBs will be
    *                                   send as long data.
    *
-   * @return MySqlWrapper
+   * @return Wrapper
    */
   public static function createRoutineWrapper( $theRoutine, $theLobAsStringFlag )
   {

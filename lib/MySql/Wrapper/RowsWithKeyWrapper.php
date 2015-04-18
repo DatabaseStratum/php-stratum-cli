@@ -14,10 +14,10 @@ namespace SetBased\Stratum\MySql\Wrapper;
 /**
  * Class for generating a wrapper method for a stored procedure that selects 0 or more rows. The rows are
  *
- * @package SetBased\DataLayer\Generator\MySqlWrapper
+ * @package SetBased\DataLayer\Generator\Wrapper
  *          returned as nested arrays.
  */
-class RowsWithKeyWrapper extends MySqlWrapper
+class RowsWithKeyWrapper extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**

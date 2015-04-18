@@ -18,7 +18,7 @@ use SetBased\Stratum\MySql\Wrapper\StaticDataLayer as DataLayer;
 /**
  * Class for loading a single stored routine into a MySQL instance from pseudo SQL file.
  */
-class MySqlRoutineLoaderHelper
+class RoutineLoaderHelper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -204,7 +204,7 @@ class MySqlRoutineLoaderHelper
    * @param string $theCollate                 The key or index columns (depending on the designation type) of the
    *                                           stored routine.
    *
-   * @return \SetBased\Stratum\MySql\MySqlRoutineLoaderHelper
+   * @return \SetBased\Stratum\MySql\RoutineLoaderHelper
    */
   public function __construct( $theRoutineFilename,
                                $theRoutineFileExtension,

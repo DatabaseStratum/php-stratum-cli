@@ -16,7 +16,7 @@ namespace SetBased\Stratum\MySql\Wrapper;
  *
  * @package SetBased\DataLayer\Generator\MySqlRoutineWrapper
  */
-class BulkWrapper extends MySqlWrapper
+class BulkWrapper extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**

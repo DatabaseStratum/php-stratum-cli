@@ -11,14 +11,14 @@
 namespace SetBased\Stratum\MySql;
 
 use SetBased\Affirm\Affirm;
-use SetBased\Stratum\MySql\Wrapper\MySqlWrapper;
+use SetBased\Stratum\MySql\Wrapper\Wrapper;
 use SetBased\Stratum\Util;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
  * Class for generating a class with wrapper methods for calling stored routines in a MySQL database.
  */
-class MySqlRoutineWrapperGenerator extends MySqlConnector
+class RoutineWrapperGenerator
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -63,6 +63,7 @@ class MySqlRoutineWrapperGenerator extends MySqlConnector
    */
   private $myWrapperFilename;
 
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * The "main" of the wrapper generator.
@@ -73,11 +74,7 @@ class MySqlRoutineWrapperGenerator extends MySqlConnector
    */
   public function run( $theConfigurationFilename )
   {
-    $config_filename = $theConfigurationFilename;
-
-    $this->readConfigurationFile( $config_filename );
-
-    $this->connect();
+    $this->readConfigurationFile( $theConfigurationFilename );
 
     $routines = $this->readRoutineMetadata();
 
@@ -107,8 +104,6 @@ class MySqlRoutineWrapperGenerator extends MySqlConnector
     // Write the wrapper class tot the filesystem.
     Util::writeTwoPhases( $this->myWrapperFilename, $this->myCode );
 
-    $this->disconnect();
-
     return 0;
   }
 
@@ -120,8 +115,6 @@ class MySqlRoutineWrapperGenerator extends MySqlConnector
    */
   private function readConfigurationFile( $theConfigFilename )
   {
-    parent::readConfigFile( $theConfigFilename );
-
     // Read the configuration file.
     $settings = parse_ini_file( $theConfigFilename, true );
 
@@ -173,12 +166,12 @@ class MySqlRoutineWrapperGenerator extends MySqlConnector
     }
 
     $this->myCode .= "<?php\n";
-    $this->myCode .= '//'.str_repeat( '-', MySqlWrapper::C_PAGE_WIDTH - 2 )."\n";
+    $this->myCode .= '//'.str_repeat( '-', Wrapper::C_PAGE_WIDTH - 2 )."\n";
     if ($namespace)
     {
       $this->myCode .= "namespace ${namespace};\n";
       $this->myCode .= "\n";
-      $this->myCode .= '//'.str_repeat( '-', MySqlWrapper::C_PAGE_WIDTH - 2 )."\n";
+      $this->myCode .= '//'.str_repeat( '-', Wrapper::C_PAGE_WIDTH - 2 )."\n";
     }
     $this->myCode .= 'class '.$class_name.' extends '.$this->myParentClassName."\n";
     $this->myCode .= "{\n";
@@ -190,10 +183,10 @@ class MySqlRoutineWrapperGenerator extends MySqlConnector
    */
   private function writeClassTrailer()
   {
-    $this->myCode .= '  //'.str_repeat( '-', MySqlWrapper::C_PAGE_WIDTH - 4 )."\n";
+    $this->myCode .= '  //'.str_repeat( '-', Wrapper::C_PAGE_WIDTH - 4 )."\n";
     $this->myCode .= "}\n";
     $this->myCode .= "\n";
-    $this->myCode .= '//'.str_repeat( '-', MySqlWrapper::C_PAGE_WIDTH - 2 )."\n";
+    $this->myCode .= '//'.str_repeat( '-', Wrapper::C_PAGE_WIDTH - 2 )."\n";
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -204,7 +197,7 @@ class MySqlRoutineWrapperGenerator extends MySqlConnector
    */
   private function writeRoutineFunction( $theRoutine )
   {
-    $wrapper = MySqlWrapper::createRoutineWrapper( $theRoutine, $this->myLobAsStringFlag );
+    $wrapper = Wrapper::createRoutineWrapper( $theRoutine, $this->myLobAsStringFlag );
     $this->myCode .= $wrapper->writeRoutineFunction( $theRoutine );
   }
 

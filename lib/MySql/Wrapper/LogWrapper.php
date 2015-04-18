@@ -14,9 +14,9 @@ namespace SetBased\Stratum\MySql\Wrapper;
 /**
  * Class LogMySqlWrapper
  *
- * @package SetBased\DataLayer\Generator\MySqlWrapper
+ * @package SetBased\DataLayer\Generator\Wrapper
  */
-class LogWrapper extends MySqlWrapper
+class LogWrapper extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**

@@ -18,7 +18,7 @@ use SetBased\Stratum\Util;
 /**
  * Class for creating PHP constants based on column widths, and auto increment columns and labels.
  */
-class MySqlConstants extends MySqlConnector
+class Constants
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -39,6 +39,13 @@ class MySqlConstants extends MySqlConnector
    * @var string
    */
   private $myConfigFilename;
+
+  /**
+   * Object for connection to a database instance.
+   *
+   * @var Connector.
+   */
+  private $myConnector;
 
   /**
    * @var array All constants.
@@ -89,9 +96,11 @@ class MySqlConstants extends MySqlConnector
    */
   public function main( $theConfigFilename )
   {
+    $this->myConnector = new Connector();
+
     $this->readConfigFile( $theConfigFilename );
 
-    $this->connect();
+    $this->myConnector->connect();
 
     $this->getOldColumns();
 
@@ -109,9 +118,27 @@ class MySqlConstants extends MySqlConnector
 
     $this->writeTargetConfigFile();
 
-    $this->disconnect();
+    $this->myConnector->disconnect();
 
     return 0;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Reads configuration parameters from the configuration file.
+   *
+   * @param string $theConfigFilename
+   */
+  protected function readConfigFile( $theConfigFilename )
+  {
+    $this->myConnector->readConfigFile( $theConfigFilename );
+
+    $settings = parse_ini_file( $theConfigFilename, true );
+
+    $this->myConstantsFilename      = Util::getSetting( $settings, true, 'constants', 'columns' );
+    $this->myPrefix                 = Util::getSetting( $settings, true, 'constants', 'prefix' );
+    $this->myTemplateConfigFilename = Util::getSetting( $settings, true, 'constants', 'config_template' );
+    $this->myConfigFilename         = Util::getSetting( $settings, true, 'constants', 'config' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -390,24 +417,6 @@ where   nullif(`%s`,'') is not null";
         }
       }
     }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Reads configuration parameters from the configuration file.
-   *
-   * @param string $theConfigFilename
-   */
-  protected function readConfigFile( $theConfigFilename )
-  {
-    parent::readConfigFile( $theConfigFilename );
-
-    $settings = parse_ini_file( $theConfigFilename, true );
-
-    $this->myConstantsFilename      = Util::getSetting( $settings, true, 'constants', 'columns' );
-    $this->myPrefix                 = Util::getSetting( $settings, true, 'constants', 'prefix' );
-    $this->myTemplateConfigFilename = Util::getSetting( $settings, true, 'constants', 'config_template' );
-    $this->myConfigFilename         = Util::getSetting( $settings, true, 'constants', 'config' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

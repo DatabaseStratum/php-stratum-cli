@@ -17,9 +17,9 @@ use SetBased\Affirm\Affirm;
  * Class for generating a wrapper method for a stored procedure that prepares a table to be used with a bulk SQL
  * statement.
  *
- * @package SetBased\DataLayer\Generator\MySqlWrapper
+ * @package SetBased\DataLayer\Generator\Wrapper
  */
-class BulkInsertWrapper extends MySqlWrapper
+class BulkInsertWrapper extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**

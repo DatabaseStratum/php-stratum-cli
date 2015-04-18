@@ -18,7 +18,7 @@ use SetBased\Stratum\Util;
 /**
  * Class for loading stored routines into a MySQL instance from pseudo SQL files.
  */
-class MySqlRoutineLoader extends MySqlConnector
+class RoutineLoader
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -105,6 +105,13 @@ class MySqlRoutineLoader extends MySqlConnector
    */
   private $myTargetConfigFilename;
 
+  /**
+   * Object for connection to a database instance.
+   *
+   * @var Connector.
+   */
+  private $myConnector;
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Loads stored routines into the current schema.
@@ -117,6 +124,8 @@ class MySqlRoutineLoader extends MySqlConnector
    */
   public function main( $theConfigFilename, $theFileNames )
   {
+    $this->myConnector = new Connector();
+
     if (empty($theFileNames))
     {
       $this->loadAll( $theConfigFilename );
@@ -129,6 +138,27 @@ class MySqlRoutineLoader extends MySqlConnector
     $this->logOverviewErrors();
 
     return ($this->myErrorFileNames) ? 1 : 0;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Reads parameters from the configuration file.
+   *
+   * @param string $theConfigFilename
+   */
+  protected function readConfigFile( $theConfigFilename )
+  {
+    $this->myConnector->readConfigFile( $theConfigFilename );
+
+    $settings = parse_ini_file( $theConfigFilename, true );
+
+    $this->myPhpStratumMetadataFilename = Util::getSetting( $settings, true, 'wrapper', 'metadata' );
+    $this->mySourceDirectory            = Util::getSetting( $settings, true, 'loader', 'source_directory' );
+    $this->mySourceFileExtension        = Util::getSetting( $settings, true, 'loader', 'extension' );
+    $this->myTargetConfigFilename       = Util::getSetting( $settings, false, 'loader', 'config' );
+    $this->mySqlMode                    = Util::getSetting( $settings, true, 'loader', 'sql_mode' );
+    $this->myCharacterSet               = Util::getSetting( $settings, true, 'loader', 'character_set' );
+    $this->myCollate                    = Util::getSetting( $settings, true, 'loader', 'collate' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -341,7 +371,7 @@ order by routine_name";
   {
     $this->readConfigFile( $theConfigFilename );
 
-    $this->connect();
+    $this->myConnector->connect();
 
     $this->findSourceFiles();
     $this->getColumnTypes();
@@ -361,7 +391,7 @@ order by routine_name";
     // Write the metadata to file.
     $this->writeStoredRoutineMetadata();
 
-    $this->disconnect();
+    $this->myConnector->disconnect();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -375,7 +405,7 @@ order by routine_name";
   {
     $this->readConfigFile( $theConfigFilename );
 
-    $this->connect();
+    $this->myConnector->connect();
 
     $this->findSourceFilesFromList( $theFileNames );
     $this->getColumnTypes();
@@ -389,7 +419,7 @@ order by routine_name";
     // Write the metadata to @c $myPhpStratumMetadataFilename.
     $this->writeStoredRoutineMetadata();
 
-    $this->disconnect();
+    $this->myConnector->disconnect();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -402,14 +432,14 @@ order by routine_name";
     {
       $routine_name = basename( $filename, $this->mySourceFileExtension );
 
-      $helper = new MySqlRoutineLoaderHelper( $filename,
-                                              $this->mySourceFileExtension,
-                                              isset($this->myPhpStratumMetadata[$routine_name]) ? $this->myPhpStratumMetadata[$routine_name] : null,
-                                              $this->myReplacePairs,
-                                              isset($this->myRdbmsOldMetadata[$routine_name]) ? $this->myRdbmsOldMetadata[$routine_name] : null,
-                                              $this->mySqlMode,
-                                              $this->myCharacterSet,
-                                              $this->myCollate );
+      $helper = new RoutineLoaderHelper( $filename,
+                                         $this->mySourceFileExtension,
+                                         isset($this->myPhpStratumMetadata[$routine_name]) ? $this->myPhpStratumMetadata[$routine_name] : null,
+                                         $this->myReplacePairs,
+                                         isset($this->myRdbmsOldMetadata[$routine_name]) ? $this->myRdbmsOldMetadata[$routine_name] : null,
+                                         $this->mySqlMode,
+                                         $this->myCharacterSet,
+                                         $this->myCollate );
 
       $meta_data = $helper->loadStoredRoutine();
       if ($meta_data===false)
@@ -436,27 +466,6 @@ order by routine_name";
     {
       echo sprintf( "Error loading file '%s'.\n", $filename );
     }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Reads parameters from the configuration file.
-   *
-   * @param string $theConfigFilename
-   */
-  protected function readConfigFile( $theConfigFilename )
-  {
-    parent::readConfigFile( $theConfigFilename );
-
-    $settings = parse_ini_file( $theConfigFilename, true );
-
-    $this->myPhpStratumMetadataFilename = Util::getSetting( $settings, true, 'wrapper', 'metadata' );
-    $this->mySourceDirectory            = Util::getSetting( $settings, true, 'loader', 'source_directory' );
-    $this->mySourceFileExtension        = Util::getSetting( $settings, true, 'loader', 'extension' );
-    $this->myTargetConfigFilename       = Util::getSetting( $settings, false, 'loader', 'config' );
-    $this->mySqlMode                    = Util::getSetting( $settings, true, 'loader', 'sql_mode' );
-    $this->myCharacterSet               = Util::getSetting( $settings, true, 'loader', 'character_set' );
-    $this->myCollate                    = Util::getSetting( $settings, true, 'loader', 'collate' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

@@ -10,8 +10,15 @@ use SetBased\Stratum\Util;
  * Class for connecting to SQL Server instances and reading SQl Server specific connection parameters from
  * configuration files.
  */
-class MySqlConnector
+class Connector
 {
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Name used database.
+   *
+   * @var string
+   */
+  protected $myDatabase;
 
   /**
    * Host name or address.
@@ -21,29 +28,22 @@ class MySqlConnector
   protected $myHostName;
 
   /**
-   * Name used database.
-   *
-   * @var string
-   */
-  protected $myDatabase;
-
-  /**
-   * @var string User name.
-   */
-  protected $myUserName;
-
-  /**
    * User password.
    *
    * @var string
    */
   protected $myPassword;
 
+  /**
+   * @var string User name.
+   */
+  protected $myUserName;
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   *  Connects to the database.
+   * Connects to the database.
    */
-  protected function connect()
+  public function connect()
   {
     DataLayer::connect( $this->myHostName,
                         $this->myUserName,
@@ -53,9 +53,9 @@ class MySqlConnector
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   *  Disconnects from the database.
+   * Disconnects from the database.
    */
-  protected function disconnect()
+  public function disconnect()
   {
     DataLayer::disconnect();
   }
@@ -66,7 +66,7 @@ class MySqlConnector
    *
    * @param string $theConfigFilename
    */
-  protected function readConfigFile( $theConfigFilename )
+  public function readConfigFile( $theConfigFilename )
   {
     $settings = parse_ini_file( $theConfigFilename, true );
 

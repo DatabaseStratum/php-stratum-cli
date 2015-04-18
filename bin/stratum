@@ -10,9 +10,9 @@
  */
 //----------------------------------------------------------------------------------------------------------------------
 use SetBased\Affirm\Affirm;
-use SetBased\Stratum\MySql\MySqlConstants;
-use SetBased\Stratum\MySql\MySqlRoutineLoader;
-use SetBased\Stratum\MySql\MySqlRoutineWrapperGenerator;
+use SetBased\Stratum\MySql\Constants;
+use SetBased\Stratum\MySql\RoutineLoader;
+use SetBased\Stratum\MySql\RoutineWrapperGenerator;
 
 //----------------------------------------------------------------------------------------------------------------------
 $files = array(__DIR__.'/../vendor/autoload.php',
@@ -131,22 +131,22 @@ function main( $options )
   if (isset($setting['fast']))
   {
     // Fast mode: only load stored routines.
-    $loader = new MySqlRoutineLoader;
+    $loader = new RoutineLoader;
     $ret = $loader->main( $setting['config'], $setting['psql_files'] );
     if ($ret!=0) exit( $ret );
   }
   else
   {
     // Normal mode: create constants, config file, load routines, and create routine wrapper class.
-    $constants = new MySqlConstants;
+    $constants = new Constants;
     $ret = $constants->main( $setting['config'] );
     if ($ret!=0) exit( $ret );
 
-    $loader = new MySqlRoutineLoader;
+    $loader = new RoutineLoader;
     $ret = $loader->main( $setting['config'], $setting['psql_files'] );
     if ($ret!=0) exit( $ret );
 
-    $wrapper = new MySqlRoutineWrapperGenerator;
+    $wrapper = new RoutineWrapperGenerator;
     $ret = $wrapper->run( $setting['config'] );
     if ($ret!=0) exit( $ret );
   }

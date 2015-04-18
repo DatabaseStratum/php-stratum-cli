@@ -14,9 +14,9 @@ namespace SetBased\Stratum\MySql\Wrapper;
 /**
  * Class Singleton1MySqlWrapper
  *
- * @package SetBased\DataLayer\Generator\MySqlWrapper
+ * @package SetBased\DataLayer\Generator\Wrapper
  */
-class Singleton1Wrapper extends MySqlWrapper
+class Singleton1Wrapper extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
