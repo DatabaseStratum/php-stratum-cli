@@ -22,12 +22,11 @@ class Singleton0Wrapper extends Wrapper
   /**
    * {@inheritdoc}
    */
-  protected function getDocBlockExceptions()
+  public function __construct( $theLobAsStringFlag )
   {
-    $exceptions   = parent::getDocBlockExceptions();
-    $exceptions[] = 'RowCountException';
+    parent::__construct( $theLobAsStringFlag );
 
-    return $exceptions;
+    $this->myExceptions[] = 'RowCountException';
   }
 
   //--------------------------------------------------------------------------------------------------------------------

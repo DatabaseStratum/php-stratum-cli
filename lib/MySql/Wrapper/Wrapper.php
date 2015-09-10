@@ -26,6 +26,13 @@ abstract class Wrapper
   const C_PAGE_WIDTH = 120;
 
   /**
+   * The exceptions that the wrapper method can throw.
+   *
+   * @var array
+   */
+  protected $myExceptions;
+
+  /**
    * Array with fully qualified names that must be imported for this wrapper method.
    *
    * @var array
@@ -57,6 +64,7 @@ abstract class Wrapper
   public function __construct( $theLobAsStringFlag )
   {
     $this->myLobAsStringFlag = $theLobAsStringFlag;
+    $this->myExceptions      = ['\Exception'];
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -408,7 +416,7 @@ abstract class Wrapper
    */
   protected function getDocBlockExceptions()
   {
-    return ['\Exception'];
+    return $this->myExceptions;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -684,8 +692,8 @@ abstract class Wrapper
     $exceptions = $this->getDocBlockExceptions();
     if ($exceptions)
     {
-      $exceptions = array_unique($exceptions);
-      foreach($exceptions as $exception)
+      $exceptions = array_unique( $exceptions );
+      foreach ($exceptions as $exception)
       {
         $this->writeLine( ' * @throws  '.$exception );
       }
