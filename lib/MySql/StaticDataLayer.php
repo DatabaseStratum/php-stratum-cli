@@ -12,6 +12,7 @@ namespace SetBased\Stratum\MySql;
 
 use SetBased\Affirm\Affirm;
 use SetBased\Stratum\BulkHandler;
+use SetBased\Stratum\Exception\RowCountException;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
@@ -276,6 +277,7 @@ class StaticDataLayer
    * @param string $theQuery The SQL statement.
    *
    * @return array|null The selected row.
+   * @throws RowCountException
    */
   public static function executeRow0( $theQuery )
   {
@@ -288,7 +290,7 @@ class StaticDataLayer
 
     if (!($n==0 || $n==1))
     {
-      self::assertFailed( "Number of rows selected by query below is %d expected 0 or 1.\n%s", $n, $theQuery );
+      throw new RowCountException( '0 or 1', $n, $theQuery );
     }
 
     return $row;
@@ -302,6 +304,7 @@ class StaticDataLayer
    * @param string $theQuery The SQL statement.
    *
    * @return array The selected row.
+   * @throws RowCountException
    */
   public static function executeRow1( $theQuery )
   {
@@ -314,7 +317,7 @@ class StaticDataLayer
 
     if ($n!=1)
     {
-      self::assertFailed( "Number of rows selected by query below is %d expected 1.\n%s", $n, $theQuery );
+      throw new RowCountException( '1', $n, $theQuery );
     }
 
     return $row;
@@ -357,12 +360,13 @@ class StaticDataLayer
    *
    * @param string $theQuery The SQL statement.
    *
-   * @return string|int The selected value.
+   * @return int|string The selected value.
+   * @throws RowCountException
    */
   public static function executeSingleton0( $theQuery )
   {
     $result = self::query( $theQuery );
-    $row    = $result->fetch_array(MYSQLI_NUM);
+    $row    = $result->fetch_array( MYSQLI_NUM );
     $n      = $result->num_rows;
     $result->free();
 
@@ -370,9 +374,7 @@ class StaticDataLayer
 
     if (!($n==0 || $n==1))
     {
-      self::assertFailed( "Number of rows selected by query below is %d expected 0 or 1.\n%s",
-                          $n,
-                          $theQuery );
+      throw new RowCountException( '0 or 1', $n, $theQuery );
     }
 
     return $row[0];
@@ -385,12 +387,13 @@ class StaticDataLayer
    *
    * @param string $theQuery The SQL statement.
    *
-   * @return string|int The selected value.
+   * @return int|string The selected value.
+   * @throws RowCountException
    */
   public static function executeSingleton1( $theQuery )
   {
     $result = self::query( $theQuery );
-    $row    = $result->fetch_array(MYSQLI_NUM);
+    $row    = $result->fetch_array( MYSQLI_NUM );
     $n      = $result->num_rows;
     $result->free();
 
@@ -398,7 +401,7 @@ class StaticDataLayer
 
     if ($n!=1)
     {
-      self::assertFailed( "Number of rows selected by query below is %d expected 1.\n%s", $n, $theQuery );
+      throw new RowCountException( '1', $n, $theQuery );
     }
 
     return $row[0];

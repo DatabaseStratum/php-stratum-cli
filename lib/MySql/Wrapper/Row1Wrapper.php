@@ -20,6 +20,18 @@ class Row1Wrapper extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * {@inheritdoc}
+   */
+  protected function getDocBlockExceptions()
+  {
+    $exceptions   = parent::getDocBlockExceptions();
+    $exceptions[] = 'RowCountException';
+
+    return $exceptions;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * @return string
    */
   protected function getDocBlockReturnType()
@@ -66,9 +78,12 @@ class Row1Wrapper extends Wrapper
   protected function writeRoutineFunctionLobReturnData()
   {
     $this->writeLine( 'if ($b===false) self::sqlError( \'mysqli_stmt::fetch\' );' );
-    $this->writeLine( 'if (count($tmp)!=1) self::assertFailed( \'Expected 1 row found %d rows.\', count($tmp) );' );
+    $this->writeLine( 'if (count($tmp)!=1) throw new RowCountException( \'1\', count($tmp), $query );' );
     $this->writeLine();
     $this->writeLine( 'return $row;' );
+
+    // For this wrapper method the following fully qualified name must be imported.
+    $this->myImports[] = '\SetBased\Stratum\Exception\RowCountException';
   }
 
   //--------------------------------------------------------------------------------------------------------------------

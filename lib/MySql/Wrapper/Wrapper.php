@@ -26,6 +26,13 @@ abstract class Wrapper
   const C_PAGE_WIDTH = 120;
 
   /**
+   * Array with fully qualified names that must be imported for this wrapper method.
+   *
+   * @var array
+   */
+  protected $myImports = [];
+
+  /**
    * @var string Buffer for generated code.
    */
   private $myCode = '';
@@ -44,8 +51,8 @@ abstract class Wrapper
   /**
    * Object constructor.
    *
-   * @param bool $theLobAsStringFlag  If set BLOBs and CLOBs are treated as string. Otherwise, BLOBs and CLOBs will be
-   *                                  send as long data.
+   * @param bool $theLobAsStringFlag If set BLOBs and CLOBs are treated as string. Otherwise, BLOBs and CLOBs will be
+   *                                 send as long data.
    */
   public function __construct( $theLobAsStringFlag )
   {
@@ -56,9 +63,9 @@ abstract class Wrapper
   /**
    * A factory for creating the appropriate object for generating a wrapper method for a stored routine.
    *
-   * @param array $theRoutine          The metadata of the stored routine.
-   * @param bool  $theLobAsStringFlag  If set BLOBs and CLOBs are treated as string. Otherwise, BLOBs and CLOBs will be
-   *                                   send as long data.
+   * @param array $theRoutine         The metadata of the stored routine.
+   * @param bool  $theLobAsStringFlag If set BLOBs and CLOBs are treated as string. Otherwise, BLOBs and CLOBs will be
+   *                                  send as long data.
    *
    * @return Wrapper
    */
@@ -124,6 +131,17 @@ abstract class Wrapper
     }
 
     return $wrapper;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns an array with fully qualified names that must be imported in the stored routine wrapper class.
+   *
+   * @return array
+   */
+  public function getImports()
+  {
+    return $this->myImports;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -202,7 +220,6 @@ abstract class Wrapper
    */
   public function writeRoutineFunction( $theRoutine )
   {
-
     if (!$this->myLobAsStringFlag && $this->isBlobParameter( $theRoutine['parameters'] ))
     {
       return $this->writeRoutineFunctionWithLob( $theRoutine );
@@ -381,6 +398,17 @@ abstract class Wrapper
     }
 
     return $ret;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns the exception that can be thrown by this method.
+   *
+   * @return array;
+   */
+  protected function getDocBlockExceptions()
+  {
+    return ['\Exception'];
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -650,6 +678,17 @@ abstract class Wrapper
     {
       $this->writeLine( ' *' );
       $this->writeLine( ' * @return '.$return );
+    }
+
+    // Generate exceptions doc.
+    $exceptions = $this->getDocBlockExceptions();
+    if ($exceptions)
+    {
+      $exceptions = array_unique($exceptions);
+      foreach($exceptions as $exception)
+      {
+        $this->writeLine( ' * @throws  '.$exception );
+      }
     }
 
     $this->writeLine( ' */' );

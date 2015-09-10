@@ -24,7 +24,7 @@ class Singleton1Test extends DataLayerTestCase
   /**
    * An exception must be thrown when a stored routine with designation type singleton1 returns 0 values.
    *
-   * @expectedException Exception
+   * @expectedException SetBased\Stratum\Exception\RowCountException
    */
   public function test2()
   {
@@ -35,7 +35,7 @@ class Singleton1Test extends DataLayerTestCase
   /**
    * An exception must be thrown when a stored routine with designation type singleton1 returns more than 1 values.
    *
-   * @expectedException Exception
+   * @expectedException SetBased\Stratum\Exception\RowCountException
    */
   public function test3()
   {

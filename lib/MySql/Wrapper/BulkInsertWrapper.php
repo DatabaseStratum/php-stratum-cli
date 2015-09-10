@@ -164,7 +164,7 @@ class BulkInsertWrapper extends Wrapper
       case 'blob':
       case 'mediumblob':
       case 'longblob':
-        Affirm::assertFailed( "LOBs are not supported in temporary tables" );
+        Affirm::assertFailed( "LOBs are not possible in temporary tables" );
         break;
 
       default:

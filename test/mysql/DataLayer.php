@@ -1,5 +1,8 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
+use \SetBased\Stratum\Exception\RowCountException;
+
+//----------------------------------------------------------------------------------------------------------------------
 class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
 {
   //-------------------------------------------------------------------------------------------------------------------
@@ -7,6 +10,8 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
    * Test for magic constant.
    *
    * @return string
+   * @throws  \Exception
+   * @throws  RowCountException
    */
   public static function magicConstant01(  )
   {
@@ -18,6 +23,8 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
    * Test for magic constant.
    *
    * @return string
+   * @throws  \Exception
+   * @throws  RowCountException
    */
   public static function magicConstant02(  )
   {
@@ -29,6 +36,8 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
    * Test for magic constant.
    *
    * @return string
+   * @throws  \Exception
+   * @throws  RowCountException
    */
   public static function magicConstant03(  )
   {
@@ -40,6 +49,8 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
    * Test for magic constant.
    *
    * @return string
+   * @throws  \Exception
+   * @throws  RowCountException
    */
   public static function magicConstant04(  )
   {
@@ -92,6 +103,7 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
    *                          set('a','b') character set latin1 collation latin1_swedish_ci
    *
    * @return int
+   * @throws  \Exception
    */
   public static function test01( $p_param00, $p_param01, $p_param02, $p_param03, $p_param04, $p_param05, $p_param06, $p_param07, $p_param08, $p_param09, $p_param10, $p_param11, $p_param12, $p_param13, $p_param14, $p_param15, $p_param16, $p_param17, $p_param26, $p_param27 )
   {
@@ -160,6 +172,7 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
    *                          set('a','b') character set latin1 collation latin1_swedish_ci
    *
    * @return int
+   * @throws  \Exception
    */
   public static function test02( $p_param00, $p_param01, $p_param02, $p_param03, $p_param04, $p_param05, $p_param06, $p_param07, $p_param08, $p_param09, $p_param10, $p_param11, $p_param12, $p_param13, $p_param14, $p_param15, $p_param16, $p_param17, $p_param18, $p_param19, $p_param20, $p_param21, $p_param22, $p_param23, $p_param24, $p_param25, $p_param26, $p_param27 )
   {
@@ -261,6 +274,7 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
    * Test for designation bulk_insert.
    *
    * @param array $theData
+   * @throws  \Exception
    */
   public static function testBulkInsert01( $theData )
   {
@@ -284,6 +298,7 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
    * Test for designation bulk_insert.
    *
    * @param array $theData
+   * @throws  \Exception
    */
   public static function testBulkInsert02( $theData )
   {
@@ -312,6 +327,7 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
    *                 int(11)
    *
    * @return string
+   * @throws  \Exception
    */
   public static function testFunction( $p_a, $p_b )
   {
@@ -325,6 +341,7 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
    *                            varchar(255) character set latin1 collation latin1_swedish_ci
    *
    * @return array[]
+   * @throws  \Exception
    */
   public static function testListOfInt( $p_ids )
   {
@@ -342,6 +359,7 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
    * Test for designation type log.
    *
    * @return int
+   * @throws  \Exception
    */
   public static function testLog(  )
   {
@@ -356,6 +374,8 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
    *                           longblob
    *
    * @return string
+   * @throws  \Exception
+   * @throws  RowCountException
    */
   public static function testMaxAllowedPacket( $p_tmp_blob )
   {
@@ -399,7 +419,7 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
     if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     if ($b===false) self::sqlError( 'mysqli_stmt::fetch' );
-    if (count($tmp)!=1) self::assertFailed( 'Expected 1 row found %d rows.', count($tmp) );
+    if (count($tmp)!=1) throw new RowCountException( '1', count($tmp), $query );
 
     return $tmp[0][0];
   }
@@ -412,6 +432,7 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
    *                     bigint(20)
    *
    * @return int
+   * @throws  \Exception
    */
   public static function testNone( $p_count )
   {
@@ -428,6 +449,7 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
    *                        blob
    *
    * @return int
+   * @throws  \Exception
    */
   public static function testNoneWithLob( $p_count, $p_blob )
   {
@@ -472,6 +494,8 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
    *                     int(11)
    *
    * @return array
+   * @throws  \Exception
+   * @throws  RowCountException
    */
   public static function testRow0a( $p_count )
   {
@@ -491,6 +515,8 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
    *                        blob
    *
    * @return array
+   * @throws  \Exception
+   * @throws  RowCountException
    */
   public static function testRow0aWithLob( $p_count, $p_blob )
   {
@@ -534,7 +560,7 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
     if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     if ($b===false) self::sqlError( 'mysqli_stmt::fetch' );
-    if (count($tmp)>1) self::assertFailed( 'Expected 0 or 1 row found %d rows.', count($tmp) );
+    if (count($tmp)>1) throw new RowCountException( '0 or 1', count($tmp), $query );
 
     return ($tmp) ? $tmp[0] : null;
   }
@@ -550,6 +576,8 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
    *                     int(11)
    *
    * @return array
+   * @throws  \Exception
+   * @throws  RowCountException
    */
   public static function testRow1a( $p_count )
   {
@@ -569,6 +597,8 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
    *                        blob
    *
    * @return array
+   * @throws  \Exception
+   * @throws  RowCountException
    */
   public static function testRow1aWithLob( $p_count, $p_blob )
   {
@@ -612,7 +642,7 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
     if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     if ($b===false) self::sqlError( 'mysqli_stmt::fetch' );
-    if (count($tmp)!=1) self::assertFailed( 'Expected 1 row found %d rows.', count($tmp) );
+    if (count($tmp)!=1) throw new RowCountException( '1', count($tmp), $query );
 
     return $row;
   }
@@ -628,6 +658,7 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
    *                     int(11)
    *
    * @return array[]
+   * @throws  \Exception
    */
   public static function testRows1( $p_count )
   {
@@ -644,6 +675,7 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
    *                        blob
    *
    * @return array[]
+   * @throws  \Exception
    */
   public static function testRows1WithLob( $p_count, $p_blob )
   {
@@ -699,6 +731,7 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
    *                     int(11)
    *
    * @return array[]
+   * @throws  \Exception
    */
   public static function testRowsWithIndex1( $p_count )
   {
@@ -722,6 +755,7 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
    *                        blob
    *
    * @return array[]
+   * @throws  \Exception
    */
   public static function testRowsWithIndex1WithLob( $p_count, $p_blob )
   {
@@ -777,6 +811,7 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
    *                     int(11)
    *
    * @return array[]
+   * @throws  \Exception
    */
   public static function testRowsWithKey1( $p_count )
   {
@@ -799,6 +834,7 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
    *                        blob
    *
    * @return array[]
+   * @throws  \Exception
    */
   public static function testRowsWithKey1WithLob( $p_count, $p_blob )
   {
@@ -857,6 +893,8 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
    *                     int(11)
    *
    * @return string
+   * @throws  \Exception
+   * @throws  RowCountException
    */
   public static function testSingleton0a( $p_count )
   {
@@ -877,6 +915,8 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
    *                        blob
    *
    * @return string
+   * @throws  \Exception
+   * @throws  RowCountException
    */
   public static function testSingleton0aWithLob( $p_count, $p_blob )
   {
@@ -920,7 +960,7 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
     if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     if ($b===false) self::sqlError( 'mysqli_stmt::fetch' );
-    if (count($tmp)>1) self::assertFailed( 'Expected 0 or 1 row found %d rows.', count($tmp) );
+    if (count($tmp)>1) throw new RowCountException( '0 or 1', count($tmp), $query );
 
     return ($tmp) ? $tmp[0][0] : null;
   }
@@ -936,6 +976,8 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
    *                     int(11)
    *
    * @return string
+   * @throws  \Exception
+   * @throws  RowCountException
    */
   public static function testSingleton1a( $p_count )
   {
@@ -955,6 +997,8 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
    *                        blob
    *
    * @return string
+   * @throws  \Exception
+   * @throws  RowCountException
    */
   public static function testSingleton1aWithLob( $p_count, $p_blob )
   {
@@ -998,7 +1042,7 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
     if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     if ($b===false) self::sqlError( 'mysqli_stmt::fetch' );
-    if (count($tmp)!=1) self::assertFailed( 'Expected 1 row found %d rows.', count($tmp) );
+    if (count($tmp)!=1) throw new RowCountException( '1', count($tmp), $query );
 
     return $tmp[0][0];
   }
@@ -1008,6 +1052,7 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
    * Test for designation type table.
    *
    * @return int
+   * @throws  \Exception
    */
   public static function testTable(  )
   {
@@ -1019,6 +1064,8 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
    * Test for magic constant.
    *
    * @return string
+   * @throws  \Exception
+   * @throws  RowCountException
    */
   public static function magicConstant05(  )
   {

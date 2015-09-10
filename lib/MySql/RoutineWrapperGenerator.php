@@ -29,6 +29,13 @@ class RoutineWrapperGenerator
   private $myCode = '';
 
   /**
+   * Array with fully qualified names that must be imported.
+   *
+   * @var array
+   */
+  private $myImports = [];
+
+  /**
    * If true BLOBs and CLOBs must be treated as strings.
    *
    * @var bool
@@ -78,9 +85,6 @@ class RoutineWrapperGenerator
 
     $routines = $this->readRoutineMetadata();
 
-    // Write the header of the wrapper class.
-    $this->writeClassHeader();
-
     if (is_array( $routines ))
     {
       // Write methods for each stored routine.
@@ -98,10 +102,19 @@ class RoutineWrapperGenerator
       echo "No files with stored routines found.\n";
     }
 
+    $methods      = $this->myCode;
+    $this->myCode = '';
+
+    // Write the header of the wrapper class.
+    $this->writeClassHeader();
+
+    // Write methods of the wrapper calls.
+    $this->myCode .= $methods;
+
     // Write the trailer of the wrapper class.
     $this->writeClassTrailer();
 
-    // Write the wrapper class tot the filesystem.
+    // Write the wrapper class to the filesystem.
     Util::writeTwoPhases( $this->myWrapperFilename, $this->myCode );
 
     return 0;
@@ -165,14 +178,29 @@ class RoutineWrapperGenerator
       $class_name = $this->myWrapperClassName;
     }
 
+    // Write PHP tag.
     $this->myCode .= "<?php\n";
-    $this->myCode .= '//'.str_repeat( '-', Wrapper::C_PAGE_WIDTH - 2 )."\n";
     if ($namespace)
     {
+      $this->myCode .= '//'.str_repeat( '-', Wrapper::C_PAGE_WIDTH - 2 )."\n";
       $this->myCode .= "namespace ${namespace};\n";
       $this->myCode .= "\n";
-      $this->myCode .= '//'.str_repeat( '-', Wrapper::C_PAGE_WIDTH - 2 )."\n";
     }
+
+    // Write use statements.
+    if ($this->myImports)
+    {
+      $this->myImports = array_unique( $this->myImports, SORT_REGULAR );
+      $this->myCode .= '//'.str_repeat( '-', Wrapper::C_PAGE_WIDTH - 2 )."\n";
+      foreach ($this->myImports as $import)
+      {
+        $this->myCode .= 'use '.$import.";\n";
+      }
+      $this->myCode .= "\n";
+    }
+
+    // Write class name.
+    $this->myCode .= '//'.str_repeat( '-', Wrapper::C_PAGE_WIDTH - 2 )."\n";
     $this->myCode .= 'class '.$class_name.' extends '.$this->myParentClassName."\n";
     $this->myCode .= "{\n";
   }
@@ -199,6 +227,8 @@ class RoutineWrapperGenerator
   {
     $wrapper = Wrapper::createRoutineWrapper( $theRoutine, $this->myLobAsStringFlag );
     $this->myCode .= $wrapper->writeRoutineFunction( $theRoutine );
+
+    $this->myImports = array_merge( $this->myImports, $wrapper->getImports() );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
