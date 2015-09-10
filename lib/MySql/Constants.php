@@ -11,7 +11,7 @@
 namespace SetBased\Stratum\MySql;
 
 use SetBased\Affirm\Affirm;
-use SetBased\Stratum\MySql\Wrapper\StaticDataLayer as DataLayer;
+use SetBased\Stratum\MySql\StaticDataLayer as DataLayer;
 use SetBased\Stratum\Util;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ class Constants
    *
    * @var array
    */
-  private $myColumns = array();
+  private $myColumns = [];
 
   /**
    * Name of file that contains all constants.
@@ -50,7 +50,7 @@ class Constants
   /**
    * @var array All constants.
    */
-  private $myConstants = array();
+  private $myConstants = [];
 
   /**
    * Filename with column names, their widths, and constant names.
@@ -64,7 +64,7 @@ class Constants
    *
    * @var array
    */
-  private $myLabels = array();
+  private $myLabels = [];
 
   /**
    * The previous column names, widths, and constant names (i.e. the content of $myConstantsFilename upon starting
@@ -72,7 +72,7 @@ class Constants
    *
    * @var array
    */
-  private $myOldColumns = array();
+  private $myOldColumns = [];
 
   /**
    * The prefix used for designations a unknown constants.
@@ -387,10 +387,10 @@ where   nullif(`%s`,'') is not null";
               $table_name = $schema_name.'.'.$table_name;
             }
 
-            $this->myOldColumns[$table_name][$column_name] = array('table_name'    => $table_name,
-                                                                   'column_name'   => $column_name,
-                                                                   'length'        => $length,
-                                                                   'constant_name' => $constant_name);
+            $this->myOldColumns[$table_name][$column_name] = ['table_name'    => $table_name,
+                                                              'column_name'   => $column_name,
+                                                              'length'        => $length,
+                                                              'constant_name' => $constant_name];
           }
         }
       }

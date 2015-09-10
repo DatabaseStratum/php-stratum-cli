@@ -11,6 +11,7 @@
 namespace SetBased\Stratum\MySql;
 
 use SetBased\Affirm\Affirm;
+use SetBased\Stratum\BulkHandler;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
@@ -87,24 +88,6 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Throws an exception with error information provided by MySQL.
-   *
-   * @param string $theText Additional text for the exception message.
-   *
-   * @throws \Exception
-   */
-  protected static function sqlError( $theText )
-  {
-    $message = "MySQL Error no: ".self::$ourMySql->errno."\n";
-    $message .= self::$ourMySql->error;
-    $message .= "\n";
-    $message .= $theText."\n";
-
-    throw new \Exception( $message );
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
    * @param \mysqli_stmt $stmt
    * @param array        $out
    */
@@ -113,8 +96,8 @@ class StaticDataLayer
     $data = $stmt->result_metadata();
     if (!$data) self::sqlError( 'mysqli_stmt::result_metadata' );
 
-    $fields = array();
-    $out    = array();
+    $fields = [];
+    $out    = [];
 
     $i = 0;
     while ($field = $data->fetch_field())
@@ -123,7 +106,7 @@ class StaticDataLayer
       $i++;
     }
 
-    $b = call_user_func_array( array($stmt, 'bind_result'), $fields );
+    $b = call_user_func_array( [$stmt, 'bind_result'], $fields );
     if ($b===false) self::sqlError( 'mysqli_stmt::bind_result' );
 
     $data->free();
@@ -183,41 +166,6 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Executes a query that does not select any rows.
-   *
-   * @param string $theQuery The SQL statement.
-   *
-   * @return int The number of affected rows (if any).
-   */
-  public static function executeNone( $theQuery )
-  {
-    self::query( $theQuery );
-
-    $n = self::$ourMySql->affected_rows;
-
-    if (self::$ourMySql->more_results()) self::$ourMySql->next_result();
-
-    return $n;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Wrapper around mysqli::query, however on failure an exception is thrown.
-   *
-   * @param string $theQuery The SQL statement.
-   *
-   * @return \mysqli_result
-   */
-  public static function query( $theQuery )
-  {
-    $ret = self::$ourMySql->query( $theQuery );
-    if ($ret===false) self::sqlError( $theQuery );
-
-    return $ret;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
    * Closes the connection to the MySQL instance, if connected.
    */
   public static function disconnect()
@@ -243,7 +191,7 @@ class StaticDataLayer
     $theBulkHandler->start();
 
     $result = self::$ourMySql->use_result();
-    while ($row = $result->fetch_array( MYSQL_ASSOC ))
+    while ($row = $result->fetch_assoc())
     {
       $theBulkHandler->row( $row );
     }
@@ -256,14 +204,68 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Wrapper around mysqli::query, however on failure an exception is thrown.
+   * Executes a query and logs the result set.
+   *
+   * @param string $theQuery The query or multi query.
+   *
+   * @return int The total number of rows selected/logged.
+   */
+  public static function executeLog( $theQuery )
+  {
+    // Counter for the number of rows written/logged.
+    $n = 0;
+
+    $ret = self::$ourMySql->multi_query( $theQuery );
+    if (!$ret) self::sqlError( $theQuery );
+    do
+    {
+      $result = self::$ourMySql->store_result();
+      if (self::$ourMySql->errno) self::sqlError( 'mysqli::store_result' );
+      if ($result)
+      {
+        $fields = $result->fetch_fields();
+        while ($row = $result->fetch_row())
+        {
+          $line = '';
+          foreach ($row as $i => $field)
+          {
+            if ($i>0) $line .= ' ';
+            $line .= str_pad( $field, $fields[$i]->max_length );
+          }
+          echo date( 'Y-m-d H:i:s' ), ' ', $line, "\n";
+          $n++;
+        }
+        $result->free();
+      }
+
+      $continue = self::$ourMySql->more_results();
+      if ($continue)
+      {
+        $tmp = self::$ourMySql->next_result();
+        if ($tmp===false) self::sqlError( 'mysqli::next_result' );
+      }
+    } while ($continue);
+
+    return $n;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Executes a query that does not select any rows.
    *
    * @param string $theQuery The SQL statement.
+   *
+   * @return int The number of affected rows (if any).
    */
-  public static function realQuery( $theQuery )
+  public static function executeNone( $theQuery )
   {
-    $tmp = self::$ourMySql->real_query( $theQuery );
-    if ($tmp===false) self::sqlError( $theQuery );
+    self::query( $theQuery );
+
+    $n = self::$ourMySql->affected_rows;
+
+    if (self::$ourMySql->more_results()) self::$ourMySql->next_result();
+
+    return $n;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -278,7 +280,7 @@ class StaticDataLayer
   public static function executeRow0( $theQuery )
   {
     $result = self::query( $theQuery );
-    $row    = $result->fetch_array( MYSQLI_ASSOC );
+    $row    = $result->fetch_assoc();
     $n      = $result->num_rows;
     $result->free();
 
@@ -286,9 +288,7 @@ class StaticDataLayer
 
     if (!($n==0 || $n==1))
     {
-      self::assertFailed( "Number of rows selected by query below is %d expected 0 or 1.\n%s",
-                          $n,
-                          $theQuery );
+      self::assertFailed( "Number of rows selected by query below is %d expected 0 or 1.\n%s", $n, $theQuery );
     }
 
     return $row;
@@ -296,15 +296,28 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Throws an exception.
+   * Executes a query that returns 1 and only 1 row.
+   * Throws an exception if the query selects none, 2 or more rows.
+   *
+   * @param string $theQuery The SQL statement.
+   *
+   * @return array The selected row.
    */
-  protected static function assertFailed()
+  public static function executeRow1( $theQuery )
   {
-    $args    = func_get_args();
-    $format  = array_shift( $args );
-    $message = vsprintf( $format, $args );
+    $result = self::query( $theQuery );
+    $row    = $result->fetch_assoc();
+    $n      = $result->num_rows;
+    $result->free();
 
-    throw new \Exception( $message );
+    if (self::$ourMySql->more_results()) self::$ourMySql->next_result();
+
+    if ($n!=1)
+    {
+      self::assertFailed( "Number of rows selected by query below is %d expected 1.\n%s", $n, $theQuery );
+    }
+
+    return $row;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -324,8 +337,8 @@ class StaticDataLayer
     }
     else
     {
-      $ret = array();
-      while ($row = $result->fetch_array( MYSQLI_ASSOC ))
+      $ret = [];
+      while ($row = $result->fetch_assoc())
       {
         $ret[] = $row;
       }
@@ -349,7 +362,7 @@ class StaticDataLayer
   public static function executeSingleton0( $theQuery )
   {
     $result = self::query( $theQuery );
-    $row    = $result->fetch_array( MYSQL_NUM );
+    $row    = $result->fetch_array(MYSQLI_NUM);
     $n      = $result->num_rows;
     $result->free();
 
@@ -377,7 +390,7 @@ class StaticDataLayer
   public static function executeSingleton1( $theQuery )
   {
     $result = self::query( $theQuery );
-    $row    = $result->fetch_array( MYSQL_NUM );
+    $row    = $result->fetch_array(MYSQLI_NUM);
     $n      = $result->num_rows;
     $result->free();
 
@@ -385,9 +398,7 @@ class StaticDataLayer
 
     if ($n!=1)
     {
-      self::assertFailed( "Number of rows selected by query below is %d expected 1.\n%s",
-                          $n,
-                          $theQuery );
+      self::assertFailed( "Number of rows selected by query below is %d expected 1.\n%s", $n, $theQuery );
     }
 
     return $row[0];
@@ -415,7 +426,7 @@ class StaticDataLayer
       if (self::$ourMySql->errno) self::sqlError( 'mysqli::store_result' );
       if ($result)
       {
-        $columns = array();
+        $columns = [];
 
         // Get metadata to array.
         foreach ($result->fetch_fields() as $str_num => $column)
@@ -458,6 +469,274 @@ class StaticDataLayer
     } while ($continue);
 
     return $row_count;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns the value of the MySQL variable max_allowed_packet.
+   *
+   * @return int
+   */
+  public static function getMaxAllowedPacket()
+  {
+    if (!isset(self::$ourMaxAllowedPacket))
+    {
+      $query              = "show variables like 'max_allowed_packet'";
+      $max_allowed_packet = self::executeRow1( $query );
+
+      self::$ourMaxAllowedPacket = $max_allowed_packet['Value'];
+
+      // Note: When setting $ourChunkSize equal to $ourMaxAllowedPacket it is not possible to transmit a LOB
+      // with size $ourMaxAllowedPacket bytes (but only $ourMaxAllowedPacket - 8 bytes). But when setting the size of
+      // $ourChunkSize less than $ourMaxAllowedPacket than it is possible to transmit a LOB with size
+      // $ourMaxAllowedPacket bytes.
+      self::$ourChunkSize = min( self::$ourMaxAllowedPacket - 8, 1024 * 1024 );
+    }
+
+    return self::$ourMaxAllowedPacket;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Wrapper around mysqli::query, however on failure an exception is thrown.
+   *
+   * @param string $theQuery The SQL statement.
+   *
+   * @return \mysqli_result
+   */
+  public static function query( $theQuery )
+  {
+    $ret = self::$ourMySql->query( $theQuery );
+    if ($ret===false) self::sqlError( $theQuery );
+
+    return $ret;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns a literal for a bit field that can be safely used in SQL statements.
+   *
+   * @param string $theBits The bit field.
+   *
+   * @return string
+   */
+  public static function quoteBit( $theBits )
+  {
+    if ($theBits===null || $theBits===false || $theBits==='')
+    {
+      return 'NULL';
+    }
+    else
+    {
+      return "b'".self::$ourMySql->real_escape_string( $theBits )."'";
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  public static function quoteListOfInt( $theList, $theDelimiter, $theEnclosure, $tehEscape )
+  {
+    if ($theList===null || $theList===false || $theList==='' || $theList===[])
+    {
+      return 'NULL';
+    }
+    else
+    {
+      $ret  = '';
+      $list = [];
+      if (is_scalar( $theList ))
+      {
+        $list = str_getcsv( $theList, $theDelimiter, $theEnclosure, $tehEscape );
+      }
+      elseif (is_array( $theList ))
+      {
+        $list = $theList;
+      }
+      else
+      {
+        Affirm::assertFailed( "Unexpected parameter type '%s'. Array or scalar expected.", gettype( $theList ) );
+      }
+
+      foreach ($list as $number)
+      {
+        if ($theList===null || $theList===false || $theList==='')
+        {
+          self::assertFailed( "Empty values are not allowed." );
+        }
+        if (!is_numeric( $number ))
+        {
+          self::assertFailed( "Value '%s' is not a number.", $number );
+        }
+
+        if ($ret) $ret .= ',';
+        $ret .= $number;
+      }
+
+      return self::quoteString( $ret );
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns a literal for a numerical field that can be safely used in SQL statements.
+   * Throws an exception if the value is not numeric.
+   *
+   * @param string $theValue The number.
+   *
+   * @return string
+   */
+  public static function quoteNum( $theValue )
+  {
+    if (is_numeric( $theValue )) return $theValue;
+    if ($theValue===null || $theValue==='' || $theValue===false) return 'NULL';
+    if ($theValue===true) return 1;
+
+    self::assertFailed( "Value '%s' is not a number.", $theValue );
+    // Not reached.
+
+    // Keep our IDE happy.
+    return 0;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns a literal for a string field that can be safely used in SQL statements.
+   *
+   * @param string $theString The string.
+   *
+   * @return string
+   */
+  public static function quoteString( $theString )
+  {
+    if ($theString===null || $theString===false || $theString==='')
+    {
+      return 'NULL';
+    }
+    else
+    {
+      return "'".self::$ourMySql->real_escape_string( $theString )."'";
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Escapes special characters in a string such that it can be safely used in SQL statements.
+   *
+   * @param string $theString The string.
+   *
+   * @return string
+   */
+  public static function realEscapeString( $theString )
+  {
+    return self::$ourMySql->real_escape_string( $theString );
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Wrapper around mysqli::query, however on failure an exception is thrown.
+   *
+   * @param string $theQuery The SQL statement.
+   */
+  public static function realQuery( $theQuery )
+  {
+    $tmp = self::$ourMySql->real_query( $theQuery );
+    if ($tmp===false) self::sqlError( $theQuery );
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Rollbacks the current transaction (and starts a new transaction).
+   * Wrapper around mysqli::rollback, however on failure an exception is thrown.
+   */
+  public static function rollback()
+  {
+    $ret = self::$ourMySql->rollback();
+    if (!$ret) self::sqlError( 'mysqli::rollback' );
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns the key of the first row in a row set for which a column has a specific value. Returns null if no row is
+   * found.
+   *
+   * @param string  $theColumnName The column name (or in PHP terms the key in an row (i.e. array) in the row set).
+   * @param string  $theValue      The value to be found.
+   * @param array[] $theRowSet     The row set.
+   *
+   * @return int|null|string
+   */
+  public static function searchInRowSet( $theColumnName, $theValue, $theRowSet )
+  {
+    if (is_array( $theRowSet ))
+    {
+      foreach ($theRowSet as $key => $row)
+      {
+        if ($row[$theColumnName]===$theValue)
+        {
+          return $key;
+        }
+      }
+    }
+
+    return null;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Logs the warnings of the last executed SQL statement.
+   * Wrapper around the SQL statement 'show warnings'.
+   */
+  public static function showWarnings()
+  {
+    self::executeLog( 'show warnings' );
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Throws an exception.
+   */
+  protected static function assertFailed()
+  {
+    $args    = func_get_args();
+    $format  = array_shift( $args );
+    $message = vsprintf( $format, $args );
+
+    throw new \Exception( $message );
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Throws an exception with error information provided by MySQL.
+   *
+   * @param string $theText Additional text for the exception message.
+   *
+   * @throws \Exception
+   */
+  protected static function sqlError( $theText )
+  {
+    $message = "MySQL Error no: ".self::$ourMySql->errno."\n";
+    $message .= self::$ourMySql->error;
+    $message .= "\n";
+    $message .= $theText."\n";
+
+    throw new \Exception( $message );
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Helper method for method executeTable.
+   * Shows table footer.
+   *
+   * @param array $theColumns
+   */
+  private static function executeTableShowFooter( $theColumns )
+  {
+    $separator = '+';
+
+    foreach ($theColumns as $column)
+    {
+      $separator .= str_repeat( '-', $column['length'] + 2 )."+";
+    }
+    echo $separator, "\n";
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -537,290 +816,6 @@ class StaticDataLayer
       default:
         self::assertFailed( "Unknown data type id '%s'.", $theColumn['type'] );
     }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Helper method for method executeTable.
-   * Shows table footer.
-   *
-   * @param array $theColumns
-   */
-  private static function executeTableShowFooter( $theColumns )
-  {
-    $separator = '+';
-
-    foreach ($theColumns as $column)
-    {
-      $separator .= str_repeat( '-', $column['length'] + 2 )."+";
-    }
-    echo $separator, "\n";
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns the value of the MySQL variable max_allowed_packet.
-   *
-   * @return int
-   */
-  public static function getMaxAllowedPacket()
-  {
-    if (!isset(self::$ourMaxAllowedPacket))
-    {
-      $query              = "show variables like 'max_allowed_packet'";
-      $max_allowed_packet = self::executeRow1( $query );
-
-      self::$ourMaxAllowedPacket = $max_allowed_packet['Value'];
-
-      // Note: When setting $ourChunkSize equal to $ourMaxAllowedPacket it is not possible to transmit a LOB
-      // with size $ourMaxAllowedPacket bytes (but only $ourMaxAllowedPacket - 8 bytes). But when setting the size of
-      // $ourChunkSize less than $ourMaxAllowedPacket than it is possible to transmit a LOB with size
-      // $ourMaxAllowedPacket bytes.
-      self::$ourChunkSize = min( self::$ourMaxAllowedPacket - 8, 1024 * 1024 );
-    }
-
-    return self::$ourMaxAllowedPacket;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Executes a query that returns 1 and only 1 row.
-   * Throws an exception if the query selects none, 2 or more rows.
-   *
-   * @param string $theQuery The SQL statement.
-   *
-   * @return array The selected row.
-   */
-  public static function executeRow1( $theQuery )
-  {
-    $result = self::query( $theQuery );
-    $row    = $result->fetch_array( MYSQLI_ASSOC );
-    $n      = $result->num_rows;
-    $result->free();
-
-    if (self::$ourMySql->more_results()) self::$ourMySql->next_result();
-
-    if ($n!=1)
-    {
-      self::assertFailed( "Number of rows selected by query below is %d expected 1.\n%s",
-                          $n,
-                          $theQuery );
-    }
-
-    return $row;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns a literal for a bit field that can be safely used in SQL statements.
-   *
-   * @param string $theBits The bit field.
-   *
-   * @return string
-   */
-  public static function quoteBit( $theBits )
-  {
-    if ($theBits===null || $theBits===false || $theBits==='')
-    {
-      return 'NULL';
-    }
-    else
-    {
-      return "b'".self::$ourMySql->real_escape_string( $theBits )."'";
-    }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns a literal for a numerical field that can be safely used in SQL statements.
-   * Throws an exception if the value is not numeric.
-   *
-   * @param string $theValue The number.
-   *
-   * @return string
-   */
-  public static function quoteNum( $theValue )
-  {
-    if (is_numeric( $theValue )) return $theValue;
-    if ($theValue===null || $theValue==='' || $theValue===false) return 'NULL';
-    if ($theValue===true) return 1;
-
-    self::assertFailed( "Value '%s' is not a number.", $theValue );
-    // Not reached.
-
-    // Keep our IDE happy.
-    return 0;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns a literal for a string field that can be safely used in SQL statements.
-   *
-   * @param string $theString The string.
-   *
-   * @return string
-   */
-  public static function quoteString( $theString )
-  {
-    if ($theString===null || $theString===false || $theString==='')
-    {
-      return 'NULL';
-    }
-    else
-    {
-      return "'".self::$ourMySql->real_escape_string( $theString )."'";
-    }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  public static function quoteListOfInt( $theList, $theDelimiter, $theEnclosure, $tehEscape )
-  {
-    if ($theList===null || $theList===false || $theList==='' || $theList===array())
-    {
-      return 'NULL';
-    }
-    else
-    {
-      $ret  = '';
-      $list = array();
-      if (is_scalar( $theList ))
-      {
-        $list = str_getcsv( $theList, $theDelimiter, $theEnclosure, $tehEscape );
-      }
-      elseif (is_array( $theList ))
-      {
-        $list = $theList;
-      }
-      else
-      {
-        Affirm::assertFailed( "Unexpected parameter type '%s'. Array or scalor expected.", gettype( $theList ) );
-      }
-
-      foreach ($list as $number)
-      {
-        if ($theList===null || $theList===false || $theList==='')
-        {
-          self::assertFailed( "Empty values are not allowed.");
-        }
-        if (!is_numeric( $number ))
-        {
-          self::assertFailed( "Value '%s' is not a number.", $number );
-        }
-
-        if ($ret) $ret .= ',';
-        $ret .= $number;
-      }
-
-      return self::quoteString( $ret );
-    }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Escapes special characters in a string such that it can be safely used in SQL statements.
-   *
-   * @param string $theString The string.
-   *
-   * @return string
-   */
-  public static function realEscapeString( $theString )
-  {
-    return self::$ourMySql->real_escape_string( $theString );
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Rollbacks the current transaction (and starts a new transaction).
-   * Wrapper around mysqli::rollback, however on failure an exception is thrown.
-   */
-  public static function rollback()
-  {
-    $ret = self::$ourMySql->rollback();
-    if (!$ret) self::sqlError( 'mysqli::rollback' );
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns the key of the first row in a row set for which a column has a specific value. Returns null if no row is
-   * found.
-   *
-   * @param string  $theColumnName The column name (or in PHP terms the key in an row (i.e. array) in the row set).
-   * @param string  $theValue      The value to be found.
-   * @param array[] $theRowSet     The row set.
-   *
-   * @return int|null|string
-   */
-  public static function searchInRowSet( $theColumnName, $theValue, $theRowSet )
-  {
-    if (is_array( $theRowSet ))
-    {
-      foreach ($theRowSet as $key => $row)
-      {
-        if ($row[$theColumnName]===$theValue)
-        {
-          return $key;
-        }
-      }
-    }
-
-    return null;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Logs the warnings of the last executed SQL statement.
-   * Wrapper around the SQL statement 'show warnings'.
-   */
-  public static function showWarnings()
-  {
-    self::executeLog( 'show warnings' );
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Executes a query and logs the result set.
-   *
-   * @param string $theQuery The query or multi query.
-   *
-   * @return int The total number of rows selected/logged.
-   */
-  public static function executeLog( $theQuery )
-  {
-    // Counter for the number of rows written/logged.
-    $n = 0;
-
-    $ret = self::$ourMySql->multi_query( $theQuery );
-    if (!$ret) self::sqlError( $theQuery );
-    do
-    {
-      $result = self::$ourMySql->store_result();
-      if (self::$ourMySql->errno) self::sqlError( 'mysqli::store_result' );
-      if ($result)
-      {
-        $fields = $result->fetch_fields();
-        while ($row = $result->fetch_row())
-        {
-          $line = '';
-          foreach ($row as $i => $field)
-          {
-            if ($i>0) $line .= ' ';
-            $line .= str_pad( $field, $fields[$i]->max_length );
-          }
-          echo date( 'Y-m-d H:i:s' ), ' ', $line, "\n";
-          $n++;
-        }
-        $result->free();
-      }
-
-      $continue = self::$ourMySql->more_results();
-      if ($continue)
-      {
-        $tmp = self::$ourMySql->next_result();
-        if ($tmp===false) self::sqlError( 'mysqli::next_result' );
-      }
-    } while ($continue);
-
-    return $n;
   }
 
   //--------------------------------------------------------------------------------------------------------------------

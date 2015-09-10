@@ -2,7 +2,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\MySql;
 
-use SetBased\Stratum\MySql\Wrapper\StaticDataLayer as DataLayer;
+use SetBased\Stratum\MySql\StaticDataLayer as DataLayer;
 use SetBased\Stratum\Util;
 
 //----------------------------------------------------------------------------------------------------------------------
