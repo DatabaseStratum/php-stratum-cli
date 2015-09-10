@@ -27,6 +27,7 @@ class Singleton1Wrapper extends Wrapper
     parent::__construct( $theLobAsStringFlag );
 
     $this->myExceptions[] = 'RowCountException';
+    $this->myImports[]    = '\SetBased\Stratum\Exception\RowCountException';
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -80,9 +81,6 @@ class Singleton1Wrapper extends Wrapper
     $this->writeLine( 'if (count($tmp)!=1) throw new RowCountException( \'1\', count($tmp), $query );' );
     $this->writeLine();
     $this->writeLine( 'return $tmp[0][0];' );
-
-    // For this wrapper method the following fully qualified name must be imported.
-    $this->myImports[] = '\SetBased\Stratum\Exception\RowCountException';
   }
 
   //--------------------------------------------------------------------------------------------------------------------
