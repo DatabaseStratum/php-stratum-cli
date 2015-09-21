@@ -19,7 +19,8 @@
   "autoload": {
     "psr-4": {
       "SetBased\\Stratum\\": "lib/"
-    }
+    },
+    "classmap": ["test/C.php"]
   },
   "config": {
     "bin-dir": "bin"

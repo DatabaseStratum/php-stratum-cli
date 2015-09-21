@@ -22,9 +22,11 @@ class Constants
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * The placeholder in the template file to be replaced with the generated constants.
+   * Name of the class that contains all constants.
+   *
+   * @var string
    */
-  const C_PLACEHOLDER = '/* AUTO_GENERATED_CONSTS */';
+  private $myClassName;
 
   /**
    * All columns in the MySQL schema.
@@ -32,13 +34,6 @@ class Constants
    * @var array
    */
   private $myColumns = [];
-
-  /**
-   * Name of file that contains all constants.
-   *
-   * @var string
-   */
-  private $myConfigFilename;
 
   /**
    * Object for connection to a database instance.
@@ -73,20 +68,6 @@ class Constants
    * @var array
    */
   private $myOldColumns = [];
-
-  /**
-   * The prefix used for designations a unknown constants.
-   *
-   * @var string
-   */
-  private $myPrefix;
-
-  /**
-   * Template filename under which the file is generated with the constants.
-   *
-   * @var string
-   */
-  private $myTemplateConfigFilename;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -135,10 +116,8 @@ class Constants
 
     $settings = parse_ini_file( $theConfigFilename, true );
 
-    $this->myConstantsFilename      = Util::getSetting( $settings, true, 'constants', 'columns' );
-    $this->myPrefix                 = Util::getSetting( $settings, true, 'constants', 'prefix' );
-    $this->myTemplateConfigFilename = Util::getSetting( $settings, true, 'constants', 'config_template' );
-    $this->myConfigFilename         = Util::getSetting( $settings, true, 'constants', 'config' );
+    $this->myConstantsFilename = Util::getSetting( $settings, true, 'constants', 'columns' );
+    $this->myClassName         = Util::getSetting( $settings, true, 'constants', 'class' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -232,7 +211,7 @@ class Constants
 
         if ($column['constant_name']=='*')
         {
-          $constant_name                                                  = strtoupper( $this->myPrefix.$column['column_name'] );
+          $constant_name                                                  = strtoupper( $column['column_name'] );
           $this->myOldColumns[$table_name][$column_name]['constant_name'] = $constant_name;
         }
         else
@@ -242,6 +221,115 @@ class Constants
         }
       }
     }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Searches for 3 lines in the source code of the class for constants. The lines are:
+   * * The first line of the doc block with the annotation '@setbased.stratum.constants'.
+   * * The last line of this doc block.
+   * * The last line of continuous constant declarations directly after the doc block.
+   * If one of these line can not be found the line number will be set to null.
+   *
+   * @param string $theSourceCode The source code of the constant class.
+   *
+   * @return array With the 3 line number as described
+   */
+  private function extractLines( $theSourceCode )
+  {
+    $tokens = token_get_all( $theSourceCode );
+
+    $line1 = null;
+    $line2 = null;
+    $line3 = null;
+
+    // Find annotation @constants
+    $step = 1;
+    foreach ($tokens as $token)
+    {
+      switch ($step)
+      {
+        case 1:
+          // Step 1: Find doc comment with annotation.
+          if (is_array( $token ) && $token[0]==T_DOC_COMMENT)
+          {
+            if (strpos( $token[1], '@setbased.stratum.constants' )!==false)
+            {
+              $line1 = $token[2];
+              $step  = 2;
+            }
+          }
+          break;
+
+        case 2:
+          // Step 2: Find end of doc block.
+          if (is_array( $token ))
+          {
+            if ($token[0]==T_WHITESPACE)
+            {
+              $line2 = $token[2];
+              if (substr_count( $token[1], "\n" )<=1)
+              {
+                // Ignore whitespace.
+              }
+              else
+              {
+                // Whitespace contains new line: end doc block with out constants.
+                $step = 4;
+              }
+            }
+            else
+            {
+              if ($token[0]==T_CONST)
+              {
+                $line3 = $token[2];
+                $step  = 3;
+              }
+              else
+              {
+                $step = 4;
+              }
+            }
+          }
+          break;
+
+        case 3:
+          // Step 4: Find en of constants declarations.
+          if (is_array( $token ))
+          {
+            if ($token[0]==T_WHITESPACE)
+            {
+              if (substr_count( $token[1], "\n" )<=1)
+              {
+                // Ignore whitespace.
+                $line3 = $token[2];
+              }
+              else
+              {
+                // Whitespace contains new line: end of const declarations.
+                $step = 4;
+              }
+            }
+            elseif ($token[0]==T_CONST || $token[2]==$line3)
+            {
+              $line3 = $token[2];
+            }
+            else
+            {
+              $step = 4;
+            }
+          }
+          break;
+
+        case 4:
+          // Leave loop.
+          break;
+      }
+    }
+
+    // @todo get indent based on indent of the doc block.
+
+    return [$line1, $line2, $line3];
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -402,6 +490,28 @@ where   nullif(`%s`,'') is not null";
   }
 
   //--------------------------------------------------------------------------------------------------------------------
+  private function makeConstantStatements()
+  {
+    $width1    = 0;
+    $width2    = 0;
+    $constants = [];
+
+    foreach ($this->myConstants as $constant => $value)
+    {
+      $width1 = max( strlen( $constant ), $width1 );
+      $width2 = max( strlen( $value ), $width2 );
+    }
+
+    $line_format = sprintf( "  const %%-%ds = %%%dd;", $width1, $width2 );
+    foreach ($this->myConstants as $constant => $value)
+    {
+      $constants[] = sprintf( $line_format, $constant, $value );
+    }
+
+    return $constants;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Preserves relevant data in $myOldColumns into $myColumns.
    */
@@ -471,39 +581,34 @@ where   nullif(`%s`,'') is not null";
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Creates a PHP configuration file from the configuration template file. In the configuration template file the
-   * place holder for constants is replaced with the constants definition.
-   *
+   * Insert new and replace old (if any) constant declaration statements in a PHP source file.
    */
   private function writeTargetConfigFile()
   {
-    $content   = file_get_contents( $this->myTemplateConfigFilename );
-    $width1    = 0;
-    $width2    = 0;
-    $constants = '';
+    // Read the source file of the class for holding constants.
+    $reflection = new \ReflectionClass( $this->myClassName );
+    $file_name  = $reflection->getFileName();
+    $source     = file_get_contents( $file_name );
+    if ($source===false) Affirm::assertFailed( "Unable the open source file '%s'.", $file_name );
+    $source_lines = explode( "\n", $source );
 
-    foreach ($this->myConstants as $constant => $value)
-    {
-      $width1 = max( strlen( $constant ), $width1 );
-      $width2 = max( strlen( $value ), $width2 );
-    }
+    // Search for the lines where to insert and replace constant declaration statements.
+    $line_numbers = $this->extractLines( $source );
+    if (!isset($line_numbers[0])) Affirm::assertFailed( "Annotation not found in '%s'.", $file_name );
 
-    $line_format = sprintf( "const %%-%ds = %%%dd; \n", $width1, $width2 );
-    foreach ($this->myConstants as $constant => $value)
-    {
-      $constants .= sprintf( $line_format, $constant, $value );
-    }
+    // Generate the constant declaration statements.
+    $constants = $this->makeConstantStatements();
 
-    $count_match = substr_count( $content, self::C_PLACEHOLDER );
-    if ($count_match!=1)
-    {
-      Affirm::assertFailed( "Error expected 1 placeholder in file '%s', found %d.", $this->myTemplateConfigFilename, $count_match );
-    }
-
-    $content = str_replace( self::C_PLACEHOLDER, $constants, $content );
+    // Insert new and replace old (if any) constant declaration statements.
+    $tmp1 = array_splice( $source_lines,
+                         0,
+                         $line_numbers[1] );
+    $tmp2 = array_splice( $source_lines,
+                          (isset($line_numbers[2])) ? $line_numbers[2] - $line_numbers[1] : 0);
+    $source_lines = array_merge($tmp1, $constants, $tmp2);
 
     // Save the configuration file.
-    Util::writeTwoPhases( $this->myConfigFilename, $content );
+    Util::writeTwoPhases( $file_name, implode( "\n", $source_lines ) );
   }
 
   //--------------------------------------------------------------------------------------------------------------------

@@ -43,6 +43,13 @@ class RoutineLoader
   private $myConnector;
 
   /**
+   * Name of the class that contains all constants.
+   *
+   * @var string
+   */
+  private $myConstantClassName;
+
+  /**
    * An array with source filenames that are not loaded into MySQL.
    *
    * @var array
@@ -105,13 +112,6 @@ class RoutineLoader
    */
   private $mySqlMode;
 
-  /**
-   * The name of the configuration file of the target project.
-   *
-   * @var string
-   */
-  private $myTargetConfigFilename;
-
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Loads stored routines into the current schema.
@@ -155,7 +155,7 @@ class RoutineLoader
     $this->myPhpStratumMetadataFilename = Util::getSetting( $settings, true, 'wrapper', 'metadata' );
     $this->mySourceDirectory            = Util::getSetting( $settings, true, 'loader', 'source_directory' );
     $this->mySourceFileExtension        = Util::getSetting( $settings, true, 'loader', 'extension' );
-    $this->myTargetConfigFilename       = Util::getSetting( $settings, false, 'loader', 'config' );
+    $this->myConstantClassName          = Util::getSetting( $settings, false, 'loader', 'constant_class' );
     $this->mySqlMode                    = Util::getSetting( $settings, true, 'loader', 'sql_mode' );
     $this->myCharacterSet               = Util::getSetting( $settings, true, 'loader', 'character_set' );
     $this->myCollate                    = Util::getSetting( $settings, true, 'loader', 'collate' );
@@ -308,13 +308,11 @@ order by table_schema
   private function getConstants()
   {
     // If myTargetConfigFilename is not set return immediately.
-    if (!isset($this->myTargetConfigFilename)) return;
+    if (!isset($this->myConstantClassName)) return;
 
-    require_once($this->myTargetConfigFilename);
-    $constants    = get_defined_constants( true );
-    $user_defined = (isset($constants['user'])) ? $constants['user'] : [];
+    $reflection = new \ReflectionClass( $this->myConstantClassName );
 
-    foreach ($user_defined as $name => $value)
+    foreach ($reflection->getConstants() as $name => $value)
     {
       if (!is_numeric( $value )) $value = "'$value'";
 
