@@ -26,8 +26,8 @@ class Row1Wrapper extends Wrapper
   {
     parent::__construct( $theLobAsStringFlag );
 
-    $this->myExceptions[] = 'RowCountException';
-    $this->myImports[]    = '\SetBased\Stratum\Exception\RowCountException';
+    $this->myExceptions[] = 'ResultException';
+    $this->myImports[]    = '\SetBased\Stratum\Exception\ResultException';
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -77,8 +77,8 @@ class Row1Wrapper extends Wrapper
    */
   protected function writeRoutineFunctionLobReturnData()
   {
-    $this->writeLine( 'if ($b===false) self::sqlError( \'mysqli_stmt::fetch\' );' );
-    $this->writeLine( 'if (count($tmp)!=1) throw new RowCountException( \'1\', count($tmp), $query );' );
+    $this->writeLine( 'if ($b===false) self::mySqlError( \'mysqli_stmt::fetch\' );' );
+    $this->writeLine( 'if (count($tmp)!=1) throw new ResultException( \'1\', count($tmp), $query );' );
     $this->writeLine();
     $this->writeLine( 'return $row;' );
   }

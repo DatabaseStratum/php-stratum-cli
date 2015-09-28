@@ -64,7 +64,7 @@ abstract class Wrapper
   public function __construct( $theLobAsStringFlag )
   {
     $this->myLobAsStringFlag = $theLobAsStringFlag;
-    $this->myExceptions      = ['\Exception'];
+    $this->myExceptions      = ['\RunTimeException'];
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -274,11 +274,11 @@ abstract class Wrapper
     $this->writeLine( '{' );
     $this->writeLine( '$query = \'CALL '.$theRoutine['routine_name'].'( '.$routine_args.' )\';' );
     $this->writeLine( '$stmt  = self::$ourMySql->prepare( $query );' );
-    $this->writeLine( 'if (!$stmt) self::sqlError( \'mysqli::prepare\' );' );
+    $this->writeLine( 'if (!$stmt) self::mySqlError( \'mysqli::prepare\' );' );
     $this->writeLine();
     $this->writeLine( '$null = null;' );
     $this->writeLine( '$b = $stmt->bind_param( \''.$bindings.'\', '.$nulls.' );' );
-    $this->writeLine( 'if (!$b) self::sqlError( \'mysqli_stmt::bind_param\' );' );
+    $this->writeLine( 'if (!$b) self::mySqlError( \'mysqli_stmt::bind_param\' );' );
     $this->writeLine();
     $this->writeLine( 'self::getMaxAllowedPacket();' );
     $this->writeLine();
@@ -293,7 +293,7 @@ abstract class Wrapper
         $this->writeLine( 'while ($p<$n)' );
         $this->writeLine( '{' );
         $this->writeLine( '$b = $stmt->send_long_data( '.$blob_argument_index.', substr( $'.$parameter_info['name'].', $p, self::$ourChunkSize ) );' );
-        $this->writeLine( 'if (!$b) self::sqlError( \'mysqli_stmt::send_long_data\' );' );
+        $this->writeLine( 'if (!$b) self::mySqlError( \'mysqli_stmt::send_long_data\' );' );
         $this->writeLine( '$p += self::$ourChunkSize;' );
         $this->writeLine( '}' );
         $this->writeLine();
@@ -303,7 +303,7 @@ abstract class Wrapper
     }
 
     $this->writeLine( '$b = $stmt->execute();' );
-    $this->writeLine( 'if (!$b) self::sqlError( \'mysqli_stmt::execute\' );' );
+    $this->writeLine( 'if (!$b) self::mySqlError( \'mysqli_stmt::execute\' );' );
     $this->writeLine();
     $this->writeRoutineFunctionLobFetchData( $theRoutine );
     $this->writeLine( '$stmt->close();' );

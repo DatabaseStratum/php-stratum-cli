@@ -34,7 +34,7 @@ class Singleton0WithLobTest extends DataLayerTestCase
   /**
    * An exception must be thrown when a stored routine with designation type singleton0 returns more than 1 values.
    *
-   * @expectedException SetBased\Stratum\Exception\RowCountException
+   * @expectedException SetBased\Stratum\Exception\ResultException
    */
   public function test3()
   {

@@ -97,7 +97,7 @@ class Constants
 
     $this->fillConstants();
 
-    $this->writeTargetConfigFile();
+    $this->writeConstantClass();
 
     $this->myConnector->disconnect();
 
@@ -583,7 +583,7 @@ where   nullif(`%s`,'') is not null";
   /**
    * Insert new and replace old (if any) constant declaration statements in a PHP source file.
    */
-  private function writeTargetConfigFile()
+  private function writeConstantClass()
   {
     // Read the source file of the class for holding constants.
     $reflection = new \ReflectionClass( $this->myClassName );
@@ -600,12 +600,9 @@ where   nullif(`%s`,'') is not null";
     $constants = $this->makeConstantStatements();
 
     // Insert new and replace old (if any) constant declaration statements.
-    $tmp1 = array_splice( $source_lines,
-                         0,
-                         $line_numbers[1] );
-    $tmp2 = array_splice( $source_lines,
-                          (isset($line_numbers[2])) ? $line_numbers[2] - $line_numbers[1] : 0);
-    $source_lines = array_merge($tmp1, $constants, $tmp2);
+    $tmp1         = array_splice( $source_lines, 0, $line_numbers[1] );
+    $tmp2         = array_splice( $source_lines, (isset($line_numbers[2])) ? $line_numbers[2] - $line_numbers[1] : 0 );
+    $source_lines = array_merge( $tmp1, $constants, $tmp2 );
 
     // Save the configuration file.
     Util::writeTwoPhases( $file_name, implode( "\n", $source_lines ) );

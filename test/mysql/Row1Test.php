@@ -26,7 +26,7 @@ class Row1Test extends DataLayerTestCase
   /**
    * An exception must be thrown when a stored routine with designation type row1 returns 0 rows.
    *
-   * @expectedException SetBased\Stratum\Exception\RowCountException
+   * @expectedException SetBased\Stratum\Exception\ResultException
    */
   public function test2()
   {
@@ -37,7 +37,7 @@ class Row1Test extends DataLayerTestCase
   /**
    * An exception must be thrown when a stored routine with designation type row1 returns more than 1 rows.
    *
-   * @expectedException SetBased\Stratum\Exception\RowCountException
+   * @expectedException SetBased\Stratum\Exception\ResultException
    */
   public function test3()
   {

@@ -1,7 +1,7 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * phpStratum
+ * PphpStratum
  *
  * @copyright 2005-2015 Paul Water / Set Based IT Consultancy (https://www.setbased.nl)
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
@@ -12,7 +12,7 @@ namespace SetBased\Stratum\MySql;
 
 use SetBased\Affirm\Affirm;
 use SetBased\Stratum\BulkHandler;
-use SetBased\Stratum\Exception\RowCountException;
+use SetBased\Stratum\Exception\ResultException;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
@@ -79,12 +79,14 @@ class StaticDataLayer
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Starts a transaction.
-   * Wrapper around mysqli::autocommit, however on failure an exception is thrown.
+   *
+   * Wrapper around [mysqli::autocommit](http://php.net/manual/mysqli.autocommit.php), however on failure an exception
+   * is thrown.
    */
   public static function begin()
   {
     $ret = self::$ourMySql->autocommit( false );
-    if (!$ret) self::sqlError( 'mysqli::autocommit' );
+    if (!$ret) self::mySqlError( 'mysqli::autocommit' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -95,7 +97,7 @@ class StaticDataLayer
   public static function bindAssoc( $stmt, &$out )
   {
     $data = $stmt->result_metadata();
-    if (!$data) self::sqlError( 'mysqli_stmt::result_metadata' );
+    if (!$data) self::mySqlError( 'mysqli_stmt::result_metadata' );
 
     $fields = [];
     $out    = [];
@@ -108,7 +110,7 @@ class StaticDataLayer
     }
 
     $b = call_user_func_array( [$stmt, 'bind_result'], $fields );
-    if ($b===false) self::sqlError( 'mysqli_stmt::bind_result' );
+    if ($b===false) self::mySqlError( 'mysqli_stmt::bind_result' );
 
     $data->free();
 
@@ -118,18 +120,22 @@ class StaticDataLayer
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Commits the current transaction (and starts a new transaction).
-   * Wrapper around mysqli::commit, however on failure an exception is thrown.
+   *
+   * Wrapper around [mysqli::commit](http://php.net/manual/mysqli.commit.php), however on failure an exception is
+   * thrown.
    */
   public static function commit()
   {
     $ret = self::$ourMySql->commit();
-    if (!$ret) self::sqlError( 'mysqli::commit' );
+    if (!$ret) self::mySqlError( 'mysqli::commit' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Connects to a MySQL instance.
-   * Wrapper around mysqli::__construct, however on failure an exception is thrown.
+   *
+   * Wrapper around [mysqli::__construct](http://php.net/manual/mysqli.construct.php), however on failure an exception
+   * is thrown.
    *
    * @param string $theHostName The hostname.
    * @param string $theUserName The MySQL user name.
@@ -140,13 +146,13 @@ class StaticDataLayer
   public static function connect( $theHostName, $theUserName, $thePassWord, $theDatabase, $thePort = 3306 )
   {
     self::$ourMySql = new \mysqli( $theHostName, $theUserName, $thePassWord, $theDatabase, $thePort );
-    if (!self::$ourMySql) self::sqlError( 'mysqli::__construct' );
+    if (!self::$ourMySql) self::mySqlError( 'mysqli::__construct' );
 
     // Set the default character set.
     if (self::$ourCharSet)
     {
       $ret = self::$ourMySql->set_charset( self::$ourCharSet );
-      if (!$ret) self::sqlError( 'mysqli::set_charset' );
+      if (!$ret) self::mySqlError( 'mysqli::set_charset' );
     }
 
     // Set the SQL mode.
@@ -217,11 +223,11 @@ class StaticDataLayer
     $n = 0;
 
     $ret = self::$ourMySql->multi_query( $theQuery );
-    if (!$ret) self::sqlError( $theQuery );
+    if (!$ret) self::mySqlError( $theQuery );
     do
     {
       $result = self::$ourMySql->store_result();
-      if (self::$ourMySql->errno) self::sqlError( 'mysqli::store_result' );
+      if (self::$ourMySql->errno) self::mySqlError( 'mysqli::store_result' );
       if ($result)
       {
         $fields = $result->fetch_fields();
@@ -243,7 +249,7 @@ class StaticDataLayer
       if ($continue)
       {
         $tmp = self::$ourMySql->next_result();
-        if ($tmp===false) self::sqlError( 'mysqli::next_result' );
+        if ($tmp===false) self::mySqlError( 'mysqli::next_result' );
       }
     } while ($continue);
 
@@ -277,7 +283,7 @@ class StaticDataLayer
    * @param string $theQuery The SQL statement.
    *
    * @return array|null The selected row.
-   * @throws RowCountException
+   * @throws ResultException
    */
   public static function executeRow0( $theQuery )
   {
@@ -290,7 +296,7 @@ class StaticDataLayer
 
     if (!($n==0 || $n==1))
     {
-      throw new RowCountException( '0 or 1', $n, $theQuery );
+      throw new ResultException( '0 or 1', $n, $theQuery );
     }
 
     return $row;
@@ -304,7 +310,7 @@ class StaticDataLayer
    * @param string $theQuery The SQL statement.
    *
    * @return array The selected row.
-   * @throws RowCountException
+   * @throws ResultException
    */
   public static function executeRow1( $theQuery )
   {
@@ -317,7 +323,7 @@ class StaticDataLayer
 
     if ($n!=1)
     {
-      throw new RowCountException( '1', $n, $theQuery );
+      throw new ResultException( '1', $n, $theQuery );
     }
 
     return $row;
@@ -361,7 +367,7 @@ class StaticDataLayer
    * @param string $theQuery The SQL statement.
    *
    * @return int|string The selected value.
-   * @throws RowCountException
+   * @throws ResultException
    */
   public static function executeSingleton0( $theQuery )
   {
@@ -374,7 +380,7 @@ class StaticDataLayer
 
     if (!($n==0 || $n==1))
     {
-      throw new RowCountException( '0 or 1', $n, $theQuery );
+      throw new ResultException( '0 or 1', $n, $theQuery );
     }
 
     return $row[0];
@@ -388,7 +394,7 @@ class StaticDataLayer
    * @param string $theQuery The SQL statement.
    *
    * @return int|string The selected value.
-   * @throws RowCountException
+   * @throws ResultException
    */
   public static function executeSingleton1( $theQuery )
   {
@@ -401,7 +407,7 @@ class StaticDataLayer
 
     if ($n!=1)
     {
-      throw new RowCountException( '1', $n, $theQuery );
+      throw new ResultException( '1', $n, $theQuery );
     }
 
     return $row[0];
@@ -421,12 +427,12 @@ class StaticDataLayer
     $row_count = 0;
 
     $ret = self::$ourMySql->multi_query( $theQuery );
-    if (!$ret) self::sqlError( $theQuery );
+    if (!$ret) self::mySqlError( $theQuery );
     do
     {
       $result = self::$ourMySql->store_result();
 
-      if (self::$ourMySql->errno) self::sqlError( 'mysqli::store_result' );
+      if (self::$ourMySql->errno) self::mySqlError( 'mysqli::store_result' );
       if ($result)
       {
         $columns = [];
@@ -467,7 +473,7 @@ class StaticDataLayer
       if ($continue)
       {
         $tmp = self::$ourMySql->next_result();
-        if ($tmp===false) self::sqlError( 'mysqli::next_result' );
+        if ($tmp===false) self::mySqlError( 'mysqli::next_result' );
       }
     } while ($continue);
 
@@ -501,7 +507,9 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Wrapper around mysqli::query, however on failure an exception is thrown.
+   * Executes an SQL statement.
+   *
+   * Wrapper around [mysqli::query](http://php.net/manual/mysqli.query.php), however on failure an exception is thrown.
    *
    * @param string $theQuery The SQL statement.
    *
@@ -510,7 +518,7 @@ class StaticDataLayer
   public static function query( $theQuery )
   {
     $ret = self::$ourMySql->query( $theQuery );
-    if ($ret===false) self::sqlError( $theQuery );
+    if ($ret===false) self::mySqlError( $theQuery );
 
     return $ret;
   }
@@ -624,6 +632,8 @@ class StaticDataLayer
   /**
    * Escapes special characters in a string such that it can be safely used in SQL statements.
    *
+   * Wrapper around [mysqli::real_escape_string](http://php.net/manual/mysqli.real-escape-string.php).
+   *
    * @param string $theString The string.
    *
    * @return string
@@ -635,25 +645,30 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Wrapper around mysqli::query, however on failure an exception is thrown.
+   * Execute an SQL query.
+   *
+   * Wrapper around [mysqli::real_query](http://php.net/manual/en/mysqli.real-query.php), however on failure an
+   * exception is thrown.
    *
    * @param string $theQuery The SQL statement.
    */
   public static function realQuery( $theQuery )
   {
     $tmp = self::$ourMySql->real_query( $theQuery );
-    if ($tmp===false) self::sqlError( $theQuery );
+    if ($tmp===false) self::mySqlError( $theQuery );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Rollbacks the current transaction (and starts a new transaction).
-   * Wrapper around mysqli::rollback, however on failure an exception is thrown.
+   *
+   * Wrapper around [mysqli::rollback](http://php.net/manual/en/mysqli.rollback.php), however on failure an exception
+   * is thrown.
    */
   public static function rollback()
   {
     $ret = self::$ourMySql->rollback();
-    if (!$ret) self::sqlError( 'mysqli::rollback' );
+    if (!$ret) self::mySqlError( 'mysqli::rollback' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -686,7 +701,8 @@ class StaticDataLayer
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Logs the warnings of the last executed SQL statement.
-   * Wrapper around the SQL statement 'show warnings'.
+   *
+   * Wrapper around the SQL statement [show warnings](https://dev.mysql.com/doc/refman/5.6/en/show-warnings.html).
    */
   public static function showWarnings()
   {
@@ -708,26 +724,28 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Throws an exception with error information provided by MySQL.
+   * Throws an exception with error information provided by MySQL/[mysqli](http://php.net/manual/en/class.mysqli.php).
+   *
+   * This method must called after a method of [mysqli](http://php.net/manual/en/class.mysqli.php) returns an
+   * error only.
    *
    * @param string $theText Additional text for the exception message.
    *
-   * @throws \Exception
+   * @throws \RuntimeException
    */
-  protected static function sqlError( $theText )
+  protected static function mySqlError( $theText )
   {
     $message = "MySQL Error no: ".self::$ourMySql->errno."\n";
     $message .= self::$ourMySql->error;
     $message .= "\n";
     $message .= $theText."\n";
 
-    throw new \Exception( $message );
+    throw new \RuntimeException( $message );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Helper method for method executeTable.
-   * Shows table footer.
+   * Helper method for method executeTable. Shows table footer.
    *
    * @param array $theColumns
    */
@@ -744,8 +762,7 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Helper method for method executeTable.
-   * Shows table header.
+   * Helper method for method executeTable. Shows table header.
    *
    * @param array $theColumns
    */
@@ -775,8 +792,7 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Helper method for method executeTable.
-   * Shows table cell with data.
+   * Helper method for method executeTable. Shows table cell with data.
    *
    * @param array  $theColumn
    * @param string $theValue
