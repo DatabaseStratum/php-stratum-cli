@@ -39,9 +39,9 @@ class ResultException extends \RuntimeException
    * @param int    $theActualRowCount   The actual number of rows selected.
    * @param string $theQuery            The SQL query
    */
-  public function __construct( $theExpectedRowCount, $theActualRowCount, $theQuery )
+  public function __construct($theExpectedRowCount, $theActualRowCount, $theQuery)
   {
-    parent::__construct( self::message( $theExpectedRowCount, $theActualRowCount, $theQuery ) );
+    parent::__construct(self::message($theExpectedRowCount, $theActualRowCount, $theQuery));
 
     $this->myExpectedRowCount = $theExpectedRowCount;
     $this->myActualRowCount   = $theActualRowCount;
@@ -91,15 +91,17 @@ class ResultException extends \RuntimeException
    *
    * @return string
    */
-  private function message( $theExpectedRowCount, $theActualRowCount, $theQuery )
+  private function message($theExpectedRowCount, $theActualRowCount, $theQuery)
   {
+    $query = trim($theQuery);
+
     $message = 'Wrong number of rows selected.';
     $message .= "\n";
-    $message .= sprintf( "Expected number of rows: %s.\n", $theExpectedRowCount );
-    $message .= sprintf( "Actual number of rows: %s.\n", $theActualRowCount );
+    $message .= sprintf("Expected number of rows: %s.\n", $theExpectedRowCount);
+    $message .= sprintf("Actual number of rows: %s.\n", $theActualRowCount);
     $message .= "Query:";
-    $message .= (strpos( $theQuery, "\n" )!==false) ? "\n" : '';
-    $message .= $this->myQuery;
+    $message .= (strpos($query, "\n")!==false) ? "\n" : '';
+    $message .= $query;
 
     return $message;
   }
