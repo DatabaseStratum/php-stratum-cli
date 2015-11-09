@@ -100,7 +100,7 @@ class ResultException extends \RuntimeException
     $message .= sprintf("Expected number of rows: %s.\n", $theExpectedRowCount);
     $message .= sprintf("Actual number of rows: %s.\n", $theActualRowCount);
     $message .= "Query:";
-    $message .= (strpos($query, "\n")!==false) ? "\n" : '';
+    $message .= (strpos($query, "\n")!==false) ? "\n" : ' ';
     $message .= $query;
 
     return $message;
