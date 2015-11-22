@@ -575,7 +575,14 @@ class StaticDataLayer
         }
         if (!is_numeric( $number ))
         {
-          self::assertFailed( "Value '%s' is not a number.", $number );
+          if (is_scalar($number))
+          {
+            self::assertFailed("Value '%s' is not a number.", $number);
+          }
+          else
+          {
+            self::assertFailed("Value '%s' is not a number.", gettype($number));
+          }
         }
 
         if ($ret) $ret .= ',';
