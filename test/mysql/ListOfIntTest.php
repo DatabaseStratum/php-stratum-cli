@@ -111,7 +111,7 @@ class ListOfIntTest extends DataLayerTestCase
   /**
    * Test with a list of integers and an empty value in CSV format.
    *
-   * @expectedException Exception
+   * @expectedException SetBased\Stratum\Exception\RuntimeException
    */
   public function test7a()
   {
@@ -123,7 +123,7 @@ class ListOfIntTest extends DataLayerTestCase
   /**
    * Test with a list of integers and an empty value in CSV format.
    *
-   * @expectedException Exception
+   * @expectedException SetBased\Stratum\Exception\RuntimeException
    */
   public function test7b()
   {
@@ -135,7 +135,7 @@ class ListOfIntTest extends DataLayerTestCase
   /**
    * Test with a list of integers and an empty value in CSV format.
    *
-   * @expectedException Exception
+   * @expectedException SetBased\Stratum\Exception\RuntimeException
    */
   public function test7c()
   {
@@ -147,7 +147,7 @@ class ListOfIntTest extends DataLayerTestCase
   /**
    * Test with an array of integers and an empty value.
    *
-   * @expectedException Exception
+   * @expectedException SetBased\Stratum\Exception\RuntimeException
    */
   public function test8a()
   {
@@ -159,7 +159,7 @@ class ListOfIntTest extends DataLayerTestCase
   /**
    * Test with an array of integers and an empty value.
    *
-   * @expectedException Exception
+   * @expectedException SetBased\Stratum\Exception\RuntimeException
    */
   public function test8b()
   {
@@ -171,7 +171,7 @@ class ListOfIntTest extends DataLayerTestCase
   /**
    * Test with an array of integers and an empty value.
    *
-   * @expectedException Exception
+   * @expectedException SetBased\Stratum\Exception\RuntimeException
    */
   public function test8c()
   {

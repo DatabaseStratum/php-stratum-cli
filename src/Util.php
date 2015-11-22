@@ -10,9 +10,9 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum;
 
-//----------------------------------------------------------------------------------------------------------------------
-use SetBased\Affirm\Affirm;
+use SetBased\Stratum\Exception\RuntimeException;
 
+//----------------------------------------------------------------------------------------------------------------------
 /**
  * Static class for miscellaneous functions.
  */
@@ -37,7 +37,7 @@ class Util
     {
       if ($theMandatoryFlag)
       {
-        Affirm::assertFailed("Section '%s' not found in configuration file.", $theSectionName);
+        throw new RuntimeException("Section '%s' not found in configuration file.", $theSectionName);
       }
       else
       {
@@ -50,9 +50,9 @@ class Util
     {
       if ($theMandatoryFlag)
       {
-        Affirm::assertFailed("Setting '%s' not found in section '%s' configuration file.",
-                             $theSettingName,
-                             $theSectionName);
+        throw new RuntimeException("Setting '%s' not found in section '%s' configuration file.",
+                                   $theSettingName,
+                                   $theSectionName);
       }
       else
       {

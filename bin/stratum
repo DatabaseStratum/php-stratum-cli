@@ -9,7 +9,6 @@
  * @link
  */
 //----------------------------------------------------------------------------------------------------------------------
-use SetBased\Affirm\Affirm;
 use SetBased\Stratum\MySql\Constants;
 use SetBased\Stratum\MySql\RoutineLoader;
 use SetBased\Stratum\MySql\RoutineWrapperGenerator;
@@ -125,9 +124,6 @@ if (!function_exists('json_last_error_msg'))
  */
 function main($options)
 {
-  // Throw exceptions on warnings and errors.
-  Affirm::setErrorHandler();
-
   // Read the ini file.
   $setting = getSetting($options);
 

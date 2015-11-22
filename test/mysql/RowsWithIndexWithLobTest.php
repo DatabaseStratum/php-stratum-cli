@@ -31,7 +31,7 @@ class RowsWithIndexWithLobTest extends DataLayerTestCase
    */
   public function test2()
   {
-    $rows = DataLayer::testRowsWithIndex1( 0, 'blob' );
+    $rows = DataLayer::testRowsWithIndex1( 0 );
     $this->assertInternalType( 'array', $rows );
     $this->assertCount( 0, $rows );
 

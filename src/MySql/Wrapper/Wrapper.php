@@ -10,7 +10,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\MySql\Wrapper;
 
-use SetBased\Affirm\Affirm;
+use SetBased\Stratum\Exception\FallenException;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
@@ -134,8 +134,7 @@ abstract class Wrapper
         break;
 
       default:
-        Affirm::assertFailed("Unknown routine type '%s'.", $theRoutine['designation']."\n");
-        $wrapper = null; // Keep our IDE happy.
+        throw new FallenException('routine type', $theRoutine['designation']);
     }
 
     return $wrapper;
@@ -210,7 +209,7 @@ abstract class Wrapper
             break;
 
           default:
-            Affirm::assertFailed("Unknown MySQL type '%s'.", $parameter_info['data_type']);
+            throw new FallenException('parameter type', $parameter_info['data_type']);
         }
       }
     }
@@ -402,7 +401,7 @@ abstract class Wrapper
         break;
 
       default:
-        Affirm::assertFailed("Unknown MySQL type '%s'.", $theType);
+        throw new FallenException('parameter type', $theType);
     }
 
     return $ret;
@@ -525,7 +524,7 @@ abstract class Wrapper
           break;
 
         default:
-          Affirm::assertFailed("Unknown MySQL type '%s'.", $parameter_info['data_type']);
+          throw new FallenException('parameter type', $parameter_info['data_type']);
       }
     }
 
@@ -726,7 +725,6 @@ abstract class Wrapper
    */
   private function writeEscapedArgs($theParameters)
   {
-    $ret = '';
     switch ($theParameters['data_type'])
     {
       case 'tinyint':
@@ -788,7 +786,7 @@ abstract class Wrapper
         break;
 
       default:
-        Affirm::assertFailed("Unknown arg type '%s'.", $theParameters['data_type']);
+        throw new FallenException('parameter type', $theParameters['data_type']);
     }
 
     return $ret;

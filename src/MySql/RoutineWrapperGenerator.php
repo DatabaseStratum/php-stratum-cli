@@ -10,7 +10,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\MySql;
 
-use SetBased\Affirm\Affirm;
+use SetBased\Stratum\Exception\RuntimeException;
 use SetBased\Stratum\MySql\Wrapper\Wrapper;
 use SetBased\Stratum\Util;
 
@@ -155,7 +155,10 @@ class RoutineWrapperGenerator
     $data = file_get_contents($this->myMetadataFilename);
 
     $routines = json_decode($data, true);
-    if (json_last_error()!=JSON_ERROR_NONE) Affirm::assertFailed("Error decoding JSON: '%s'.", json_last_error_msg());
+    if (json_last_error()!=JSON_ERROR_NONE)
+    {
+      throw new RuntimeException("Error decoding JSON: '%s'.", json_last_error_msg());
+    }
 
     return $routines;
   }

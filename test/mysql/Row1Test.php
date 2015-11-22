@@ -18,7 +18,6 @@ class Row1Test extends DataLayerTestCase
   public function test1()
   {
     $ret = DataLayer::testRow1a( 1 );
-    $ret = DataLayer::testRow1a( 1 );
     $this->assertInternalType( 'array', $ret );
   }
 

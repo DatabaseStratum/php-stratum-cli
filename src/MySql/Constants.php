@@ -10,7 +10,8 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\MySql;
 
-use SetBased\Affirm\Affirm;
+use SetBased\Stratum\Exception\FallenException;
+use SetBased\Stratum\Exception\RuntimeException;
 use SetBased\Stratum\MySql\StaticDataLayer as DataLayer;
 use SetBased\Stratum\Util;
 
@@ -188,7 +189,7 @@ class Constants
         break;
 
       default:
-        Affirm::assertFailed("Unknown type '%s'.", $theColumn['data_type']);
+        throw new FallenException('column type', $theColumn['data_type']);
     }
 
     return $ret;
@@ -355,7 +356,10 @@ class Constants
     }
 
     $ok = ksort($this->myConstants);
-    if ($ok===false) Affirm::assertFailed("Internal error.");
+    if ($ok===false)
+    {
+      throw new RuntimeException("Internal error.");
+    }
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -459,7 +463,9 @@ where   nullif(`%s`,'') is not null";
           $n = preg_match('/^\s*(([a-zA-Z0-9_]+)\.)?([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s+(\d+)\s*(\*|[a-zA-Z0-9_]+)?\s*$/', $line, $matches);
           if ($n==0)
           {
-            Affirm::assertFailed("Illegal format at line %d in file '%s'.", $line_number, $this->myConstantsFilename);
+            throw new RuntimeException("Illegal format at line %d in file '%s'.",
+                                       $line_number,
+                                       $this->myConstantsFilename);
           }
 
           if (isset($matches[6]))
@@ -482,10 +488,16 @@ where   nullif(`%s`,'') is not null";
           }
         }
       }
-      if (!feof($handle)) Affirm::assertFailed("Error reading from file '%s'.", $this->myConstantsFilename);
+      if (!feof($handle))
+      {
+        throw new RuntimeException("Error reading from file '%s'.", $this->myConstantsFilename);
+      }
 
       $ok = fclose($handle);
-      if ($ok===false) Affirm::assertFailed("Error closing file '%s'.", $this->myConstantsFilename);
+      if ($ok===false)
+      {
+        throw new RuntimeException("Error closing file '%s'.", $this->myConstantsFilename);
+      }
     }
   }
 
@@ -593,12 +605,18 @@ where   nullif(`%s`,'') is not null";
     // Read the source of the class without actually loading the class. Otherwise, we can not (re)load the class in
     // \SetBased\Stratum\MySql\RoutineLoader::getConstants.
     $source = file_get_contents($file_name);
-    if ($source===false) Affirm::assertFailed("Unable the open source file '%s'.", $file_name);
+    if ($source===false)
+    {
+      throw new RuntimeException("Unable the open source file '%s'.", $file_name);
+    }
     $source_lines = explode("\n", $source);
 
     // Search for the lines where to insert and replace constant declaration statements.
     $line_numbers = $this->extractLines($source);
-    if (!isset($line_numbers[0])) Affirm::assertFailed("Annotation not found in '%s'.", $file_name);
+    if (!isset($line_numbers[0]))
+    {
+      throw new RuntimeException("Annotation not found in '%s'.", $file_name);
+    }
 
     // Generate the constant declaration statements.
     $constants = $this->makeConstantStatements();

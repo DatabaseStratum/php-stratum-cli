@@ -50,7 +50,7 @@ class MaxAllowedPacketTest extends DataLayerTestCase
   //--------------------------------------------------------------------------------------------------------------------
   /** Calling a stored routine with a BLOB larger than max_allowed_packet bytes is not possible.
    *
-   * @expectedException Exception
+   * @expectedException SetBased\Stratum\Exception\RuntimeException
    */
   public function xtest3()
   {
@@ -60,7 +60,7 @@ class MaxAllowedPacketTest extends DataLayerTestCase
   //--------------------------------------------------------------------------------------------------------------------
   /** Calling a stored routine with a BLOB of larger than max_allowed_packet bytes is not possible.
    *
-   * @expectedException Exception
+   * @expectedException SetBased\Stratum\Exception\RuntimeException
    */
   public function test4()
   {

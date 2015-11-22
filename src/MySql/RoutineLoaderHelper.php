@@ -11,7 +11,8 @@
 namespace SetBased\Stratum\MySql;
 
 use phpDocumentor\Reflection\DocBlock;
-use SetBased\Affirm\Affirm;
+use SetBased\Stratum\Exception\FallenException;
+use SetBased\Stratum\Exception\RuntimeException;
 use SetBased\Stratum\MySql\StaticDataLayer as DataLayer;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -316,8 +317,6 @@ class RoutineLoaderHelper
    */
   private function columnTypeToPhpType($theType)
   {
-    $php_type = '';
-
     switch ($theType)
     {
       case 'tinyint':
@@ -370,7 +369,7 @@ class RoutineLoaderHelper
         break;
 
       default:
-        Affirm::assertFailed("Unknown MySQL type '%s'.", $theType);
+        throw new FallenException('column type', $theType);
     }
 
     return $php_type;
@@ -427,7 +426,10 @@ and   table_name   = %s', DataLayer::quoteString($this->myTableName));
     // Check number of columns in the table match the number of fields given in the designation type.
     $n1 = count($this->myColumns);
     $n2 = count($columns);
-    if ($n1!=$n2) Affirm::assertFailed("Number of fields %d and number of columns %d don't match.", $n1, $n2);
+    if ($n1!=$n2)
+    {
+      throw new RuntimeException("Number of fields %d and number of columns %d don't match.", $n1, $n2);
+    }
 
     // Fill arrays with column names and column types.
     $tmp_column_types = [];
@@ -472,8 +474,8 @@ and   table_name   = %s', DataLayer::quoteString($this->myTableName));
                               $info);
               if ($m==0)
               {
-                Affirm::assertFailed("Error: Expected: -- type: bulk_insert <table_name> <columns> in file '%s'.\n",
-                                     $this->mySourceFilename);
+                throw new RuntimeException("Error: Expected: -- type: bulk_insert <table_name> <columns> in file '%s'.",
+                                           $this->mySourceFilename);
               }
               $this->myTableName = $info[1];
               $this->myColumns   = explode(',', $info[2]);
@@ -628,15 +630,15 @@ and   table_name   = %s', DataLayer::quoteString($this->myTableName));
             }
             else
             {
-              Affirm::assertFailed("Duplicate parameter '%s' in file '%s'.",
-                                   $parameter_name,
-                                   $this->mySourceFilename);
+              throw new RuntimeException("Duplicate parameter '%s' in file '%s'.",
+                                         $parameter_name,
+                                         $this->mySourceFilename);
             }
           }
           else
           {
-            Affirm::assertFailed("Error: Expected: -- param: <field_name> <type_of_list> [delimiter enclosure escape] in file '%s'.\n",
-                                 $this->mySourceFilename);
+            throw new RuntimeException("Error: Expected: -- param: <field_name> <type_of_list> [delimiter enclosure escape] in file '%s'.",
+                                       $this->mySourceFilename);
           }
         }
       }
@@ -780,7 +782,10 @@ and   table_name   = %s', DataLayer::quoteString($this->myTableName));
         $this->myReplace[$placeholder] = $this->myReplacePairs[strtoupper($placeholder)];
       }
       $ok = ksort($this->myReplace);
-      if ($ok===false) Affirm::assertFailed("Internal error.");
+      if ($ok===false)
+      {
+        throw new RuntimeException("Internal error.");
+      }
     }
 
     return $ret;
@@ -940,9 +945,9 @@ and   t1.routine_name   = '%s'", $this->myRoutineName);
         }
         if ($param_not_exist)
         {
-          Affirm::assertFailed("Specific parameter '%s' does not exist in file '%s'.",
-                               $spec_param_name,
-                               $this->mySourceFilename);
+          throw new RuntimeException("Specific parameter '%s' does not exist in file '%s'.",
+                                     $spec_param_name,
+                                     $this->mySourceFilename);
         }
       }
     }

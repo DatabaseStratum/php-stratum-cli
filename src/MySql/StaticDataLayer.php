@@ -10,9 +10,10 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\MySql;
 
-use SetBased\Affirm\Affirm;
 use SetBased\Stratum\BulkHandler;
+use SetBased\Stratum\Exception\FallenException;
 use SetBased\Stratum\Exception\ResultException;
+use SetBased\Stratum\Exception\RuntimeException;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
@@ -85,8 +86,8 @@ class StaticDataLayer
    */
   public static function begin()
   {
-    $ret = self::$ourMySql->autocommit( false );
-    if (!$ret) self::mySqlError( 'mysqli::autocommit' );
+    $ret = self::$ourMySql->autocommit(false);
+    if (!$ret) self::mySqlError('mysqli::autocommit');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -94,10 +95,10 @@ class StaticDataLayer
    * @param \mysqli_stmt $stmt
    * @param array        $out
    */
-  public static function bindAssoc( $stmt, &$out )
+  public static function bindAssoc($stmt, &$out)
   {
     $data = $stmt->result_metadata();
-    if (!$data) self::mySqlError( 'mysqli_stmt::result_metadata' );
+    if (!$data) self::mySqlError('mysqli_stmt::result_metadata');
 
     $fields = [];
     $out    = [];
@@ -109,8 +110,8 @@ class StaticDataLayer
       $i++;
     }
 
-    $b = call_user_func_array( [$stmt, 'bind_result'], $fields );
-    if ($b===false) self::mySqlError( 'mysqli_stmt::bind_result' );
+    $b = call_user_func_array([$stmt, 'bind_result'], $fields);
+    if ($b===false) self::mySqlError('mysqli_stmt::bind_result');
 
     $data->free();
 
@@ -127,7 +128,7 @@ class StaticDataLayer
   public static function commit()
   {
     $ret = self::$ourMySql->commit();
-    if (!$ret) self::mySqlError( 'mysqli::commit' );
+    if (!$ret) self::mySqlError('mysqli::commit');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -143,32 +144,32 @@ class StaticDataLayer
    * @param string $theDatabase The default database.
    * @param int    $thePort     The port number.
    */
-  public static function connect( $theHostName, $theUserName, $thePassWord, $theDatabase, $thePort = 3306 )
+  public static function connect($theHostName, $theUserName, $thePassWord, $theDatabase, $thePort = 3306)
   {
-    self::$ourMySql = new \mysqli( $theHostName, $theUserName, $thePassWord, $theDatabase, $thePort );
-    if (!self::$ourMySql) self::mySqlError( 'mysqli::__construct' );
+    self::$ourMySql = new \mysqli($theHostName, $theUserName, $thePassWord, $theDatabase, $thePort);
+    if (!self::$ourMySql) self::mySqlError('mysqli::__construct');
 
     // Set the default character set.
     if (self::$ourCharSet)
     {
-      $ret = self::$ourMySql->set_charset( self::$ourCharSet );
-      if (!$ret) self::mySqlError( 'mysqli::set_charset' );
+      $ret = self::$ourMySql->set_charset(self::$ourCharSet);
+      if (!$ret) self::mySqlError('mysqli::set_charset');
     }
 
     // Set the SQL mode.
     if (self::$ourSqlMode)
     {
-      self::executeNone( "SET sql_mode = '".self::$ourSqlMode."'" );
+      self::executeNone("SET sql_mode = '".self::$ourSqlMode."'");
     }
 
     // Set transaction isolation level.
     if (self::$ourTransactionIsolationLevel)
     {
-      self::executeNone( "SET SESSION tx_isolation = '".self::$ourTransactionIsolationLevel."'" );
+      self::executeNone("SET SESSION tx_isolation = '".self::$ourTransactionIsolationLevel."'");
     }
 
     // Set flag to use method mysqli_result::fetch_all if we are using MySQL native driver.
-    self::$ourHaveFetchAll = method_exists( 'mysqli_result', 'fetch_all' );
+    self::$ourHaveFetchAll = method_exists('mysqli_result', 'fetch_all');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -191,16 +192,16 @@ class StaticDataLayer
    * @param BulkHandler $theBulkHandler The bulk handler.
    * @param string      $theQuery       The SQL statement.
    */
-  public static function executeBulk( $theBulkHandler, $theQuery )
+  public static function executeBulk($theBulkHandler, $theQuery)
   {
-    self::realQuery( $theQuery );
+    self::realQuery($theQuery);
 
     $theBulkHandler->start();
 
     $result = self::$ourMySql->use_result();
     while ($row = $result->fetch_assoc())
     {
-      $theBulkHandler->row( $row );
+      $theBulkHandler->row($row);
     }
     $result->free();
 
@@ -217,17 +218,17 @@ class StaticDataLayer
    *
    * @return int The total number of rows selected/logged.
    */
-  public static function executeLog( $theQuery )
+  public static function executeLog($theQuery)
   {
     // Counter for the number of rows written/logged.
     $n = 0;
 
-    $ret = self::$ourMySql->multi_query( $theQuery );
-    if (!$ret) self::mySqlError( $theQuery );
+    $ret = self::$ourMySql->multi_query($theQuery);
+    if (!$ret) self::mySqlError($theQuery);
     do
     {
       $result = self::$ourMySql->store_result();
-      if (self::$ourMySql->errno) self::mySqlError( 'mysqli::store_result' );
+      if (self::$ourMySql->errno) self::mySqlError('mysqli::store_result');
       if ($result)
       {
         $fields = $result->fetch_fields();
@@ -237,9 +238,9 @@ class StaticDataLayer
           foreach ($row as $i => $field)
           {
             if ($i>0) $line .= ' ';
-            $line .= str_pad( $field, $fields[$i]->max_length );
+            $line .= str_pad($field, $fields[$i]->max_length);
           }
-          echo date( 'Y-m-d H:i:s' ), ' ', $line, "\n";
+          echo date('Y-m-d H:i:s'), ' ', $line, "\n";
           $n++;
         }
         $result->free();
@@ -249,7 +250,7 @@ class StaticDataLayer
       if ($continue)
       {
         $tmp = self::$ourMySql->next_result();
-        if ($tmp===false) self::mySqlError( 'mysqli::next_result' );
+        if ($tmp===false) self::mySqlError('mysqli::next_result');
       }
     } while ($continue);
 
@@ -264,9 +265,9 @@ class StaticDataLayer
    *
    * @return int The number of affected rows (if any).
    */
-  public static function executeNone( $theQuery )
+  public static function executeNone($theQuery)
   {
-    self::query( $theQuery );
+    self::query($theQuery);
 
     $n = self::$ourMySql->affected_rows;
 
@@ -285,9 +286,9 @@ class StaticDataLayer
    * @return array|null The selected row.
    * @throws ResultException
    */
-  public static function executeRow0( $theQuery )
+  public static function executeRow0($theQuery)
   {
-    $result = self::query( $theQuery );
+    $result = self::query($theQuery);
     $row    = $result->fetch_assoc();
     $n      = $result->num_rows;
     $result->free();
@@ -296,7 +297,7 @@ class StaticDataLayer
 
     if (!($n==0 || $n==1))
     {
-      throw new ResultException( '0 or 1', $n, $theQuery );
+      throw new ResultException('0 or 1', $n, $theQuery);
     }
 
     return $row;
@@ -312,9 +313,9 @@ class StaticDataLayer
    * @return array The selected row.
    * @throws ResultException
    */
-  public static function executeRow1( $theQuery )
+  public static function executeRow1($theQuery)
   {
-    $result = self::query( $theQuery );
+    $result = self::query($theQuery);
     $row    = $result->fetch_assoc();
     $n      = $result->num_rows;
     $result->free();
@@ -323,7 +324,7 @@ class StaticDataLayer
 
     if ($n!=1)
     {
-      throw new ResultException( '1', $n, $theQuery );
+      throw new ResultException('1', $n, $theQuery);
     }
 
     return $row;
@@ -337,12 +338,12 @@ class StaticDataLayer
    *
    * @return array[] The selected rows.
    */
-  public static function executeRows( $theQuery )
+  public static function executeRows($theQuery)
   {
-    $result = self::query( $theQuery );
+    $result = self::query($theQuery);
     if (self::$ourHaveFetchAll)
     {
-      $ret = $result->fetch_all( MYSQLI_ASSOC );
+      $ret = $result->fetch_all(MYSQLI_ASSOC);
     }
     else
     {
@@ -369,10 +370,10 @@ class StaticDataLayer
    * @return int|string The selected value.
    * @throws ResultException
    */
-  public static function executeSingleton0( $theQuery )
+  public static function executeSingleton0($theQuery)
   {
-    $result = self::query( $theQuery );
-    $row    = $result->fetch_array( MYSQLI_NUM );
+    $result = self::query($theQuery);
+    $row    = $result->fetch_array(MYSQLI_NUM);
     $n      = $result->num_rows;
     $result->free();
 
@@ -380,7 +381,7 @@ class StaticDataLayer
 
     if (!($n==0 || $n==1))
     {
-      throw new ResultException( '0 or 1', $n, $theQuery );
+      throw new ResultException('0 or 1', $n, $theQuery);
     }
 
     return $row[0];
@@ -396,10 +397,10 @@ class StaticDataLayer
    * @return int|string The selected value.
    * @throws ResultException
    */
-  public static function executeSingleton1( $theQuery )
+  public static function executeSingleton1($theQuery)
   {
-    $result = self::query( $theQuery );
-    $row    = $result->fetch_array( MYSQLI_NUM );
+    $result = self::query($theQuery);
+    $row    = $result->fetch_array(MYSQLI_NUM);
     $n      = $result->num_rows;
     $result->free();
 
@@ -407,7 +408,7 @@ class StaticDataLayer
 
     if ($n!=1)
     {
-      throw new ResultException( '1', $n, $theQuery );
+      throw new ResultException('1', $n, $theQuery);
     }
 
     return $row[0];
@@ -422,17 +423,17 @@ class StaticDataLayer
    *
    * @return int The total number of rows in the tables.
    */
-  public static function executeTable( $theQuery )
+  public static function executeTable($theQuery)
   {
     $row_count = 0;
 
-    $ret = self::$ourMySql->multi_query( $theQuery );
-    if (!$ret) self::mySqlError( $theQuery );
+    $ret = self::$ourMySql->multi_query($theQuery);
+    if (!$ret) self::mySqlError($theQuery);
     do
     {
       $result = self::$ourMySql->store_result();
 
-      if (self::$ourMySql->errno) self::mySqlError( 'mysqli::store_result' );
+      if (self::$ourMySql->errno) self::mySqlError('mysqli::store_result');
       if ($result)
       {
         $columns = [];
@@ -442,11 +443,11 @@ class StaticDataLayer
         {
           $columns[$str_num]['header'] = $column->name;
           $columns[$str_num]['type']   = $column->type;
-          $columns[$str_num]['length'] = max( 4, $column->max_length, strlen( $column->name ) );
+          $columns[$str_num]['length'] = max(4, $column->max_length, strlen($column->name));
         }
 
         // Show the table header.
-        self::executeTableShowHeader( $columns );
+        self::executeTableShowHeader($columns);
 
         // Show for all rows all columns.
         while ($row = $result->fetch_row())
@@ -458,7 +459,7 @@ class StaticDataLayer
 
           foreach ($row as $i => $value)
           {
-            self::executeTableShowTableColumn( $columns[$i], $value );
+            self::executeTableShowTableColumn($columns[$i], $value);
             echo "|";
           }
 
@@ -466,14 +467,14 @@ class StaticDataLayer
         }
 
         // Show the table footer.
-        self::executeTableShowFooter( $columns );
+        self::executeTableShowFooter($columns);
       }
 
       $continue = self::$ourMySql->more_results();
       if ($continue)
       {
         $tmp = self::$ourMySql->next_result();
-        if ($tmp===false) self::mySqlError( 'mysqli::next_result' );
+        if ($tmp===false) self::mySqlError('mysqli::next_result');
       }
     } while ($continue);
 
@@ -491,7 +492,7 @@ class StaticDataLayer
     if (!isset(self::$ourMaxAllowedPacket))
     {
       $query              = "show variables like 'max_allowed_packet'";
-      $max_allowed_packet = self::executeRow1( $query );
+      $max_allowed_packet = self::executeRow1($query);
 
       self::$ourMaxAllowedPacket = $max_allowed_packet['Value'];
 
@@ -499,7 +500,7 @@ class StaticDataLayer
       // with size $ourMaxAllowedPacket bytes (but only $ourMaxAllowedPacket - 8 bytes). But when setting the size of
       // $ourChunkSize less than $ourMaxAllowedPacket than it is possible to transmit a LOB with size
       // $ourMaxAllowedPacket bytes.
-      self::$ourChunkSize = min( self::$ourMaxAllowedPacket - 8, 1024 * 1024 );
+      self::$ourChunkSize = min(self::$ourMaxAllowedPacket - 8, 1024 * 1024);
     }
 
     return self::$ourMaxAllowedPacket;
@@ -515,10 +516,10 @@ class StaticDataLayer
    *
    * @return \mysqli_result
    */
-  public static function query( $theQuery )
+  public static function query($theQuery)
   {
-    $ret = self::$ourMySql->query( $theQuery );
-    if ($ret===false) self::mySqlError( $theQuery );
+    $ret = self::$ourMySql->query($theQuery);
+    if ($ret===false) self::mySqlError($theQuery);
 
     return $ret;
   }
@@ -531,7 +532,7 @@ class StaticDataLayer
    *
    * @return string
    */
-  public static function quoteBit( $theBits )
+  public static function quoteBit($theBits)
   {
     if ($theBits===null || $theBits===false || $theBits==='')
     {
@@ -539,12 +540,12 @@ class StaticDataLayer
     }
     else
     {
-      return "b'".self::$ourMySql->real_escape_string( $theBits )."'";
+      return "b'".self::$ourMySql->real_escape_string($theBits)."'";
     }
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  public static function quoteListOfInt( $theList, $theDelimiter, $theEnclosure, $tehEscape )
+  public static function quoteListOfInt($theList, $theDelimiter, $theEnclosure, $tehEscape)
   {
     if ($theList===null || $theList===false || $theList==='' || $theList===[])
     {
@@ -552,44 +553,36 @@ class StaticDataLayer
     }
     else
     {
-      $ret  = '';
-      $list = [];
-      if (is_scalar( $theList ))
+      $ret = '';
+      if (is_scalar($theList))
       {
-        $list = str_getcsv( $theList, $theDelimiter, $theEnclosure, $tehEscape );
+        $list = str_getcsv($theList, $theDelimiter, $theEnclosure, $tehEscape);
       }
-      elseif (is_array( $theList ))
+      elseif (is_array($theList))
       {
         $list = $theList;
       }
       else
       {
-        Affirm::assertFailed( "Unexpected parameter type '%s'. Array or scalar expected.", gettype( $theList ) );
+        throw new RuntimeException("Unexpected parameter type '%s'. Array or scalar expected.", gettype($theList));
       }
 
       foreach ($list as $number)
       {
         if ($theList===null || $theList===false || $theList==='')
         {
-          self::assertFailed( "Empty values are not allowed." );
+          throw new RuntimeException("Empty values are not allowed.");
         }
-        if (!is_numeric( $number ))
+        if (!is_numeric($number))
         {
-          if (is_scalar($number))
-          {
-            self::assertFailed("Value '%s' is not a number.", $number);
-          }
-          else
-          {
-            self::assertFailed("Value '%s' is not a number.", gettype($number));
-          }
+          throw new RuntimeException("Value '%s' is not a number.", (is_scalar($number)) ? $number : gettype($number));
         }
 
         if ($ret) $ret .= ',';
         $ret .= $number;
       }
 
-      return self::quoteString( $ret );
+      return self::quoteString($ret);
     }
   }
 
@@ -602,17 +595,13 @@ class StaticDataLayer
    *
    * @return string
    */
-  public static function quoteNum( $theValue )
+  public static function quoteNum($theValue)
   {
-    if (is_numeric( $theValue )) return $theValue;
+    if (is_numeric($theValue)) return $theValue;
     if ($theValue===null || $theValue==='' || $theValue===false) return 'NULL';
     if ($theValue===true) return 1;
 
-    self::assertFailed( "Value '%s' is not a number.", $theValue );
-    // Not reached.
-
-    // Keep our IDE happy.
-    return 0;
+    throw new RuntimeException("Value '%s' is not a number.", $theValue);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -623,7 +612,7 @@ class StaticDataLayer
    *
    * @return string
    */
-  public static function quoteString( $theString )
+  public static function quoteString($theString)
   {
     if ($theString===null || $theString===false || $theString==='')
     {
@@ -631,7 +620,7 @@ class StaticDataLayer
     }
     else
     {
-      return "'".self::$ourMySql->real_escape_string( $theString )."'";
+      return "'".self::$ourMySql->real_escape_string($theString)."'";
     }
   }
 
@@ -645,9 +634,9 @@ class StaticDataLayer
    *
    * @return string
    */
-  public static function realEscapeString( $theString )
+  public static function realEscapeString($theString)
   {
-    return self::$ourMySql->real_escape_string( $theString );
+    return self::$ourMySql->real_escape_string($theString);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -659,10 +648,10 @@ class StaticDataLayer
    *
    * @param string $theQuery The SQL statement.
    */
-  public static function realQuery( $theQuery )
+  public static function realQuery($theQuery)
   {
-    $tmp = self::$ourMySql->real_query( $theQuery );
-    if ($tmp===false) self::mySqlError( $theQuery );
+    $tmp = self::$ourMySql->real_query($theQuery);
+    if ($tmp===false) self::mySqlError($theQuery);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -675,7 +664,7 @@ class StaticDataLayer
   public static function rollback()
   {
     $ret = self::$ourMySql->rollback();
-    if (!$ret) self::mySqlError( 'mysqli::rollback' );
+    if (!$ret) self::mySqlError('mysqli::rollback');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -689,9 +678,9 @@ class StaticDataLayer
    *
    * @return int|null|string
    */
-  public static function searchInRowSet( $theColumnName, $theValue, $theRowSet )
+  public static function searchInRowSet($theColumnName, $theValue, $theRowSet)
   {
-    if (is_array( $theRowSet ))
+    if (is_array($theRowSet))
     {
       foreach ($theRowSet as $key => $row)
       {
@@ -713,20 +702,7 @@ class StaticDataLayer
    */
   public static function showWarnings()
   {
-    self::executeLog( 'show warnings' );
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Throws an exception.
-   */
-  protected static function assertFailed()
-  {
-    $args    = func_get_args();
-    $format  = array_shift( $args );
-    $message = vsprintf( $format, $args );
-
-    throw new \Exception( $message );
+    self::executeLog('show warnings');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -740,14 +716,14 @@ class StaticDataLayer
    *
    * @throws \RuntimeException
    */
-  protected static function mySqlError( $theText )
+  protected static function mySqlError($theText)
   {
     $message = "MySQL Error no: ".self::$ourMySql->errno."\n";
     $message .= self::$ourMySql->error;
     $message .= "\n";
     $message .= $theText."\n";
 
-    throw new \RuntimeException( $message );
+    throw new RuntimeException($message);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -756,13 +732,13 @@ class StaticDataLayer
    *
    * @param array $theColumns
    */
-  private static function executeTableShowFooter( $theColumns )
+  private static function executeTableShowFooter($theColumns)
   {
     $separator = '+';
 
     foreach ($theColumns as $column)
     {
-      $separator .= str_repeat( '-', $column['length'] + 2 )."+";
+      $separator .= str_repeat('-', $column['length'] + 2)."+";
     }
     echo $separator, "\n";
   }
@@ -773,21 +749,21 @@ class StaticDataLayer
    *
    * @param array $theColumns
    */
-  private static function executeTableShowHeader( $theColumns )
+  private static function executeTableShowHeader($theColumns)
   {
     $separator = '+';
     $header    = '|';
 
     foreach ($theColumns as $column)
     {
-      $separator .= str_repeat( '-', $column['length'] + 2 )."+";
-      $spaces = ($column['length'] + 2) - strlen( $column['header'] );
+      $separator .= str_repeat('-', $column['length'] + 2)."+";
+      $spaces = ($column['length'] + 2) - strlen($column['header']);
 
       $l_spaces = $spaces / 2;
       $r_spaces = ($spaces / 2) + ($spaces % 2);
 
-      $l_spaces = ($l_spaces>0) ? str_repeat( " ", $l_spaces ) : '';
-      $r_spaces = ($r_spaces>0) ? str_repeat( " ", $r_spaces ) : '';
+      $l_spaces = ($l_spaces>0) ? str_repeat(" ", $l_spaces) : '';
+      $r_spaces = ($r_spaces>0) ? str_repeat(" ", $r_spaces) : '';
 
       $header .= $l_spaces.$column['header'].$r_spaces.'|';
     }
@@ -804,9 +780,9 @@ class StaticDataLayer
    * @param array  $theColumn
    * @param string $theValue
    */
-  private static function executeTableShowTableColumn( $theColumn, $theValue )
+  private static function executeTableShowTableColumn($theColumn, $theValue)
   {
-    $spaces = str_repeat( " ", $theColumn['length'] - strlen( $theValue ) );
+    $spaces = str_repeat(" ", $theColumn['length'] - strlen($theValue));
 
     switch ($theColumn['type'])
     {
@@ -840,7 +816,7 @@ class StaticDataLayer
         break;
 
       default:
-        self::assertFailed( "Unknown data type id '%s'.", $theColumn['type'] );
+        throw new FallenException('data type id', $theColumn['type']);
     }
   }
 

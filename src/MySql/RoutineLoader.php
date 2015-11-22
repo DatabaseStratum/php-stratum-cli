@@ -10,7 +10,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\MySql;
 
-use SetBased\Affirm\Affirm;
+use SetBased\Stratum\Exception\RuntimeException;
 use SetBased\Stratum\MySql\StaticDataLayer as DataLayer;
 use SetBased\Stratum\Util;
 
@@ -475,7 +475,10 @@ order by routine_name";
     if (file_exists($this->myPhpStratumMetadataFilename))
     {
       $this->myPhpStratumMetadata = json_decode(file_get_contents($this->myPhpStratumMetadataFilename), true);
-      if (json_last_error()!=JSON_ERROR_NONE) Affirm::assertFailed("Error decoding JSON: '%s'.", json_last_error_msg());
+      if (json_last_error()!=JSON_ERROR_NONE)
+      {
+        throw new RuntimeException("Error decoding JSON: '%s'.", json_last_error_msg());
+      }
     }
   }
 
@@ -505,7 +508,10 @@ order by routine_name";
     if (defined('JSON_PRETTY_PRINT')) $options = $options | constant('JSON_PRETTY_PRINT');
 
     $json_data = json_encode($this->myPhpStratumMetadata, $options);
-    if (json_last_error()!=JSON_ERROR_NONE) Affirm::assertFailed("Error of encoding to JSON: '%s'.", json_last_error_msg());
+    if (json_last_error()!=JSON_ERROR_NONE)
+    {
+      throw new RuntimeException("Error of encoding to JSON: '%s'.", json_last_error_msg());
+    }
 
     // Save the metadata.
     Util::writeTwoPhases($this->myPhpStratumMetadataFilename, $json_data);
