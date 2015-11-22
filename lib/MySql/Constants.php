@@ -585,10 +585,14 @@ where   nullif(`%s`,'') is not null";
    */
   private function writeConstantClass()
   {
-    // Read the source file of the class for holding constants.
-    $reflection = new \ReflectionClass( $this->myClassName );
-    $file_name  = $reflection->getFileName();
-    $source     = file_get_contents( $file_name );
+    // Get the class loader.
+    /** @var \Composer\Autoload\ClassLoader $loader */
+    $loader = spl_autoload_functions()[0][0];
+    $file_name = $loader->findFile($this->myClassName);
+
+    // Read the source of the class without actually loading the class. Otherwise, we can not (re)load the class in
+    // \SetBased\Stratum\MySql\RoutineLoader::getConstants.
+    $source = file_get_contents( $file_name );
     if ($source===false) Affirm::assertFailed( "Unable the open source file '%s'.", $file_name );
     $source_lines = explode( "\n", $source );
 
