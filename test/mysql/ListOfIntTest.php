@@ -20,11 +20,11 @@ class ListOfIntTest extends DataLayerTestCase
   public function test1()
   {
     $ids = "1,3";
-    $ret = DataLayer::testListOfInt( $ids );
+    $ret = DataLayer::testListOfInt($ids);
 
-    self::assertEquals( 2, count( $ret ) );
-    self::assertArrayHasKey( 1, $ret );
-    self::assertArrayHasKey( 3, $ret );
+    self::assertEquals(2, count($ret));
+    self::assertArrayHasKey(1, $ret);
+    self::assertArrayHasKey(3, $ret);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -33,12 +33,12 @@ class ListOfIntTest extends DataLayerTestCase
    */
   public function test2()
   {
-    $ids = array(2, 4);
-    $ret = DataLayer::testListOfInt( $ids );
+    $ids = [2, 4];
+    $ret = DataLayer::testListOfInt($ids);
 
-    self::assertEquals( 2, count( $ret ) );
-    self::assertArrayHasKey( 2, $ret );
-    self::assertArrayHasKey( 4, $ret );
+    self::assertEquals(2, count($ret));
+    self::assertArrayHasKey(2, $ret);
+    self::assertArrayHasKey(4, $ret);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -50,7 +50,7 @@ class ListOfIntTest extends DataLayerTestCase
   public function test3()
   {
     $ids = "2,not_int";
-    DataLayer::testListOfInt( $ids );
+    DataLayer::testListOfInt($ids);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -61,8 +61,8 @@ class ListOfIntTest extends DataLayerTestCase
    */
   public function test4a()
   {
-    $ids = array('not_int', 3);
-    DataLayer::testListOfInt( $ids );
+    $ids = ['not_int', 3];
+    DataLayer::testListOfInt($ids);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -73,8 +73,8 @@ class ListOfIntTest extends DataLayerTestCase
    */
   public function test4b()
   {
-    $ids = array(array(), 3);
-    DataLayer::testListOfInt( $ids );
+    $ids = [[], 3];
+    DataLayer::testListOfInt($ids);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -84,16 +84,16 @@ class ListOfIntTest extends DataLayerTestCase
   public function test5()
   {
     $ids = null;
-    $ret = DataLayer::testListOfInt( $ids );
-    self::assertEquals( 0, count( $ret ) );
+    $ret = DataLayer::testListOfInt($ids);
+    self::assertEquals(0, count($ret));
 
     $ids = false;
-    $ret = DataLayer::testListOfInt( $ids );
-    self::assertEquals( 0, count( $ret ) );
+    $ret = DataLayer::testListOfInt($ids);
+    self::assertEquals(0, count($ret));
 
     $ids = '';
-    $ret = DataLayer::testListOfInt( $ids );
-    self::assertEquals( 0, count( $ret ) );
+    $ret = DataLayer::testListOfInt($ids);
+    self::assertEquals(0, count($ret));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -102,9 +102,9 @@ class ListOfIntTest extends DataLayerTestCase
    */
   public function test6()
   {
-    $ids = array();
-    $ret = DataLayer::testListOfInt( $ids );
-    self::assertEquals( 0, count( $ret ) );
+    $ids = [];
+    $ret = DataLayer::testListOfInt($ids);
+    self::assertEquals(0, count($ret));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -116,7 +116,7 @@ class ListOfIntTest extends DataLayerTestCase
   public function test7a()
   {
     $ids = "1,2,,3";
-    DataLayer::testListOfInt( $ids );
+    DataLayer::testListOfInt($ids);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -128,7 +128,7 @@ class ListOfIntTest extends DataLayerTestCase
   public function test7b()
   {
     $ids = "1,2,";
-    DataLayer::testListOfInt( $ids );
+    DataLayer::testListOfInt($ids);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -140,7 +140,7 @@ class ListOfIntTest extends DataLayerTestCase
   public function test7c()
   {
     $ids = ",1,2";
-    DataLayer::testListOfInt( $ids );
+    DataLayer::testListOfInt($ids);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -151,8 +151,8 @@ class ListOfIntTest extends DataLayerTestCase
    */
   public function test8a()
   {
-    $ids = array(1, 2, '', 3);
-    DataLayer::testListOfInt( $ids );
+    $ids = [1, 2, '', 3];
+    DataLayer::testListOfInt($ids);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -163,8 +163,8 @@ class ListOfIntTest extends DataLayerTestCase
    */
   public function test8b()
   {
-    $ids = array(1, 2, 3, null);
-    DataLayer::testListOfInt( $ids );
+    $ids = [1, 2, 3, null];
+    DataLayer::testListOfInt($ids);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -175,8 +175,8 @@ class ListOfIntTest extends DataLayerTestCase
    */
   public function test8c()
   {
-    $ids = array(false, 1, 2, 3);
-    DataLayer::testListOfInt( $ids );
+    $ids = [false, 1, 2, 3];
+    DataLayer::testListOfInt($ids);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

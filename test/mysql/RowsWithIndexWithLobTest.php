@@ -16,13 +16,13 @@ class RowsWithIndexWithLobTest extends DataLayerTestCase
    */
   public function test1()
   {
-    $rows = DataLayer::testRowsWithIndex1WithLob( 100, 'blob' );
-    $this->assertInternalType( 'array', $rows );
+    $rows = DataLayer::testRowsWithIndex1WithLob(100, 'blob');
+    $this->assertInternalType('array', $rows);
 
-    $this->assertArrayHasKey( 'a', $rows );
-    $this->assertArrayHasKey( 'b', $rows['a'] );
+    $this->assertArrayHasKey('a', $rows);
+    $this->assertArrayHasKey('b', $rows['a']);
 
-    $this->assertNotCount( 0, $rows['a']['b'] );
+    $this->assertNotCount(0, $rows['a']['b']);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -31,9 +31,9 @@ class RowsWithIndexWithLobTest extends DataLayerTestCase
    */
   public function test2()
   {
-    $rows = DataLayer::testRowsWithIndex1( 0 );
-    $this->assertInternalType( 'array', $rows );
-    $this->assertCount( 0, $rows );
+    $rows = DataLayer::testRowsWithIndex1(0);
+    $this->assertInternalType('array', $rows);
+    $this->assertCount(0, $rows);
 
   }
 

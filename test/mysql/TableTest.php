@@ -30,7 +30,7 @@ class TableTest extends DataLayerTestCase
     $table = ob_get_contents();
     ob_end_clean();
 
-    $this->assertEquals( $table, $template_table );
+    $this->assertEquals($table, $template_table);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

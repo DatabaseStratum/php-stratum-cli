@@ -9,7 +9,7 @@
  */
 //----------------------------------------------------------------------------------------------------------------------
 error_reporting(E_ALL);
-date_default_timezone_set( 'Europe/Amsterdam' );
+date_default_timezone_set('Europe/Amsterdam');
 
 ini_set('memory_limit', '10000M');
 

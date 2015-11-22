@@ -16,8 +16,8 @@ class Singleton1Test extends DataLayerTestCase
    */
   public function test1()
   {
-    $ret = DataLayer::testSingleton1a( 1 );
-    $this->assertEquals( 1, $ret );
+    $ret = DataLayer::testSingleton1a(1);
+    $this->assertEquals(1, $ret);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -28,7 +28,7 @@ class Singleton1Test extends DataLayerTestCase
    */
   public function test2()
   {
-    DataLayer::testSingleton1a( 0 );
+    DataLayer::testSingleton1a(0);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -39,7 +39,7 @@ class Singleton1Test extends DataLayerTestCase
    */
   public function test3()
   {
-    DataLayer::testSingleton1a( 2 );
+    DataLayer::testSingleton1a(2);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

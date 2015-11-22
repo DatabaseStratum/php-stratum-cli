@@ -7,7 +7,6 @@
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @link
  */
-
 //----------------------------------------------------------------------------------------------------------------------
 class Row1Test extends DataLayerTestCase
 {
@@ -17,8 +16,8 @@ class Row1Test extends DataLayerTestCase
    */
   public function test1()
   {
-    $ret = DataLayer::testRow1a( 1 );
-    $this->assertInternalType( 'array', $ret );
+    $ret = DataLayer::testRow1a(1);
+    $this->assertInternalType('array', $ret);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -29,7 +28,7 @@ class Row1Test extends DataLayerTestCase
    */
   public function test2()
   {
-    DataLayer::testRow1a( 0 );
+    DataLayer::testRow1a(0);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -40,7 +39,7 @@ class Row1Test extends DataLayerTestCase
    */
   public function test3()
   {
-    DataLayer::testRow1a( 2 );
+    DataLayer::testRow1a(2);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

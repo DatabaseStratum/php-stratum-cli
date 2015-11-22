@@ -16,18 +16,18 @@ class RowsWithKeyWithLobTest extends DataLayerTestCase
    */
   public function test1()
   {
-    $rows = DataLayer::testRowsWithKey1WithLob( 100, 'blob' );
-    $this->assertInternalType( 'array', $rows );
-    $this->assertCount( 1, $rows );
+    $rows = DataLayer::testRowsWithKey1WithLob(100, 'blob');
+    $this->assertInternalType('array', $rows);
+    $this->assertCount(1, $rows);
 
-    $this->assertArrayHasKey( 'a', $rows );
-    $this->assertArrayHasKey( 'b', $rows['a'] );
+    $this->assertArrayHasKey('a', $rows);
+    $this->assertArrayHasKey('b', $rows['a']);
 
-    $this->assertNotCount( 0, $rows['a']['b'] );
+    $this->assertNotCount(0, $rows['a']['b']);
 
-    $this->assertArrayHasKey( 'c1', $rows['a']['b'] );
+    $this->assertArrayHasKey('c1', $rows['a']['b']);
 
-    $this->assertNotCount( 0, $rows['a']['b']['c1'] );
+    $this->assertNotCount(0, $rows['a']['b']['c1']);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -36,9 +36,9 @@ class RowsWithKeyWithLobTest extends DataLayerTestCase
    */
   public function test2()
   {
-    $rows = DataLayer::testRowsWithKey1WithLob( 0, 'blob' );
-    $this->assertInternalType( 'array', $rows );
-    $this->assertCount( 0, $rows );
+    $rows = DataLayer::testRowsWithKey1WithLob(0, 'blob');
+    $this->assertInternalType('array', $rows);
+    $this->assertCount(0, $rows);
 
   }
 
