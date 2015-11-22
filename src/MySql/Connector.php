@@ -45,10 +45,10 @@ class Connector
    */
   public function connect()
   {
-    DataLayer::connect( $this->myHostName,
-                        $this->myUserName,
-                        $this->myPassword,
-                        $this->myDatabase );
+    DataLayer::connect($this->myHostName,
+                       $this->myUserName,
+                       $this->myPassword,
+                       $this->myDatabase);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -66,14 +66,14 @@ class Connector
    *
    * @param string $theConfigFilename
    */
-  public function readConfigFile( $theConfigFilename )
+  public function readConfigFile($theConfigFilename)
   {
-    $settings = parse_ini_file( $theConfigFilename, true );
+    $settings = parse_ini_file($theConfigFilename, true);
 
-    $this->myHostName = Util::getSetting( $settings, true, 'database', 'host_name' );
-    $this->myUserName = Util::getSetting( $settings, true, 'database', 'user_name' );
-    $this->myPassword = Util::getSetting( $settings, true, 'database', 'password' );
-    $this->myDatabase = Util::getSetting( $settings, true, 'database', 'database_name' );
+    $this->myHostName = Util::getSetting($settings, true, 'database', 'host_name');
+    $this->myUserName = Util::getSetting($settings, true, 'database', 'user_name');
+    $this->myPassword = Util::getSetting($settings, true, 'database', 'password');
+    $this->myDatabase = Util::getSetting($settings, true, 'database', 'database_name');
   }
 
   //--------------------------------------------------------------------------------------------------------------------

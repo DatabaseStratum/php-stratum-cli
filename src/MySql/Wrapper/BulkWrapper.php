@@ -12,11 +12,11 @@ namespace SetBased\Stratum\MySql\Wrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class for generating a wrapper method for a stored procedure without result set.
+ * Class BulkMySqlWrapper
  *
- * @package SetBased\DataLayer\Generator\Wrapper
+ * @package SetBased\DataLayer\Generator\MySqlRoutineWrapper
  */
-class NoneWrapper extends Wrapper
+class BulkWrapper extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -24,36 +24,26 @@ class NoneWrapper extends Wrapper
    */
   protected function getDocBlockReturnType()
   {
-    return 'int';
+    return '';
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * {@inheritdoc}
-   */
-  protected function writeResultHandler( $theRoutine )
+  protected function writeResultHandler($theRoutine)
   {
-    $routine_args = $this->getRoutineArgs( $theRoutine );
-    $this->writeLine( 'return self::executeNone( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\' );' );
+    $routine_args = $this->getRoutineArgs($theRoutine);
+    $this->writeLine('self::executeBulk( $theBulkHandler, \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * {@inheritdoc}
-   */
-  protected function writeRoutineFunctionLobFetchData( $theRoutine )
+  protected function writeRoutineFunctionLobFetchData($theRoutine)
   {
-    $this->writeLine( '$ret = self::$ourMySql->affected_rows;' );
-    $this->writeLine();
+    // Nothing to do.
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * {@inheritdoc}
-   */
   protected function writeRoutineFunctionLobReturnData()
   {
-    $this->writeLine( 'return $ret;' );
+    // Nothing to do.
   }
 
   //--------------------------------------------------------------------------------------------------------------------

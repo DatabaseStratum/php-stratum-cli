@@ -30,14 +30,14 @@ class Util
    *
    * @return array|null
    */
-  public static function getSetting( $theSettings, $theMandatoryFlag, $theSectionName, $theSettingName )
+  public static function getSetting($theSettings, $theMandatoryFlag, $theSectionName, $theSettingName)
   {
     // Test if the section exists.
-    if (!array_key_exists( $theSectionName, $theSettings ))
+    if (!array_key_exists($theSectionName, $theSettings))
     {
       if ($theMandatoryFlag)
       {
-        Affirm::assertFailed( "Section '%s' not found in configuration file.", $theSectionName );
+        Affirm::assertFailed("Section '%s' not found in configuration file.", $theSectionName);
       }
       else
       {
@@ -46,13 +46,13 @@ class Util
     }
 
     // Test if the setting in the section exists.
-    if (!array_key_exists( $theSettingName, $theSettings[$theSectionName] ))
+    if (!array_key_exists($theSettingName, $theSettings[$theSectionName]))
     {
       if ($theMandatoryFlag)
       {
-        Affirm::assertFailed( "Setting '%s' not found in section '%s' configuration file.",
-                              $theSettingName,
-                              $theSectionName );
+        Affirm::assertFailed("Setting '%s' not found in section '%s' configuration file.",
+                             $theSettingName,
+                             $theSectionName);
       }
       else
       {
@@ -77,20 +77,20 @@ class Util
    * @param string $theFilename The name of the file were the data must be stored.
    * @param string $theData     The data that must be written.
    */
-  public static function writeTwoPhases( $theFilename, $theData )
+  public static function writeTwoPhases($theFilename, $theData)
   {
     $write_flag = true;
-    if (file_exists( $theFilename ))
+    if (file_exists($theFilename))
     {
-      $old_data = file_get_contents( $theFilename );
+      $old_data = file_get_contents($theFilename);
       if ($theData==$old_data) $write_flag = false;
     }
 
     if ($write_flag)
     {
       $tmp_filename = $theFilename.'.tmp';
-      file_put_contents( $tmp_filename, $theData );
-      rename( $tmp_filename, $theFilename );
+      file_put_contents($tmp_filename, $theData);
+      rename($tmp_filename, $theFilename);
       echo "Wrote: '", $theFilename, "'.\n";
     }
   }

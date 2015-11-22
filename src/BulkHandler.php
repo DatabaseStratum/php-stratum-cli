@@ -24,7 +24,7 @@ interface BulkHandler
    *
    * @param string[] $theRow A row from the result set.
    */
-  public function row( $theRow );
+  public function row($theRow);
 
   // -------------------------------------------------------------------------------------------------------------------
   /**

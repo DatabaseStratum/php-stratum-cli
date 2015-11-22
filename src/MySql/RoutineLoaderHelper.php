@@ -206,14 +206,14 @@ class RoutineLoaderHelper
    *
    * @return \SetBased\Stratum\MySql\RoutineLoaderHelper
    */
-  public function __construct( $theRoutineFilename,
-                               $theRoutineFileExtension,
-                               $thePhpStratumMetadata,
-                               $theReplacePairs,
-                               $theRdbmsOldRoutineMetadata,
-                               $theSqlMode,
-                               $theCharacterSet,
-                               $theCollate
+  public function __construct($theRoutineFilename,
+                              $theRoutineFileExtension,
+                              $thePhpStratumMetadata,
+                              $theReplacePairs,
+                              $theRdbmsOldRoutineMetadata,
+                              $theSqlMode,
+                              $theCharacterSet,
+                              $theCollate
   )
   {
     $this->mySourceFilename          = $theRoutineFilename;
@@ -238,23 +238,23 @@ class RoutineLoaderHelper
     try
     {
       // We assume that the basename of the routine file and routine name are equal.
-      $this->myRoutineName = basename( $this->mySourceFilename, $this->mySourceFileExtension );
+      $this->myRoutineName = basename($this->mySourceFilename, $this->mySourceFileExtension);
 
       // Save old metadata.
       $this->myPhpStratumOldMetadata = $this->myPhpStratumMetadata;
 
       // Get modification time of the source file.
-      $this->myMTime = filemtime( $this->mySourceFilename );
+      $this->myMTime = filemtime($this->mySourceFilename);
 
       // Load the stored routine into MySQL only if the source has changed or the value of a placeholder.
       $load = $this->getMustReload();
       if ($load)
       {
         // Read the stored routine source code.
-        $this->myRoutineSourceCode = file_get_contents( $this->mySourceFilename );
+        $this->myRoutineSourceCode = file_get_contents($this->mySourceFilename);
 
         // Split the stored routine source code into lines.
-        $this->myRoutineSourceCodeLines = explode( "\n", $this->myRoutineSourceCode );
+        $this->myRoutineSourceCodeLines = explode("\n", $this->myRoutineSourceCode);
         if ($this->myRoutineSourceCodeLines===false) return false;
 
         // Extract placeholders from the stored routine source code.
@@ -314,7 +314,7 @@ class RoutineLoaderHelper
    * @return string
    * @throws \Exception
    */
-  private function columnTypeToPhpType( $theType )
+  private function columnTypeToPhpType($theType)
   {
     $php_type = '';
 
@@ -370,7 +370,7 @@ class RoutineLoaderHelper
         break;
 
       default:
-        Affirm::assertFailed( "Unknown MySQL type '%s'.", $theType );
+        Affirm::assertFailed("Unknown MySQL type '%s'.", $theType);
     }
 
     return $php_type;
@@ -384,11 +384,11 @@ class RoutineLoaderHelper
   {
     if (isset($this->myRdbmsOldRoutineMetadata))
     {
-      $sql = sprintf( "drop %s if exists %s",
-                      $this->myRdbmsOldRoutineMetadata['routine_type'],
-                      $this->myRoutineName );
+      $sql = sprintf("drop %s if exists %s",
+                     $this->myRdbmsOldRoutineMetadata['routine_type'],
+                     $this->myRoutineName);
 
-      DataLayer::executeNone( $sql );
+      DataLayer::executeNone($sql);
     }
   }
 
@@ -399,42 +399,42 @@ class RoutineLoaderHelper
   private function getBulkInsertTableColumnsInfo()
   {
     // Check if table is a temporary table or a non-temporary table.
-    $query                  = sprintf( '
+    $query                  = sprintf('
 select 1
 from   information_schema.TABLES
 where table_schema = database()
-and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
-    $table_is_non_temporary = DataLayer::executeRow0( $query );
+and   table_name   = %s', DataLayer::quoteString($this->myTableName));
+    $table_is_non_temporary = DataLayer::executeRow0($query);
 
     // Create temporary table if table is non-temporary table.
     if (!$table_is_non_temporary)
     {
       $query = 'call '.$this->myRoutineName.'()';
-      DataLayer::executeNone( $query );
+      DataLayer::executeNone($query);
     }
 
     // Get information about the columns of the table.
-    $query   = sprintf( "describe `%s`", $this->myTableName );
-    $columns = DataLayer::executeRows( $query );
+    $query   = sprintf("describe `%s`", $this->myTableName);
+    $columns = DataLayer::executeRows($query);
 
     // Drop temporary table if table is non-temporary.
     if (!$table_is_non_temporary)
     {
-      $query = sprintf( "drop temporary table `%s`", $this->myTableName );
-      DataLayer::executeNone( $query );
+      $query = sprintf("drop temporary table `%s`", $this->myTableName);
+      DataLayer::executeNone($query);
     }
 
     // Check number of columns in the table match the number of fields given in the designation type.
-    $n1 = count( $this->myColumns );
-    $n2 = count( $columns );
-    if ($n1!=$n2) Affirm::assertFailed( "Number of fields %d and number of columns %d don't match.", $n1, $n2 );
+    $n1 = count($this->myColumns);
+    $n2 = count($columns);
+    if ($n1!=$n2) Affirm::assertFailed("Number of fields %d and number of columns %d don't match.", $n1, $n2);
 
     // Fill arrays with column names and column types.
     $tmp_column_types = [];
     $tmp_fields       = [];
     foreach ($columns as $column)
     {
-      preg_match( "(\\w+)", $column['Type'], $type );
+      preg_match("(\\w+)", $column['Type'], $type);
       $tmp_column_types[] = $type['0'];
       $tmp_fields[]       = $column['Field'];
     }
@@ -452,36 +452,36 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
   private function getDesignationType()
   {
     $ret = true;
-    $key = array_search( 'begin', $this->myRoutineSourceCodeLines );
+    $key = array_search('begin', $this->myRoutineSourceCodeLines);
 
     if ($key!==false)
     {
       for ($i = 1; $i<$key; $i++)
       {
-        $n = preg_match( '/^\s*--\s+type:\s*(\w+)\s*(.+)?\s*$/',
-                         $this->myRoutineSourceCodeLines[$key - $i],
-                         $matches );
+        $n = preg_match('/^\s*--\s+type:\s*(\w+)\s*(.+)?\s*$/',
+                        $this->myRoutineSourceCodeLines[$key - $i],
+                        $matches);
         if ($n==1)
         {
           $this->myDesignationType = $matches[1];
           switch ($this->myDesignationType)
           {
             case 'bulk_insert':
-              $m = preg_match( '/^([a-zA-Z0-9_]+)\s+([a-zA-Z0-9_,]+)$/',
-                               $matches[2],
-                               $info );
+              $m = preg_match('/^([a-zA-Z0-9_]+)\s+([a-zA-Z0-9_,]+)$/',
+                              $matches[2],
+                              $info);
               if ($m==0)
               {
-                Affirm::assertFailed( "Error: Expected: -- type: bulk_insert <table_name> <columns> in file '%s'.\n",
-                                      $this->mySourceFilename );
+                Affirm::assertFailed("Error: Expected: -- type: bulk_insert <table_name> <columns> in file '%s'.\n",
+                                     $this->mySourceFilename);
               }
               $this->myTableName = $info[1];
-              $this->myColumns   = explode( ',', $info[2] );
+              $this->myColumns   = explode(',', $info[2]);
               break;
 
             case 'rows_with_key':
             case 'rows_with_index':
-              $this->myColumns = explode( ',', $matches[2] );
+              $this->myColumns = explode(',', $matches[2]);
               break;
 
             default:
@@ -499,8 +499,8 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
 
     if ($ret===false)
     {
-      echo sprintf( "Error: Unable to find the designation type of the stored routine in file '%s'.\n",
-                    $this->mySourceFilename );
+      echo sprintf("Error: Unable to find the designation type of the stored routine in file '%s'.\n",
+                   $this->mySourceFilename);
     }
 
     return $ret;
@@ -516,12 +516,12 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
     $tmp = '';
     foreach ($this->myRoutineSourceCodeLines as $line)
     {
-      $n = preg_match( "/create\\s+(procedure|function)\\s+([a-zA-Z0-9_]+)/i", $line );
+      $n = preg_match("/create\\s+(procedure|function)\\s+([a-zA-Z0-9_]+)/i", $line);
       if ($n) break;
       else $tmp .= $line."\n";
     }
 
-    $phpdoc = new DocBlock( $tmp );
+    $phpdoc = new DocBlock($tmp);
 
     // Get the short description.
     $this->myDocBlockPartsSource['sort_description'] = $phpdoc->getShortDescription();
@@ -538,15 +538,15 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
         $description = $tag->getDescription();
 
         // Gets name of parameter from routine doc block.
-        $name = trim( substr( $content, 0, strlen( $content ) - strlen( $description ) ) );
+        $name = trim(substr($content, 0, strlen($content) - strlen($description)));
 
         $tmp   = [];
-        $lines = explode( "\n", $description );
+        $lines = explode("\n", $description);
         foreach ($lines as $line)
         {
-          $tmp[] = trim( $line );
+          $tmp[] = trim($line);
         }
-        $description = implode( "\n", $tmp );
+        $description = implode("\n", $tmp);
 
         $this->myDocBlockPartsSource['parameters'][$key] = ['name'        => $name,
                                                             'description' => $description];
@@ -568,9 +568,9 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
     foreach ($this->myParameters as $key => $parameter_info)
     {
       $parameters[] = ['name'                 => $parameter_info['name'],
-                       'php_type'             => $this->columnTypeToPhpType( $parameter_info['data_type'] ),
+                       'php_type'             => $this->columnTypeToPhpType($parameter_info['data_type']),
                        'data_type_descriptor' => $parameter_info['data_type_descriptor'],
-                       'description'          => $this->getParameterDocDescription( $parameter_info['name'] )];
+                       'description'          => $this->getParameterDocDescription($parameter_info['name'])];
     }
 
     // Compose all the DocBlock parts to be used by the wrapper generator.
@@ -587,19 +587,19 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
    */
   private function getExtendedParametersInfo()
   {
-    $key = array_search( 'begin', $this->myRoutineSourceCodeLines );
+    $key = array_search('begin', $this->myRoutineSourceCodeLines);
 
     if ($key!==false)
     {
       for ($i = 1; $i<$key; $i++)
       {
-        $k = preg_match( '/^\s*--\s+param:(?:\s*(\w+)\s+(\w+)(?:(?:\s+([^\s-])\s+([^\s-])\s+([^\s-])\s*$)|(?:\s*$)))?/',
-                         $this->myRoutineSourceCodeLines[$key - $i + 1],
-                         $matches );
+        $k = preg_match('/^\s*--\s+param:(?:\s*(\w+)\s+(\w+)(?:(?:\s+([^\s-])\s+([^\s-])\s+([^\s-])\s*$)|(?:\s*$)))?/',
+                        $this->myRoutineSourceCodeLines[$key - $i + 1],
+                        $matches);
 
         if ($k==1)
         {
-          $count = count( $matches );
+          $count = count($matches);
           if ($count==3 || $count==6)
           {
             $parameter_name = $matches[1];
@@ -628,15 +628,15 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
             }
             else
             {
-              Affirm::assertFailed( "Duplicate parameter '%s' in file '%s'.",
-                                    $parameter_name,
-                                    $this->mySourceFilename );
+              Affirm::assertFailed("Duplicate parameter '%s' in file '%s'.",
+                                   $parameter_name,
+                                   $this->mySourceFilename);
             }
           }
           else
           {
-            Affirm::assertFailed( "Error: Expected: -- param: <field_name> <type_of_list> [delimiter enclosure escape] in file '%s'.\n",
-                                  $this->mySourceFilename );
+            Affirm::assertFailed("Error: Expected: -- param: <field_name> <type_of_list> [delimiter enclosure escape] in file '%s'.\n",
+                                 $this->mySourceFilename);
           }
         }
       }
@@ -661,8 +661,8 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
     // If the value of a placeholder has changed the source file must be loaded.
     foreach ($this->myPhpStratumOldMetadata['replace'] as $place_holder => $old_value)
     {
-      if (!isset($this->myReplacePairs[strtoupper( $place_holder )]) ||
-        $this->myReplacePairs[strtoupper( $place_holder )]!==$old_value
+      if (!isset($this->myReplacePairs[strtoupper($place_holder)]) ||
+        $this->myReplacePairs[strtoupper($place_holder)]!==$old_value
       )
       {
         return true;
@@ -695,16 +695,16 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
   {
     $ret = true;
 
-    $n = preg_match( "/create\\s+(procedure|function)\\s+([a-zA-Z0-9_]+)/i", $this->myRoutineSourceCode, $matches );
+    $n = preg_match("/create\\s+(procedure|function)\\s+([a-zA-Z0-9_]+)/i", $this->myRoutineSourceCode, $matches);
     if ($n==1)
     {
-      $this->myRoutineType = strtolower( $matches[1] );
+      $this->myRoutineType = strtolower($matches[1]);
 
       if ($this->myRoutineName!=$matches[2])
       {
-        echo sprintf( "Error: Stored routine name '%s' does not match filename in file '%s'.\n",
-                      $matches[2],
-                      $this->mySourceFilename );
+        echo sprintf("Error: Stored routine name '%s' does not match filename in file '%s'.\n",
+                     $matches[2],
+                     $this->mySourceFilename);
         $ret = false;
       }
     }
@@ -715,8 +715,8 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
 
     if (!isset($this->myRoutineType))
     {
-      echo sprintf( "Error: Unable to find the stored routine name and type in file '%s'.\n",
-                    $this->mySourceFilename );
+      echo sprintf("Error: Unable to find the stored routine name and type in file '%s'.\n",
+                   $this->mySourceFilename);
     }
 
     return $ret;
@@ -730,7 +730,7 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
    *
    * @return string
    */
-  private function getParameterDocDescription( $theName )
+  private function getParameterDocDescription($theName)
   {
     if (isset($this->myDocBlockPartsSource['parameters']))
     {
@@ -751,7 +751,7 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
    */
   private function getPlaceholders()
   {
-    preg_match_all( '(@[A-Za-z0-9\_\.]+(\%type)?@)', $this->myRoutineSourceCode, $matches );
+    preg_match_all('(@[A-Za-z0-9\_\.]+(\%type)?@)', $this->myRoutineSourceCode, $matches);
 
     $ret                  = true;
     $this->myPlaceholders = [];
@@ -760,9 +760,9 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
     {
       foreach ($matches[0] as $placeholder)
       {
-        if (!isset($this->myReplacePairs[strtoupper( $placeholder )]))
+        if (!isset($this->myReplacePairs[strtoupper($placeholder)]))
         {
-          echo sprintf( "Error: Unknown placeholder '%s' in file '%s'.\n", $placeholder, $this->mySourceFilename );
+          echo sprintf("Error: Unknown placeholder '%s' in file '%s'.\n", $placeholder, $this->mySourceFilename);
           $ret = false;
         }
 
@@ -777,10 +777,10 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
     {
       foreach ($this->myPlaceholders as $placeholder)
       {
-        $this->myReplace[$placeholder] = $this->myReplacePairs[strtoupper( $placeholder )];
+        $this->myReplace[$placeholder] = $this->myReplacePairs[strtoupper($placeholder)];
       }
-      $ok = ksort( $this->myReplace );
-      if ($ok===false) Affirm::assertFailed( "Internal error." );
+      $ok = ksort($this->myReplace);
+      if ($ok===false) Affirm::assertFailed("Internal error.");
     }
 
     return $ret;
@@ -792,7 +792,7 @@ and   table_name   = %s', DataLayer::quoteString( $this->myTableName ) );
    */
   private function getRoutineParametersInfo()
   {
-    $query = sprintf( "
+    $query = sprintf("
 select t2.parameter_name      parameter_name
 ,      t2.data_type           parameter_type
 ,      t2.dtd_identifier      column_type
@@ -803,9 +803,9 @@ left outer join information_schema.PARAMETERS t2  on  t2.specific_schema = t1.ro
                                                       t2.specific_name   = t1.routine_name and
                                                       t2.parameter_mode   is not null
 where t1.routine_schema = database()
-and   t1.routine_name   = '%s'", $this->myRoutineName );
+and   t1.routine_name   = '%s'", $this->myRoutineName);
 
-    $routine_parameters = DataLayer::executeRows( $query );
+    $routine_parameters = DataLayer::executeRows($query);
 
     foreach ($routine_parameters as $key => $routine_parameter)
     {
@@ -836,22 +836,22 @@ and   t1.routine_name   = '%s'", $this->myRoutineName );
    */
   private function loadRoutineFile()
   {
-    echo sprintf( "Loading %s %s\n",
-                  $this->myRoutineType,
-                  $this->myRoutineName );
+    echo sprintf("Loading %s %s\n",
+                 $this->myRoutineType,
+                 $this->myRoutineName);
 
     // Set magic constants specific for this stored routine.
     $this->setMagicConstants();
 
     // Replace all place holders with their values.
-    $lines          = explode( "\n", $this->myRoutineSourceCode );
+    $lines          = explode("\n", $this->myRoutineSourceCode);
     $routine_source = [];
     foreach ($lines as $i => &$line)
     {
       $this->myReplace['__LINE__'] = $i + 1;
-      $routine_source[$i]          = strtr( $line, $this->myReplace );
+      $routine_source[$i]          = strtr($line, $this->myReplace);
     }
-    $routine_source = implode( "\n", $routine_source );
+    $routine_source = implode("\n", $routine_source);
 
     // Unset magic constants specific for this stored routine.
     $this->unsetMagicConstants();
@@ -860,15 +860,15 @@ and   t1.routine_name   = '%s'", $this->myRoutineName );
     $this->dropRoutine();
 
     // Set the SQL-mode under which the stored routine will run.
-    $sql = sprintf( "set sql_mode ='%s'", $this->mySqlMode );
-    DataLayer::executeNone( $sql );
+    $sql = sprintf("set sql_mode ='%s'", $this->mySqlMode);
+    DataLayer::executeNone($sql);
 
     // Set the default character set and collate under which the store routine will run.
-    $sql = sprintf( "set names '%s' collate '%s'", $this->myCharacterSet, $this->myCollate );
-    DataLayer::executeNone( $sql );
+    $sql = sprintf("set names '%s' collate '%s'", $this->myCharacterSet, $this->myCollate);
+    DataLayer::executeNone($sql);
 
     // Finally, execute the SQL code for loading the stored routine.
-    DataLayer::executeNone( $routine_source );
+    DataLayer::executeNone($routine_source);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -877,11 +877,11 @@ and   t1.routine_name   = '%s'", $this->myRoutineName );
    */
   private function setMagicConstants()
   {
-    $real_path = realpath( $this->mySourceFilename );
+    $real_path = realpath($this->mySourceFilename);
 
-    $this->myReplace['__FILE__']    = "'".DataLayer::realEscapeString( $real_path )."'";
+    $this->myReplace['__FILE__']    = "'".DataLayer::realEscapeString($real_path)."'";
     $this->myReplace['__ROUTINE__'] = "'".$this->myRoutineName."'";
-    $this->myReplace['__DIR__']     = "'".DataLayer::realEscapeString( dirname( $real_path ) )."'";
+    $this->myReplace['__DIR__']     = "'".DataLayer::realEscapeString(dirname($real_path))."'";
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -933,16 +933,16 @@ and   t1.routine_name   = '%s'", $this->myRoutineName );
         {
           if ($param_info['name']==$spec_param_name)
           {
-            $this->myParameters[$kay] = array_merge( $this->myParameters[$kay], $spec_param_info );
+            $this->myParameters[$kay] = array_merge($this->myParameters[$kay], $spec_param_info);
             $param_not_exist          = false;
             break;
           }
         }
         if ($param_not_exist)
         {
-          Affirm::assertFailed( "Specific parameter '%s' does not exist in file '%s'.",
-                                $spec_param_name,
-                                $this->mySourceFilename );
+          Affirm::assertFailed("Specific parameter '%s' does not exist in file '%s'.",
+                               $spec_param_name,
+                               $this->mySourceFilename);
         }
       }
     }
@@ -973,17 +973,17 @@ and   t1.routine_name   = '%s'", $this->myRoutineName );
     }
 
     // Check and show warning if any parameters is missing in doc block.
-    $tmp = array_diff( $database_parameters_names, $doc_block_parameters_names );
+    $tmp = array_diff($database_parameters_names, $doc_block_parameters_names);
     foreach ($tmp as $name)
     {
-      echo sprintf( "  Warning: parameter '%s' is missing from doc block.\n", $name );
+      echo sprintf("  Warning: parameter '%s' is missing from doc block.\n", $name);
     }
 
     // Check and show warning if find unknown parameters in doc block.
-    $tmp = array_diff( $doc_block_parameters_names, $database_parameters_names );
+    $tmp = array_diff($doc_block_parameters_names, $database_parameters_names);
     foreach ($tmp as $name)
     {
-      echo sprintf( "  Warning: unknown parameter '%s' found in doc block.\n", $name );
+      echo sprintf("  Warning: unknown parameter '%s' found in doc block.\n", $name);
     }
   }
 

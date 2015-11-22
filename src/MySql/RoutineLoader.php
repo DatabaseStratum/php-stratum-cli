@@ -122,17 +122,17 @@ class RoutineLoader
    *
    * @return int Returns 0 on success, 1 if one or more errors occurred.
    */
-  public function main( $theConfigFilename, $theFileNames )
+  public function main($theConfigFilename, $theFileNames)
   {
     $this->myConnector = new Connector();
 
     if (empty($theFileNames))
     {
-      $this->loadAll( $theConfigFilename );
+      $this->loadAll($theConfigFilename);
     }
     else
     {
-      $this->loadList( $theConfigFilename, $theFileNames );
+      $this->loadList($theConfigFilename, $theFileNames);
     }
 
     $this->logOverviewErrors();
@@ -146,19 +146,19 @@ class RoutineLoader
    *
    * @param string $theConfigFilename
    */
-  protected function readConfigFile( $theConfigFilename )
+  protected function readConfigFile($theConfigFilename)
   {
-    $this->myConnector->readConfigFile( $theConfigFilename );
+    $this->myConnector->readConfigFile($theConfigFilename);
 
-    $settings = parse_ini_file( $theConfigFilename, true );
+    $settings = parse_ini_file($theConfigFilename, true);
 
-    $this->myPhpStratumMetadataFilename = Util::getSetting( $settings, true, 'wrapper', 'metadata' );
-    $this->mySourceDirectory            = Util::getSetting( $settings, true, 'loader', 'source_directory' );
-    $this->mySourceFileExtension        = Util::getSetting( $settings, true, 'loader', 'extension' );
-    $this->myConstantClassName          = Util::getSetting( $settings, false, 'loader', 'constant_class' );
-    $this->mySqlMode                    = Util::getSetting( $settings, true, 'loader', 'sql_mode' );
-    $this->myCharacterSet               = Util::getSetting( $settings, true, 'loader', 'character_set' );
-    $this->myCollate                    = Util::getSetting( $settings, true, 'loader', 'collate' );
+    $this->myPhpStratumMetadataFilename = Util::getSetting($settings, true, 'wrapper', 'metadata');
+    $this->mySourceDirectory            = Util::getSetting($settings, true, 'loader', 'source_directory');
+    $this->mySourceFileExtension        = Util::getSetting($settings, true, 'loader', 'extension');
+    $this->myConstantClassName          = Util::getSetting($settings, false, 'loader', 'constant_class');
+    $this->mySqlMode                    = Util::getSetting($settings, true, 'loader', 'sql_mode');
+    $this->myCharacterSet               = Util::getSetting($settings, true, 'loader', 'character_set');
+    $this->myCollate                    = Util::getSetting($settings, true, 'loader', 'collate');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -172,12 +172,12 @@ class RoutineLoader
     {
       if (!isset($this->mySourceFileNames[$old_routine['routine_name']]))
       {
-        echo sprintf( "Dropping %s %s\n",
-                      strtolower( $old_routine['routine_type'] ),
-                      $old_routine['routine_name'] );
+        echo sprintf("Dropping %s %s\n",
+                     strtolower($old_routine['routine_type']),
+                     $old_routine['routine_name']);
 
-        $sql = sprintf( "drop %s if exists %s", $old_routine['routine_type'], $old_routine['routine_name'] );
-        DataLayer::executeNone( $sql );
+        $sql = sprintf("drop %s if exists %s", $old_routine['routine_type'], $old_routine['routine_name']);
+        DataLayer::executeNone($sql);
       }
     }
   }
@@ -188,32 +188,32 @@ class RoutineLoader
    *
    * @param string $theSourceDir The directory.
    */
-  private function findSourceFiles( $theSourceDir = null )
+  private function findSourceFiles($theSourceDir = null)
   {
     if ($theSourceDir===null) $theSourceDir = $this->mySourceDirectory;
 
-    $psql_filenames = glob( $theSourceDir.'/*'.$this->mySourceFileExtension );
+    $psql_filenames = glob($theSourceDir.'/*'.$this->mySourceFileExtension);
     foreach ($psql_filenames as $psql_filename)
     {
-      $base_name = basename( $psql_filename, $this->mySourceFileExtension );
+      $base_name = basename($psql_filename, $this->mySourceFileExtension);
       if (!isset($this->mySourceFileNames[$base_name]))
       {
         $this->mySourceFileNames[$base_name] = $psql_filename;
       }
       else
       {
-        echo sprintf( "Error: Files '%s' and '%s' have the same basename.\n",
-                      $this->mySourceFileNames[$base_name],
-                      $psql_filename );
+        echo sprintf("Error: Files '%s' and '%s' have the same basename.\n",
+                     $this->mySourceFileNames[$base_name],
+                     $psql_filename);
         $this->myErrorFileNames[] = $psql_filename;
       }
     }
 
-    $filenames = scandir( $theSourceDir );
+    $filenames = scandir($theSourceDir);
     $dir_names = [];
     foreach ($filenames as $filename)
     {
-      if (is_dir( $theSourceDir.'/'.$filename ))
+      if (is_dir($theSourceDir.'/'.$filename))
       {
         if ($filename!='.' && $filename!='..')
         {
@@ -224,7 +224,7 @@ class RoutineLoader
 
     foreach ($dir_names as $dir_name)
     {
-      $this->findSourceFiles( $dir_name );
+      $this->findSourceFiles($dir_name);
     }
   }
 
@@ -234,28 +234,28 @@ class RoutineLoader
    *
    * @param array $theFileNames The list of filenames.
    */
-  private function findSourceFilesFromList( $theFileNames )
+  private function findSourceFilesFromList($theFileNames)
   {
     foreach ($theFileNames as $psql_filename)
     {
-      if (file_exists( $psql_filename ))
+      if (file_exists($psql_filename))
       {
-        $base_name = basename( $psql_filename, $this->mySourceFileExtension );
+        $base_name = basename($psql_filename, $this->mySourceFileExtension);
         if (!isset($this->mySourceFileNames[$base_name]))
         {
           $this->mySourceFileNames[$base_name] = $psql_filename;
         }
         else
         {
-          echo sprintf( "Error: Files '%s' and '%s' have the same basename.\n",
-                        $this->mySourceFileNames[$base_name],
-                        $psql_filename );
+          echo sprintf("Error: Files '%s' and '%s' have the same basename.\n",
+                       $this->mySourceFileNames[$base_name],
+                       $psql_filename);
           $this->myErrorFileNames[] = $psql_filename;
         }
       }
       else
       {
-        echo sprintf( "File not exists: '%s'.\n", $psql_filename );
+        echo sprintf("File not exists: '%s'.\n", $psql_filename);
         $this->myErrorFileNames[] = $psql_filename;
       }
     }
@@ -286,13 +286,13 @@ order by table_schema
 ,        table_name
 ,        column_name';
 
-    $rows = DataLayer::executeRows( $query );
+    $rows = DataLayer::executeRows($query);
     foreach ($rows as $row)
     {
       $key = '@';
       if (isset($row['table_schema'])) $key .= $row['table_schema'].'.';
       $key .= $row['table_name'].'.'.$row['column_name'].'%type@';
-      $key = strtoupper( $key );
+      $key = strtoupper($key);
 
       $value = $row['column_type'];
       if (isset($row['character_set_name'])) $value .= ' character set '.$row['character_set_name'];
@@ -310,11 +310,11 @@ order by table_schema
     // If myTargetConfigFilename is not set return immediately.
     if (!isset($this->myConstantClassName)) return;
 
-    $reflection = new \ReflectionClass( $this->myConstantClassName );
+    $reflection = new \ReflectionClass($this->myConstantClassName);
 
     foreach ($reflection->getConstants() as $name => $value)
     {
-      if (!is_numeric( $value )) $value = "'$value'";
+      if (!is_numeric($value)) $value = "'$value'";
 
       $this->myReplacePairs['@'.$name.'@'] = $value;
     }
@@ -326,11 +326,11 @@ order by table_schema
    */
   private function getCorrectSqlMode()
   {
-    $sql = sprintf( "set sql_mode ='%s'", $this->mySqlMode );
-    DataLayer::executeNone( $sql );
+    $sql = sprintf("set sql_mode ='%s'", $this->mySqlMode);
+    DataLayer::executeNone($sql);
 
     $query           = "select @@sql_mode;";
-    $tmp             = DataLayer::executeRows( $query );
+    $tmp             = DataLayer::executeRows($query);
     $this->mySqlMode = $tmp[0]['@@sql_mode'];
   }
 
@@ -350,7 +350,7 @@ from  information_schema.ROUTINES
 where ROUTINE_SCHEMA = database()
 order by routine_name";
 
-    $rows = DataLayer::executeRows( $query );
+    $rows = DataLayer::executeRows($query);
 
     $this->myRdbmsOldMetadata = [];
     foreach ($rows as $row)
@@ -365,9 +365,9 @@ order by routine_name";
    *
    * @param string $theConfigFilename The filename of the configuration file.
    */
-  private function loadAll( $theConfigFilename )
+  private function loadAll($theConfigFilename)
   {
-    $this->readConfigFile( $theConfigFilename );
+    $this->readConfigFile($theConfigFilename);
 
     $this->myConnector->connect();
 
@@ -399,13 +399,13 @@ order by routine_name";
    * @param string $theConfigFilename The filename of the configuration file.
    * @param array  $theFileNames      The list of files to be loaded.
    */
-  private function loadList( $theConfigFilename, $theFileNames )
+  private function loadList($theConfigFilename, $theFileNames)
   {
-    $this->readConfigFile( $theConfigFilename );
+    $this->readConfigFile($theConfigFilename);
 
     $this->myConnector->connect();
 
-    $this->findSourceFilesFromList( $theFileNames );
+    $this->findSourceFilesFromList($theFileNames);
     $this->getColumnTypes();
     $this->readStoredRoutineMetadata();
     $this->getConstants();
@@ -428,16 +428,16 @@ order by routine_name";
   {
     foreach ($this->mySourceFileNames as $filename)
     {
-      $routine_name = basename( $filename, $this->mySourceFileExtension );
+      $routine_name = basename($filename, $this->mySourceFileExtension);
 
-      $helper = new RoutineLoaderHelper( $filename,
-                                         $this->mySourceFileExtension,
-                                         isset($this->myPhpStratumMetadata[$routine_name]) ? $this->myPhpStratumMetadata[$routine_name] : null,
-                                         $this->myReplacePairs,
-                                         isset($this->myRdbmsOldMetadata[$routine_name]) ? $this->myRdbmsOldMetadata[$routine_name] : null,
-                                         $this->mySqlMode,
-                                         $this->myCharacterSet,
-                                         $this->myCollate );
+      $helper = new RoutineLoaderHelper($filename,
+                                        $this->mySourceFileExtension,
+                                        isset($this->myPhpStratumMetadata[$routine_name]) ? $this->myPhpStratumMetadata[$routine_name] : null,
+                                        $this->myReplacePairs,
+                                        isset($this->myRdbmsOldMetadata[$routine_name]) ? $this->myRdbmsOldMetadata[$routine_name] : null,
+                                        $this->mySqlMode,
+                                        $this->myCharacterSet,
+                                        $this->myCollate);
 
       $meta_data = $helper->loadStoredRoutine();
       if ($meta_data===false)
@@ -462,7 +462,7 @@ order by routine_name";
   {
     foreach ($this->myErrorFileNames as $filename)
     {
-      echo sprintf( "Error loading file '%s'.\n", $filename );
+      echo sprintf("Error loading file '%s'.\n", $filename);
     }
   }
 
@@ -472,10 +472,10 @@ order by routine_name";
    */
   private function readStoredRoutineMetadata()
   {
-    if (file_exists( $this->myPhpStratumMetadataFilename ))
+    if (file_exists($this->myPhpStratumMetadataFilename))
     {
-      $this->myPhpStratumMetadata = json_decode( file_get_contents( $this->myPhpStratumMetadataFilename ), true );
-      if (json_last_error()!=JSON_ERROR_NONE) Affirm::assertFailed( "Error decoding JSON: '%s'.", json_last_error_msg() );
+      $this->myPhpStratumMetadata = json_decode(file_get_contents($this->myPhpStratumMetadataFilename), true);
+      if (json_last_error()!=JSON_ERROR_NONE) Affirm::assertFailed("Error decoding JSON: '%s'.", json_last_error_msg());
     }
   }
 
@@ -488,7 +488,7 @@ order by routine_name";
     $clean = [];
     foreach ($this->mySourceFileNames as $myPsqlFilename)
     {
-      $tmp = basename( $myPsqlFilename, $this->mySourceFileExtension );
+      $tmp = basename($myPsqlFilename, $this->mySourceFileExtension);
       if (isset($this->myPhpStratumMetadata[$tmp])) $clean[$tmp] = $this->myPhpStratumMetadata[$tmp];
     }
     $this->myPhpStratumMetadata = $clean;
@@ -502,13 +502,13 @@ order by routine_name";
   {
     // Note: Constant JSON_PRETTY_PRINT was introduced in php 5.4 while we want to be compatible with php 5.3.
     $options = 0;
-    if (defined( 'JSON_PRETTY_PRINT' )) $options = $options | constant( 'JSON_PRETTY_PRINT' );
+    if (defined('JSON_PRETTY_PRINT')) $options = $options | constant('JSON_PRETTY_PRINT');
 
-    $json_data = json_encode( $this->myPhpStratumMetadata, $options );
-    if (json_last_error()!=JSON_ERROR_NONE) Affirm::assertFailed( "Error of encoding to JSON: '%s'.", json_last_error_msg() );
+    $json_data = json_encode($this->myPhpStratumMetadata, $options);
+    if (json_last_error()!=JSON_ERROR_NONE) Affirm::assertFailed("Error of encoding to JSON: '%s'.", json_last_error_msg());
 
     // Save the metadata.
-    Util::writeTwoPhases( $this->myPhpStratumMetadataFilename, $json_data );
+    Util::writeTwoPhases($this->myPhpStratumMetadataFilename, $json_data);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

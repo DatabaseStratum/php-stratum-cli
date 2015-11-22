@@ -34,7 +34,7 @@ class BulkInsertWrapper extends Wrapper
   /**
    * {@inheritdoc}
    */
-  protected function getWrapperArgs( $theRoutine )
+  protected function getWrapperArgs($theRoutine)
   {
     return '$theData';
   }
@@ -43,15 +43,15 @@ class BulkInsertWrapper extends Wrapper
   /**
    * {@inheritdoc}
    */
-  protected function writeResultHandler( $theRoutine )
+  protected function writeResultHandler($theRoutine)
   {
     // Validate number of column names and number of column types are equal.
-    $n1 = count( $theRoutine['columns'] );
-    $n2 = count( $theRoutine['column_types'] );
-    if ($n1!=$n2) Affirm::assertFailed( "Number of fields %d and number of columns %d don't match.", $n1, $n2 );
+    $n1 = count($theRoutine['columns']);
+    $n2 = count($theRoutine['column_types']);
+    if ($n1!=$n2) Affirm::assertFailed("Number of fields %d and number of columns %d don't match.", $n1, $n2);
 
-    $routine_args = $this->getRoutineArgs( $theRoutine );
-    $this->writeLine( 'self::query( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
+    $routine_args = $this->getRoutineArgs($theRoutine);
+    $this->writeLine('self::query( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');');
 
     $columns = '';
     $fields  = '';
@@ -63,24 +63,24 @@ class BulkInsertWrapper extends Wrapper
         $columns .= '`'.$theRoutine['fields'][$i].'`';
 
         if ($fields) $fields .= ',';
-        $fields .= $this->writeEscapesValue( $theRoutine['column_types'][$i], '$row[\''.$field.'\']' );
+        $fields .= $this->writeEscapesValue($theRoutine['column_types'][$i], '$row[\''.$field.'\']');
       }
     }
 
-    $this->writeLine( 'if (is_array($theData) &&!empty($theData))' );
-    $this->writeLine( '{' );
-    $this->writeLine( '$sql = "INSERT INTO `'.$theRoutine['table_name'].'`('.$columns.')";' );
-    $this->writeLine( '$first = true;' );
-    $this->writeLine( 'foreach( $theData as $row )' );
-    $this->writeLine( '{' );
+    $this->writeLine('if (is_array($theData) &&!empty($theData))');
+    $this->writeLine('{');
+    $this->writeLine('$sql = "INSERT INTO `'.$theRoutine['table_name'].'`('.$columns.')";');
+    $this->writeLine('$first = true;');
+    $this->writeLine('foreach( $theData as $row )');
+    $this->writeLine('{');
 
-    $this->writeLine( 'if ($first) $sql .=\' values('.$fields.')\';' );
-    $this->writeLine( 'else        $sql .=\',      ('.$fields.')\';' );
+    $this->writeLine('if ($first) $sql .=\' values('.$fields.')\';');
+    $this->writeLine('else        $sql .=\',      ('.$fields.')\';');
 
-    $this->writeLine( '$first = false;' );
-    $this->writeLine( '}' );
-    $this->writeLine( 'self::query( $sql );' );
-    $this->writeLine( '}' );
+    $this->writeLine('$first = false;');
+    $this->writeLine('}');
+    $this->writeLine('self::query( $sql );');
+    $this->writeLine('}');
   }
 
 
@@ -88,7 +88,7 @@ class BulkInsertWrapper extends Wrapper
   /**
    * {@inheritdoc}
    */
-  protected function writeRoutineFunctionLobFetchData( $theRoutine )
+  protected function writeRoutineFunctionLobFetchData($theRoutine)
   {
     // Nothing to do.
   }
@@ -111,7 +111,7 @@ class BulkInsertWrapper extends Wrapper
    *
    * @return string The generated PHP code.
    */
-  private function writeEscapesValue( $theValueType, $theFieldExpression )
+  private function writeEscapesValue($theValueType, $theFieldExpression)
   {
     $ret = '';
     switch ($theValueType)
@@ -164,11 +164,11 @@ class BulkInsertWrapper extends Wrapper
       case 'blob':
       case 'mediumblob':
       case 'longblob':
-        Affirm::assertFailed( "LOBs are not possible in temporary tables" );
+        Affirm::assertFailed("LOBs are not possible in temporary tables");
         break;
 
       default:
-        Affirm::assertFailed( "Unknown type '%s'.", $theValueType );
+        Affirm::assertFailed("Unknown type '%s'.", $theValueType);
     }
 
     return $ret;

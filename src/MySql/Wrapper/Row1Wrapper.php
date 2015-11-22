@@ -12,38 +12,63 @@ namespace SetBased\Stratum\MySql\Wrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class TableMySqlWrapper
+ * Class Row1MySqlWrapper
  *
  * @package SetBased\DataLayer\Generator\Wrapper
  */
-class TableWrapper extends Wrapper
+class Row1Wrapper extends Wrapper
 {
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct($theLobAsStringFlag)
+  {
+    parent::__construct($theLobAsStringFlag);
+
+    $this->myExceptions[] = 'ResultException';
+    $this->myImports[]    = '\SetBased\Stratum\Exception\ResultException';
+  }
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * @return string
    */
   protected function getDocBlockReturnType()
   {
-    return 'int';
+    return 'array';
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * {@inheritdoc}
    */
-  protected function writeResultHandler( $theRoutine )
+  protected function writeResultHandler($theRoutine)
   {
-    $routine_args = $this->getRoutineArgs( $theRoutine );
-    $this->writeLine( 'return self::executeTable( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\' );' );
+    $routine_args = $this->getRoutineArgs($theRoutine);
+    $this->writeLine('return self::executeRow1( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * {@inheritdoc}
    */
-  protected function writeRoutineFunctionLobFetchData( $theRoutine )
+  protected function writeRoutineFunctionLobFetchData($theRoutine)
   {
-    // Nothing to do.
+    $this->writeLine('$row = array();');
+    $this->writeLine('self::bindAssoc( $stmt, $row );');
+    $this->writeLine();
+    $this->writeLine('$tmp = array();');
+    $this->writeLine('while (($b = $stmt->fetch()))');
+    $this->writeLine('{');
+    $this->writeLine('$new = array();');
+    $this->writeLine('foreach( $row as $key => $value )');
+    $this->writeLine('{');
+    $this->writeLine('$new[$key] = $value;');
+    $this->writeLine('}');
+    $this->writeLine('$tmp[] = $new;');
+    $this->writeLine('}');
+    $this->writeLine();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -52,7 +77,10 @@ class TableWrapper extends Wrapper
    */
   protected function writeRoutineFunctionLobReturnData()
   {
-    // Nothing to do.
+    $this->writeLine('if ($b===false) self::mySqlError( \'mysqli_stmt::fetch\' );');
+    $this->writeLine('if (count($tmp)!=1) throw new ResultException( \'1\', count($tmp), $query );');
+    $this->writeLine();
+    $this->writeLine('return $row;');
   }
 
   //--------------------------------------------------------------------------------------------------------------------

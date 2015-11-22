@@ -12,11 +12,11 @@ namespace SetBased\Stratum\MySql\Wrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class BulkMySqlWrapper
+ * Class TableMySqlWrapper
  *
- * @package SetBased\DataLayer\Generator\MySqlRoutineWrapper
+ * @package SetBased\DataLayer\Generator\Wrapper
  */
-class BulkWrapper extends Wrapper
+class TableWrapper extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -24,23 +24,32 @@ class BulkWrapper extends Wrapper
    */
   protected function getDocBlockReturnType()
   {
-    return '';
+    return 'int';
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  protected function writeResultHandler( $theRoutine )
+  /**
+   * {@inheritdoc}
+   */
+  protected function writeResultHandler($theRoutine)
   {
-    $routine_args = $this->getRoutineArgs( $theRoutine );
-    $this->writeLine( 'self::executeBulk( $theBulkHandler, \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
+    $routine_args = $this->getRoutineArgs($theRoutine);
+    $this->writeLine('return self::executeTable( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\' );');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  protected function writeRoutineFunctionLobFetchData( $theRoutine )
+  /**
+   * {@inheritdoc}
+   */
+  protected function writeRoutineFunctionLobFetchData($theRoutine)
   {
     // Nothing to do.
   }
 
   //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * {@inheritdoc}
+   */
   protected function writeRoutineFunctionLobReturnData()
   {
     // Nothing to do.

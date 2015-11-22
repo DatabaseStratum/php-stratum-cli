@@ -75,11 +75,11 @@ class Constants
    *
    * @return int
    */
-  public function main( $theConfigFilename )
+  public function main($theConfigFilename)
   {
     $this->myConnector = new Connector();
 
-    $this->readConfigFile( $theConfigFilename );
+    $this->readConfigFile($theConfigFilename);
 
     $this->myConnector->connect();
 
@@ -110,14 +110,14 @@ class Constants
    *
    * @param string $theConfigFilename
    */
-  protected function readConfigFile( $theConfigFilename )
+  protected function readConfigFile($theConfigFilename)
   {
-    $this->myConnector->readConfigFile( $theConfigFilename );
+    $this->myConnector->readConfigFile($theConfigFilename);
 
-    $settings = parse_ini_file( $theConfigFilename, true );
+    $settings = parse_ini_file($theConfigFilename, true);
 
-    $this->myConstantsFilename = Util::getSetting( $settings, true, 'constants', 'columns' );
-    $this->myClassName         = Util::getSetting( $settings, true, 'constants', 'class' );
+    $this->myConstantsFilename = Util::getSetting($settings, true, 'constants', 'columns');
+    $this->myClassName         = Util::getSetting($settings, true, 'constants', 'class');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -128,7 +128,7 @@ class Constants
    *
    * @returns int|null The width of the column.
    */
-  private function deriveFieldLength( $theColumn )
+  private function deriveFieldLength($theColumn)
   {
     $ret = null;
     switch ($theColumn['data_type'])
@@ -188,7 +188,7 @@ class Constants
         break;
 
       default:
-        Affirm::assertFailed( "Unknown type '%s'.", $theColumn['data_type'] );
+        Affirm::assertFailed("Unknown type '%s'.", $theColumn['data_type']);
     }
 
     return $ret;
@@ -211,12 +211,12 @@ class Constants
 
         if ($column['constant_name']=='*')
         {
-          $constant_name                                                  = strtoupper( $column['column_name'] );
+          $constant_name                                                  = strtoupper($column['column_name']);
           $this->myOldColumns[$table_name][$column_name]['constant_name'] = $constant_name;
         }
         else
         {
-          $constant_name                                                  = strtoupper( $this->myOldColumns[$table_name][$column_name]['constant_name'] );
+          $constant_name                                                  = strtoupper($this->myOldColumns[$table_name][$column_name]['constant_name']);
           $this->myOldColumns[$table_name][$column_name]['constant_name'] = $constant_name;
         }
       }
@@ -235,9 +235,9 @@ class Constants
    *
    * @return array With the 3 line number as described
    */
-  private function extractLines( $theSourceCode )
+  private function extractLines($theSourceCode)
   {
-    $tokens = token_get_all( $theSourceCode );
+    $tokens = token_get_all($theSourceCode);
 
     $line1 = null;
     $line2 = null;
@@ -251,9 +251,9 @@ class Constants
       {
         case 1:
           // Step 1: Find doc comment with annotation.
-          if (is_array( $token ) && $token[0]==T_DOC_COMMENT)
+          if (is_array($token) && $token[0]==T_DOC_COMMENT)
           {
-            if (strpos( $token[1], '@setbased.stratum.constants' )!==false)
+            if (strpos($token[1], '@setbased.stratum.constants')!==false)
             {
               $line1 = $token[2];
               $step  = 2;
@@ -263,12 +263,12 @@ class Constants
 
         case 2:
           // Step 2: Find end of doc block.
-          if (is_array( $token ))
+          if (is_array($token))
           {
             if ($token[0]==T_WHITESPACE)
             {
               $line2 = $token[2];
-              if (substr_count( $token[1], "\n" )<=1)
+              if (substr_count($token[1], "\n")<=1)
               {
                 // Ignore whitespace.
               }
@@ -295,11 +295,11 @@ class Constants
 
         case 3:
           // Step 4: Find en of constants declarations.
-          if (is_array( $token ))
+          if (is_array($token))
           {
             if ($token[0]==T_WHITESPACE)
             {
-              if (substr_count( $token[1], "\n" )<=1)
+              if (substr_count($token[1], "\n")<=1)
               {
                 // Ignore whitespace.
                 $line3 = $token[2];
@@ -354,8 +354,8 @@ class Constants
       $this->myConstants[$label] = $id;
     }
 
-    $ok = ksort( $this->myConstants );
-    if ($ok===false) Affirm::assertFailed( "Internal error." );
+    $ok = ksort($this->myConstants);
+    if ($ok===false) Affirm::assertFailed("Internal error.");
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -396,10 +396,10 @@ union all
 )
 ";
 
-    $rows = DataLayer::executeRows( $query );
+    $rows = DataLayer::executeRows($query);
     foreach ($rows as $row)
     {
-      $row['length']                                            = $this->deriveFieldLength( $row );
+      $row['length']                                            = $this->deriveFieldLength($row);
       $this->myColumns[$row['table_name']][$row['column_name']] = $row;
     }
   }
@@ -421,7 +421,7 @@ and   t1.extra        = 'auto_increment'
 and   t2.table_schema = database()
 and   t2.column_name like '%%\\_label'";
 
-    $tables = DataLayer::executeRows( $query_string );
+    $tables = DataLayer::executeRows($query_string);
     foreach ($tables as $table)
     {
       $query_string = "
@@ -430,8 +430,8 @@ select `%s`  as `id`
 from   `%s`
 where   nullif(`%s`,'') is not null";
 
-      $query_string = sprintf( $query_string, $table['id'], $table['label'], $table['table_name'], $table['label'] );
-      $rows         = DataLayer::executeRows( $query_string );
+      $query_string = sprintf($query_string, $table['id'], $table['label'], $table['table_name'], $table['label']);
+      $rows         = DataLayer::executeRows($query_string);
       foreach ($rows as $row)
       {
         $this->myLabels[$row['label']] = $row['id'];
@@ -446,20 +446,20 @@ where   nullif(`%s`,'') is not null";
    */
   private function getOldColumns()
   {
-    if (file_exists( $this->myConstantsFilename ))
+    if (file_exists($this->myConstantsFilename))
     {
-      $handle = fopen( $this->myConstantsFilename, 'r' );
+      $handle = fopen($this->myConstantsFilename, 'r');
 
       $line_number = 0;
-      while ($line = fgets( $handle ))
+      while ($line = fgets($handle))
       {
         $line_number++;
         if ($line!="\n")
         {
-          $n = preg_match( '/^\s*(([a-zA-Z0-9_]+)\.)?([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s+(\d+)\s*(\*|[a-zA-Z0-9_]+)?\s*$/', $line, $matches );
+          $n = preg_match('/^\s*(([a-zA-Z0-9_]+)\.)?([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s+(\d+)\s*(\*|[a-zA-Z0-9_]+)?\s*$/', $line, $matches);
           if ($n==0)
           {
-            Affirm::assertFailed( "Illegal format at line %d in file '%s'.", $line_number, $this->myConstantsFilename );
+            Affirm::assertFailed("Illegal format at line %d in file '%s'.", $line_number, $this->myConstantsFilename);
           }
 
           if (isset($matches[6]))
@@ -482,10 +482,10 @@ where   nullif(`%s`,'') is not null";
           }
         }
       }
-      if (!feof( $handle )) Affirm::assertFailed( "Error reading from file '%s'.", $this->myConstantsFilename );
+      if (!feof($handle)) Affirm::assertFailed("Error reading from file '%s'.", $this->myConstantsFilename);
 
-      $ok = fclose( $handle );
-      if ($ok===false) Affirm::assertFailed( "Error closing file '%s'.", $this->myConstantsFilename );
+      $ok = fclose($handle);
+      if ($ok===false) Affirm::assertFailed("Error closing file '%s'.", $this->myConstantsFilename);
     }
   }
 
@@ -498,14 +498,14 @@ where   nullif(`%s`,'') is not null";
 
     foreach ($this->myConstants as $constant => $value)
     {
-      $width1 = max( strlen( $constant ), $width1 );
-      $width2 = max( strlen( $value ), $width2 );
+      $width1 = max(strlen($constant), $width1);
+      $width2 = max(strlen($value), $width2);
     }
 
-    $line_format = sprintf( "  const %%-%ds = %%%dd;", $width1, $width2 );
+    $line_format = sprintf("  const %%-%ds = %%%dd;", $width1, $width2);
     foreach ($this->myConstants as $constant => $value)
     {
-      $constants[] = sprintf( $line_format, $constant, $value );
+      $constants[] = sprintf($line_format, $constant, $value);
     }
 
     return $constants;
@@ -543,8 +543,8 @@ where   nullif(`%s`,'') is not null";
       $width2 = 0;
       foreach ($table as $column)
       {
-        $width1 = max( strlen( $column['column_name'] ), $width1 );
-        $width2 = max( strlen( $column['length'] ), $width2 );
+        $width1 = max(strlen($column['column_name']), $width1);
+        $width2 = max(strlen($column['length']), $width2);
       }
 
 
@@ -554,20 +554,20 @@ where   nullif(`%s`,'') is not null";
         {
           if (isset($column['constant_name']))
           {
-            $line_format = sprintf( "%%s.%%-%ds %%%dd %%s\n", $width1, $width2 );
-            $content .= sprintf( $line_format,
-                                 $column['table_name'],
-                                 $column['column_name'],
-                                 $column['length'],
-                                 $column['constant_name'] );
+            $line_format = sprintf("%%s.%%-%ds %%%dd %%s\n", $width1, $width2);
+            $content .= sprintf($line_format,
+                                $column['table_name'],
+                                $column['column_name'],
+                                $column['length'],
+                                $column['constant_name']);
           }
           else
           {
-            $line_format = sprintf( "%%s.%%-%ds %%%dd\n", $width1, $width2 );
-            $content .= sprintf( $line_format,
-                                 $column['table_name'],
-                                 $column['column_name'],
-                                 $column['length'] );
+            $line_format = sprintf("%%s.%%-%ds %%%dd\n", $width1, $width2);
+            $content .= sprintf($line_format,
+                                $column['table_name'],
+                                $column['column_name'],
+                                $column['length']);
           }
         }
       }
@@ -576,7 +576,7 @@ where   nullif(`%s`,'') is not null";
     }
 
     // Save the columns, width and constants to the filesystem.
-    Util::writeTwoPhases( $this->myConstantsFilename, $content );
+    Util::writeTwoPhases($this->myConstantsFilename, $content);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -587,29 +587,29 @@ where   nullif(`%s`,'') is not null";
   {
     // Get the class loader.
     /** @var \Composer\Autoload\ClassLoader $loader */
-    $loader = spl_autoload_functions()[0][0];
+    $loader    = spl_autoload_functions()[0][0];
     $file_name = $loader->findFile($this->myClassName);
 
     // Read the source of the class without actually loading the class. Otherwise, we can not (re)load the class in
     // \SetBased\Stratum\MySql\RoutineLoader::getConstants.
-    $source = file_get_contents( $file_name );
-    if ($source===false) Affirm::assertFailed( "Unable the open source file '%s'.", $file_name );
-    $source_lines = explode( "\n", $source );
+    $source = file_get_contents($file_name);
+    if ($source===false) Affirm::assertFailed("Unable the open source file '%s'.", $file_name);
+    $source_lines = explode("\n", $source);
 
     // Search for the lines where to insert and replace constant declaration statements.
-    $line_numbers = $this->extractLines( $source );
-    if (!isset($line_numbers[0])) Affirm::assertFailed( "Annotation not found in '%s'.", $file_name );
+    $line_numbers = $this->extractLines($source);
+    if (!isset($line_numbers[0])) Affirm::assertFailed("Annotation not found in '%s'.", $file_name);
 
     // Generate the constant declaration statements.
     $constants = $this->makeConstantStatements();
 
     // Insert new and replace old (if any) constant declaration statements.
-    $tmp1         = array_splice( $source_lines, 0, $line_numbers[1] );
-    $tmp2         = array_splice( $source_lines, (isset($line_numbers[2])) ? $line_numbers[2] - $line_numbers[1] : 0 );
-    $source_lines = array_merge( $tmp1, $constants, $tmp2 );
+    $tmp1         = array_splice($source_lines, 0, $line_numbers[1]);
+    $tmp2         = array_splice($source_lines, (isset($line_numbers[2])) ? $line_numbers[2] - $line_numbers[1] : 0);
+    $source_lines = array_merge($tmp1, $constants, $tmp2);
 
     // Save the configuration file.
-    Util::writeTwoPhases( $file_name, implode( "\n", $source_lines ) );
+    Util::writeTwoPhases($file_name, implode("\n", $source_lines));
   }
 
   //--------------------------------------------------------------------------------------------------------------------

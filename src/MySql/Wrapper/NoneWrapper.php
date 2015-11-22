@@ -1,22 +1,22 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\Stratum\MySql\Wrapper;
-  /**
-   * phpStratum
-   *
-   * @copyright 2005-2015 Paul Water / Set Based IT Consultancy (https://www.setbased.nl)
-   * @license   http://www.opensource.org/licenses/mit-license.php MIT
-   * @link
-   */
+/**
+ * phpStratum
+ *
+ * @copyright 2005-2015 Paul Water / Set Based IT Consultancy (https://www.setbased.nl)
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
+ * @link
+ */
 //----------------------------------------------------------------------------------------------------------------------
+namespace SetBased\Stratum\MySql\Wrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class LogMySqlWrapper
+ * Class for generating a wrapper method for a stored procedure without result set.
  *
  * @package SetBased\DataLayer\Generator\Wrapper
  */
-class LogWrapper extends Wrapper
+class NoneWrapper extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -31,19 +31,20 @@ class LogWrapper extends Wrapper
   /**
    * {@inheritdoc}
    */
-  protected function writeResultHandler( $theRoutine )
+  protected function writeResultHandler($theRoutine)
   {
-    $routine_args = $this->getRoutineArgs( $theRoutine );
-    $this->writeLine( 'return self::executeLog( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\' );' );
+    $routine_args = $this->getRoutineArgs($theRoutine);
+    $this->writeLine('return self::executeNone( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\' );');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * {@inheritdoc}
    */
-  protected function writeRoutineFunctionLobFetchData( $theRoutine )
+  protected function writeRoutineFunctionLobFetchData($theRoutine)
   {
-    // Nothing to do.
+    $this->writeLine('$ret = self::$ourMySql->affected_rows;');
+    $this->writeLine();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -52,7 +53,7 @@ class LogWrapper extends Wrapper
    */
   protected function writeRoutineFunctionLobReturnData()
   {
-    // Nothing to do.
+    $this->writeLine('return $ret;');
   }
 
   //--------------------------------------------------------------------------------------------------------------------

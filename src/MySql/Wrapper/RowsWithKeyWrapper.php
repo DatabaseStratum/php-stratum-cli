@@ -12,11 +12,12 @@ namespace SetBased\Stratum\MySql\Wrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class RowsMySqlWrapper
+ * Class for generating a wrapper method for a stored procedure that selects 0 or more rows. The rows are
  *
  * @package SetBased\DataLayer\Generator\Wrapper
+ *          returned as nested arrays.
  */
-class RowsWrapper extends Wrapper
+class RowsWithKeyWrapper extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -31,31 +32,50 @@ class RowsWrapper extends Wrapper
   /**
    * {@inheritdoc}
    */
-  protected function writeResultHandler( $theRoutine )
+  protected function writeResultHandler($theRoutine)
   {
-    $routine_args = $this->getRoutineArgs( $theRoutine );
-    $this->writeLine( 'return self::executeRows( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\' );' );
+    $routine_args = $this->getRoutineArgs($theRoutine);
+
+    $key = '';
+    foreach ($theRoutine['columns'] as $column)
+    {
+      $key .= '[$row[\''.$column.'\']]';
+    }
+
+    $this->writeLine('$result = self::query( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');');
+    $this->writeLine('$ret = array();');
+    $this->writeLine('while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret'.$key.' = $row;');
+    $this->writeLine('$result->free();');
+    $this->writeLine('if(self::$ourMySql->more_results()) self::$ourMySql->next_result();');
+    $this->writeLine();
+    $this->writeLine('return  $ret;');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * {@inheritdoc}
    */
-  protected function writeRoutineFunctionLobFetchData( $theRoutine )
+  protected function writeRoutineFunctionLobFetchData($theRoutine)
   {
-    $this->writeLine( '$row = array();' );
-    $this->writeLine( 'self::bindAssoc( $stmt, $row );' );
+    $key = '';
+    foreach ($theRoutine['columns'] as $column)
+    {
+      $key .= '[$new[\''.$column.'\']]';
+    }
+
+    $this->writeLine('$row = array();');
+    $this->writeLine('self::bindAssoc( $stmt, $row );');
     $this->writeLine();
-    $this->writeLine( '$tmp = array();' );
-    $this->writeLine( 'while (($b = $stmt->fetch()))' );
-    $this->writeLine( '{' );
-    $this->writeLine( '$new = array();' );
-    $this->writeLine( 'foreach( $row as $key => $value )' );
-    $this->writeLine( '{' );
-    $this->writeLine( '$new[$key] = $value;' );
-    $this->writeLine( '}' );
-    $this->writeLine( ' $tmp[] = $new;' );
-    $this->writeLine( '}' );
+    $this->writeLine('$ret = array();');
+    $this->writeLine('while (($b = $stmt->fetch()))');
+    $this->writeLine('{');
+    $this->writeLine('$new = array();');
+    $this->writeLine('foreach( $row as $key => $value )');
+    $this->writeLine('{');
+    $this->writeLine('$new[$key] = $value;');
+    $this->writeLine('}');
+    $this->writeLine('$ret'.$key.' = $new;');
+    $this->writeLine('}');
     $this->writeLine();
   }
 
@@ -65,9 +85,9 @@ class RowsWrapper extends Wrapper
    */
   protected function writeRoutineFunctionLobReturnData()
   {
-    $this->writeLine( 'if ($b===false) self::mySqlError( \'mysqli_stmt::fetch\' );' );
+    $this->writeLine('if ($b===false) self::mySqlError( \'mysqli_stmt::fetch\' );');
     $this->writeLine();
-    $this->writeLine( 'return $tmp;' );
+    $this->writeLine('return $ret;');
   }
 
   //--------------------------------------------------------------------------------------------------------------------

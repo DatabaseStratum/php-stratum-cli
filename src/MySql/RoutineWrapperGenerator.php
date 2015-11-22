@@ -79,13 +79,13 @@ class RoutineWrapperGenerator
    *
    * @return int Returns 0 on success, 1 if one or more errors occured.
    */
-  public function run( $theConfigurationFilename )
+  public function run($theConfigurationFilename)
   {
-    $this->readConfigurationFile( $theConfigurationFilename );
+    $this->readConfigurationFile($theConfigurationFilename);
 
     $routines = $this->readRoutineMetadata();
 
-    if (is_array( $routines ))
+    if (is_array($routines))
     {
       // Write methods for each stored routine.
       foreach ($routines as $routine)
@@ -93,7 +93,7 @@ class RoutineWrapperGenerator
         // If routine type is hidden don't create routine wrapper.
         if ($routine['designation']!='hidden')
         {
-          $this->writeRoutineFunction( $routine );
+          $this->writeRoutineFunction($routine);
         }
       }
     }
@@ -115,7 +115,7 @@ class RoutineWrapperGenerator
     $this->writeClassTrailer();
 
     // Write the wrapper class to the filesystem.
-    Util::writeTwoPhases( $this->myWrapperFilename, $this->myCode );
+    Util::writeTwoPhases($this->myWrapperFilename, $this->myCode);
 
     return 0;
   }
@@ -126,10 +126,10 @@ class RoutineWrapperGenerator
    *
    * @param string $theConfigFilename The filename of the configuration file.
    */
-  private function readConfigurationFile( $theConfigFilename )
+  private function readConfigurationFile($theConfigFilename)
   {
     // Read the configuration file.
-    $settings = parse_ini_file( $theConfigFilename, true );
+    $settings = parse_ini_file($theConfigFilename, true);
 
     // Set default values.
     if (!isset($settings['wrapper']['lob_as_string']))
@@ -137,11 +137,11 @@ class RoutineWrapperGenerator
       $settings['wrapper']['lob_as_string'] = false;
     }
 
-    $this->myParentClassName  = Util::getSetting( $settings, true, 'wrapper', 'parent_class' );
-    $this->myWrapperClassName = Util::getSetting( $settings, true, 'wrapper', 'wrapper_class' );
-    $this->myWrapperFilename  = Util::getSetting( $settings, true, 'wrapper', 'wrapper_file' );
-    $this->myMetadataFilename = Util::getSetting( $settings, true, 'wrapper', 'metadata' );
-    $this->myLobAsStringFlag  = (Util::getSetting( $settings, true, 'wrapper', 'lob_as_string' )) ? true : false;
+    $this->myParentClassName  = Util::getSetting($settings, true, 'wrapper', 'parent_class');
+    $this->myWrapperClassName = Util::getSetting($settings, true, 'wrapper', 'wrapper_class');
+    $this->myWrapperFilename  = Util::getSetting($settings, true, 'wrapper', 'wrapper_file');
+    $this->myMetadataFilename = Util::getSetting($settings, true, 'wrapper', 'metadata');
+    $this->myLobAsStringFlag  = (Util::getSetting($settings, true, 'wrapper', 'lob_as_string')) ? true : false;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -152,10 +152,10 @@ class RoutineWrapperGenerator
    */
   private function readRoutineMetadata()
   {
-    $data = file_get_contents( $this->myMetadataFilename );
+    $data = file_get_contents($this->myMetadataFilename);
 
-    $routines = json_decode( $data, true );
-    if (json_last_error()!=JSON_ERROR_NONE) Affirm::assertFailed( "Error decoding JSON: '%s'.", json_last_error_msg() );
+    $routines = json_decode($data, true);
+    if (json_last_error()!=JSON_ERROR_NONE) Affirm::assertFailed("Error decoding JSON: '%s'.", json_last_error_msg());
 
     return $routines;
   }
@@ -166,11 +166,11 @@ class RoutineWrapperGenerator
    */
   private function writeClassHeader()
   {
-    $p = strrpos( $this->myWrapperClassName, '\\' );
+    $p = strrpos($this->myWrapperClassName, '\\');
     if ($p!==false)
     {
-      $namespace  = ltrim( substr( $this->myWrapperClassName, 0, $p ), '\\' );
-      $class_name = substr( $this->myWrapperClassName, $p + 1 );
+      $namespace  = ltrim(substr($this->myWrapperClassName, 0, $p), '\\');
+      $class_name = substr($this->myWrapperClassName, $p + 1);
     }
     else
     {
@@ -182,7 +182,7 @@ class RoutineWrapperGenerator
     $this->myCode .= "<?php\n";
     if ($namespace)
     {
-      $this->myCode .= '//'.str_repeat( '-', Wrapper::C_PAGE_WIDTH - 2 )."\n";
+      $this->myCode .= '//'.str_repeat('-', Wrapper::C_PAGE_WIDTH - 2)."\n";
       $this->myCode .= "namespace ${namespace};\n";
       $this->myCode .= "\n";
     }
@@ -190,8 +190,8 @@ class RoutineWrapperGenerator
     // Write use statements.
     if ($this->myImports)
     {
-      $this->myImports = array_unique( $this->myImports, SORT_REGULAR );
-      $this->myCode .= '//'.str_repeat( '-', Wrapper::C_PAGE_WIDTH - 2 )."\n";
+      $this->myImports = array_unique($this->myImports, SORT_REGULAR);
+      $this->myCode .= '//'.str_repeat('-', Wrapper::C_PAGE_WIDTH - 2)."\n";
       foreach ($this->myImports as $import)
       {
         $this->myCode .= 'use '.$import.";\n";
@@ -200,7 +200,7 @@ class RoutineWrapperGenerator
     }
 
     // Write class name.
-    $this->myCode .= '//'.str_repeat( '-', Wrapper::C_PAGE_WIDTH - 2 )."\n";
+    $this->myCode .= '//'.str_repeat('-', Wrapper::C_PAGE_WIDTH - 2)."\n";
     $this->myCode .= 'class '.$class_name.' extends '.$this->myParentClassName."\n";
     $this->myCode .= "{\n";
   }
@@ -211,10 +211,10 @@ class RoutineWrapperGenerator
    */
   private function writeClassTrailer()
   {
-    $this->myCode .= '  //'.str_repeat( '-', Wrapper::C_PAGE_WIDTH - 4 )."\n";
+    $this->myCode .= '  //'.str_repeat('-', Wrapper::C_PAGE_WIDTH - 4)."\n";
     $this->myCode .= "}\n";
     $this->myCode .= "\n";
-    $this->myCode .= '//'.str_repeat( '-', Wrapper::C_PAGE_WIDTH - 2 )."\n";
+    $this->myCode .= '//'.str_repeat('-', Wrapper::C_PAGE_WIDTH - 2)."\n";
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -223,12 +223,12 @@ class RoutineWrapperGenerator
    *
    * @param array $theRoutine The metadata of the stored routine.
    */
-  private function writeRoutineFunction( $theRoutine )
+  private function writeRoutineFunction($theRoutine)
   {
-    $wrapper = Wrapper::createRoutineWrapper( $theRoutine, $this->myLobAsStringFlag );
-    $this->myCode .= $wrapper->writeRoutineFunction( $theRoutine );
+    $wrapper = Wrapper::createRoutineWrapper($theRoutine, $this->myLobAsStringFlag);
+    $this->myCode .= $wrapper->writeRoutineFunction($theRoutine);
 
-    $this->myImports = array_merge( $this->myImports, $wrapper->getImports() );
+    $this->myImports = array_merge($this->myImports, $wrapper->getImports());
   }
 
   //--------------------------------------------------------------------------------------------------------------------

@@ -15,14 +15,14 @@ use SetBased\Stratum\MySql\RoutineLoader;
 use SetBased\Stratum\MySql\RoutineWrapperGenerator;
 
 //----------------------------------------------------------------------------------------------------------------------
-$files = array(__DIR__.'/../vendor/autoload.php',
-               __DIR__.'/../../vendor/autoload.php',
-               __DIR__.'/../../../vendor/autoload.php',
-               __DIR__.'/../../../../vendor/autoload.php' );
+$files = [__DIR__.'/../vendor/autoload.php',
+          __DIR__.'/../../vendor/autoload.php',
+          __DIR__.'/../../../vendor/autoload.php',
+          __DIR__.'/../../../../vendor/autoload.php'];
 
 foreach ($files as $file)
 {
-  if (file_exists( $file ))
+  if (file_exists($file))
   {
     require $file;
     break;
@@ -38,7 +38,7 @@ function synopsis()
   echo "Synopsis: stratum [-f] -c <configuration file> [routine.psql] ... \n";
   echo "          stratum -h\n";
 
-  exit( 1 );
+  exit(1);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -50,41 +50,41 @@ function synopsis()
  * @return array  The parameters.
  * @throws Exception
  */
-function getSetting( $options )
+function getSetting($options)
 {
   // skip first key with current file name.
-  array_shift( $options );
-  $setting['psql_files'] = array();
-  while (($param = array_shift( $options ))!==null)
+  array_shift($options);
+  $setting['psql_files'] = [];
+  while (($param = array_shift($options))!==null)
   {
     switch ($param)
     {
-    case '-f':
-    case '--fast':
-      $setting['fast'] = true;
-      break;
+      case '-f':
+      case '--fast':
+        $setting['fast'] = true;
+        break;
 
-    case '-c':
-    case '--config':
-      $setting['config'] = array_shift( $options );
-      break;
+      case '-c':
+      case '--config':
+        $setting['config'] = array_shift($options);
+        break;
 
-    case '-h':
-    case '--help':
-      synopsis();
-      break;
-
-    default:
-      $n = preg_match( '([A-Za-z0-9\_/]+.psql)', $param, $regs );
-      if ($n==1)
-      {
-        $setting['psql_files'][]= $regs[0];
-      }
-      else
-      {
+      case '-h':
+      case '--help':
         synopsis();
-      }
-      break;
+        break;
+
+      default:
+        $n = preg_match('([A-Za-z0-9\_/]+.psql)', $param, $regs);
+        if ($n==1)
+        {
+          $setting['psql_files'][] = $regs[0];
+        }
+        else
+        {
+          synopsis();
+        }
+        break;
     }
   }
 
@@ -99,17 +99,20 @@ function getSetting( $options )
  *
  * json_last_error_msg is defined in php 5.5.
  */
-if (!function_exists('json_last_error_msg')) {
-  function json_last_error_msg() {
-    static $errors = array(
-      JSON_ERROR_NONE             => null,
-      JSON_ERROR_DEPTH            => 'Maximum stack depth exceeded',
-      JSON_ERROR_STATE_MISMATCH   => 'Underflow or the modes mismatch',
-      JSON_ERROR_CTRL_CHAR        => 'Unexpected control character found',
-      JSON_ERROR_SYNTAX           => 'Syntax error, malformed JSON',
-      JSON_ERROR_UTF8             => 'Malformed UTF-8 characters, possibly incorrectly encoded'
-    );
+if (!function_exists('json_last_error_msg'))
+{
+  function json_last_error_msg()
+  {
+    static $errors = [
+      JSON_ERROR_NONE           => null,
+      JSON_ERROR_DEPTH          => 'Maximum stack depth exceeded',
+      JSON_ERROR_STATE_MISMATCH => 'Underflow or the modes mismatch',
+      JSON_ERROR_CTRL_CHAR      => 'Unexpected control character found',
+      JSON_ERROR_SYNTAX         => 'Syntax error, malformed JSON',
+      JSON_ERROR_UTF8           => 'Malformed UTF-8 characters, possibly incorrectly encoded'
+    ];
     $error = json_last_error();
+
     return array_key_exists($error, $errors) ? $errors[$error] : "Unknown error ({$error})";
   }
 }
@@ -120,39 +123,39 @@ if (!function_exists('json_last_error_msg')) {
  *
  * @param array $options The arguments of this programs (i.e. $argv).
  */
-function main( $options )
+function main($options)
 {
   // Throw exceptions on warnings and errors.
   Affirm::setErrorHandler();
 
   // Read the ini file.
-  $setting = getSetting( $options );
+  $setting = getSetting($options);
 
   if (isset($setting['fast']))
   {
     // Fast mode: only load stored routines.
     $loader = new RoutineLoader;
-    $ret = $loader->main( $setting['config'], $setting['psql_files'] );
-    if ($ret!=0) exit( $ret );
+    $ret    = $loader->main($setting['config'], $setting['psql_files']);
+    if ($ret!=0) exit($ret);
   }
   else
   {
     // Normal mode: create constants, config file, load routines, and create routine wrapper class.
     $constants = new Constants;
-    $ret = $constants->main( $setting['config'] );
-    if ($ret!=0) exit( $ret );
+    $ret       = $constants->main($setting['config']);
+    if ($ret!=0) exit($ret);
 
     $loader = new RoutineLoader;
-    $ret = $loader->main( $setting['config'], $setting['psql_files'] );
-    if ($ret!=0) exit( $ret );
+    $ret    = $loader->main($setting['config'], $setting['psql_files']);
+    if ($ret!=0) exit($ret);
 
     $wrapper = new RoutineWrapperGenerator;
-    $ret = $wrapper->run( $setting['config'] );
-    if ($ret!=0) exit( $ret );
+    $ret     = $wrapper->run($setting['config']);
+    if ($ret!=0) exit($ret);
   }
 
-  exit( 0 );
+  exit(0);
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-main( $argv );
+main($argv);

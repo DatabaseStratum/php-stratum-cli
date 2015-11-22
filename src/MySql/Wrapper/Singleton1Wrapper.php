@@ -12,70 +12,62 @@ namespace SetBased\Stratum\MySql\Wrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class for generating a wrapper method for a stored procedure that selects 0 or more rows. The rows are
+ * Class Singleton1MySqlWrapper
  *
  * @package SetBased\DataLayer\Generator\Wrapper
- *          returned as nested arrays.
  */
-class RowsWithKeyWrapper extends Wrapper
+class Singleton1Wrapper extends Wrapper
 {
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct($theLobAsStringFlag)
+  {
+    parent::__construct($theLobAsStringFlag);
+
+    $this->myExceptions[] = 'ResultException';
+    $this->myImports[]    = '\SetBased\Stratum\Exception\ResultException';
+  }
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * @return string
    */
   protected function getDocBlockReturnType()
   {
-    return 'array[]';
+    return 'string';
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * {@inheritdoc}
    */
-  protected function writeResultHandler( $theRoutine )
+  protected function writeResultHandler($theRoutine)
   {
-    $routine_args = $this->getRoutineArgs( $theRoutine );
-
-    $key = '';
-    foreach ($theRoutine['columns'] as $column)
-    {
-      $key .= '[$row[\''.$column.'\']]';
-    }
-
-    $this->writeLine( '$result = self::query( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');' );
-    $this->writeLine( '$ret = array();' );
-    $this->writeLine( 'while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret'.$key.' = $row;' );
-    $this->writeLine( '$result->free();' );
-    $this->writeLine( 'if(self::$ourMySql->more_results()) self::$ourMySql->next_result();' );
-    $this->writeLine();
-    $this->writeLine( 'return  $ret;' );
+    $routine_args = $this->getRoutineArgs($theRoutine);
+    $this->writeLine('return self::executeSingleton1( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * {@inheritdoc}
    */
-  protected function writeRoutineFunctionLobFetchData( $theRoutine )
+  protected function writeRoutineFunctionLobFetchData($theRoutine)
   {
-    $key = '';
-    foreach ($theRoutine['columns'] as $column)
-    {
-      $key .= '[$new[\''.$column.'\']]';
-    }
-
-    $this->writeLine( '$row = array();' );
-    $this->writeLine( 'self::bindAssoc( $stmt, $row );' );
+    $this->writeLine('$row = array();');
+    $this->writeLine('self::bindAssoc( $stmt, $row );');
     $this->writeLine();
-    $this->writeLine( '$ret = array();' );
-    $this->writeLine( 'while (($b = $stmt->fetch()))' );
-    $this->writeLine( '{' );
-    $this->writeLine( '$new = array();' );
-    $this->writeLine( 'foreach( $row as $key => $value )' );
-    $this->writeLine( '{' );
-    $this->writeLine( '$new[$key] = $value;' );
-    $this->writeLine( '}' );
-    $this->writeLine( '$ret'.$key.' = $new;' );
-    $this->writeLine( '}' );
+    $this->writeLine('$tmp = array();');
+    $this->writeLine('while (($b = $stmt->fetch()))');
+    $this->writeLine('{');
+    $this->writeLine('$new = array();');
+    $this->writeLine('foreach( $row as $value )');
+    $this->writeLine('{');
+    $this->writeLine('$new[] = $value;');
+    $this->writeLine('}');
+    $this->writeLine('$tmp[] = $new;');
+    $this->writeLine('}');
     $this->writeLine();
   }
 
@@ -85,9 +77,10 @@ class RowsWithKeyWrapper extends Wrapper
    */
   protected function writeRoutineFunctionLobReturnData()
   {
-    $this->writeLine( 'if ($b===false) self::mySqlError( \'mysqli_stmt::fetch\' );' );
+    $this->writeLine('if ($b===false) self::mySqlError( \'mysqli_stmt::fetch\' );');
+    $this->writeLine('if (count($tmp)!=1) throw new ResultException( \'1\', count($tmp), $query );');
     $this->writeLine();
-    $this->writeLine( 'return $ret;' );
+    $this->writeLine('return $tmp[0][0];');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
