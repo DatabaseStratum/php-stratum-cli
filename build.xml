@@ -53,13 +53,11 @@
     <target name="unit">
         <delete file="etc/mysql/test_routines.json" quiet="true"/>
         <exec command="cat test/mysql/create_test.sql | mysql -utest -ptest test" passthru="true" checkreturn="true"/>
-        <!-- Rename folder for test5() -->
+        <!-- Rename folder for \MagicConstantTest::test5 -->
         <move file="test/mysql/psql/rename" tofile="test/mysql/psql/ test_escape ' &quot; @ $ ! ." overwrite="true"/>
-        <!--  -->
         <exec command="bin/stratum -c etc/mysql/test_stratum.cfg" passthru="true" checkreturn="true"/>
         <exec command="bin/phpunit --bootstrap=test/mysql/bootstrap.php test" passthru="true" checkreturn="true"/>
-        <!-- Rename folder back for test5() -->
+        <!-- Rename folder back for \MagicConstantTest::test5 -->
         <move file="test/mysql/psql/ test_escape ' &quot; @ $ ! ." tofile="test/mysql/psql/rename"  overwrite="true"/>
-        <!--  -->
     </target>
 </project>
