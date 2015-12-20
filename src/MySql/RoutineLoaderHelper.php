@@ -332,6 +332,10 @@ class RoutineLoaderHelper
         break;
 
       case 'decimal':
+        print_r($theType);
+        $php_type = 'float';
+        break;
+
       case 'float':
       case 'double':
         $php_type = 'float';
@@ -570,7 +574,7 @@ and   table_name   = %s', DataLayer::quoteString($this->myTableName));
     foreach ($this->myParameters as $key => $parameter_info)
     {
       $parameters[] = ['name'                 => $parameter_info['name'],
-                       'php_type'             => $this->columnTypeToPhpType($parameter_info['data_type']),
+                       'php_type'             => $this->columnTypeToPhpType($parameter_info),
                        'data_type_descriptor' => $parameter_info['data_type_descriptor'],
                        'description'          => $this->getParameterDocDescription($parameter_info['name'])];
     }
@@ -934,11 +938,11 @@ and   t1.routine_name   = '%s'", $this->myRoutineName);
       foreach ($this->myExtendedParameters as $spec_param_name => $spec_param_info)
       {
         $param_not_exist = true;
-        foreach ($this->myParameters as $kay => $param_info)
+        foreach ($this->myParameters as $key => $param_info)
         {
           if ($param_info['name']==$spec_param_name)
           {
-            $this->myParameters[$kay] = array_merge($this->myParameters[$kay], $spec_param_info);
+            $this->myParameters[$key] = array_merge($this->myParameters[$key], $spec_param_info);
             $param_not_exist          = false;
             break;
           }
