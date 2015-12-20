@@ -485,6 +485,23 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
 
   //-------------------------------------------------------------------------------------------------------------------
   /**
+   * Test for conversion of MySQL types to PHP types.
+   *
+   * @param float $p_php_type1 Must be converted to PHP type float in the DataLayer.
+   *                           decimal(10,2)
+   * @param int   $p_php_type2 Must be converted to PHP type int in the DataLayer.
+   *                           decimal(10,0)
+   *
+   * @return int
+   * @throws  \RunTimeException
+   */
+  public static function testParameterType( $p_php_type1, $p_php_type2 )
+  {
+    return self::executeNone( 'CALL tst_test_parameter_type('.self::quoteNum( $p_php_type1 ).','.self::quoteNum( $p_php_type2 ).')' );
+  }
+
+  //-------------------------------------------------------------------------------------------------------------------
+  /**
    * Test for designation type row0.
    *
    * @param int $p_count The number of rows selected.

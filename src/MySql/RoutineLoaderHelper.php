@@ -310,14 +310,14 @@ class RoutineLoaderHelper
   /**
    * Converts MySQL data type to the PHP data type.
    *
-   * @param string $theType
+   * @param string[] $theParameterInfo
    *
    * @return string
    * @throws \Exception
    */
-  private function columnTypeToPhpType($theType)
+  private function columnTypeToPhpType($theParameterInfo)
   {
-    switch ($theType)
+    switch ($theParameterInfo['data_type'])
     {
       case 'tinyint':
       case 'smallint':
@@ -332,6 +332,9 @@ class RoutineLoaderHelper
         break;
 
       case 'decimal':
+        $php_type = ($theParameterInfo['numeric_scale']=='0') ? 'int' : 'float';
+        break;
+
       case 'float':
       case 'double':
         $php_type = 'float';
@@ -369,7 +372,7 @@ class RoutineLoaderHelper
         break;
 
       default:
-        throw new FallenException('column type', $theType);
+        throw new FallenException('column type', $theParameterInfo);
     }
 
     return $php_type;
@@ -570,7 +573,7 @@ and   table_name   = %s', DataLayer::quoteString($this->myTableName));
     foreach ($this->myParameters as $key => $parameter_info)
     {
       $parameters[] = ['name'                 => $parameter_info['name'],
-                       'php_type'             => $this->columnTypeToPhpType($parameter_info['data_type']),
+                       'php_type'             => $this->columnTypeToPhpType($parameter_info),
                        'data_type_descriptor' => $parameter_info['data_type_descriptor'],
                        'description'          => $this->getParameterDocDescription($parameter_info['name'])];
     }
@@ -793,16 +796,18 @@ and   table_name   = %s', DataLayer::quoteString($this->myTableName));
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Gets the parameters of the stored routine.
+   * Gets info about the parameters of the stored routine.
    */
   private function getRoutineParametersInfo()
   {
     $query = sprintf("
-select t2.parameter_name      parameter_name
-,      t2.data_type           parameter_type
-,      t2.dtd_identifier      column_type
-,      t2.character_set_name  character_set_name
-,      t2.collation_name      collation
+select t2.parameter_name
+,      t2.data_type
+,      t2.numeric_precision
+,      t2.numeric_scale
+,      t2.character_set_name
+,      t2.collation_name
+,      t2.dtd_identifier
 from            information_schema.ROUTINES   t1
 left outer join information_schema.PARAMETERS t2  on  t2.specific_schema = t1.routine_schema and
                                                       t2.specific_name   = t1.routine_name and
@@ -816,19 +821,20 @@ and   t1.routine_name   = '%s'", $this->myRoutineName);
     {
       if ($routine_parameter['parameter_name'])
       {
-        $value = $routine_parameter['column_type'];
+        $data_type_descriptor = $routine_parameter['dtd_identifier'];
         if (isset($routine_parameter['character_set_name']))
         {
-          $value .= ' character set '.$routine_parameter['character_set_name'];
+          $data_type_descriptor .= ' character set '.$routine_parameter['character_set_name'];
         }
-        if (isset($routine_parameter['collation']))
+        if (isset($routine_parameter['collation_name']))
         {
-          $value .= ' collation '.$routine_parameter['collation'];
+          $data_type_descriptor .= ' collation '.$routine_parameter['collation_name'];
         }
 
-        $this->myParameters[$key]['name']                 = $routine_parameter['parameter_name'];
-        $this->myParameters[$key]['data_type']            = $routine_parameter['parameter_type'];
-        $this->myParameters[$key]['data_type_descriptor'] = $value;
+        $routine_parameter['name']                 = $routine_parameter['parameter_name'];
+        $routine_parameter['data_type_descriptor'] = $data_type_descriptor;
+
+        $this->myParameters[$key] = $routine_parameter;
       }
     }
 
@@ -934,11 +940,11 @@ and   t1.routine_name   = '%s'", $this->myRoutineName);
       foreach ($this->myExtendedParameters as $spec_param_name => $spec_param_info)
       {
         $param_not_exist = true;
-        foreach ($this->myParameters as $kay => $param_info)
+        foreach ($this->myParameters as $key => $param_info)
         {
           if ($param_info['name']==$spec_param_name)
           {
-            $this->myParameters[$kay] = array_merge($this->myParameters[$kay], $spec_param_info);
+            $this->myParameters[$key] = array_merge($this->myParameters[$key], $spec_param_info);
             $param_not_exist          = false;
             break;
           }
