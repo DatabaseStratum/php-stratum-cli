@@ -712,7 +712,12 @@ abstract class Wrapper
    */
   private function getWrapperRoutineName($theStoredRoutineName)
   {
-    return lcfirst(preg_replace('/(_)([a-z])/e', "strtoupper('\\2')", stristr($theStoredRoutineName, '_')));
+    return lcfirst(preg_replace_callback('/(_)([a-z])/',
+      function ($matches)
+      {
+        return strtoupper($matches[2]);
+      },
+                                         stristr($theStoredRoutineName, '_')));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
