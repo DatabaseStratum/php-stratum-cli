@@ -30,6 +30,13 @@ class StaticDataLayer
   public static $ourCharSet = 'utf8';
 
   /**
+   * If set queries must be logged.
+   *
+   * @var bool
+   */
+  public static $ourQueryLogFlag = false;
+
+  /**
    * The SQL mode of the MySQL instance.
    *
    * @var string
@@ -77,6 +84,13 @@ class StaticDataLayer
    */
   protected static $ourMySql;
 
+  /**
+   * The query log.
+   *
+   * @var array[]
+   */
+  protected static $ourQueryLog;
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Starts a transaction.
@@ -103,19 +117,15 @@ class StaticDataLayer
     $fields = [];
     $out    = [];
 
-    $i = 0;
     while ($field = $data->fetch_field())
     {
-      $fields[$i] = &$out[$field->name];
-      $i++;
+      $fields[] = &$out[$field->name];
     }
 
     $b = call_user_func_array([$stmt, 'bind_result'], $fields);
     if ($b===false) self::mySqlError('mysqli_stmt::bind_result');
 
     $data->free();
-
-    if (self::$ourMySql->more_results()) self::$ourMySql->next_result();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -148,7 +158,7 @@ class StaticDataLayer
   {
     self::$ourMySql = new \mysqli($theHostName, $theUserName, $thePassWord, $theDatabase, $thePort);
     if (!self::$ourMySql) self::mySqlError('mysqli::__construct');
-
+/*
     // Set the default character set.
     if (self::$ourCharSet)
     {
@@ -170,6 +180,7 @@ class StaticDataLayer
 
     // Set flag to use method mysqli_result::fetch_all if we are using MySQL native driver.
     self::$ourHaveFetchAll = method_exists('mysqli_result', 'fetch_all');
+    */
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -223,8 +234,7 @@ class StaticDataLayer
     // Counter for the number of rows written/logged.
     $n = 0;
 
-    $ret = self::$ourMySql->multi_query($theQuery);
-    if (!$ret) self::mySqlError($theQuery);
+    self::multi_query($theQuery);
     do
     {
       $result = self::$ourMySql->store_result();
@@ -427,8 +437,7 @@ class StaticDataLayer
   {
     $row_count = 0;
 
-    $ret = self::$ourMySql->multi_query($theQuery);
-    if (!$ret) self::mySqlError($theQuery);
+    self::multi_query($theQuery);
     do
     {
       $result = self::$ourMySql->store_result();
@@ -508,6 +517,51 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * Returns the query log.
+   *
+   * To enable the query log set {@link $ourQueryLogFlag} to true.
+   *
+   * @return array[]
+   */
+  public static function getQueryLog()
+  {
+    return self::$ourQueryLog;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Executes multiple SQL statements.
+   *
+   * Wrapper around [multi_mysqli::query](http://php.net/manual/mysqli.multi-query.php), however on failure an exception
+   * is thrown.
+   *
+   * @param string $theQueries The SQL statements.
+   *
+   * @return \mysqli_result
+   */
+  public static function multi_query($theQueries)
+  {
+    if (self::$ourQueryLogFlag)
+    {
+      $time0 = microtime(true);
+
+      $ret = self::$ourMySql->multi_query($theQueries);
+      if ($ret===false) self::mySqlError($theQueries);
+
+      self::$ourQueryLog[] = ['query' => $theQueries,
+                              'time'  => microtime(true) - $time0];
+    }
+    else
+    {
+      $ret = self::$ourMySql->multi_query($theQueries);
+      if ($ret===false) self::mySqlError($theQueries);
+    }
+
+    return $ret;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Executes an SQL statement.
    *
    * Wrapper around [mysqli::query](http://php.net/manual/mysqli.query.php), however on failure an exception is thrown.
@@ -518,8 +572,21 @@ class StaticDataLayer
    */
   public static function query($theQuery)
   {
-    $ret = self::$ourMySql->query($theQuery);
-    if ($ret===false) self::mySqlError($theQuery);
+    if (self::$ourQueryLogFlag)
+    {
+      $time0 = microtime(true);
+
+      $ret = self::$ourMySql->query($theQuery);
+      if ($ret===false) self::mySqlError($theQuery);
+
+      self::$ourQueryLog[] = ['query' => $theQuery,
+                              'time'  => microtime(true) - $time0];
+    }
+    else
+    {
+      $ret = self::$ourMySql->query($theQuery);
+      if ($ret===false) self::mySqlError($theQuery);
+    }
 
     return $ret;
   }
@@ -650,8 +717,21 @@ class StaticDataLayer
    */
   public static function realQuery($theQuery)
   {
-    $tmp = self::$ourMySql->real_query($theQuery);
-    if ($tmp===false) self::mySqlError($theQuery);
+    if (self::$ourQueryLogFlag)
+    {
+      $time0 = microtime(true);
+
+      $ret = self::$ourMySql->real_query($theQuery);
+      if ($ret===false) self::mySqlError($theQuery);
+
+      self::$ourQueryLog[] = ['query' => $theQuery,
+                              'time'  => microtime(true) - $time0];
+    }
+    else
+    {
+      $ret = self::$ourMySql->real_query($theQuery);
+      if ($ret===false) self::mySqlError($theQuery);
+    }
   }
 
   //--------------------------------------------------------------------------------------------------------------------
