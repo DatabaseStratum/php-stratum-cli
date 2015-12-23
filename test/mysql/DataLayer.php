@@ -7,17 +7,127 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
 {
   //-------------------------------------------------------------------------------------------------------------------
   /**
-   * Test for designation type none.
    *
-   * @param int $p_count The number of iterations.
-   *                     bigint(20)
+   * @param string|int[] $p_ids The id's in CSV format.
+   *                            varchar(255) character set utf8 collation utf8_general_ci
+   *
+   * @return array[]
+   * @throws  \RunTimeException
+   */
+  public static function testListOfInt( $p_ids )
+  {
+    $result = self::query( 'CALL tst_test_list_of_int('.self::quoteListOfInt( $p_ids, ',', '\"', '\\' ).')');
+    $ret = array();
+    while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret[$row['tst_id']] = $row;
+    $result->free();
+    if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
+
+    return  $ret;
+  }
+
+  //-------------------------------------------------------------------------------------------------------------------
+  /**
+   * Test for designation type table.
    *
    * @return int
    * @throws  \RunTimeException
    */
-  public static function testNone2( $p_count )
+  public static function testTable(  )
   {
-    return self::executeNone( 'CALL foo_test_none2('.self::quoteNum( $p_count ).')' );
+    return self::executeTable( 'CALL tst_test_table()' );
+  }
+
+  //-------------------------------------------------------------------------------------------------------------------
+  /**
+   * Test for conversion of MySQL types to PHP types.
+   *
+   * @param float $p_php_type1 Must be converted to PHP type float in the DataLayer.
+   *                           decimal(10,2)
+   * @param int   $p_php_type2 Must be converted to PHP type int in the DataLayer.
+   *                           decimal(10,0)
+   *
+   * @return int
+   * @throws  \RunTimeException
+   */
+  public static function testParameterType( $p_php_type1, $p_php_type2 )
+  {
+    return self::executeNone( 'CALL tst_test_parameter_type('.self::quoteNum( $p_php_type1 ).','.self::quoteNum( $p_php_type2 ).')' );
+  }
+
+  //-------------------------------------------------------------------------------------------------------------------
+  /**
+   * Test for magic constant.
+   *
+   * @return string
+   * @throws  \RunTimeException
+   * @throws  ResultException
+   */
+  public static function magicConstant05(  )
+  {
+    return self::executeSingleton1( 'CALL tst_magic_constant05()');
+  }
+
+  //-------------------------------------------------------------------------------------------------------------------
+  /**
+   * Test for designation type singleton1 with BLOB.
+   *
+   * @param int    $p_count The number of rows selected.
+   *                        * 0 For a invalid test.
+   *                        * 1 For a valid test.
+   *                        * 2 For a invalid test.
+   *                        int(11)
+   * @param string $p_blob  The BLOB.
+   *                        blob
+   *
+   * @return string
+   * @throws  \RunTimeException
+   * @throws  ResultException
+   */
+  public static function testSingleton1aWithLob( $p_count, $p_blob )
+  {
+    $query = 'CALL tst_test_singleton1a_with_lob( '.self::quoteNum( $p_count ).',? )';
+    $stmt  = self::$ourMySql->prepare( $query );
+    if (!$stmt) self::mySqlError( 'mysqli::prepare' );
+
+    $null = null;
+    $b = $stmt->bind_param( 'b', $null );
+    if (!$b) self::mySqlError( 'mysqli_stmt::bind_param' );
+
+    self::getMaxAllowedPacket();
+
+    $n = strlen( $p_blob );
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data( 0, substr( $p_blob, $p, self::$ourChunkSize ) );
+      if (!$b) self::mySqlError( 'mysqli_stmt::send_long_data' );
+      $p += self::$ourChunkSize;
+    }
+
+    $b = $stmt->execute();
+    if (!$b) self::mySqlError( 'mysqli_stmt::execute' );
+
+    $row = array();
+    self::bindAssoc( $stmt, $row );
+
+    $tmp = array();
+    while (($b = $stmt->fetch()))
+    {
+      $new = array();
+      foreach( $row as $value )
+      {
+        $new[] = $value;
+      }
+      $tmp[] = $new;
+    }
+
+    $stmt->close();
+    if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
+
+    if ($b===false) self::mySqlError( 'mysqli_stmt::fetch' );
+    if (count($tmp)!=1) throw new ResultException( '1', count($tmp), $query );
+
+    return $tmp[0][0];
   }
 
   //-------------------------------------------------------------------------------------------------------------------
@@ -351,26 +461,6 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
 
   //-------------------------------------------------------------------------------------------------------------------
   /**
-   *
-   * @param string|int[] $p_ids The id's in CSV format.
-   *                            varchar(255) character set utf8 collation utf8_general_ci
-   *
-   * @return array[]
-   * @throws  \RunTimeException
-   */
-  public static function testListOfInt( $p_ids )
-  {
-    $result = self::query( 'CALL tst_test_list_of_int('.self::quoteListOfInt( $p_ids, ',', '\"', '\\' ).')');
-    $ret = array();
-    while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret[$row['tst_id']] = $row;
-    $result->free();
-    if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
-
-    return  $ret;
-  }
-
-  //-------------------------------------------------------------------------------------------------------------------
-  /**
    * Test for designation type log.
    *
    * @return int
@@ -496,23 +586,6 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
     if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     return $ret;
-  }
-
-  //-------------------------------------------------------------------------------------------------------------------
-  /**
-   * Test for conversion of MySQL types to PHP types.
-   *
-   * @param float $p_php_type1 Must be converted to PHP type float in the DataLayer.
-   *                           decimal(10,2)
-   * @param int   $p_php_type2 Must be converted to PHP type int in the DataLayer.
-   *                           decimal(10,0)
-   *
-   * @return int
-   * @throws  \RunTimeException
-   */
-  public static function testParameterType( $p_php_type1, $p_php_type2 )
-  {
-    return self::executeNone( 'CALL tst_test_parameter_type('.self::quoteNum( $p_php_type1 ).','.self::quoteNum( $p_php_type2 ).')' );
   }
 
   //-------------------------------------------------------------------------------------------------------------------
@@ -1018,90 +1091,17 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
 
   //-------------------------------------------------------------------------------------------------------------------
   /**
-   * Test for designation type singleton1 with BLOB.
+   * Test for designation type none.
    *
-   * @param int    $p_count The number of rows selected.
-   *                        * 0 For a invalid test.
-   *                        * 1 For a valid test.
-   *                        * 2 For a invalid test.
-   *                        int(11)
-   * @param string $p_blob  The BLOB.
-   *                        blob
-   *
-   * @return string
-   * @throws  \RunTimeException
-   * @throws  ResultException
-   */
-  public static function testSingleton1aWithLob( $p_count, $p_blob )
-  {
-    $query = 'CALL tst_test_singleton1a_with_lob( '.self::quoteNum( $p_count ).',? )';
-    $stmt  = self::$ourMySql->prepare( $query );
-    if (!$stmt) self::mySqlError( 'mysqli::prepare' );
-
-    $null = null;
-    $b = $stmt->bind_param( 'b', $null );
-    if (!$b) self::mySqlError( 'mysqli_stmt::bind_param' );
-
-    self::getMaxAllowedPacket();
-
-    $n = strlen( $p_blob );
-    $p = 0;
-    while ($p<$n)
-    {
-      $b = $stmt->send_long_data( 0, substr( $p_blob, $p, self::$ourChunkSize ) );
-      if (!$b) self::mySqlError( 'mysqli_stmt::send_long_data' );
-      $p += self::$ourChunkSize;
-    }
-
-    $b = $stmt->execute();
-    if (!$b) self::mySqlError( 'mysqli_stmt::execute' );
-
-    $row = array();
-    self::bindAssoc( $stmt, $row );
-
-    $tmp = array();
-    while (($b = $stmt->fetch()))
-    {
-      $new = array();
-      foreach( $row as $value )
-      {
-        $new[] = $value;
-      }
-      $tmp[] = $new;
-    }
-
-    $stmt->close();
-    if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
-
-    if ($b===false) self::mySqlError( 'mysqli_stmt::fetch' );
-    if (count($tmp)!=1) throw new ResultException( '1', count($tmp), $query );
-
-    return $tmp[0][0];
-  }
-
-  //-------------------------------------------------------------------------------------------------------------------
-  /**
-   * Test for designation type table.
+   * @param int $p_count The number of iterations.
+   *                     bigint(20)
    *
    * @return int
    * @throws  \RunTimeException
    */
-  public static function testTable(  )
+  public static function testNone2( $p_count )
   {
-    return self::executeTable( 'CALL tst_test_table()' );
-  }
-
-  //-------------------------------------------------------------------------------------------------------------------
-  /**
-   * Test for magic constant.
-   *
-   * @return string
-   * @throws  \RunTimeException
-   * @throws  ResultException
-   */
-  public static function magicConstant05(  )
-  {
-    return self::executeSingleton1( 'CALL tst_magic_constant05()');
+    return self::executeNone( 'CALL foo_test_none2('.self::quoteNum( $p_count ).')' );
   }
 
   //--------------------------------------------------------------------------------------------------------------------
