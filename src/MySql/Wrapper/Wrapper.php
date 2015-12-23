@@ -301,8 +301,21 @@ abstract class Wrapper
       }
     }
 
+    $this->writeLine('if (self::$ourQueryLogFlag)');
+    $this->writeLine('{');
+    $this->writeLine('$time0 = microtime(true);');
+    $this->writeLine('');
     $this->writeLine('$b = $stmt->execute();');
     $this->writeLine('if (!$b) self::mySqlError( \'mysqli_stmt::execute\' );');
+    $this->writeLine('');
+    $this->writeLine('self::$ourQueryLog[] = [\'query\' => $query,');
+    $this->writeLine('                        \'time\'  => microtime(true) - $time0];');
+    $this->writeLine('}');
+    $this->writeLine('else');
+    $this->writeLine('{');
+    $this->writeLine('$b = $stmt->execute();');
+    $this->writeLine('if (!$b) self::mySqlError( \'mysqli_stmt::execute\' );');
+    $this->writeLine('}');
     $this->writeLine();
     $this->writeRoutineFunctionLobFetchData($theRoutine);
     $this->writeLine('$stmt->close();');

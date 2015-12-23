@@ -258,8 +258,21 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
       $p += self::$ourChunkSize;
     }
 
-    $b = $stmt->execute();
-    if (!$b) self::mySqlError( 'mysqli_stmt::execute' );
+    if (self::$ourQueryLogFlag)
+    {
+      $time0 = microtime(true);
+
+      $b = $stmt->execute();
+      if (!$b) self::mySqlError( 'mysqli_stmt::execute' );
+
+      self::$ourQueryLog[] = ['query' => $query,
+                              'time'  => microtime(true) - $time0];
+    }
+    else
+    {
+      $b = $stmt->execute();
+      if (!$b) self::mySqlError( 'mysqli_stmt::execute' );
+    }
 
     $ret = self::$ourMySql->affected_rows;
 
@@ -398,8 +411,21 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
       $p += self::$ourChunkSize;
     }
 
-    $b = $stmt->execute();
-    if (!$b) self::mySqlError( 'mysqli_stmt::execute' );
+    if (self::$ourQueryLogFlag)
+    {
+      $time0 = microtime(true);
+
+      $b = $stmt->execute();
+      if (!$b) self::mySqlError( 'mysqli_stmt::execute' );
+
+      self::$ourQueryLog[] = ['query' => $query,
+                              'time'  => microtime(true) - $time0];
+    }
+    else
+    {
+      $b = $stmt->execute();
+      if (!$b) self::mySqlError( 'mysqli_stmt::execute' );
+    }
 
     $row = array();
     self::bindAssoc( $stmt, $row );
@@ -472,8 +498,21 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
       $p += self::$ourChunkSize;
     }
 
-    $b = $stmt->execute();
-    if (!$b) self::mySqlError( 'mysqli_stmt::execute' );
+    if (self::$ourQueryLogFlag)
+    {
+      $time0 = microtime(true);
+
+      $b = $stmt->execute();
+      if (!$b) self::mySqlError( 'mysqli_stmt::execute' );
+
+      self::$ourQueryLog[] = ['query' => $query,
+                              'time'  => microtime(true) - $time0];
+    }
+    else
+    {
+      $b = $stmt->execute();
+      if (!$b) self::mySqlError( 'mysqli_stmt::execute' );
+    }
 
     $ret = self::$ourMySql->affected_rows;
 
@@ -556,8 +595,21 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
       $p += self::$ourChunkSize;
     }
 
-    $b = $stmt->execute();
-    if (!$b) self::mySqlError( 'mysqli_stmt::execute' );
+    if (self::$ourQueryLogFlag)
+    {
+      $time0 = microtime(true);
+
+      $b = $stmt->execute();
+      if (!$b) self::mySqlError( 'mysqli_stmt::execute' );
+
+      self::$ourQueryLog[] = ['query' => $query,
+                              'time'  => microtime(true) - $time0];
+    }
+    else
+    {
+      $b = $stmt->execute();
+      if (!$b) self::mySqlError( 'mysqli_stmt::execute' );
+    }
 
     $row = array();
     self::bindAssoc( $stmt, $row );
@@ -638,8 +690,21 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
       $p += self::$ourChunkSize;
     }
 
-    $b = $stmt->execute();
-    if (!$b) self::mySqlError( 'mysqli_stmt::execute' );
+    if (self::$ourQueryLogFlag)
+    {
+      $time0 = microtime(true);
+
+      $b = $stmt->execute();
+      if (!$b) self::mySqlError( 'mysqli_stmt::execute' );
+
+      self::$ourQueryLog[] = ['query' => $query,
+                              'time'  => microtime(true) - $time0];
+    }
+    else
+    {
+      $b = $stmt->execute();
+      if (!$b) self::mySqlError( 'mysqli_stmt::execute' );
+    }
 
     $row = array();
     self::bindAssoc( $stmt, $row );
@@ -715,8 +780,21 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
       $p += self::$ourChunkSize;
     }
 
-    $b = $stmt->execute();
-    if (!$b) self::mySqlError( 'mysqli_stmt::execute' );
+    if (self::$ourQueryLogFlag)
+    {
+      $time0 = microtime(true);
+
+      $b = $stmt->execute();
+      if (!$b) self::mySqlError( 'mysqli_stmt::execute' );
+
+      self::$ourQueryLog[] = ['query' => $query,
+                              'time'  => microtime(true) - $time0];
+    }
+    else
+    {
+      $b = $stmt->execute();
+      if (!$b) self::mySqlError( 'mysqli_stmt::execute' );
+    }
 
     $row = array();
     self::bindAssoc( $stmt, $row );
@@ -795,8 +873,21 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
       $p += self::$ourChunkSize;
     }
 
-    $b = $stmt->execute();
-    if (!$b) self::mySqlError( 'mysqli_stmt::execute' );
+    if (self::$ourQueryLogFlag)
+    {
+      $time0 = microtime(true);
+
+      $b = $stmt->execute();
+      if (!$b) self::mySqlError( 'mysqli_stmt::execute' );
+
+      self::$ourQueryLog[] = ['query' => $query,
+                              'time'  => microtime(true) - $time0];
+    }
+    else
+    {
+      $b = $stmt->execute();
+      if (!$b) self::mySqlError( 'mysqli_stmt::execute' );
+    }
 
     $row = array();
     self::bindAssoc( $stmt, $row );
@@ -874,8 +965,21 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
       $p += self::$ourChunkSize;
     }
 
-    $b = $stmt->execute();
-    if (!$b) self::mySqlError( 'mysqli_stmt::execute' );
+    if (self::$ourQueryLogFlag)
+    {
+      $time0 = microtime(true);
+
+      $b = $stmt->execute();
+      if (!$b) self::mySqlError( 'mysqli_stmt::execute' );
+
+      self::$ourQueryLog[] = ['query' => $query,
+                              'time'  => microtime(true) - $time0];
+    }
+    else
+    {
+      $b = $stmt->execute();
+      if (!$b) self::mySqlError( 'mysqli_stmt::execute' );
+    }
 
     $row = array();
     self::bindAssoc( $stmt, $row );
@@ -956,8 +1060,21 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
       $p += self::$ourChunkSize;
     }
 
-    $b = $stmt->execute();
-    if (!$b) self::mySqlError( 'mysqli_stmt::execute' );
+    if (self::$ourQueryLogFlag)
+    {
+      $time0 = microtime(true);
+
+      $b = $stmt->execute();
+      if (!$b) self::mySqlError( 'mysqli_stmt::execute' );
+
+      self::$ourQueryLog[] = ['query' => $query,
+                              'time'  => microtime(true) - $time0];
+    }
+    else
+    {
+      $b = $stmt->execute();
+      if (!$b) self::mySqlError( 'mysqli_stmt::execute' );
+    }
 
     $row = array();
     self::bindAssoc( $stmt, $row );
@@ -1038,8 +1155,21 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
       $p += self::$ourChunkSize;
     }
 
-    $b = $stmt->execute();
-    if (!$b) self::mySqlError( 'mysqli_stmt::execute' );
+    if (self::$ourQueryLogFlag)
+    {
+      $time0 = microtime(true);
+
+      $b = $stmt->execute();
+      if (!$b) self::mySqlError( 'mysqli_stmt::execute' );
+
+      self::$ourQueryLog[] = ['query' => $query,
+                              'time'  => microtime(true) - $time0];
+    }
+    else
+    {
+      $b = $stmt->execute();
+      if (!$b) self::mySqlError( 'mysqli_stmt::execute' );
+    }
 
     $row = array();
     self::bindAssoc( $stmt, $row );
