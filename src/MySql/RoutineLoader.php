@@ -184,6 +184,19 @@ class RoutineLoader
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * Detects stored routines that would result in the same method name.
+   */
+  private function detectNameConflicts()
+  {
+     // xxx in $this->mySourceFileNames find routines that result in the same method name
+     // xxx take method from \SetBased\Stratum\NameMangler\NameMangler::getMethodName
+     // xxx put conflicts in  $this->myErrorFileNames[] = $psql_filename;
+
+     // xxx remove conflicts from  $this->mySourceFileNames and  make key is routine name (or basename of file).
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Searches recursively for all source files in a directory.
    *
    * @param string $theSourceDir The directory.
@@ -192,21 +205,12 @@ class RoutineLoader
   {
     if ($theSourceDir===null) $theSourceDir = $this->mySourceDirectory;
 
+    // XXX replace with recursive scan like you did before.
+
     $psql_filenames = glob($theSourceDir.'/*'.$this->mySourceFileExtension);
     foreach ($psql_filenames as $psql_filename)
     {
-      $base_name = basename($psql_filename, $this->mySourceFileExtension);
-      if (!isset($this->mySourceFileNames[$base_name]))
-      {
-        $this->mySourceFileNames[$base_name] = $psql_filename;
-      }
-      else
-      {
-        echo sprintf("Error: Files '%s' and '%s' have the same basename.\n",
-                     $this->mySourceFileNames[$base_name],
-                     $psql_filename);
-        $this->myErrorFileNames[] = $psql_filename;
-      }
+      $this->mySourceFileNames[] = $psql_filename;
     }
 
     $filenames = scandir($theSourceDir);
@@ -241,17 +245,7 @@ class RoutineLoader
       if (file_exists($psql_filename))
       {
         $base_name = basename($psql_filename, $this->mySourceFileExtension);
-        if (!isset($this->mySourceFileNames[$base_name]))
-        {
-          $this->mySourceFileNames[$base_name] = $psql_filename;
-        }
-        else
-        {
-          echo sprintf("Error: Files '%s' and '%s' have the same basename.\n",
-                       $this->mySourceFileNames[$base_name],
-                       $psql_filename);
-          $this->myErrorFileNames[] = $psql_filename;
-        }
+        $this->detectNameConflicts($base_name, $psql_filename);
       }
       else
       {
@@ -372,6 +366,7 @@ order by routine_name";
     $this->myConnector->connect();
 
     $this->findSourceFiles();
+    $this->detectNameConflicts();
     $this->getColumnTypes();
     $this->readStoredRoutineMetadata();
     $this->getConstants();
@@ -406,6 +401,7 @@ order by routine_name";
     $this->myConnector->connect();
 
     $this->findSourceFilesFromList($theFileNames);
+    $this->detectNameConflicts();
     $this->getColumnTypes();
     $this->readStoredRoutineMetadata();
     $this->getConstants();

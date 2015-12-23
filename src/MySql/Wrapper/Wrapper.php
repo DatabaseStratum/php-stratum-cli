@@ -11,6 +11,7 @@
 namespace SetBased\Stratum\MySql\Wrapper;
 
 use SetBased\Stratum\Exception\FallenException;
+use SetBased\Stratum\NameMangler\SetBasedNameMangler;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
@@ -247,7 +248,8 @@ abstract class Wrapper
    */
   public function writeRoutineFunctionWithLob($theRoutine)
   {
-    $wrapper_function_name = $this->getWrapperRoutineName($theRoutine['routine_name']);
+//    $wrapper_function_name = $this->getWrapperRoutineName($theRoutine['routine_name']);
+    $wrapper_function_name = SetBasedNameMangler::getMethodName($theRoutine['routine_name']);
 
     $wrapper_args = $this->getWrapperArgs($theRoutine);
 
@@ -325,7 +327,8 @@ abstract class Wrapper
    */
   public function writeRoutineFunctionWithoutLob($theRoutine)
   {
-    $wrapper_function_name = $this->getWrapperRoutineName($theRoutine['routine_name']);
+//    $wrapper_function_name = $this->getWrapperRoutineName($theRoutine['routine_name']);
+    $wrapper_function_name = SetBasedNameMangler::getMethodName($theRoutine['routine_name']);
 
     $wrapper_args = $this->getWrapperArgs($theRoutine);
 
@@ -480,7 +483,8 @@ abstract class Wrapper
         case 'decimal':
         case 'float':
         case 'double':
-          $ret .= '$'.$parameter_info['name'];
+//          $ret .= '$'.$parameter_info['name'];
+          $ret .= SetBasedNameMangler::getParameterName('$'.$parameter_info['name']);
           break;
 
         case 'varbinary':
@@ -488,7 +492,7 @@ abstract class Wrapper
 
         case 'char':
         case 'varchar':
-          $ret .= '$'.$parameter_info['name'];
+          $ret .= SetBasedNameMangler::getParameterName('$'.$parameter_info['name']);
           break;
 
         case 'time':
@@ -496,31 +500,31 @@ abstract class Wrapper
 
         case 'date':
         case 'datetime':
-          $ret .= '$'.$parameter_info['name'];
+          $ret .= SetBasedNameMangler::getParameterName('$'.$parameter_info['name']);
           break;
 
         case 'enum':
         case 'bit':
         case 'set':
-          $ret .= '$'.$parameter_info['name'];
+          $ret .= SetBasedNameMangler::getParameterName('$'.$parameter_info['name']);
           break;
 
         case 'tinytext':
         case 'text':
         case 'mediumtext':
         case 'longtext':
-          $ret .= '$'.$parameter_info['name'];
+          $ret .= SetBasedNameMangler::getParameterName('$'.$parameter_info['name']);
           break;
 
         case 'tinyblob':
         case 'blob':
         case 'mediumblob':
         case 'longblob':
-          $ret .= '$'.$parameter_info['name'];
+          $ret .= SetBasedNameMangler::getParameterName('$'.$parameter_info['name']);
           break;
 
         case 'list_of_int':
-          $ret .= '$'.$parameter_info['name'];
+          $ret .= SetBasedNameMangler::getParameterName('$'.$parameter_info['name']);
           break;
 
         default:
