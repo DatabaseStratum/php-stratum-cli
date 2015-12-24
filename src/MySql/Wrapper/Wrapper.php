@@ -11,6 +11,7 @@
 namespace SetBased\Stratum\MySql\Wrapper;
 
 use SetBased\Stratum\Exception\FallenException;
+use SetBased\Stratum\NameMangler\NameMangler;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
@@ -221,19 +222,20 @@ abstract class Wrapper
   /**
    * Generates a complete wrapper method.
    *
-   * @param array $theRoutine Metadata of the stored routine.
+   * @param array       $theRoutine     Metadata of the stored routine.
+   * @param NameMangler $theNameMangler The mangler for wrapper and parameter names.
    *
    * @return string PHP code with a routine wrapper.
    */
-  public function writeRoutineFunction($theRoutine)
+  public function writeRoutineFunction($theRoutine, $theNameMangler)
   {
     if (!$this->myLobAsStringFlag && $this->isBlobParameter($theRoutine['parameters']))
     {
-      return $this->writeRoutineFunctionWithLob($theRoutine);
+      return $this->writeRoutineFunctionWithLob($theRoutine, $theNameMangler);
     }
     else
     {
-      return $this->writeRoutineFunctionWithoutLob($theRoutine);
+      return $this->writeRoutineFunctionWithoutLob($theRoutine, $theNameMangler);
     }
   }
 
@@ -241,18 +243,16 @@ abstract class Wrapper
   /**
    * Generates a complete wrapper method for a stored routine with a LOB parameter.
    *
-   * @param array $theRoutine The metadata of the stored routine.
+   * @param array       $theRoutine     The metadata of the stored routine.
+   * @param NameMangler $theNameMangler The mangler for wrapper and parameter names.
    *
    * @return string PHP code with a routine wrapper.
    */
-  public function writeRoutineFunctionWithLob($theRoutine)
+  public function writeRoutineFunctionWithLob($theRoutine, $theNameMangler)
   {
-    $wrapper_function_name = $this->getWrapperRoutineName($theRoutine['routine_name']);
-
-    $wrapper_args = $this->getWrapperArgs($theRoutine);
-
+    $wrapper_args = $this->getWrapperArgs($theRoutine, $theNameMangler);
     $routine_args = $this->getRoutineArgs($theRoutine);
-
+    $method_name  = $theNameMangler->getMethodName($theRoutine['routine_name']);
 
     $bindings = '';
     $nulls    = '';
@@ -269,7 +269,7 @@ abstract class Wrapper
 
     $this->writeSeparator();
     $this->generatePhpDoc($theRoutine);
-    $this->writeLine('public static function '.$wrapper_function_name.'( '.$wrapper_args.' )');
+    $this->writeLine('public static function '.$method_name.'( '.$wrapper_args.' )');
     $this->writeLine('{');
     $this->writeLine('$query = \'CALL '.$theRoutine['routine_name'].'( '.$routine_args.' )\';');
     $this->writeLine('$stmt  = self::$ourMySql->prepare( $query );');
@@ -332,19 +332,19 @@ abstract class Wrapper
   /**
    * Returns a wrapper method for a stored routine without LOB parameters.
    *
-   * @param $theRoutine array The metadata of the stored routine.
+   * @param             $theRoutine     array The metadata of the stored routine.
+   * @param NameMangler $theNameMangler The mangler for wrapper and parameter names.
    *
    * @return string PHP code with a routine wrapper.
    */
-  public function writeRoutineFunctionWithoutLob($theRoutine)
+  public function writeRoutineFunctionWithoutLob($theRoutine, $theNameMangler)
   {
-    $wrapper_function_name = $this->getWrapperRoutineName($theRoutine['routine_name']);
-
-    $wrapper_args = $this->getWrapperArgs($theRoutine);
+    $wrapper_args = $this->getWrapperArgs($theRoutine, $theNameMangler);
+    $method_name  = $theNameMangler->getMethodName($theRoutine['routine_name']);
 
     $this->writeSeparator();
     $this->generatePhpDoc($theRoutine);
-    $this->writeLine('public static function '.$wrapper_function_name.'( '.$wrapper_args.' )');
+    $this->writeLine('public static function '.$method_name.'( '.$wrapper_args.' )');
     $this->writeLine('{');
 
     $this->writeResultHandler($theRoutine);
@@ -462,11 +462,12 @@ abstract class Wrapper
   /**
    * Returns code for the parameters of the wrapper method for the stored routine.
    *
-   * @param $theRoutine array The metadata of the stored routine.
+   * @param             $theRoutine     array The metadata of the stored routine.
+   * @param NameMangler $theNameMangler The mangler for wrapper and parameter names.
    *
    * @return string
    */
-  protected function getWrapperArgs($theRoutine)
+  protected function getWrapperArgs($theRoutine, $theNameMangler)
   {
     if ($theRoutine['designation']=='bulk')
     {
@@ -493,7 +494,7 @@ abstract class Wrapper
         case 'decimal':
         case 'float':
         case 'double':
-          $ret .= '$'.$parameter_info['name'];
+          $ret .= $theNameMangler->getParameterName('$'.$parameter_info['name']);
           break;
 
         case 'varbinary':
@@ -501,7 +502,7 @@ abstract class Wrapper
 
         case 'char':
         case 'varchar':
-          $ret .= '$'.$parameter_info['name'];
+          $ret .= $theNameMangler->getParameterName('$'.$parameter_info['name']);
           break;
 
         case 'time':
@@ -509,31 +510,31 @@ abstract class Wrapper
 
         case 'date':
         case 'datetime':
-          $ret .= '$'.$parameter_info['name'];
+          $ret .= $theNameMangler->getParameterName('$'.$parameter_info['name']);
           break;
 
         case 'enum':
         case 'bit':
         case 'set':
-          $ret .= '$'.$parameter_info['name'];
+          $ret .= $theNameMangler->getParameterName('$'.$parameter_info['name']);
           break;
 
         case 'tinytext':
         case 'text':
         case 'mediumtext':
         case 'longtext':
-          $ret .= '$'.$parameter_info['name'];
+          $ret .= $theNameMangler->getParameterName('$'.$parameter_info['name']);
           break;
 
         case 'tinyblob':
         case 'blob':
         case 'mediumblob':
         case 'longblob':
-          $ret .= '$'.$parameter_info['name'];
+          $ret .= $theNameMangler->getParameterName('$'.$parameter_info['name']);
           break;
 
         case 'list_of_int':
-          $ret .= '$'.$parameter_info['name'];
+          $ret .= $theNameMangler->getParameterName('$'.$parameter_info['name']);
           break;
 
         default:
@@ -712,25 +713,6 @@ abstract class Wrapper
     }
 
     $this->writeLine(' */');
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns @a $theStoredRoutineName after the first underscore in camel case.
-   * E.g. set_foo_foo => fooFoo.
-   *
-   * @param $theStoredRoutineName string The name of the stored routine.
-   *
-   * @return string
-   */
-  private function getWrapperRoutineName($theStoredRoutineName)
-  {
-    return lcfirst(preg_replace_callback('/(_)([a-z])/',
-      function ($matches)
-      {
-        return strtoupper($matches[2]);
-      },
-                                         stristr($theStoredRoutineName, '_')));
   }
 
   //--------------------------------------------------------------------------------------------------------------------

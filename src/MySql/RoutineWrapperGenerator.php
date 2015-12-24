@@ -12,6 +12,7 @@ namespace SetBased\Stratum\MySql;
 
 use SetBased\Stratum\Exception\RuntimeException;
 use SetBased\Stratum\MySql\Wrapper\Wrapper;
+use SetBased\Stratum\NameMangler\NameMangler;
 use SetBased\Stratum\Util;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -50,6 +51,13 @@ class RoutineWrapperGenerator
   private $myMetadataFilename;
 
   /**
+   * Class name for mangling routine and parameter names.
+   *
+   * @var string
+   */
+  private $myNameMangler;
+
+  /**
    * The class name (including namespace) of the parent class of the routine wrapper.
    *
    * @var string
@@ -70,7 +78,6 @@ class RoutineWrapperGenerator
    */
   private $myWrapperFilename;
 
-
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * The "main" of the wrapper generator.
@@ -83,6 +90,7 @@ class RoutineWrapperGenerator
   {
     $this->readConfigurationFile($theConfigurationFilename);
 
+    $mangler  = new $this->myNameMangler();
     $routines = $this->readRoutineMetadata();
 
     if (is_array($routines))
@@ -93,7 +101,7 @@ class RoutineWrapperGenerator
         // If routine type is hidden don't create routine wrapper.
         if ($routine['designation']!='hidden')
         {
-          $this->writeRoutineFunction($routine);
+          $this->writeRoutineFunction($routine, $mangler);
         }
       }
     }
@@ -138,6 +146,7 @@ class RoutineWrapperGenerator
     }
 
     $this->myParentClassName  = Util::getSetting($settings, true, 'wrapper', 'parent_class');
+    $this->myNameMangler      = Util::getSetting($settings, true, 'wrapper', 'mangler_class');
     $this->myWrapperClassName = Util::getSetting($settings, true, 'wrapper', 'wrapper_class');
     $this->myWrapperFilename  = Util::getSetting($settings, true, 'wrapper', 'wrapper_file');
     $this->myMetadataFilename = Util::getSetting($settings, true, 'wrapper', 'metadata');
@@ -224,12 +233,13 @@ class RoutineWrapperGenerator
   /**
    * Generates a complete wrapper method for a stored routine.
    *
-   * @param array $theRoutine The metadata of the stored routine.
+   * @param array       $theRoutine     The metadata of the stored routine.
+   * @param NameMangler $theNameMangler The mangler for wrapper and parameter names.
    */
-  private function writeRoutineFunction($theRoutine)
+  private function writeRoutineFunction($theRoutine, $theNameMangler)
   {
     $wrapper = Wrapper::createRoutineWrapper($theRoutine, $this->myLobAsStringFlag);
-    $this->myCode .= $wrapper->writeRoutineFunction($theRoutine);
+    $this->myCode .= $wrapper->writeRoutineFunction($theRoutine, $theNameMangler);
 
     $this->myImports = array_merge($this->myImports, $wrapper->getImports());
   }

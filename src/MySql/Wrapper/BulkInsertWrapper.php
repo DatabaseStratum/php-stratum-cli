@@ -36,7 +36,7 @@ class BulkInsertWrapper extends Wrapper
   /**
    * {@inheritdoc}
    */
-  protected function getWrapperArgs($theRoutine)
+  protected function getWrapperArgs($theRoutine, $theNameMangler)
   {
     return '$theData';
   }
