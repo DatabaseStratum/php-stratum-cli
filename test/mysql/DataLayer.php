@@ -7,26 +7,6 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
 {
   //-------------------------------------------------------------------------------------------------------------------
   /**
-   *
-   * @param string|int[] $p_ids The id's in CSV format.
-   *                            varchar(255) character set utf8 collation utf8_general_ci
-   *
-   * @return array[]
-   * @throws  \RunTimeException
-   */
-  public static function testListOfInt( $p_ids )
-  {
-    $result = self::query( 'CALL tst_test_list_of_int('.self::quoteListOfInt( $p_ids, ',', '\"', '\\' ).')');
-    $ret = array();
-    while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret[$row['tst_id']] = $row;
-    $result->free();
-    if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
-
-    return  $ret;
-  }
-
-  //-------------------------------------------------------------------------------------------------------------------
-  /**
    * Test for designation type table.
    *
    * @return int
@@ -56,15 +36,22 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
 
   //-------------------------------------------------------------------------------------------------------------------
   /**
-   * Test for magic constant.
    *
-   * @return string
+   * @param string|int[] $p_ids The id's in CSV format.
+   *                            varchar(255) character set utf8 collation utf8_general_ci
+   *
+   * @return array[]
    * @throws  \RunTimeException
-   * @throws  ResultException
    */
-  public static function magicConstant05(  )
+  public static function testListOfInt( $p_ids )
   {
-    return self::executeSingleton1( 'CALL tst_magic_constant05()');
+    $result = self::query( 'CALL tst_test_list_of_int('.self::quoteListOfInt( $p_ids, ',', '\"', '\\' ).')');
+    $ret = array();
+    while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret[$row['tst_id']] = $row;
+    $result->free();
+    if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
+
+    return  $ret;
   }
 
   //-------------------------------------------------------------------------------------------------------------------
@@ -128,6 +115,19 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
     if (count($tmp)!=1) throw new ResultException( '1', count($tmp), $query );
 
     return $tmp[0][0];
+  }
+
+  //-------------------------------------------------------------------------------------------------------------------
+  /**
+   * Test for magic constant.
+   *
+   * @return string
+   * @throws  \RunTimeException
+   * @throws  ResultException
+   */
+  public static function magicConstant05(  )
+  {
+    return self::executeSingleton1( 'CALL tst_magic_constant05()');
   }
 
   //-------------------------------------------------------------------------------------------------------------------

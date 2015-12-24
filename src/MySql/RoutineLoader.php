@@ -14,6 +14,7 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SetBased\Stratum\Exception\RuntimeException;
 use SetBased\Stratum\MySql\StaticDataLayer as DataLayer;
+use SetBased\Stratum\NameMangler\NameMangler;
 use SetBased\Stratum\Util;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -108,11 +109,16 @@ class RoutineLoader
   private $mySourceFileExtension;
 
   /**
-   * All found source files.
+   * All sources with stored routines. Each element is an array with the following keys:
+   * <ul>
+   * <li> path_name    The path the source file.
+   * <li> routine_name The name of the routine (equals the basename of the path).
+   * <li> method_name  The name of the method in the data layer for the wrapper method of the stored routine.
+   * </ul>
    *
-   * @var array
+   * @var array[]
    */
-  private $mySourceFileNames = [];
+  private $mySources = [];
 
   /**
    * The SQL mode under which the stored routine will be loaded and run.
@@ -180,7 +186,7 @@ class RoutineLoader
   {
     foreach ($this->myRdbmsOldMetadata as $old_routine)
     {
-      if (!isset($this->mySourceFileNames[$old_routine['routine_name']]))
+      if (!isset($this->mySources[$old_routine['routine_name']]))
       {
         echo sprintf("Dropping %s %s\n",
                      strtolower($old_routine['routine_type']),
@@ -198,26 +204,34 @@ class RoutineLoader
    */
   private function detectNameConflicts()
   {
-    // Get method name from every source file
-    $method_names = [];
-    foreach ($this->mySourceFileNames as $file_name)
-    {
-      $mangle                   = new $this->myMangler;
-      $method_name              = $mangle::getMethodName($file_name);
-      $method_names[$file_name] = $method_name;
-    }
+    # Get same method names from array
+    $not_unique_names = $this->getArrayNotUnique($this->mySources);
 
-    // Get same method names from array
-    $not_unique_names = $this->getArrayNotUnique($method_names);
+    # Remove $not_unique_names from mySourceFileNames
+    $this->mySources = array_udiff($this->mySources, $not_unique_names, [$this, 'udiffCompare']);
 
-    // Check if array not empty and then add every not unique method name to myErrorFileNames
+    # Check if array not empty and then add every not unique method name to myErrorFileNames
     if ($not_unique_names)
     {
-      foreach ($not_unique_names as $file_name => $method_name)
+      foreach ($not_unique_names as $item)
       {
-        $this->myErrorFileNames[] = $file_name;
+        $this->myErrorFileNames[] = $item['path_name'];
       }
     }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Return different values from arrays
+   *
+   * @param $a array
+   * @param $b array
+   *
+   * @return mixed
+   */
+  private function udiffCompare($a, $b)
+  {
+    return $a['method_name'] - $b['method_name'];
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -234,13 +248,14 @@ class RoutineLoader
     $processed  = [];
     foreach ($input as $i)
     {
-      if (in_array($i, $processed))
+      if (in_array($i['method_name'], $processed))
       {
-        $duplicates[] = $i;
+        $duplicates['path_name']   = $i['path_name'];
+        $duplicates['method_name'] = $i['method_name'];
       }
       else
       {
-        $processed[] = $i;
+        $processed['method_name'] = $i['method_name'];
       }
     }
 
@@ -258,12 +273,19 @@ class RoutineLoader
     if ($theSourceDir===null) $theSourceDir = $this->mySourceDirectory;
 
     $directory = new RecursiveDirectoryIterator($theSourceDir);
-    $files = new RecursiveIteratorIterator($directory);
+    $files     = new RecursiveIteratorIterator($directory);
     foreach ($files as $full_path => $file)
     {
       if ($file->isFile() && '.'.$file->getExtension()==$this->mySourceFileExtension)
       {
-        $this->mySourceFileNames[$file->getBasename($this->mySourceFileExtension)] = $full_path;
+        $sources                 = [];
+        $sources['path_name']    = $full_path;
+        $sources['routine_name'] = $file->getBasename($this->mySourceFileExtension);
+
+        /** @var NameMangler $mangle */
+        $mangle                 = new $this->myMangler;
+        $sources['method_name'] = $mangle::getMethodName($file->getFilename());
+        $this->mySources[]      = $sources;
       }
     }
   }
@@ -453,11 +475,11 @@ order by routine_name";
    */
   private function loadStoredRoutines()
   {
-    foreach ($this->mySourceFileNames as $filename)
+    foreach ($this->mySources as $filename)
     {
-      $routine_name = basename($filename, $this->mySourceFileExtension);
+      $routine_name = $filename['routine_name'];
 
-      $helper = new RoutineLoaderHelper($filename,
+      $helper = new RoutineLoaderHelper($filename['path_name'],
                                         $this->mySourceFileExtension,
                                         isset($this->myPhpStratumMetadata[$routine_name]) ? $this->myPhpStratumMetadata[$routine_name] : null,
                                         $this->myReplacePairs,
@@ -470,7 +492,7 @@ order by routine_name";
       if ($meta_data===false)
       {
         # An error occurred during the loading og the stored routine.
-        $this->myErrorFileNames[] = $filename;
+        $this->myErrorFileNames[] = $filename['path_name'];
         unset($this->myPhpStratumMetadata[$routine_name]);
       }
       else
@@ -515,10 +537,11 @@ order by routine_name";
    */
   private function removeObsoleteMetadata()
   {
+    // 1 pass through $mySources make new array with routine_name is key.
     $clean = [];
-    foreach ($this->mySourceFileNames as $myPsqlFilename)
+    foreach ($this->mySources as $myPsqlFilename)
     {
-      $tmp = basename($myPsqlFilename, $this->mySourceFileExtension);
+      $tmp = $myPsqlFilename['routine_name'];
       if (isset($this->myPhpStratumMetadata[$tmp])) $clean[$tmp] = $this->myPhpStratumMetadata[$tmp];
     }
     $this->myPhpStratumMetadata = $clean;
