@@ -190,6 +190,15 @@ class RoutineWrapperGenerator
       $this->myCode .= "\n";
     }
 
+    $parent_class_name = substr($this->myParentClassName, strrpos($this->myParentClassName, '\\') + 1);
+    if(!isset($parent_class_name))
+      throw new RuntimeException('Wrong parent class name in config file.');
+    if($class_name!=$parent_class_name)
+    {
+      $this->myImports[]       = $this->myParentClassName;
+      $this->myParentClassName = $parent_class_name;
+    }
+
     // Write use statements.
     if ($this->myImports)
     {
