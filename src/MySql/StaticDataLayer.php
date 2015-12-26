@@ -158,7 +158,7 @@ class StaticDataLayer
   {
     self::$ourMySql = new \mysqli($theHostName, $theUserName, $thePassWord, $theDatabase, $thePort);
     if (!self::$ourMySql) self::mySqlError('mysqli::__construct');
-/*
+
     // Set the default character set.
     if (self::$ourCharSet)
     {
@@ -180,7 +180,6 @@ class StaticDataLayer
 
     // Set flag to use method mysqli_result::fetch_all if we are using MySQL native driver.
     self::$ourHaveFetchAll = method_exists('mysqli_result', 'fetch_all');
-    */
   }
 
   //--------------------------------------------------------------------------------------------------------------------
