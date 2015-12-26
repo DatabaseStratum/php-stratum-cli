@@ -199,6 +199,15 @@ class RoutineWrapperGenerator
       $this->myCode .= "\n";
     }
 
+    // If the child class and parent class have different names import the parent class. Otherwise use the fully
+    // qualified parent class name.
+    $parent_class_name = substr($this->myParentClassName, strrpos($this->myParentClassName, '\\') + 1);
+    if ($class_name!=$parent_class_name)
+    {
+      $this->myImports[]       = $this->myParentClassName;
+      $this->myParentClassName = $parent_class_name;
+    }
+
     // Write use statements.
     if ($this->myImports)
     {
