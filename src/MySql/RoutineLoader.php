@@ -254,7 +254,8 @@ class RoutineLoader
     /** @var NameMangler $mangler */
     $mangler   = $this->myNameMangler;
     $directory = new RecursiveDirectoryIterator($theSourceDir);
-    $files     = new RecursiveIteratorIterator($directory);
+    $directory->setFlags(RecursiveDirectoryIterator::FOLLOW_SYMLINKS);
+    $files = new RecursiveIteratorIterator($directory);
     foreach ($files as $full_path => $file)
     {
       // If the file is a source file with stored routine add it to my sources.
