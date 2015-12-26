@@ -1,9 +1,10 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
 use \SetBased\Stratum\Exception\ResultException;
+use \SetBased\Stratum\MySql\StaticDataLayer;
 
 //----------------------------------------------------------------------------------------------------------------------
-class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
+class DataLayer extends StaticDataLayer
 {
   //-------------------------------------------------------------------------------------------------------------------
   /**
@@ -250,6 +251,19 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
   public static function testLog(  )
   {
     return self::executeLog( 'CALL tst_test_log()' );
+  }
+
+  //-------------------------------------------------------------------------------------------------------------------
+  /**
+   * Test for magic constant.
+   *
+   * @return string
+   * @throws  \RunTimeException
+   * @throws  ResultException
+   */
+  public static function magicConstant05(  )
+  {
+    return self::executeSingleton1( 'CALL tst_magic_constant05()');
   }
 
   //-------------------------------------------------------------------------------------------------------------------
@@ -738,19 +752,6 @@ class DataLayer extends \SetBased\Stratum\MySql\StaticDataLayer
     if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     return  $ret;
-  }
-
-  //-------------------------------------------------------------------------------------------------------------------
-  /**
-   * Test for magic constant.
-   *
-   * @return string
-   * @throws  \RunTimeException
-   * @throws  ResultException
-   */
-  public static function magicConstant05(  )
-  {
-    return self::executeSingleton1( 'CALL tst_magic_constant05()');
   }
 
   //-------------------------------------------------------------------------------------------------------------------

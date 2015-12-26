@@ -500,7 +500,7 @@ information_schema.GEOMETRY_COLUMNS.SRID                5
 
 information_schema.SPATIAL_REF_SYS.SRID         5
 information_schema.SPATIAL_REF_SYS.AUTH_NAME  512
-information_schema.SPATIAL_REF_SYS.AUTH_SRID    5
+information_schema.SPATIAL_REF_SYS.AUTH_SRID   10
 information_schema.SPATIAL_REF_SYS.SRTEXT    2048
 
 information_schema.CLIENT_STATISTICS.CLIENT                      64
