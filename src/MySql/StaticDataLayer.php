@@ -798,9 +798,10 @@ class StaticDataLayer
   protected static function mySqlError($theText)
   {
     $message = "MySQL Error no: ".self::$ourMySql->errno."\n";
-    $message .= self::$ourMySql->error;
+    $message .=  str_replace('%', '%%', self::$ourMySql->error);
     $message .= "\n";
-    $message .= $theText."\n";
+    $message .= str_replace('%', '%%', $theText );
+    $message .= "\n";
 
     throw new RuntimeException($message);
   }
