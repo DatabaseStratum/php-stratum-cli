@@ -65,7 +65,8 @@ abstract class Wrapper
   public function __construct($theLobAsStringFlag)
   {
     $this->myLobAsStringFlag = $theLobAsStringFlag;
-    $this->myExceptions      = ['\RunTimeException'];
+    $this->myExceptions      = ['RunTimeException'];
+    $this->myImports[]       = '\SetBased\Stratum\Exception\RunTimeException';
   }
 
   //--------------------------------------------------------------------------------------------------------------------
