@@ -529,6 +529,34 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * Returns the first row in a row set for which a column has a specific value.
+   *
+   * Throws an exception if now row is found.
+   *
+   * @param string  $theColumnName The column name (or in PHP terms the key in an row (i.e. array) in the row set).
+   * @param mixed   $theValue      The value to be found.
+   * @param array[] $theRowSet     The row set.
+   *
+   * @return mixed
+   */
+  public static function getRowInRowSet($theColumnName, $theValue, $theRowSet)
+  {
+    if (is_array($theRowSet))
+    {
+      foreach ($theRowSet as $key => $row)
+      {
+        if ((string)$row[$theColumnName]==(string)$theValue)
+        {
+          return $row;
+        }
+      }
+    }
+
+    throw new RuntimeException("Value '%s' for column '%s' not found in row set.", $theValue, $theColumnName);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Executes multiple SQL statements.
    *
    * Wrapper around [multi_mysqli::query](http://php.net/manual/mysqli.multi-query.php), however on failure an exception
@@ -763,7 +791,7 @@ class StaticDataLayer
     {
       foreach ($theRowSet as $key => $row)
       {
-        if ($row[$theColumnName]===$theValue)
+        if ((string)$row[$theColumnName]==(string)$theValue)
         {
           return $key;
         }
@@ -798,9 +826,9 @@ class StaticDataLayer
   protected static function mySqlError($theText)
   {
     $message = "MySQL Error no: ".self::$ourMySql->errno."\n";
-    $message .=  str_replace('%', '%%', self::$ourMySql->error);
+    $message .= str_replace('%', '%%', self::$ourMySql->error);
     $message .= "\n";
-    $message .= str_replace('%', '%%', $theText );
+    $message .= str_replace('%', '%%', $theText);
     $message .= "\n";
 
     throw new RuntimeException($message);

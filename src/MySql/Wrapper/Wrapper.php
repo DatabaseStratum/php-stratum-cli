@@ -65,7 +65,8 @@ abstract class Wrapper
   public function __construct($theLobAsStringFlag)
   {
     $this->myLobAsStringFlag = $theLobAsStringFlag;
-    $this->myExceptions      = ['\RunTimeException'];
+    $this->myExceptions      = ['RunTimeException'];
+    $this->myImports[]       = '\SetBased\Stratum\Exception\RunTimeException';
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -428,6 +429,8 @@ abstract class Wrapper
    */
   protected function getDocBlockExceptions()
   {
+    sort($this->myExceptions);
+
     return $this->myExceptions;
   }
 
@@ -708,7 +711,7 @@ abstract class Wrapper
       $exceptions = array_unique($exceptions);
       foreach ($exceptions as $exception)
       {
-        $this->writeLine(' * @throws  '.$exception);
+        $this->writeLine(' * @throws '.$exception);
       }
     }
 
