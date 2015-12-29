@@ -255,19 +255,6 @@ class DataLayer extends StaticDataLayer
 
   //-------------------------------------------------------------------------------------------------------------------
   /**
-   * Test for magic constant.
-   *
-   * @return string
-   * @throws  \RunTimeException
-   * @throws  ResultException
-   */
-  public static function magicConstant05(  )
-  {
-    return self::executeSingleton1( 'CALL tst_magic_constant05()');
-  }
-
-  //-------------------------------------------------------------------------------------------------------------------
-  /**
    * Test for designation type table.
    *
    * @return int
@@ -752,6 +739,19 @@ class DataLayer extends StaticDataLayer
     if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     return  $ret;
+  }
+
+  //-------------------------------------------------------------------------------------------------------------------
+  /**
+   * Test for magic constant.
+   *
+   * @return string
+   * @throws  \RunTimeException
+   * @throws  ResultException
+   */
+  public static function magicConstant05(  )
+  {
+    return self::executeSingleton1( 'CALL tst_magic_constant05()');
   }
 
   //-------------------------------------------------------------------------------------------------------------------
