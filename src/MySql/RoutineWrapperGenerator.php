@@ -96,7 +96,14 @@ class RoutineWrapperGenerator
     if (is_array($routines))
     {
       // Write methods for each stored routine.
+      $sorted_routines = [];
       foreach ($routines as $routine)
+      {
+        $method_name       = $mangler->getMethodName($routine['routine_name']);
+        $sorted_routines[$method_name] = $routine;
+      }
+      ksort($sorted_routines);
+      foreach ($sorted_routines as $method_name => $routine)
       {
         // If routine type is hidden don't create routine wrapper.
         if ($routine['designation']!='hidden')
@@ -109,7 +116,6 @@ class RoutineWrapperGenerator
     {
       echo "No files with stored routines found.\n";
     }
-
     $methods      = $this->myCode;
     $this->myCode = '';
 

@@ -574,6 +574,7 @@ order by routine_name";
     $options = 0;
     if (defined('JSON_PRETTY_PRINT')) $options = $options | constant('JSON_PRETTY_PRINT');
 
+    ksort($this->myPhpStratumMetadata);
     $json_data = json_encode($this->myPhpStratumMetadata, $options);
     if (json_last_error()!=JSON_ERROR_NONE)
     {
