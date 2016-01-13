@@ -500,7 +500,7 @@ information_schema.GEOMETRY_COLUMNS.SRID                5
 
 information_schema.SPATIAL_REF_SYS.SRID         5
 information_schema.SPATIAL_REF_SYS.AUTH_NAME  512
-information_schema.SPATIAL_REF_SYS.AUTH_SRID    5
+information_schema.SPATIAL_REF_SYS.AUTH_SRID   10
 information_schema.SPATIAL_REF_SYS.SRTEXT    2048
 
 information_schema.CLIENT_STATISTICS.CLIENT                      64
@@ -898,6 +898,16 @@ information_schema.INNODB_TABLESPACES_SCRUBBING.CURRENT_SCRUB_STARTED          1
 information_schema.INNODB_TABLESPACES_SCRUBBING.CURRENT_SCRUB_ACTIVE_THREADS   10
 information_schema.INNODB_TABLESPACES_SCRUBBING.CURRENT_SCRUB_PAGE_NUMBER      20
 information_schema.INNODB_TABLESPACES_SCRUBBING.CURRENT_SCRUB_MAX_PAGE_NUMBER  20
+
+sample01.BAR_USER.usr_id            10
+sample01.BAR_USER.ust_id             3
+sample01.BAR_USER.usr_name          40
+sample01.BAR_USER.usr_password_hash 60
+sample01.BAR_USER.usr_email         80
+
+sample01.BAR_USER_STATUS.ust_id           3
+sample01.BAR_USER_STATUS.ust_description 40
+sample01.BAR_USER_STATUS.ust_label       20
 
 test.TST_FOO1.tst_c00         10
 test.TST_FOO1.tst_c01          5

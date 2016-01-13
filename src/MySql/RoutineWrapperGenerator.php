@@ -90,19 +90,22 @@ class RoutineWrapperGenerator
   {
     $this->readConfigurationFile($theConfigurationFilename);
 
+    /** @var NameMangler $mangler */
     $mangler  = new $this->myNameMangler();
     $routines = $this->readRoutineMetadata();
 
-    if (is_array($routines))
+    if ($routines)
     {
-      // Write methods for each stored routine.
+      // Sort routines by their wrapper method name.
       $sorted_routines = [];
       foreach ($routines as $routine)
       {
-        $method_name       = $mangler->getMethodName($routine['routine_name']);
+        $method_name                   = $mangler->getMethodName($routine['routine_name']);
         $sorted_routines[$method_name] = $routine;
       }
       ksort($sorted_routines);
+
+      // Write methods for each stored routine.
       foreach ($sorted_routines as $method_name => $routine)
       {
         // If routine type is hidden don't create routine wrapper.
@@ -116,6 +119,7 @@ class RoutineWrapperGenerator
     {
       echo "No files with stored routines found.\n";
     }
+
     $methods      = $this->myCode;
     $this->myCode = '';
 
