@@ -599,8 +599,14 @@ where   nullif(`%s`,'') is not null";
   {
     // Get the class loader.
     /** @var \Composer\Autoload\ClassLoader $loader */
-    $loader    = spl_autoload_functions()[0][0];
+    $loader = spl_autoload_functions()[0][0];
+
+    // Find the source file of the constant class.
     $file_name = $loader->findFile($this->myClassName);
+    if ($file_name===false)
+    {
+      throw new RuntimeException("Composer can not find class '%s'.", $this->myClassName);
+    }
 
     // Read the source of the class without actually loading the class. Otherwise, we can not (re)load the class in
     // \SetBased\Stratum\MySql\RoutineLoader::getConstants.

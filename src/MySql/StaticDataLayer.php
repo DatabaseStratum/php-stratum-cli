@@ -157,7 +157,14 @@ class StaticDataLayer
   public static function connect($theHostName, $theUserName, $thePassWord, $theDatabase, $thePort = 3306)
   {
     self::$ourMySql = new \mysqli($theHostName, $theUserName, $thePassWord, $theDatabase, $thePort);
-    if (!self::$ourMySql) self::mySqlError('mysqli::__construct');
+    if (self::$ourMySql->connect_errno)
+    {
+      $message = "MySQL Error no: ".self::$ourMySql->connect_errno."\n";
+      $message .= str_replace('%', '%%', self::$ourMySql->connect_error);
+      $message .= "\n";
+
+      throw new RuntimeException($message);
+    }
 
     // Set the default character set.
     if (self::$ourCharSet)
@@ -440,7 +447,6 @@ class StaticDataLayer
     do
     {
       $result = self::$ourMySql->store_result();
-
       if (self::$ourMySql->errno) self::mySqlError('mysqli::store_result');
       if ($result)
       {
