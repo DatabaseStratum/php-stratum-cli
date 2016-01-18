@@ -484,10 +484,28 @@ order by routine_name";
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * Help function for sorting StoredRoutines
+   *
+   * @param $a
+   * @param $b
+   *
+   * @return int
+   */
+  private static function cmpStoredRoutines($a, $b)
+  {
+    if ($a==$b)
+      return 0;
+
+    return ($a['routine_name']<$b['routine_name']) ? -1 : 1;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Loads all stored routines.
    */
   private function loadStoredRoutines()
   {
+    usort($this->mySources, '\SetBased\Stratum\MySql\RoutineLoader::cmpStoredRoutines');
     foreach ($this->mySources as $filename)
     {
       $routine_name = $filename['routine_name'];
@@ -574,7 +592,6 @@ order by routine_name";
     $options = 0;
     if (defined('JSON_PRETTY_PRINT')) $options = $options | constant('JSON_PRETTY_PRINT');
 
-    ksort($this->myPhpStratumMetadata);
     $json_data = json_encode($this->myPhpStratumMetadata, $options);
     if (json_last_error()!=JSON_ERROR_NONE)
     {
