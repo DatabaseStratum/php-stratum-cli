@@ -270,18 +270,27 @@ class RoutineLoader
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Finds all source files that actually exists from a list of filenames.
+   * Finds all source files that actually exists from a list of file names.
    *
-   * @param array $theFileNames The list of filenames.
+   * @param array $theFileNames The list of file names.
    */
   private function findSourceFilesFromList($theFileNames)
   {
+    /** @var NameMangler $mangler */
+    $mangler = $this->myNameMangler;
     foreach ($theFileNames as $psql_filename)
     {
       if (!file_exists($psql_filename))
       {
         echo sprintf("File not exists: '%s'.\n", $psql_filename);
         $this->myErrorFileNames[] = $psql_filename;
+      }
+      $extension = '.'.pathinfo($psql_filename, PATHINFO_EXTENSION);
+      if ($extension==$this->mySourceFileExtension)
+      {
+        $this->mySources[] = ['path_name'    => $psql_filename,
+                              'routine_name' => pathinfo($psql_filename, PATHINFO_FILENAME),
+                              'method_name'  => $mangler::getMethodName(pathinfo($psql_filename, PATHINFO_FILENAME))];
       }
     }
   }
