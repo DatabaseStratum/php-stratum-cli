@@ -586,11 +586,7 @@ order by routine_name";
    */
   private function writeStoredRoutineMetadata()
   {
-    // Note: Constant JSON_PRETTY_PRINT was introduced in php 5.4 while we want to be compatible with php 5.3.
-    $options = 0;
-    if (defined('JSON_PRETTY_PRINT')) $options = $options | constant('JSON_PRETTY_PRINT');
-
-    $json_data = json_encode($this->myPhpStratumMetadata, $options);
+    $json_data = json_encode($this->myPhpStratumMetadata, JSON_PRETTY_PRINT);
     if (json_last_error()!=JSON_ERROR_NONE)
     {
       throw new RuntimeException("Error of encoding to JSON: '%s'.", json_last_error_msg());
