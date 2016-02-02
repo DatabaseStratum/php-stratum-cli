@@ -12,7 +12,6 @@ before_script:
   - mysql -u root -e "create database if not exists test;"
   - mysql -u root -e "create user 'test'@'localhost' identified by 'test';"
   - mysql -u root -e "grant all on test.*  to 'test'@'localhost';"
-  - mysql -u root -e "set global log_bin_trust_function_creators = 1;"
 
 install:
   - composer self-update
