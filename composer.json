@@ -4,9 +4,17 @@
   "keywords": ["MySQL","Stored Routines","Stored Procedures","Stored Functions","Wrapper","Loader","PHP"],
   "type": "tool",
   "license": "MIT",
+  "authors": [
+    {
+      "name": "Paul Water",
+      "email": "p.r.water@setbased.nl",
+      "homepage": "http://www.setbased.nl",
+      "role": "Architect"
+    }
+  ],
   "require-dev": {
     "phpunit/phpunit": "*",
-    "setbased/phing-extensions": "1.*"
+    "setbased/phing-extensions": "2.*"
   },
   "require": {
     "php": ">=5.4.0",
