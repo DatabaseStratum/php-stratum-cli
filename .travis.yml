@@ -5,3 +5,13 @@ php:
 addons:
   mariadb: '10.0'
   
+before_script:
+  - mysql -e 'create database if not exists test;'
+  - mysql -e "create user 'test'@'localhost' identified by 'test';"
+  - mysql -e "grant all on test.*  to 'test'@'localhost';"
+
+install:
+    - composer install --dev
+    
+script: phing unit
+
