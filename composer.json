@@ -6,10 +6,9 @@
   "license": "MIT",
   "authors": [
     {
-      "name": "Paul Water",
-      "email": "p.r.water@setbased.nl",
-      "homepage": "http://www.setbased.nl",
-      "role": "Architect"
+      "name": "Set Based IT Consultancy",
+      "email": "info@setbased.nl",
+      "homepage": "http://www.setbased.nl"
     }
   ],
   "require-dev": {
