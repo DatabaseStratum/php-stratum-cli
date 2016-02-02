@@ -13,5 +13,5 @@ before_script:
 install:
     - composer install --dev
     
-script: phing unit
+script: ./bin/phing unit
 
