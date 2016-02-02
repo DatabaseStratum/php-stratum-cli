@@ -13,7 +13,7 @@ addons:
 before_script:
   - echo "binlog_format = row"                 | sudo tee    /etc/mysql/conf.d/row_replication.cnf
   - echo "log_bin_trust_function_creators = 1" | sudo tee -a /etc/mysql/conf.d/row_replication.cnf
-  - sudo systemctl restart mysql
+  - sudo service mysql restart
   - mysql -u root -e "create database if not exists test;"
   - mysql -u root -e "create user 'test'@'localhost' identified by 'test';"
   - mysql -u root -e "grant all on test.*  to 'test'@'localhost';"
