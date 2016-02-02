@@ -1,0 +1,7 @@
+language: php
+php:
+  - '5.4'
+
+addons:
+  mariadb: '10.0'
+  
