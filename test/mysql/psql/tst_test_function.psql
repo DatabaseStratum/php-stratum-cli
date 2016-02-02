@@ -7,6 +7,7 @@
 create function tst_test_function( p_a int,
                                    p_b int )
 returns int
+deterministic
 no sql
 -- type: function
 begin
