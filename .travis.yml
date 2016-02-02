@@ -9,6 +9,7 @@ addons:
   mariadb: '10.0'
   
 before_script:
+  - cat /etc/mysql/my.cnf
   - mysql -u root -e "create database if not exists test;"
   - mysql -u root -e "create user 'test'@'localhost' identified by 'test';"
   - mysql -u root -e "grant all on test.*  to 'test'@'localhost';"
