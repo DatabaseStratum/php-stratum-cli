@@ -1,6 +1,10 @@
 # PhpStratum
 A stored procedure and function loader, wrapper generator for MySQL in PHP.
 
+[![Latest Stable Version](https://poser.pugx.org/setbased/php-stratum/v/stable)](https://packagist.org/packages/setbased/php-stratum)
+[![Total Downloads](https://poser.pugx.org/setbased/php-stratum/downloads)](https://packagist.org/packages/setbased/php-stratum)
+[![License](https://poser.pugx.org/setbased/php-stratum/license)](https://packagist.org/packages/setbased/php-stratum)
+
 # Overview
 PhpStratum is a tool and library with the following mayor functionalities:  
 * Loading modified and new stored routines and removing obsolete stored routines into/from a MySQL instance. This MySQL instance can be part of your development or a production environment. 
