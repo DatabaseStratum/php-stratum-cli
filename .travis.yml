@@ -9,14 +9,8 @@ php:
   
 sudo: true
 
-matrix:
-  include:
-    - addons:
-        mariadb: 5.5
-    - addons:
-        mariadb: 10.0
-    - addons:
-        mariadb: 10.1
+addons:
+  mariadb: 10.1
 
 before_install:
   - mysql --version
