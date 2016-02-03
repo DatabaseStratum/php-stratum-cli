@@ -1,6 +1,7 @@
 # PhpStratum
 A stored procedure and function loader, wrapper generator for MySQL in PHP.
 
+[![Build Status](https://travis-ci.org/SetBased/php-stratum.svg?branch=master)](https://travis-ci.org/SetBased/php-stratum)
 [![Latest Stable Version](https://poser.pugx.org/setbased/php-stratum/v/stable)](https://packagist.org/packages/setbased/php-stratum)
 [![Total Downloads](https://poser.pugx.org/setbased/php-stratum/downloads)](https://packagist.org/packages/setbased/php-stratum)
 [![License](https://poser.pugx.org/setbased/php-stratum/license)](https://packagist.org/packages/setbased/php-stratum)
