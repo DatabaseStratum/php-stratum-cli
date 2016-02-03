@@ -11,9 +11,9 @@ addons:
   mariadb: '10.1'
   
 before_script:
-  - echo "[mysqld]"                            | sudo tee    /etc/mysql/conf.d/row_replication.cnf
-  - echo "binlog_format = row"                 | sudo tee -a /etc/mysql/conf.d/row_replication.cnf
-  - echo "log_bin_trust_function_creators = 1" | sudo tee -a /etc/mysql/conf.d/row_replication.cnf
+  - echo "[mysqld]"                            | sudo tee -a /etc/mysql/conf.d/my.cnf
+  - echo "binlog_format = row"                 | sudo tee -a /etc/mysql/conf.d/my.cnf
+  - echo "log_bin_trust_function_creators = 1" | sudo tee -a /etc/mysql/conf.d/my.cnf
   - find /etc/mysql -type f -ls -exec cat {} \;
   - sudo service mysql restart
   - mysql -u root -e "create database if not exists test;"
