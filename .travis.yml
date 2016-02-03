@@ -11,15 +11,13 @@ addons:
   mariadb: '10.1'
   
 before_install:
-  - sudo sed -i 's/^log_bin/#log_bin/' /etc/mysql/my.cnf
-  - echo "[mysqld]"                            | sudo tee -a /etc/mysql/my.cnf
-  - echo "binlog_format = row"                 | sudo tee -a /etc/mysql/my.cnf
-  - echo "log_bin_trust_function_creators = 1" | sudo tee -a /etc/mysql/my.cnf
   - sudo find /etc -type f -name "*.cnf" -ls -exec cat {} \;
   - sudo service mysql restart
   - mysql -u root -e "create database if not exists test;"
   - mysql -u root -e "create user 'test'@'localhost' identified by 'test';"
   - mysql -u root -e "grant all on test.*  to 'test'@'localhost';"
+  - mysql -u root -e "set global binlog_format = 'row';"
+  - mysql -u root -e "set global log_bin_trust_function_creators = 1;"
   - mysql -u root -e "show variables;"
   
 install:
