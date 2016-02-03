@@ -12,9 +12,9 @@ addons:
   
 before_install:
   - sudo sed -i 's/^log_bin/#log_bin/' /etc/conf/my.cnf
-  - echo "[mysqld]"                            | sudo tee -a /etc/conf/my.cnf
-  - echo "binlog_format = row"                 | sudo tee -a /etc/conf/my.cnf
-  - echo "log_bin_trust_function_creators = 1" | sudo tee -a /etc/conf/my.cnf
+  - echo "[mysqld]"                            | sudo tee -a /etc/mysql/my.cnf
+  - echo "binlog_format = row"                 | sudo tee -a /etc/mysql/my.cnf
+  - echo "log_bin_trust_function_creators = 1" | sudo tee -a /etc/mysql/my.cnf
   - sudo find /etc -type f -name "*.cnf" -ls -exec cat {} \;
   - sudo service mysql restart
   - mysql -u root -e "create database if not exists test;"
