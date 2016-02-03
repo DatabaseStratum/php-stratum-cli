@@ -9,20 +9,14 @@ php:
   
 sudo: true
 
-env:
-  - DB=mysql
-  - DB=mariadb100
-  - DB=mariadb101
-  
-mysql:
-
-mariadb100:
-  addons:
-    mariadb: '10.0'
-
-mariadb101:
-  addons:
-    mariadb: '10.1'
+matrix:
+  include:
+    - addons:
+        mariadb: 5.5
+    - addons:
+        mariadb: 10.0
+    - addons:
+        mariadb: 10.1
 
 before_install:
   - mysql --version
