@@ -25,6 +25,7 @@ mariadb101:
     mariadb: '10.1'
 
 before_install:
+  - mysql --verison
   - mysql -u root -e "create database if not exists test;"
   - mysql -u root -e "create user 'test'@'localhost' identified by 'test';"
   - mysql -u root -e "grant all on test.*  to 'test'@'localhost';"
