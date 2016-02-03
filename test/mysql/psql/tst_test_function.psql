@@ -8,7 +8,7 @@ create function tst_test_function( p_a int,
                                    p_b int )
 returns int
 deterministic
-no sql
+reads sql data
 -- type: function
 begin
   return p_a + p_b;
