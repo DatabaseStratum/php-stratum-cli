@@ -107,6 +107,11 @@ We are aiming to have the full documentation available in 2015 at GitHup Pages.
    
 Examples are available at [PhpStratum Samples](https://github.com/SetBased/php-stratum-samples).    
 
+# Contact
+
+* IRC:     Freenode, ##stratum
+* E-mail:  [info@setbased.nl](mailto:info@setbased.nl)
+
 # History of PhpStratum
 ## Version 1.x
 The initial development of PhpStratum started in 2005 when MySQL 5.0 became GA. MySQL 5.0 was the first release with
