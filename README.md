@@ -1,4 +1,6 @@
 # PhpStratum
+
+[![Join the chat at https://gitter.im/SetBased/php-stratum](https://badges.gitter.im/SetBased/php-stratum.svg)](https://gitter.im/SetBased/php-stratum?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 A stored procedure and function loader, wrapper generator for MySQL in PHP.
 
 [![Build Status](https://travis-ci.org/SetBased/php-stratum.svg?branch=master)](https://travis-ci.org/SetBased/php-stratum)
