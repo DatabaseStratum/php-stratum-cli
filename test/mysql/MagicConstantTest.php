@@ -62,8 +62,11 @@ class MagicConstantTest extends DataLayerTestCase
   {
     $dir_name = realpath(__DIR__.'/../../test/mysql/psql/ test_escape \' " @ $ ! .');
 
-    $ret = DataLayer::magicConstant05();
-    $this->assertEquals($dir_name, $ret);
+    if ($dir_name)
+    {
+      $ret = DataLayer::magicConstant05();
+      $this->assertEquals($dir_name, $ret);
+    }
   }
 
   //--------------------------------------------------------------------------------------------------------------------

@@ -15,26 +15,26 @@ class QuoteTest extends DataLayerTestCase
   {
     try
     {
-      $n = DataLayer::test01(($theColumn=='int') ? $theValue : null,
-                             ($theColumn=='smallint') ? $theValue : null,
-                             ($theColumn=='tinyint') ? $theValue : null,
-                             ($theColumn=='mediumint') ? $theValue : null,
-                             ($theColumn=='bigint') ? $theValue : null,
-                             ($theColumn=='decimal)') ? $theValue : null,
-                             ($theColumn=='float') ? $theValue : null,
-                             ($theColumn=='double') ? $theValue : null,
-                             ($theColumn=='bit') ? $theValue : null,
-                             ($theColumn=='date') ? $theValue : null,
-                             ($theColumn=='datetime') ? $theValue : null,
-                             ($theColumn=='timestamp') ? $theValue : null,
-                             ($theColumn=='time') ? $theValue : null,
-                             ($theColumn=='year') ? $theValue : null,
-                             ($theColumn=='char') ? $theValue : null,
-                             ($theColumn=='varchar') ? $theValue : null,
-                             ($theColumn=='binary') ? $theValue : null,
-                             ($theColumn=='varbinary') ? $theValue : null,
-                             ($theColumn=='enum') ? $theValue : null,
-                             ($theColumn=='set') ? $theValue : null);
+      DataLayer::test01(($theColumn=='int') ? $theValue : null,
+                        ($theColumn=='smallint') ? $theValue : null,
+                        ($theColumn=='tinyint') ? $theValue : null,
+                        ($theColumn=='mediumint') ? $theValue : null,
+                        ($theColumn=='bigint') ? $theValue : null,
+                        ($theColumn=='decimal)') ? $theValue : null,
+                        ($theColumn=='float') ? $theValue : null,
+                        ($theColumn=='double') ? $theValue : null,
+                        ($theColumn=='bit') ? $theValue : null,
+                        ($theColumn=='date') ? $theValue : null,
+                        ($theColumn=='datetime') ? $theValue : null,
+                        ($theColumn=='timestamp') ? $theValue : null,
+                        ($theColumn=='time') ? $theValue : null,
+                        ($theColumn=='year') ? $theValue : null,
+                        ($theColumn=='char') ? $theValue : null,
+                        ($theColumn=='varchar') ? $theValue : null,
+                        ($theColumn=='binary') ? $theValue : null,
+                        ($theColumn=='varbinary') ? $theValue : null,
+                        ($theColumn=='enum') ? $theValue : null,
+                        ($theColumn=='set') ? $theValue : null);
       $this->assertTrue(false);
     }
     catch (Exception $e)
