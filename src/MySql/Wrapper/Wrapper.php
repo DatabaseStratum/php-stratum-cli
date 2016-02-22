@@ -284,7 +284,7 @@ abstract class Wrapper
     $this->writeLine();
 
     $blob_argument_index = 0;
-    foreach ($theRoutine['parameters'] as $i => $parameter_info)
+    foreach ($theRoutine['parameters'] as $parameter_info)
     {
       if ($this->getBindVariableType($parameter_info['data_type'])=='b')
       {

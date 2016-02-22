@@ -570,7 +570,7 @@ and   table_name   = %s', DataLayer::quoteString($this->myTableName));
 
     // Generate the parameters parts of the DocBlock to be used by the wrapper.
     $parameters = [];
-    foreach ($this->myParameters as $key => $parameter_info)
+    foreach ($this->myParameters as $parameter_info)
     {
       $parameters[] = ['name'                 => $parameter_info['name'],
                        'php_type'             => $this->columnTypeToPhpType($parameter_info),

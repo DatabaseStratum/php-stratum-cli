@@ -549,7 +549,7 @@ class StaticDataLayer
   {
     if (is_array($theRowSet))
     {
-      foreach ($theRowSet as $key => $row)
+      foreach ($theRowSet as $row)
       {
         if ((string)$row[$theColumnName]==(string)$theValue)
         {
