@@ -452,7 +452,7 @@ abstract class Wrapper
   {
     $ret = '';
 
-    foreach ($theRoutine['parameters'] as $i => $parameter_info)
+    foreach ($theRoutine['parameters'] as $parameter_info)
     {
       if ($ret) $ret .= ',';
       $ret .= $this->writeEscapedArgs($parameter_info);
@@ -465,7 +465,7 @@ abstract class Wrapper
   /**
    * Returns code for the parameters of the wrapper method for the stored routine.
    *
-   * @param             $theRoutine     array The metadata of the stored routine.
+   * @param array       $theRoutine     The metadata of the stored routine.
    * @param NameMangler $theNameMangler The mangler for wrapper and parameter names.
    *
    * @return string
