@@ -7,6 +7,7 @@ A stored procedure and function loader, wrapper generator for MySQL in PHP.
 [![Latest Stable Version](https://poser.pugx.org/setbased/php-stratum/v/stable)](https://packagist.org/packages/setbased/php-stratum)
 [![Build Status](https://travis-ci.org/SetBased/php-stratum.svg?branch=master)](https://travis-ci.org/SetBased/php-stratum)
 [![Dependency Status](https://www.versioneye.com/user/projects/56c9d79918b27104252dcca1/badge.svg?style=flat)](https://www.versioneye.com/user/projects/56c9d79918b27104252dcca1)
+[![Codacy Badge](https://api.codacy.com/project/badge/grade/f82e67624cda4501a65fd2d1a6d35f84)](https://www.codacy.com/app/p-r-water/php-stratum)
 [![PHP 7 ready](http://php7ready.timesplinter.ch/SetBased/php-stratum/badge.svg)](https://travis-ci.org/SetBased/php-stratum)
 
 
