@@ -97,6 +97,8 @@ class StaticDataLayer
    *
    * Wrapper around [mysqli::autocommit](http://php.net/manual/mysqli.autocommit.php), however on failure an exception
    * is thrown.
+   *
+   * @api
    */
   public static function begin()
   {
@@ -134,6 +136,8 @@ class StaticDataLayer
    *
    * Wrapper around [mysqli::commit](http://php.net/manual/mysqli.commit.php), however on failure an exception is
    * thrown.
+   *
+   * @api
    */
   public static function commit()
   {
@@ -153,6 +157,8 @@ class StaticDataLayer
    * @param string $thePassWord The password.
    * @param string $theDatabase The default database.
    * @param int    $thePort     The port number.
+   *
+   * @api
    */
   public static function connect($theHostName, $theUserName, $thePassWord, $theDatabase, $thePort = 3306)
   {
@@ -192,6 +198,8 @@ class StaticDataLayer
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Closes the connection to the MySQL instance, if connected.
+   *
+   * @api
    */
   public static function disconnect()
   {
@@ -234,6 +242,8 @@ class StaticDataLayer
    * @param string $theQuery The query or multi query.
    *
    * @return int The total number of rows selected/logged.
+   *
+   * @api
    */
   public static function executeLog($theQuery)
   {
@@ -280,6 +290,8 @@ class StaticDataLayer
    * @param string $theQuery The SQL statement.
    *
    * @return int The number of affected rows (if any).
+   *
+   * @api
    */
   public static function executeNone($theQuery)
   {
@@ -301,6 +313,8 @@ class StaticDataLayer
    *
    * @return array|null The selected row.
    * @throws ResultException
+   *
+   * @api
    */
   public static function executeRow0($theQuery)
   {
@@ -328,6 +342,8 @@ class StaticDataLayer
    *
    * @return array The selected row.
    * @throws ResultException
+   *
+   * @api
    */
   public static function executeRow1($theQuery)
   {
@@ -353,6 +369,8 @@ class StaticDataLayer
    * @param string $theQuery The SQL statement.
    *
    * @return array[] The selected rows.
+   *
+   * @api
    */
   public static function executeRows($theQuery)
   {
@@ -385,6 +403,8 @@ class StaticDataLayer
    *
    * @return int|string The selected value.
    * @throws ResultException
+   *
+   * @api
    */
   public static function executeSingleton0($theQuery)
   {
@@ -412,6 +432,8 @@ class StaticDataLayer
    *
    * @return int|string The selected value.
    * @throws ResultException
+   *
+   * @api
    */
   public static function executeSingleton1($theQuery)
   {
@@ -438,6 +460,8 @@ class StaticDataLayer
    * @param string $theQuery The query.
    *
    * @return int The total number of rows in the tables.
+   *
+   * @api
    */
   public static function executeTable($theQuery)
   {
@@ -527,6 +551,8 @@ class StaticDataLayer
    * To enable the query log set {@link $ourQueryLogFlag} to true.
    *
    * @return array[]
+   *
+   * @api
    */
   public static function getQueryLog()
   {
@@ -544,6 +570,8 @@ class StaticDataLayer
    * @param array[] $theRowSet     The row set.
    *
    * @return mixed
+   *
+   * @api
    */
   public static function getRowInRowSet($theColumnName, $theValue, $theRowSet)
   {
@@ -773,6 +801,8 @@ class StaticDataLayer
    *
    * Wrapper around [mysqli::rollback](http://php.net/manual/en/mysqli.rollback.php), however on failure an exception
    * is thrown.
+   *
+   * @api
    */
   public static function rollback()
   {
@@ -790,6 +820,8 @@ class StaticDataLayer
    * @param array[] $theRowSet     The row set.
    *
    * @return int|null|string
+   *
+   * @api
    */
   public static function searchInRowSet($theColumnName, $theValue, $theRowSet)
   {
@@ -812,6 +844,8 @@ class StaticDataLayer
    * Logs the warnings of the last executed SQL statement.
    *
    * Wrapper around the SQL statement [show warnings](https://dev.mysql.com/doc/refman/5.6/en/show-warnings.html).
+   *
+   * @api
    */
   public static function showWarnings()
   {
