@@ -123,11 +123,11 @@ class Constants
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns the widths of a field based on column.
+   * Returns the widths of a field based on a column.
    *
    * @param array $theColumn The column of which the field is based.
    *
-   * @returns int|null The width of the column.
+   * @return int|null
    */
   private function deriveFieldLength($theColumn)
   {
@@ -269,13 +269,9 @@ class Constants
             if ($token[0]==T_WHITESPACE)
             {
               $line2 = $token[2];
-              if (substr_count($token[1], "\n")<=1)
+              if (substr_count($token[1], "\n")>1)
               {
-                // Ignore whitespace.
-              }
-              else
-              {
-                // Whitespace contains new line: end doc block with out constants.
+                // Whitespace contains new line: end doc block without constants.
                 $step = 4;
               }
             }
@@ -358,7 +354,7 @@ class Constants
     $ok = ksort($this->myConstants);
     if ($ok===false)
     {
-      throw new RuntimeException("Internal error.");
+      throw new RuntimeException('Internal error.');
     }
   }
 
@@ -514,7 +510,7 @@ where   nullif(`%s`,'') is not null";
       $width2 = max(strlen($value), $width2);
     }
 
-    $line_format = sprintf("  const %%-%ds = %%%dd;", $width1, $width2);
+    $line_format = sprintf('  const %%-%ds = %%%dd;', $width1, $width2);
     foreach ($this->myConstants as $constant => $value)
     {
       $constants[] = sprintf($line_format, $constant, $value);

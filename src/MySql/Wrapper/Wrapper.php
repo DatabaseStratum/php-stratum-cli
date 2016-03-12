@@ -15,8 +15,7 @@ use SetBased\Stratum\NameMangler\NameMangler;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class Wrapper
- * routine.
+ * Abstract parent class for all wrapper generators.
  */
 abstract class Wrapper
 {
@@ -437,6 +436,8 @@ abstract class Wrapper
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Returns the return type the be used in the DocBlock.
+   *
+   * @return string
    */
   abstract protected function getDocBlockReturnType();
 
@@ -592,6 +593,8 @@ abstract class Wrapper
    * Generates code for calling the stored routine in the wrapper method.
    *
    * @param array $theRoutine The metadata of the stored routine.
+   *
+   * @return void
    */
   abstract protected function writeResultHandler($theRoutine);
 
@@ -600,18 +603,22 @@ abstract class Wrapper
    * Generates code for fetching data of a stored routine with one or more LOB parameters.
    *
    * @param array $theRoutine The metadata of the stored routine.
+   *
+   * @return void
    */
   abstract protected function writeRoutineFunctionLobFetchData($theRoutine);
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Generates code for retuning the data returned by a stored routine with one or more LOB parameters.
+   *
+   * @return void
    */
   abstract protected function writeRoutineFunctionLobReturnData();
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Appends a comment line to @c $myCode.
+   * Appends a comment line to the generated code.
    */
   protected function writeSeparator()
   {
@@ -652,7 +659,7 @@ abstract class Wrapper
     }
 
     // Generate phpDoc with parameters and descriptions of parameters.
-    if ($theRoutine['phpdoc']['parameters'])
+    if (!empty($theRoutine['phpdoc']['parameters']))
     {
       $this->writeLine(' *');
 
@@ -664,16 +671,16 @@ abstract class Wrapper
         $max_name_length = max($max_name_length, strlen($parameter['name']));
         $max_type_length = max($max_type_length, strlen($parameter['php_type']));
       }
-      # Add 1 character for $.
+      // Add 1 character for $.
       $max_name_length++;
 
       // Generate phpDoc for the parameters of the wrapper method.
       foreach ($theRoutine['phpdoc']['parameters'] as $parameter)
       {
-        $format = sprintf(" * %%-%ds %%-%ds %%-%ds %%s", strlen('@param'), $max_type_length, $max_name_length);
+        $format = sprintf(' * %%-%ds %%-%ds %%-%ds %%s', strlen('@param'), $max_type_length, $max_name_length);
 
         $lines = explode("\n", $parameter['description']);
-        if ($lines)
+        if (!empty($lines))
         {
           $line = array_shift($lines);
           $this->writeLine(sprintf($format, '@param', $parameter['php_type'], '$'.$parameter['name'], $line));
@@ -707,7 +714,7 @@ abstract class Wrapper
 
     // Generate exceptions doc.
     $exceptions = $this->getDocBlockExceptions();
-    if ($exceptions)
+    if (!empty($exceptions))
     {
       $exceptions = array_unique($exceptions);
       foreach ($exceptions as $exception)

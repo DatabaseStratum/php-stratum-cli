@@ -159,7 +159,7 @@ class StaticDataLayer
     self::$ourMySql = new \mysqli($theHostName, $theUserName, $thePassWord, $theDatabase, $thePort);
     if (self::$ourMySql->connect_errno)
     {
-      $message = "MySQL Error no: ".self::$ourMySql->connect_errno."\n";
+      $message = 'MySQL Error no: '.self::$ourMySql->connect_errno."\n";
       $message .= str_replace('%', '%%', self::$ourMySql->connect_error);
       $message .= "\n";
 
@@ -240,7 +240,7 @@ class StaticDataLayer
     // Counter for the number of rows written/logged.
     $n = 0;
 
-    self::multi_query($theQuery);
+    self::multiQuery($theQuery);
     do
     {
       $result = self::$ourMySql->store_result();
@@ -443,7 +443,7 @@ class StaticDataLayer
   {
     $row_count = 0;
 
-    self::multi_query($theQuery);
+    self::multiQuery($theQuery);
     do
     {
       $result = self::$ourMySql->store_result();
@@ -469,12 +469,12 @@ class StaticDataLayer
           $row_count++;
 
           // First row separator.
-          echo "|";
+          echo '|';
 
           foreach ($row as $i => $value)
           {
             self::executeTableShowTableColumn($columns[$i], $value);
-            echo "|";
+            echo '|';
           }
 
           echo "\n";
@@ -572,7 +572,7 @@ class StaticDataLayer
    *
    * @return bool
    */
-  public static function multi_query($theQueries)
+  public static function multiQuery($theQueries)
   {
     if (self::$ourQueryLogFlag)
     {
@@ -671,7 +671,7 @@ class StaticDataLayer
       {
         if ($theList===null || $theList===false || $theList==='')
         {
-          throw new RuntimeException("Empty values are not allowed.");
+          throw new RuntimeException('Empty values are not allowed.');
         }
         if (!is_numeric($number))
         {
@@ -699,7 +699,7 @@ class StaticDataLayer
   {
     if (is_numeric($theValue)) return $theValue;
     if ($theValue===null || $theValue==='' || $theValue===false) return 'NULL';
-    if ($theValue===true) return 1;
+    if ($theValue===true) return '1';
 
     throw new RuntimeException("Value '%s' is not a number.", $theValue);
   }
@@ -831,7 +831,7 @@ class StaticDataLayer
    */
   protected static function mySqlError($theText)
   {
-    $message = "MySQL Error no: ".self::$ourMySql->errno."\n";
+    $message = 'MySQL Error no: '.self::$ourMySql->errno."\n";
     $message .= str_replace('%', '%%', self::$ourMySql->error);
     $message .= "\n";
     $message .= str_replace('%', '%%', $theText);
@@ -852,7 +852,7 @@ class StaticDataLayer
 
     foreach ($theColumns as $column)
     {
-      $separator .= str_repeat('-', $column['length'] + 2)."+";
+      $separator .= str_repeat('-', $column['length'] + 2).'+';
     }
     echo $separator, "\n";
   }
@@ -876,8 +876,8 @@ class StaticDataLayer
       $l_spaces = $spaces / 2;
       $r_spaces = ($spaces / 2) + ($spaces % 2);
 
-      $l_spaces = ($l_spaces>0) ? str_repeat(" ", $l_spaces) : '';
-      $r_spaces = ($r_spaces>0) ? str_repeat(" ", $r_spaces) : '';
+      $l_spaces = ($l_spaces>0) ? str_repeat(' ', $l_spaces) : '';
+      $r_spaces = ($r_spaces>0) ? str_repeat(' ', $r_spaces) : '';
 
       $header .= $l_spaces.$column['header'].$r_spaces.'|';
     }
@@ -896,7 +896,7 @@ class StaticDataLayer
    */
   private static function executeTableShowTableColumn($theColumn, $theValue)
   {
-    $spaces = str_repeat(" ", $theColumn['length'] - strlen($theValue));
+    $spaces = str_repeat(' ', $theColumn['length'] - strlen($theValue));
 
     switch ($theColumn['type'])
     {

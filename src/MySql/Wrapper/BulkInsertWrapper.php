@@ -18,8 +18,6 @@ use SetBased\Stratum\Exception\RuntimeException;
 /**
  * Class for generating a wrapper method for a stored procedure that prepares a table to be used with a bulk SQL
  * statement.
- *
- * @package SetBased\DataLayer\Generator\Wrapper
  */
 class BulkInsertWrapper extends Wrapper
 {
@@ -168,8 +166,7 @@ class BulkInsertWrapper extends Wrapper
       case 'blob':
       case 'mediumblob':
       case 'longblob':
-        throw new RuntimeException("LOBs are not possible in temporary tables");
-        break;
+        throw new RuntimeException('LOBs are not possible in temporary tables');
 
       default:
         throw new FallenException('column type', $theValueType);

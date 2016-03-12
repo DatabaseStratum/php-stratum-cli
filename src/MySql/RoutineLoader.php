@@ -235,7 +235,7 @@ class RoutineLoader
                      strtolower($old_routine['routine_type']),
                      $old_routine['routine_name']);
 
-        $sql = sprintf("drop %s if exists %s", $old_routine['routine_type'], $old_routine['routine_name']);
+        $sql = sprintf('drop %s if exists %s', $old_routine['routine_type'], $old_routine['routine_name']);
         DataLayer::executeNone($sql);
       }
     }
@@ -245,7 +245,7 @@ class RoutineLoader
   /**
    * Searches recursively for all source files in a directory.
    *
-   * @param string $theSourceDir The directory.
+   * @param string|null $theSourceDir The directory.
    */
   private function findSourceFiles($theSourceDir = null)
   {
@@ -272,7 +272,7 @@ class RoutineLoader
   /**
    * Finds all source files that actually exists from a list of file names.
    *
-   * @param array $theFileNames The list of file names.
+   * @param string[] $theFileNames The list of file names.
    */
   private function findSourceFilesFromList($theFileNames)
   {
@@ -363,7 +363,7 @@ order by table_schema
     $sql = sprintf("set sql_mode ='%s'", $this->mySqlMode);
     DataLayer::executeNone($sql);
 
-    $query           = "select @@sql_mode;";
+    $query           = 'select @@sql_mode;';
     $tmp             = DataLayer::executeRows($query);
     $this->mySqlMode = $tmp[0]['@@sql_mode'];
   }
@@ -409,7 +409,7 @@ order by table_schema
    */
   private function getOldStoredRoutinesInfo()
   {
-    $query = "
+    $query = '
 select routine_name
 ,      routine_type
 ,      sql_mode
@@ -417,7 +417,7 @@ select routine_name
 ,      collation_connection
 from  information_schema.ROUTINES
 where ROUTINE_SCHEMA = database()
-order by routine_name";
+order by routine_name';
 
     $rows = DataLayer::executeRows($query);
 
@@ -520,13 +520,13 @@ order by routine_name";
       $meta_data = $helper->loadStoredRoutine();
       if ($meta_data===false)
       {
-        # An error occurred during the loading og the stored routine.
+        // An error occurred during the loading og the stored routine.
         $this->myErrorFileNames[] = $filename['path_name'];
         unset($this->myPhpStratumMetadata[$routine_name]);
       }
       else
       {
-        # Stored routine is successfully loaded.
+        // Stored routine is successfully loaded.
         $this->myPhpStratumMetadata[$routine_name] = $meta_data;
       }
     }

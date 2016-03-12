@@ -236,8 +236,8 @@ class RoutineLoaderHelper
   /**
    * Loads the stored routine into the instance of MySQL.
    *
-   * @return array|bool If the stored routine is loaded successfully the new mata data of the stored routine. Otherwise
-   *                    false.
+   * @return array|false If the stored routine is loaded successfully the new mata data of the stored routine. Otherwise
+   *                     false.
    */
   public function loadStoredRoutine()
   {
@@ -377,7 +377,7 @@ class RoutineLoaderHelper
         break;
 
       default:
-        throw new FallenException('column type', $theParameterInfo);
+        throw new FallenException('column type', $theParameterInfo['data_type']);
     }
 
     return $php_type;
@@ -391,7 +391,7 @@ class RoutineLoaderHelper
   {
     if (isset($this->myRdbmsOldRoutineMetadata))
     {
-      $sql = sprintf("drop %s if exists %s",
+      $sql = sprintf('drop %s if exists %s',
                      $this->myRdbmsOldRoutineMetadata['routine_type'],
                      $this->myRoutineName);
 
@@ -411,7 +411,7 @@ select 1
 from   information_schema.TABLES
 where table_schema = database()
 and   table_name   = %s', DataLayer::quoteString($this->myTableName));
-    $table_is_non_temporary = DataLayer::executeRow0($query);
+    $table_is_non_temporary = DataLayer::executeSingleton0($query);
 
     // Create temporary table if table is non-temporary table.
     if (!$table_is_non_temporary)
@@ -421,13 +421,13 @@ and   table_name   = %s', DataLayer::quoteString($this->myTableName));
     }
 
     // Get information about the columns of the table.
-    $query   = sprintf("describe `%s`", $this->myTableName);
+    $query   = sprintf('describe `%s`', $this->myTableName);
     $columns = DataLayer::executeRows($query);
 
     // Drop temporary table if table is non-temporary.
     if (!$table_is_non_temporary)
     {
-      $query = sprintf("drop temporary table `%s`", $this->myTableName);
+      $query = sprintf('drop temporary table `%s`', $this->myTableName);
       DataLayer::executeNone($query);
     }
 
@@ -444,7 +444,7 @@ and   table_name   = %s', DataLayer::quoteString($this->myTableName));
     $tmp_fields       = [];
     foreach ($columns as $column)
     {
-      preg_match("(\\w+)", $column['Type'], $type);
+      preg_match('(\\w+)', $column['Type'], $type);
       $tmp_column_types[] = $type['0'];
       $tmp_fields[]       = $column['Field'];
     }
@@ -526,7 +526,7 @@ and   table_name   = %s', DataLayer::quoteString($this->myTableName));
     $tmp = '';
     foreach ($this->myRoutineSourceCodeLines as $line)
     {
-      $n = preg_match("/create\\s+(procedure|function)\\s+([a-zA-Z0-9_]+)/i", $line);
+      $n = preg_match('/create\\s+(procedure|function)\\s+([a-zA-Z0-9_]+)/i', $line);
       if ($n) break;
       else $tmp .= $line."\n";
     }
@@ -705,7 +705,7 @@ and   table_name   = %s', DataLayer::quoteString($this->myTableName));
   {
     $ret = true;
 
-    $n = preg_match("/create\\s+(procedure|function)\\s+([a-zA-Z0-9_]+)/i", $this->myRoutineSourceCode, $matches);
+    $n = preg_match('/create\\s+(procedure|function)\\s+([a-zA-Z0-9_]+)/i', $this->myRoutineSourceCode, $matches);
     if ($n==1)
     {
       $this->myRoutineType = strtolower($matches[1]);
@@ -792,7 +792,7 @@ and   table_name   = %s', DataLayer::quoteString($this->myTableName));
       $ok = ksort($this->myReplace);
       if ($ok===false)
       {
-        throw new RuntimeException("Internal error.");
+        throw new RuntimeException('Internal error.');
       }
     }
 
@@ -940,7 +940,7 @@ and   t1.routine_name   = '%s'", $this->myRoutineName);
    */
   private function updateParametersInfo()
   {
-    if ($this->myExtendedParameters)
+    if (!empty($this->myExtendedParameters))
     {
       foreach ($this->myExtendedParameters as $spec_param_name => $spec_param_info)
       {
