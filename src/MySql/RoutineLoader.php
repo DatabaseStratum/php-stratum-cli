@@ -466,8 +466,8 @@ order by routine_name";
   /**
    * Loads all stored routines in a list into MySQL.
    *
-   * @param string $theConfigFilename The filename of the configuration file.
-   * @param array  $theFileNames      The list of files to be loaded.
+   * @param string   $theConfigFilename The filename of the configuration file.
+   * @param string[] $theFileNames      The list of files to be loaded.
    */
   private function loadList($theConfigFilename, $theFileNames)
   {
