@@ -94,7 +94,7 @@ class RoutineWrapperGenerator
     $mangler  = new $this->myNameMangler();
     $routines = $this->readRoutineMetadata();
 
-    if ($routines)
+    if (!empty($routines))
     {
       // Sort routines by their wrapper method name.
       $sorted_routines = [];
@@ -202,7 +202,7 @@ class RoutineWrapperGenerator
 
     // Write PHP tag.
     $this->myCode .= "<?php\n";
-    if ($namespace)
+    if ($namespace!==null)
     {
       $this->myCode .= '//'.str_repeat('-', Wrapper::C_PAGE_WIDTH - 2)."\n";
       $this->myCode .= "namespace ${namespace};\n";
@@ -219,7 +219,7 @@ class RoutineWrapperGenerator
     }
 
     // Write use statements.
-    if ($this->myImports)
+    if (!empty($this->myImports))
     {
       $this->myImports = array_unique($this->myImports, SORT_REGULAR);
       $this->myCode .= '//'.str_repeat('-', Wrapper::C_PAGE_WIDTH - 2)."\n";

@@ -16,7 +16,7 @@ class SetBasedNameMangler implements NameMangler
    *
    * @return string
    */
-  static function getMethodName($theRoutineName)
+  static public function getMethodName($theRoutineName)
   {
     return lcfirst(preg_replace_callback('/(_)([a-z])/',
       function ($matches)
@@ -34,7 +34,7 @@ class SetBasedNameMangler implements NameMangler
    *
    * @return string
    */
-  static function getParameterName($theRoutineParameterName)
+  static public function getParameterName($theRoutineParameterName)
   {
     return $theRoutineParameterName;
   }

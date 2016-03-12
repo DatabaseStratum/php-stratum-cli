@@ -20,7 +20,7 @@ class ResultException extends \RuntimeException
   /**
    * The expected number selected of rows selected.
    *
-   * @var string
+   * @var int
    */
   private $myExpectedRowCount;
 
@@ -35,7 +35,7 @@ class ResultException extends \RuntimeException
   /**
    * Object constructor.
    *
-   * @param string $theExpectedRowCount The expected number of rows selected.
+   * @param int    $theExpectedRowCount The expected number of rows selected.
    * @param int    $theActualRowCount   The actual number of rows selected.
    * @param string $theQuery            The SQL query
    */
@@ -52,7 +52,7 @@ class ResultException extends \RuntimeException
   /**
    * Returns the actual number of selected rows.
    *
-   * @return string
+   * @return int
    */
   public function getActualNumberRows()
   {
@@ -63,7 +63,7 @@ class ResultException extends \RuntimeException
   /**
    * Returns the expected number of selected rows.
    *
-   * @return string
+   * @return int
    */
   public function getExpectedNumberRows()
   {
@@ -85,7 +85,7 @@ class ResultException extends \RuntimeException
   /**
    * Composes the exception message.
    *
-   * @param string $theExpectedRowCount The expected number of rows selected.
+   * @param int    $theExpectedRowCount The expected number of rows selected.
    * @param int    $theActualRowCount   The actual number of rows selected.
    * @param string $theQuery            The SQL query
    *
@@ -99,7 +99,7 @@ class ResultException extends \RuntimeException
     $message .= "\n";
     $message .= sprintf("Expected number of rows: %s.\n", $theExpectedRowCount);
     $message .= sprintf("Actual number of rows: %s.\n", $theActualRowCount);
-    $message .= "Query:";
+    $message .= 'Query:';
     $message .= (strpos($query, "\n")!==false) ? "\n" : ' ';
     $message .= $query;
 
