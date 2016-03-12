@@ -570,7 +570,7 @@ class StaticDataLayer
    *
    * @param string $theQueries The SQL statements.
    *
-   * @return \mysqli_result
+   * @return bool
    */
   public static function multi_query($theQueries)
   {

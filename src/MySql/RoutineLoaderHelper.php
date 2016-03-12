@@ -39,14 +39,14 @@ class RoutineLoaderHelper
   /**
    * The key or index columns (depending on the designation type) of the stored routine .
    *
-   * @var string
+   * @var string[]
    */
   private $myColumns;
 
   /**
    * The column types of columns of the table for bulk insert of the stored routine.
    *
-   * @var string
+   * @var string[]
    */
   private $myColumnsTypes;
 
@@ -81,7 +81,7 @@ class RoutineLoaderHelper
   /**
    * The keys in the PHP array for bulk insert.
    *
-   * @var string
+   * @var string[]
    */
   private $myFields;
 
@@ -170,6 +170,13 @@ class RoutineLoaderHelper
   private $myRoutineType;
 
   /**
+   * The extension of the source file of the stored routine.
+   *
+   * @var string
+   */
+  private $mySourceFileExtension;
+
+  /**
    * The source filename holding the stored routine.
    *
    * @var string
@@ -192,7 +199,7 @@ class RoutineLoaderHelper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Loads a single stored routine into MySQL.
+   * Object constructor.
    *
    * @param string $theRoutineFilename         The filename of the source of the stored routine.
    * @param string $theRoutineFileExtension    The extension of the source file of the stored routine.
@@ -204,8 +211,6 @@ class RoutineLoaderHelper
    *                                           and run.
    * @param string $theCollate                 The key or index columns (depending on the designation type) of the
    *                                           stored routine.
-   *
-   * @return \SetBased\Stratum\MySql\RoutineLoaderHelper
    */
   public function __construct($theRoutineFilename,
                               $theRoutineFileExtension,

@@ -425,7 +425,7 @@ abstract class Wrapper
   /**
    * Returns the exception that can be thrown by this method.
    *
-   * @return array;
+   * @return array
    */
   protected function getDocBlockExceptions()
   {
@@ -444,7 +444,7 @@ abstract class Wrapper
   /**
    * Returns code for the arguments for calling the stored routine in a wrapper method.
    *
-   * @param $theRoutine array The metadata of the stored routine.
+   * @param array $theRoutine The metadata of the stored routine.
    *
    * @return string
    */
@@ -550,7 +550,9 @@ abstract class Wrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * @param $theString string Appends @a $theString to @c $myCode
+   * Appends a string to the generated code.
+   *
+   * @param string $theString The string.
    */
   protected function write($theString)
   {
@@ -559,13 +561,12 @@ abstract class Wrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Appends @a $theString and a LF to @c $myCode.
-   * - @a $theString must not contain a LF.
-   * - Indent level is increased or decreased as @a $theString equals to '{' or '}'.
+   *  Appends a string and automatically a LF to the generated code.
+   * Note:
+   * - The string must not contain a LF.
+   * - Indent level is increased or decreased as the string equals to '{' or '}'.
    *
-   * @param string $theString
-   *
-   * @return void
+   * @param string $theString The string.
    */
   protected function writeLine($theString = '')
   {
@@ -590,7 +591,7 @@ abstract class Wrapper
   /**
    * Generates code for calling the stored routine in the wrapper method.
    *
-   * @param $theRoutine array The metadata of the stored routine.
+   * @param array $theRoutine The metadata of the stored routine.
    */
   abstract protected function writeResultHandler($theRoutine);
 
@@ -598,7 +599,7 @@ abstract class Wrapper
   /**
    * Generates code for fetching data of a stored routine with one or more LOB parameters.
    *
-   * @param $theRoutine array The metadata of the stored routine.
+   * @param array $theRoutine The metadata of the stored routine.
    */
   abstract protected function writeRoutineFunctionLobFetchData($theRoutine);
 
@@ -722,7 +723,7 @@ abstract class Wrapper
   /**
    * Return code for escaping the arguments of a stored routine.
    *
-   * @param array[] $theParameters Information about the parameters of the stored routine.
+   * @param string[] $theParameters Information about the parameters of the stored routine.
    *
    * @return string
    */

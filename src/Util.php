@@ -28,7 +28,7 @@ class Util
    * @param string $theSectionName   The name of the section of the requested setting.
    * @param string $theSettingName   The name of the setting of the requested setting.
    *
-   * @return array|null
+   * @return string|null
    */
   public static function getSetting($theSettings, $theMandatoryFlag, $theSectionName, $theSettingName)
   {
