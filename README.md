@@ -1,10 +1,13 @@
 # PhpStratum
+
 A stored procedure and function loader, wrapper generator for MySQL in PHP.
 
 [![Build Status](https://travis-ci.org/SetBased/php-stratum.svg?branch=master)](https://travis-ci.org/SetBased/php-stratum)
+[![PHP 7 ready](http://php7ready.timesplinter.ch/SetBased/php-stratum/badge.svg)](https://travis-ci.org/SetBased/php-stratum)
 [![Latest Stable Version](https://poser.pugx.org/setbased/php-stratum/v/stable)](https://packagist.org/packages/setbased/php-stratum)
 [![Total Downloads](https://poser.pugx.org/setbased/php-stratum/downloads)](https://packagist.org/packages/setbased/php-stratum)
 [![License](https://poser.pugx.org/setbased/php-stratum/license)](https://packagist.org/packages/setbased/php-stratum)
+[![Join the chat at https://gitter.im/SetBased/php-stratum](https://badges.gitter.im/SetBased/php-stratum.svg)](https://gitter.im/SetBased/php-stratum?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 # Overview
 PhpStratum is a tool and library with the following mayor functionalities:  
@@ -105,6 +108,11 @@ We recommend to install PhpStratum via [Composer](https://getcomposer.org/):
 We are aiming to have the full documentation available in 2015 at GitHup Pages.
    
 Examples are available at [PhpStratum Samples](https://github.com/SetBased/php-stratum-samples).    
+
+# Contact
+
+* IRC:     Freenode, ##stratum
+* E-mail:  [info@setbased.nl](mailto:info@setbased.nl)
 
 # History of PhpStratum
 ## Version 1.x
