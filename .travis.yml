@@ -10,7 +10,7 @@ php:
 sudo: true
 
 addons:
-  mariadb: 10.1
+  mariadb: 5.5
 
 before_install:
   - mysql --version
@@ -22,7 +22,7 @@ before_install:
   
 install:
   - composer self-update
-  - composer install
+  - composer update
     
 script: 
   - ./bin/phing unit
