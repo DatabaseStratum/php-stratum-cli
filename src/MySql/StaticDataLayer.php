@@ -716,40 +716,52 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns a literal for a numerical field that can be safely used in SQL statements.
-   * Throws an exception if the value is not numeric.
+   * Returns a literal for a numerical field that can be safely used in SQL statements. Throws an exception if the value
+   * is not numeric.
    *
-   * @param string $theValue The number.
+   * To be more specific:
+   * <ul>
+   * <li>Returns the string representation of an int, float, and a string that is a number.
+   * <li>Returns 'NULL' if the value is null or ''.
+   * <li>Returns '0' if the value if false.
+   * <li>Returns '1' if the value is true.
+   * <li>Throws an exception in all other cases.
+   * </ul>
+   *
+   * @param int|float|bool|null $theValue The numerical value.
    *
    * @return string
    */
   public static function quoteNum($theValue)
   {
-    if (is_numeric($theValue)) return $theValue;
-    if ($theValue===null || $theValue==='' || $theValue===false) return 'NULL';
+    if (is_numeric($theValue)) return (string)$theValue;
+    if ($theValue===null || $theValue==='') return 'NULL';
+    if ($theValue===false) return '0';
     if ($theValue===true) return '1';
 
-    throw new RuntimeException("Value '%s' is not a number.", $theValue);
+    throw new RuntimeException("Value '%s' is not a number.", (is_scalar($theValue) ? $theValue : gettype($theValue)));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Returns a literal for a string field that can be safely used in SQL statements.
    *
-   * @param string $theString The string.
+   * To be more specific:
+   * <ul>
+   * <li>Returns 'NULL' if the value is null, '', or false.
+   * <li>Otherwise returns the escaped value.
+   * </ul>
+   *
+   * @param string|null $theValue The value.
    *
    * @return string
    */
-  public static function quoteString($theString)
+  public static function quoteString($theValue)
   {
-    if ($theString===null || $theString===false || $theString==='')
-    {
-      return 'NULL';
-    }
-    else
-    {
-      return "'".self::$ourMySql->real_escape_string($theString)."'";
-    }
+    if ($theValue===null || $theValue===false || $theValue==='') return 'NULL';
+    if (is_scalar($theValue)) return "'".self::$ourMySql->real_escape_string($theValue)."'";
+
+    throw new RuntimeException("'%s' is not a string.", gettype($theValue));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
