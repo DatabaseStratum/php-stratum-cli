@@ -417,7 +417,7 @@ information_schema.TABLES.UPDATE_TIME       16
 information_schema.TABLES.CHECK_TIME        16
 information_schema.TABLES.TABLE_COLLATION   32
 information_schema.TABLES.CHECKSUM          20
-information_schema.TABLES.CREATE_OPTIONS   255
+information_schema.TABLES.CREATE_OPTIONS  2048
 information_schema.TABLES.TABLE_COMMENT   2048
 
 information_schema.TABLESPACES.TABLESPACE_NAME      64
