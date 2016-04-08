@@ -1,10 +1,7 @@
 .idea
 bin/phing
-bin/phpcbf
-bin/phpcs
 bin/phpunit
-bin/yuicompressor.jar
+build/
 composer.lock
 doc/
-etc/mysql/test_routines.json
 vendor/
