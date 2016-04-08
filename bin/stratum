@@ -9,7 +9,8 @@
  * @link
  */
 //----------------------------------------------------------------------------------------------------------------------
-use SetBased\Stratum\Exception\RuntimeException;
+use SetBased\Affirm\ErrorHandler;
+use SetBased\Affirm\Exception\RuntimeException;
 use SetBased\Stratum\MySql\Constants;
 use SetBased\Stratum\MySql\RoutineLoader;
 use SetBased\Stratum\MySql\RoutineWrapperGenerator;
@@ -135,6 +136,10 @@ if (!function_exists('json_last_error_msg'))
  */
 function main($argv)
 {
+  // Set error handler.
+  $handler = new ErrorHandler();
+  $handler->register();
+  
   // Read the ini file.
   $options = getOptions($argv);
 

@@ -10,7 +10,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\MySql\Wrapper;
 
-use SetBased\Stratum\Exception\FallenException;
+use SetBased\Affirm\Exception\FallenException;
 use SetBased\Stratum\NameMangler\NameMangler;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -30,7 +30,7 @@ abstract class Wrapper
    *
    * @var array
    */
-  protected $myExceptions;
+  protected $myExceptions = [];
 
   /**
    * Array with fully qualified names that must be imported for this wrapper method.
@@ -64,8 +64,8 @@ abstract class Wrapper
   public function __construct($theLobAsStringFlag)
   {
     $this->myLobAsStringFlag = $theLobAsStringFlag;
-    $this->myExceptions      = ['RunTimeException'];
-    $this->myImports[]       = '\SetBased\Stratum\Exception\RunTimeException';
+    $this->myExceptions[]    = 'RuntimeException';
+    $this->myImports[]       = '\SetBased\Affirm\Exception\RuntimeException';
   }
 
   //--------------------------------------------------------------------------------------------------------------------

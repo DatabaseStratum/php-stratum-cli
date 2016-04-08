@@ -2,12 +2,14 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\Exception;
 
+use SetBased\Affirm\Exception\RuntimeException;
+
 //----------------------------------------------------------------------------------------------------------------------
 /**
  * Exception for situations where the result (set) a query does not meet the expectations. Either a mismatch between
- * the actual and expected numbers of rows selected or a unexpected NULL value was selected.
+ * the actual and expected numbers of rows selected or an unexpected NULL value was selected.
  */
-class ResultException extends \RuntimeException
+class ResultException extends RuntimeException
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -68,6 +70,15 @@ class ResultException extends \RuntimeException
   public function getExpectedNumberRows()
   {
     return $this->myExpectedRowCount;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * {@inheritdoc}
+   */
+  public function getName()
+  {
+    return 'Wrong row count';
   }
 
   //--------------------------------------------------------------------------------------------------------------------

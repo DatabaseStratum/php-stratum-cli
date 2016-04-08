@@ -10,8 +10,8 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\MySql;
 
-use SetBased\Stratum\Exception\FallenException;
-use SetBased\Stratum\Exception\RuntimeException;
+use SetBased\Affirm\Exception\FallenException;
+use SetBased\Affirm\Exception\RuntimeException;
 use SetBased\Stratum\MySql\StaticDataLayer as DataLayer;
 use SetBased\Stratum\Util;
 
@@ -351,11 +351,7 @@ class Constants
       $this->myConstants[$label] = $id;
     }
 
-    $ok = ksort($this->myConstants);
-    if ($ok===false)
-    {
-      throw new RuntimeException('Internal error.');
-    }
+    ksort($this->myConstants);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

@@ -11,8 +11,8 @@
 namespace SetBased\Stratum\MySql;
 
 use phpDocumentor\Reflection\DocBlock;
-use SetBased\Stratum\Exception\FallenException;
-use SetBased\Stratum\Exception\RuntimeException;
+use SetBased\Affirm\Exception\FallenException;
+use SetBased\Affirm\Exception\RuntimeException;
 use SetBased\Stratum\MySql\StaticDataLayer as DataLayer;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -789,11 +789,7 @@ and   table_name   = %s', DataLayer::quoteString($this->myTableName));
       {
         $this->myReplace[$placeholder] = $this->myReplacePairs[strtoupper($placeholder)];
       }
-      $ok = ksort($this->myReplace);
-      if ($ok===false)
-      {
-        throw new RuntimeException('Internal error.');
-      }
+      ksort($this->myReplace);
     }
 
     return $ret;

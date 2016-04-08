@@ -10,9 +10,9 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\MySql\Wrapper;
 
-use SetBased\Stratum\Exception\FallenException;
-use SetBased\Stratum\Exception\LogicException;
-use SetBased\Stratum\Exception\RuntimeException;
+use SetBased\Affirm\Exception\FallenException;
+use SetBased\Affirm\Exception\LogicException;
+use SetBased\Affirm\Exception\RuntimeException;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**

@@ -12,7 +12,7 @@ namespace SetBased\Stratum\MySql;
 
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use SetBased\Stratum\Exception\RuntimeException;
+use SetBased\Affirm\Exception\RuntimeException;
 use SetBased\Stratum\MySql\StaticDataLayer as DataLayer;
 use SetBased\Stratum\NameMangler\NameMangler;
 use SetBased\Stratum\Util;

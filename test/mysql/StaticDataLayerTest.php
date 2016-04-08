@@ -9,7 +9,7 @@
  */
 
 //----------------------------------------------------------------------------------------------------------------------
-use SetBased\Stratum\Exception\RuntimeException;
+use SetBased\Affirm\Exception\RuntimeException;
 use SetBased\Stratum\MySql\StaticDataLayer;
 
 //----------------------------------------------------------------------------------------------------------------------
