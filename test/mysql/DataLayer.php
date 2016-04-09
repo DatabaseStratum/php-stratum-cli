@@ -292,7 +292,7 @@ class DataLayer extends StaticDataLayer
     $ret = self::$ourMySql->affected_rows;
 
     $stmt->close();
-    if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
+    if (self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     return $ret;
   }
@@ -389,7 +389,7 @@ class DataLayer extends StaticDataLayer
     $ret = [];
     while($row = $result->fetch_array(MYSQLI_ASSOC)) $ret[$row['tst_id']] = $row;
     $result->free();
-    if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
+    if (self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     return  $ret;
   }
@@ -469,7 +469,7 @@ class DataLayer extends StaticDataLayer
     }
 
     $stmt->close();
-    if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
+    if (self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     if ($b===false) self::mySqlError('mysqli_stmt::fetch');
     if (count($tmp)!=1) throw new ResultException('1', count($tmp), $query);
@@ -544,7 +544,7 @@ class DataLayer extends StaticDataLayer
     $ret = self::$ourMySql->affected_rows;
 
     $stmt->close();
-    if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
+    if (self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     return $ret;
   }
@@ -653,7 +653,7 @@ class DataLayer extends StaticDataLayer
     }
 
     $stmt->close();
-    if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
+    if (self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     if ($b===false) self::mySqlError('mysqli_stmt::fetch');
     if (count($tmp)>1) throw new ResultException('0 or 1', count($tmp), $query);
@@ -748,7 +748,7 @@ class DataLayer extends StaticDataLayer
     }
 
     $stmt->close();
-    if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
+    if (self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     if ($b===false) self::mySqlError('mysqli_stmt::fetch');
     if (count($tmp)!=1) throw new ResultException('1', count($tmp), $query);
@@ -838,7 +838,7 @@ class DataLayer extends StaticDataLayer
     }
 
     $stmt->close();
-    if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
+    if (self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     if ($b===false) self::mySqlError('mysqli_stmt::fetch');
 
@@ -861,7 +861,7 @@ class DataLayer extends StaticDataLayer
     $ret = [];
     while($row = $result->fetch_array(MYSQLI_ASSOC)) $ret[$row['tst_c01']][$row['tst_c02']][] = $row;
     $result->free();
-    if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
+    if (self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     return $ret;
   }
@@ -931,7 +931,7 @@ class DataLayer extends StaticDataLayer
     }
 
     $stmt->close();
-    if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
+    if (self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     if ($b===false) self::mySqlError('mysqli_stmt::fetch');
 
@@ -954,7 +954,7 @@ class DataLayer extends StaticDataLayer
     $ret = [];
     while($row = $result->fetch_array(MYSQLI_ASSOC)) $ret[$row['tst_c01']][$row['tst_c02']][$row['tst_c03']] = $row;
     $result->free();
-    if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
+    if (self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     return  $ret;
   }
@@ -1023,7 +1023,7 @@ class DataLayer extends StaticDataLayer
     }
 
     $stmt->close();
-    if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
+    if (self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     if ($b===false) self::mySqlError('mysqli_stmt::fetch');
 
@@ -1118,7 +1118,7 @@ class DataLayer extends StaticDataLayer
     }
 
     $stmt->close();
-    if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
+    if (self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     if ($b===false) self::mySqlError('mysqli_stmt::fetch');
     if (count($tmp)>1) throw new ResultException('0 or 1', count($tmp), $query);
@@ -1213,7 +1213,7 @@ class DataLayer extends StaticDataLayer
     }
 
     $stmt->close();
-    if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
+    if (self::$ourMySql->more_results()) self::$ourMySql->next_result();
 
     if ($b===false) self::mySqlError('mysqli_stmt::fetch');
     if (count($tmp)!=1) throw new ResultException('1', count($tmp), $query);
