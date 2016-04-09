@@ -4,4 +4,5 @@ bin/phpunit
 build/
 composer.lock
 doc/
+test/mysql/etc/routines.json
 vendor/

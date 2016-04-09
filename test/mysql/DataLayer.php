@@ -402,7 +402,7 @@ class DataLayer extends StaticDataLayer
    * @throws RuntimeException
    */
   public static function testLog()
-    {
+  {
     return self::executeLog('CALL tst_test_log()');
   }
 
