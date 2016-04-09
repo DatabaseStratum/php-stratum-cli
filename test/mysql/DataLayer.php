@@ -386,7 +386,7 @@ class DataLayer extends StaticDataLayer
   public static function testListOfInt($p_ids)
   {
     $result = self::query('CALL tst_test_list_of_int('.self::quoteListOfInt($p_ids, ',', '\"', '\\').')');
-    $ret = array();
+    $ret = [];
     while($row = $result->fetch_array(MYSQLI_ASSOC)) $ret[$row['tst_id']] = $row;
     $result->free();
     if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
@@ -454,13 +454,13 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::execute');
     }
 
-    $row = array();
+    $row = [];
     self::bindAssoc($stmt, $row);
 
-    $tmp = array();
+    $tmp = [];
     while (($b = $stmt->fetch()))
     {
-      $new = array();
+      $new = [];
       foreach($row as $value)
       {
         $new[] = $value;
@@ -638,13 +638,13 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::execute');
     }
 
-    $row = array();
+    $row = [];
     self::bindAssoc($stmt, $row);
 
-    $tmp = array();
+    $tmp = [];
     while (($b = $stmt->fetch()))
     {
-      $new = array();
+      $new = [];
       foreach($row as $key => $value)
       {
         $new[$key] = $value;
@@ -733,13 +733,13 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::execute');
     }
 
-    $row = array();
+    $row = [];
     self::bindAssoc($stmt, $row);
 
-    $tmp = array();
+    $tmp = [];
     while (($b = $stmt->fetch()))
     {
-      $new = array();
+      $new = [];
       foreach($row as $key => $value)
       {
         $new[$key] = $value;
@@ -823,13 +823,13 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::execute');
     }
 
-    $row = array();
+    $row = [];
     self::bindAssoc($stmt, $row);
 
-    $tmp = array();
+    $tmp = [];
     while (($b = $stmt->fetch()))
     {
-      $new = array();
+      $new = [];
       foreach($row as $key => $value)
       {
         $new[$key] = $value;
@@ -858,7 +858,7 @@ class DataLayer extends StaticDataLayer
   public static function testRowsWithIndex1($p_count)
   {
     $result = self::query('CALL tst_test_rows_with_index1('.self::quoteNum($p_count).')');
-    $ret = array();
+    $ret = [];
     while($row = $result->fetch_array(MYSQLI_ASSOC)) $ret[$row['tst_c01']][$row['tst_c02']][] = $row;
     $result->free();
     if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
@@ -916,13 +916,13 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::execute');
     }
 
-    $row = array();
+    $row = [];
     self::bindAssoc($stmt, $row);
 
-    $ret = array();
+    $ret = [];
     while (($b = $stmt->fetch()))
     {
-      $new = array();
+      $new = [];
       foreach($row as $key => $value)
       {
         $new[$key] = $value;
@@ -951,7 +951,7 @@ class DataLayer extends StaticDataLayer
   public static function testRowsWithKey1($p_count)
   {
     $result = self::query('CALL tst_test_rows_with_key1('.self::quoteNum($p_count).')');
-    $ret = array();
+    $ret = [];
     while($row = $result->fetch_array(MYSQLI_ASSOC)) $ret[$row['tst_c01']][$row['tst_c02']][$row['tst_c03']] = $row;
     $result->free();
     if(self::$ourMySql->more_results()) self::$ourMySql->next_result();
@@ -1008,13 +1008,13 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::execute');
     }
 
-    $row = array();
+    $row = [];
     self::bindAssoc($stmt, $row);
 
-    $ret = array();
+    $ret = [];
     while (($b = $stmt->fetch()))
     {
-      $new = array();
+      $new = [];
       foreach($row as $key => $value)
       {
         $new[$key] = $value;
@@ -1103,13 +1103,13 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::execute');
     }
 
-    $row = array();
+    $row = [];
     self::bindAssoc($stmt, $row);
 
-    $tmp = array();
+    $tmp = [];
     while (($b = $stmt->fetch()))
     {
-      $new = array();
+      $new = [];
       foreach($row as $value)
       {
         $new[] = $value;
@@ -1198,13 +1198,13 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::execute');
     }
 
-    $row = array();
+    $row = [];
     self::bindAssoc($stmt, $row);
 
-    $tmp = array();
+    $tmp = [];
     while (($b = $stmt->fetch()))
     {
-      $new = array();
+      $new = [];
       foreach($row as $value)
       {
         $new[] = $value;

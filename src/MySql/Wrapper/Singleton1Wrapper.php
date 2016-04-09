@@ -55,13 +55,13 @@ class Singleton1Wrapper extends Wrapper
    */
   protected function writeRoutineFunctionLobFetchData($theRoutine)
   {
-    $this->writeLine('$row = array();');
+    $this->writeLine('$row = [];');
     $this->writeLine('self::bindAssoc($stmt, $row);');
     $this->writeLine();
-    $this->writeLine('$tmp = array();');
+    $this->writeLine('$tmp = [];');
     $this->writeLine('while (($b = $stmt->fetch()))');
     $this->writeLine('{');
-    $this->writeLine('$new = array();');
+    $this->writeLine('$new = [];');
     $this->writeLine('foreach($row as $value)');
     $this->writeLine('{');
     $this->writeLine('$new[] = $value;');

@@ -43,7 +43,7 @@ class RowsWithIndexWrapper extends Wrapper
     }
 
     $this->writeLine('$result = self::query(\'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');');
-    $this->writeLine('$ret = array();');
+    $this->writeLine('$ret = [];');
     $this->writeLine('while($row = $result->fetch_array(MYSQLI_ASSOC)) $ret'.$index.'[] = $row;');
     $this->writeLine('$result->free();');
     $this->writeLine('if(self::$ourMySql->more_results()) self::$ourMySql->next_result();');
@@ -63,13 +63,13 @@ class RowsWithIndexWrapper extends Wrapper
       $index .= '[$new[\''.$column.'\']]';
     }
 
-    $this->writeLine('$row = array();');
+    $this->writeLine('$row = [];');
     $this->writeLine('self::bindAssoc($stmt, $row);');
     $this->writeLine();
-    $this->writeLine('$ret = array();');
+    $this->writeLine('$ret = [];');
     $this->writeLine('while (($b = $stmt->fetch()))');
     $this->writeLine('{');
-    $this->writeLine('$new = array();');
+    $this->writeLine('$new = [];');
     $this->writeLine('foreach($row as $key => $value)');
     $this->writeLine('{');
     $this->writeLine('$new[$key] = $value;');
