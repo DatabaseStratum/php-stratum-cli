@@ -54,7 +54,7 @@ class BulkInsertWrapper extends Wrapper
     }
 
     $routine_args = $this->getRoutineArgs($theRoutine);
-    $this->writeLine('self::query( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');');
+    $this->writeLine('self::query(\'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');');
 
     $columns = '';
     $fields  = '';
@@ -74,7 +74,7 @@ class BulkInsertWrapper extends Wrapper
     $this->writeLine('{');
     $this->writeLine('$sql = "INSERT INTO `'.$theRoutine['table_name'].'`('.$columns.')";');
     $this->writeLine('$first = true;');
-    $this->writeLine('foreach( $theData as $row )');
+    $this->writeLine('foreach($theData as $row)');
     $this->writeLine('{');
 
     $this->writeLine('if ($first) $sql .=\' values('.$fields.')\';');
@@ -82,7 +82,7 @@ class BulkInsertWrapper extends Wrapper
 
     $this->writeLine('$first = false;');
     $this->writeLine('}');
-    $this->writeLine('self::query( $sql );');
+    $this->writeLine('self::query($sql);');
     $this->writeLine('}');
   }
 

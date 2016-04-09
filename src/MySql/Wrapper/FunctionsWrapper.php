@@ -34,7 +34,7 @@ class FunctionsWrapper extends Wrapper
   protected function writeResultHandler($theRoutine)
   {
     $routine_args = $this->getRoutineArgs($theRoutine);
-    $this->writeLine('return self::executeSingleton0( \'SELECT '.$theRoutine['routine_name'].'('.$routine_args.') \' );');
+    $this->writeLine('return self::executeSingleton0(\'SELECT '.$theRoutine['routine_name'].'('.$routine_args.')\');');
   }
 
   //--------------------------------------------------------------------------------------------------------------------

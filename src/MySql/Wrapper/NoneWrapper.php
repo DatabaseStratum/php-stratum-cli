@@ -34,7 +34,7 @@ class NoneWrapper extends Wrapper
   protected function writeResultHandler($theRoutine)
   {
     $routine_args = $this->getRoutineArgs($theRoutine);
-    $this->writeLine('return self::executeNone( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\' );');
+    $this->writeLine('return self::executeNone(\'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');');
   }
 
   //--------------------------------------------------------------------------------------------------------------------

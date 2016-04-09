@@ -34,7 +34,7 @@ class TableWrapper extends Wrapper
   protected function writeResultHandler($theRoutine)
   {
     $routine_args = $this->getRoutineArgs($theRoutine);
-    $this->writeLine('return self::executeTable( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\' );');
+    $this->writeLine('return self::executeTable(\'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');');
   }
 
   //--------------------------------------------------------------------------------------------------------------------

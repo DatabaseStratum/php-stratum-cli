@@ -269,15 +269,15 @@ abstract class Wrapper
 
     $this->writeSeparator();
     $this->generatePhpDoc($theRoutine);
-    $this->writeLine('public static function '.$method_name.'( '.$wrapper_args.' )');
+    $this->writeLine('public static function '.$method_name.'('.$wrapper_args.')');
     $this->writeLine('{');
-    $this->writeLine('$query = \'CALL '.$theRoutine['routine_name'].'( '.$routine_args.' )\';');
-    $this->writeLine('$stmt  = self::$ourMySql->prepare( $query );');
-    $this->writeLine('if (!$stmt) self::mySqlError( \'mysqli::prepare\' );');
+    $this->writeLine('$query = \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\';');
+    $this->writeLine('$stmt  = self::$ourMySql->prepare($query);');
+    $this->writeLine('if (!$stmt) self::mySqlError(\'mysqli::prepare\');');
     $this->writeLine();
     $this->writeLine('$null = null;');
-    $this->writeLine('$b = $stmt->bind_param( \''.$bindings.'\', '.$nulls.' );');
-    $this->writeLine('if (!$b) self::mySqlError( \'mysqli_stmt::bind_param\' );');
+    $this->writeLine('$b = $stmt->bind_param(\''.$bindings.'\', '.$nulls.');');
+    $this->writeLine('if (!$b) self::mySqlError(\'mysqli_stmt::bind_param\');');
     $this->writeLine();
     $this->writeLine('self::getMaxAllowedPacket();');
     $this->writeLine();
@@ -287,12 +287,12 @@ abstract class Wrapper
     {
       if ($this->getBindVariableType($parameter_info['data_type'])=='b')
       {
-        $this->writeLine('$n = strlen( $'.$parameter_info['name'].' );');
+        $this->writeLine('$n = strlen($'.$parameter_info['name'].');');
         $this->writeLine('$p = 0;');
         $this->writeLine('while ($p<$n)');
         $this->writeLine('{');
-        $this->writeLine('$b = $stmt->send_long_data( '.$blob_argument_index.', substr( $'.$parameter_info['name'].', $p, self::$ourChunkSize ) );');
-        $this->writeLine('if (!$b) self::mySqlError( \'mysqli_stmt::send_long_data\' );');
+        $this->writeLine('$b = $stmt->send_long_data('.$blob_argument_index.', substr($'.$parameter_info['name'].', $p, self::$ourChunkSize));');
+        $this->writeLine('if (!$b) self::mySqlError(\'mysqli_stmt::send_long_data\');');
         $this->writeLine('$p += self::$ourChunkSize;');
         $this->writeLine('}');
         $this->writeLine();
@@ -306,7 +306,7 @@ abstract class Wrapper
     $this->writeLine('$time0 = microtime(true);');
     $this->writeLine('');
     $this->writeLine('$b = $stmt->execute();');
-    $this->writeLine('if (!$b) self::mySqlError( \'mysqli_stmt::execute\' );');
+    $this->writeLine('if (!$b) self::mySqlError(\'mysqli_stmt::execute\');');
     $this->writeLine('');
     $this->writeLine('self::$ourQueryLog[] = [\'query\' => $query,');
     $this->writeLine('                        \'time\'  => microtime(true) - $time0];');
@@ -314,7 +314,7 @@ abstract class Wrapper
     $this->writeLine('else');
     $this->writeLine('{');
     $this->writeLine('$b = $stmt->execute();');
-    $this->writeLine('if (!$b) self::mySqlError( \'mysqli_stmt::execute\' );');
+    $this->writeLine('if (!$b) self::mySqlError(\'mysqli_stmt::execute\');');
     $this->writeLine('}');
     $this->writeLine();
     $this->writeRoutineFunctionLobFetchData($theRoutine);
@@ -344,7 +344,7 @@ abstract class Wrapper
 
     $this->writeSeparator();
     $this->generatePhpDoc($theRoutine);
-    $this->writeLine('public static function '.$method_name.'( '.$wrapper_args.' )');
+    $this->writeLine('public static function '.$method_name.'('.$wrapper_args.')');
     $this->writeLine('{');
 
     $this->writeResultHandler($theRoutine);
@@ -749,7 +749,7 @@ abstract class Wrapper
       case 'decimal':
       case 'float':
       case 'double':
-        $ret = '\'.self::quoteNum( $'.$theParameters['name'].' ).\'';
+        $ret = '\'.self::quoteNum($'.$theParameters['name'].').\'';
         break;
 
       case 'varbinary':
@@ -757,7 +757,7 @@ abstract class Wrapper
 
       case 'char':
       case 'varchar':
-        $ret = '\'.self::quoteString( $'.$theParameters['name'].' ).\'';
+        $ret = '\'.self::quoteString($'.$theParameters['name'].').\'';
         break;
 
       case 'time':
@@ -765,16 +765,16 @@ abstract class Wrapper
 
       case 'date':
       case 'datetime':
-        $ret = '\'.self::quoteString( $'.$theParameters['name'].' ).\'';
+        $ret = '\'.self::quoteString($'.$theParameters['name'].').\'';
         break;
 
       case 'enum':
       case 'set':
-        $ret = '\'.self::quoteString( $'.$theParameters['name'].' ).\'';
+        $ret = '\'.self::quoteString($'.$theParameters['name'].').\'';
         break;
 
       case 'bit':
-        $ret = '\'.self::quoteBit( $'.$theParameters['name'].' ).\'';
+        $ret = '\'.self::quoteBit($'.$theParameters['name'].').\'';
         break;
 
       case 'tinytext':
@@ -786,14 +786,14 @@ abstract class Wrapper
       case 'blob':
       case 'mediumblob':
       case 'longblob':
-        $ret = ($this->myLobAsStringFlag) ? $ret = '\'.self::quoteString( $'.$theParameters['name'].' ).\'' : '?';
+        $ret = ($this->myLobAsStringFlag) ? $ret = '\'.self::quoteString($'.$theParameters['name'].').\'' : '?';
         break;
 
       case 'list_of_int':
-        $ret = '\'.self::quoteListOfInt( $'.$theParameters['name'].", '".
+        $ret = '\'.self::quoteListOfInt($'.$theParameters['name'].", '".
           addslashes($theParameters['delimiter'])."', '".
           addslashes($theParameters['enclosure'])."', '".
-          addslashes($theParameters['escape'])."' ).'";
+          addslashes($theParameters['escape'])."').'";
         break;
 
       default:

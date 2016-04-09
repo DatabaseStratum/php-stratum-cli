@@ -42,9 +42,9 @@ class RowsWithKeyWrapper extends Wrapper
       $key .= '[$row[\''.$column.'\']]';
     }
 
-    $this->writeLine('$result = self::query( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');');
+    $this->writeLine('$result = self::query(\'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');');
     $this->writeLine('$ret = array();');
-    $this->writeLine('while($row = $result->fetch_array( MYSQLI_ASSOC )) $ret'.$key.' = $row;');
+    $this->writeLine('while($row = $result->fetch_array(MYSQLI_ASSOC)) $ret'.$key.' = $row;');
     $this->writeLine('$result->free();');
     $this->writeLine('if(self::$ourMySql->more_results()) self::$ourMySql->next_result();');
     $this->writeLine();
@@ -64,13 +64,13 @@ class RowsWithKeyWrapper extends Wrapper
     }
 
     $this->writeLine('$row = array();');
-    $this->writeLine('self::bindAssoc( $stmt, $row );');
+    $this->writeLine('self::bindAssoc($stmt, $row);');
     $this->writeLine();
     $this->writeLine('$ret = array();');
     $this->writeLine('while (($b = $stmt->fetch()))');
     $this->writeLine('{');
     $this->writeLine('$new = array();');
-    $this->writeLine('foreach( $row as $key => $value )');
+    $this->writeLine('foreach($row as $key => $value)');
     $this->writeLine('{');
     $this->writeLine('$new[$key] = $value;');
     $this->writeLine('}');
@@ -85,7 +85,7 @@ class RowsWithKeyWrapper extends Wrapper
    */
   protected function writeRoutineFunctionLobReturnData()
   {
-    $this->writeLine('if ($b===false) self::mySqlError( \'mysqli_stmt::fetch\' );');
+    $this->writeLine('if ($b===false) self::mySqlError(\'mysqli_stmt::fetch\');');
     $this->writeLine();
     $this->writeLine('return $ret;');
   }

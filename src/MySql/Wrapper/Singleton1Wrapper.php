@@ -46,7 +46,7 @@ class Singleton1Wrapper extends Wrapper
   protected function writeResultHandler($theRoutine)
   {
     $routine_args = $this->getRoutineArgs($theRoutine);
-    $this->writeLine('return self::executeSingleton1( \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');');
+    $this->writeLine('return self::executeSingleton1(\'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -56,13 +56,13 @@ class Singleton1Wrapper extends Wrapper
   protected function writeRoutineFunctionLobFetchData($theRoutine)
   {
     $this->writeLine('$row = array();');
-    $this->writeLine('self::bindAssoc( $stmt, $row );');
+    $this->writeLine('self::bindAssoc($stmt, $row);');
     $this->writeLine();
     $this->writeLine('$tmp = array();');
     $this->writeLine('while (($b = $stmt->fetch()))');
     $this->writeLine('{');
     $this->writeLine('$new = array();');
-    $this->writeLine('foreach( $row as $value )');
+    $this->writeLine('foreach($row as $value)');
     $this->writeLine('{');
     $this->writeLine('$new[] = $value;');
     $this->writeLine('}');
@@ -77,8 +77,8 @@ class Singleton1Wrapper extends Wrapper
    */
   protected function writeRoutineFunctionLobReturnData()
   {
-    $this->writeLine('if ($b===false) self::mySqlError( \'mysqli_stmt::fetch\' );');
-    $this->writeLine('if (count($tmp)!=1) throw new ResultException( \'1\', count($tmp), $query );');
+    $this->writeLine('if ($b===false) self::mySqlError(\'mysqli_stmt::fetch\');');
+    $this->writeLine('if (count($tmp)!=1) throw new ResultException(\'1\', count($tmp), $query);');
     $this->writeLine();
     $this->writeLine('return $tmp[0][0];');
   }

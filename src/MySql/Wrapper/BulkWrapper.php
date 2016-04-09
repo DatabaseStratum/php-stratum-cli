@@ -31,7 +31,7 @@ class BulkWrapper extends Wrapper
   protected function writeResultHandler($theRoutine)
   {
     $routine_args = $this->getRoutineArgs($theRoutine);
-    $this->writeLine('self::executeBulk( $theBulkHandler, \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');');
+    $this->writeLine('self::executeBulk($theBulkHandler, \'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
