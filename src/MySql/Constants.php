@@ -551,7 +551,6 @@ where   nullif(`%s`,'') is not null";
         $width2 = max(strlen($column['length']), $width2);
       }
 
-
       foreach ($table as $column)
       {
         if (isset($column['length']))
