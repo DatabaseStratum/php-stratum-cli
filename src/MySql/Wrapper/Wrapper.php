@@ -10,7 +10,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\MySql\Wrapper;
 
-use SetBased\Affirm\Exception\FallenException;
+use SetBased\Exception\FallenException;
 use SetBased\Stratum\NameMangler\NameMangler;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -65,7 +65,7 @@ abstract class Wrapper
   {
     $this->myLobAsStringFlag = $theLobAsStringFlag;
     $this->myExceptions[]    = 'RuntimeException';
-    $this->myImports[]       = '\SetBased\Affirm\Exception\RuntimeException';
+    $this->myImports[]       = '\SetBased\Exception\RuntimeException';
   }
 
   //--------------------------------------------------------------------------------------------------------------------

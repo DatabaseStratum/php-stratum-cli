@@ -11,8 +11,8 @@
 namespace SetBased\Stratum\MySql;
 
 use phpDocumentor\Reflection\DocBlock;
-use SetBased\Affirm\Exception\FallenException;
-use SetBased\Affirm\Exception\RuntimeException;
+use SetBased\Exception\FallenException;
+use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\MySql\StaticDataLayer as DataLayer;
 
 //----------------------------------------------------------------------------------------------------------------------

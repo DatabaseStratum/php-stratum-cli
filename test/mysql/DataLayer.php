@@ -1,6 +1,6 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-use \SetBased\Affirm\Exception\RuntimeException;
+use \SetBased\Exception\RuntimeException;
 use \SetBased\Stratum\Exception\ResultException;
 use \SetBased\Stratum\MySql\StaticDataLayer;
 

@@ -10,7 +10,7 @@
  */
 //----------------------------------------------------------------------------------------------------------------------
 use SetBased\Affirm\ErrorHandler;
-use SetBased\Affirm\Exception\RuntimeException;
+use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\MySql\Constants;
 use SetBased\Stratum\MySql\RoutineLoader;
 use SetBased\Stratum\MySql\RoutineWrapperGenerator;

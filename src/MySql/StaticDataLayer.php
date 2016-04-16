@@ -10,8 +10,8 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\MySql;
 
-use SetBased\Affirm\Exception\FallenException;
-use SetBased\Affirm\Exception\RuntimeException;
+use SetBased\Exception\FallenException;
+use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\BulkHandler;
 use SetBased\Stratum\Exception\ResultException;
 

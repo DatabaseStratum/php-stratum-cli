@@ -18,6 +18,7 @@
   "require": {
     "php": ">=5.4.0",
     "phpdocumentor/reflection-docblock": "2.*",
+    "setbased/exception": "1.*",
     "setbased/php-affirm": "*"
   },
   "bin": [
