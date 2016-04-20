@@ -17,9 +17,9 @@
   },
   "require": {
     "php": ">=5.4.0",
-    "phpdocumentor/reflection-docblock": "2.*",
     "setbased/exception": "1.*",
-    "setbased/php-affirm": "*"
+    "setbased/php-affirm": "*",
+    "zf1/zend-reflection": "^1.12"
   },
   "bin": [
     "bin/stratum"

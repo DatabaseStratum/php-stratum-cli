@@ -10,7 +10,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\MySql;
 
-use phpDocumentor\Reflection\DocBlock;
+use Zend_Reflection_Docblock;
 use SetBased\Exception\FallenException;
 use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\MySql\StaticDataLayer as DataLayer;
@@ -531,34 +531,28 @@ and   table_name   = %s', DataLayer::quoteString($this->myTableName));
       else $tmp .= $line."\n";
     }
 
-    $phpdoc = new DocBlock($tmp);
+    $phpdoc = new Zend_Reflection_Docblock($tmp);
 
     // Get the short description.
     $this->myDocBlockPartsSource['sort_description'] = $phpdoc->getShortDescription();
 
     // Get the long description.
-    $this->myDocBlockPartsSource['long_description'] = $phpdoc->getLongDescription()->getContents();
+    $this->myDocBlockPartsSource['long_description'] = $phpdoc->getLongDescription();
 
     // Get the description for each parameter of the stored routine.
     foreach ($phpdoc->getTags() as $key => $tag)
     {
       if ($tag->getName()=='param')
       {
-        $content     = $tag->getContent();
         $description = $tag->getDescription();
-
-        // Gets name of parameter from routine doc block.
-        $name = trim(substr($content, 0, strlen($content) - strlen($description)));
-
-        $tmp   = [];
-        $lines = explode("\n", $description);
+        $tmp         = [];
+        $lines       = explode("\n", $description);
         foreach ($lines as $line)
         {
           $tmp[] = trim($line);
         }
-        $description = implode("\n", $tmp);
-
-        $this->myDocBlockPartsSource['parameters'][$key] = ['name'        => $name,
+        $description                                     = implode("\n", $tmp);
+        $this->myDocBlockPartsSource['parameters'][$key] = ['name'        => $tag->getType(),
                                                             'description' => $description];
       }
     }
