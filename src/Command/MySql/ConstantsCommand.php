@@ -8,18 +8,20 @@
  * @link
  */
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\Stratum\MySql;
+namespace SetBased\Stratum\Command\MySql;
 
 use SetBased\Exception\FallenException;
 use SetBased\Exception\RuntimeException;
-use SetBased\Stratum\MySql\StaticDataLayer as DataLayer;
-use SetBased\Stratum\Util;
+use SetBased\Stratum\MySql\MetadataDataLayer as DataLayer;
+use SetBased\Stratum\Style\StratumStyle;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class for creating PHP constants based on column widths, and auto increment columns and labels.
+ * Command for creating PHP constants based on column widths, and auto increment columns and labels.
  */
-class Constants
+class ConstantsCommand extends MySqlCommand
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -35,13 +37,6 @@ class Constants
    * @var array
    */
   private $myColumns = [];
-
-  /**
-   * Object for connection to a database instance.
-   *
-   * @var Connector.
-   */
-  private $myConnector;
 
   /**
    * @var array All constants.
@@ -72,67 +67,55 @@ class Constants
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * @param string $theConfigFilename
-   *
-   * @return int
+   * {@inheritdoc}
    */
-  public function main($theConfigFilename)
+  protected function configure()
   {
-    $this->myConnector = new Connector();
+    $this->setName('constants')
+         ->setDescription('Generates constants based on database IDs');
+  }
 
-    $this->readConfigFile($theConfigFilename);
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * {@inheritdoc}
+   */
+  protected function execute(InputInterface $input, OutputInterface $output)
+  {
+    $this->io = new StratumStyle($input, $output);
 
-    $this->myConnector->connect();
+    $configFileName = $input->getArgument('config file');
+    $settings       = $this->readConfigFile($configFileName);
 
-    $this->getOldColumns();
+    if ($this->myConstantsFilename!==null || $this->myClassName!==null)
+    {
+      $this->io->title('Constants');
 
-    $this->getColumns();
+      $this->connect($settings);
 
-    $this->enhanceColumns();
+      $this->executeEnabled();
 
-    $this->mergeColumns();
-
-    $this->writeColumns();
-
-    $this->getLabels();
-
-    $this->fillConstants();
-
-    $this->writeConstantClass();
-
-    $this->myConnector->disconnect();
+      $this->disconnect();
+    }
+    else
+    {
+      $this->io->logVerbose('Constants not enabled');
+    }
 
     return 0;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Reads configuration parameters from the configuration file.
-   *
-   * @param string $theConfigFilename
-   */
-  protected function readConfigFile($theConfigFilename)
-  {
-    $this->myConnector->readConfigFile($theConfigFilename);
-
-    $settings = parse_ini_file($theConfigFilename, true);
-
-    $this->myConstantsFilename = Util::getSetting($settings, true, 'constants', 'columns');
-    $this->myClassName         = Util::getSetting($settings, true, 'constants', 'class');
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
    * Returns the widths of a field based on a column.
    *
-   * @param array $theColumn The column of which the field is based.
+   * @param array $column The column of which the field is based.
    *
    * @return int|null
    */
-  private function deriveFieldLength($theColumn)
+  private function deriveFieldLength($column)
   {
     $ret = null;
-    switch ($theColumn['data_type'])
+    switch ($column['data_type'])
     {
       case 'tinyint':
       case 'smallint':
@@ -143,7 +126,7 @@ class Constants
       case 'decimal':
       case 'float':
       case 'double':
-        $ret = $theColumn['numeric_precision'];
+        $ret = $column['numeric_precision'];
         break;
 
       case 'char':
@@ -160,7 +143,7 @@ class Constants
       case 'mediumblob':
       case 'longblob':
       case 'bit':
-        $ret = $theColumn['character_maximum_length'];
+        $ret = $column['character_maximum_length'];
         break;
 
       case 'timestamp':
@@ -189,7 +172,7 @@ class Constants
         break;
 
       default:
-        throw new FallenException('column type', $theColumn['data_type']);
+        throw new FallenException('column type', $column['data_type']);
     }
 
     return $ret;
@@ -226,19 +209,68 @@ class Constants
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * Gathers constants based on column widths.
+   */
+  private function executeColumnWidths()
+  {
+    $this->getOldColumns();
+
+    $this->getColumns();
+
+    $this->enhanceColumns();
+
+    $this->mergeColumns();
+
+    $this->writeColumns();
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Creates constants declarations in a class.
+   */
+  private function executeCreateConstants()
+  {
+    $this->getLabels();
+
+    $this->fillConstants();
+
+    $this->writeConstantClass();
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Executes the enabled functionalities.
+   */
+  private function executeEnabled()
+  {
+    if ($this->myConstantsFilename!==null)
+    {
+      $this->executeColumnWidths();
+    }
+
+    if ($this->myClassName!==null)
+    {
+      $this->executeCreateConstants();
+    }
+
+    $this->logNumberOfConstants();
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Searches for 3 lines in the source code of the class for constants. The lines are:
    * * The first line of the doc block with the annotation '@setbased.stratum.constants'.
    * * The last line of this doc block.
    * * The last line of continuous constant declarations directly after the doc block.
    * If one of these line can not be found the line number will be set to null.
    *
-   * @param string $theSourceCode The source code of the constant class.
+   * @param string $source The source code of the constant class.
    *
    * @return array With the 3 line number as described
    */
-  private function extractLines($theSourceCode)
+  private function extractLines($source)
   {
-    $tokens = token_get_all($theSourceCode);
+    $tokens = token_get_all($source);
 
     $line1 = null;
     $line2 = null;
@@ -360,39 +392,7 @@ class Constants
    */
   private function getColumns()
   {
-    $query = "
-(
-  select table_name
-  ,      column_name
-  ,      data_type
-  ,      character_maximum_length
-  ,      numeric_precision
-  from   information_schema.COLUMNS
-  where  table_schema = database()
-  and    table_name  rlike '^[a-zA-Z0-9_]*$'
-  and    column_name rlike '^[a-zA-Z0-9_]*$'
-  order by table_name
-  ,        ordinal_position
-)
-
-union all
-
-(
-  select concat(table_schema,'.',table_name) table_name
-  ,      column_name
-  ,      data_type
-  ,      character_maximum_length
-  ,      numeric_precision
-  from   information_schema.COLUMNS
-  where  table_name  rlike '^[a-zA-Z0-9_]*$'
-  and    column_name rlike '^[a-zA-Z0-9_]*$'
-  order by table_schema
-  ,        table_name
-  ,        ordinal_position
-)
-";
-
-    $rows = DataLayer::executeRows($query);
+    $rows = DataLayer::getAllTableColumns();
     foreach ($rows as $row)
     {
       $row['length']                                            = $this->deriveFieldLength($row);
@@ -406,28 +406,10 @@ union all
    */
   private function getLabels()
   {
-    $query_string = "
-select t1.table_name  `table_name`
-,      t1.column_name `id`
-,      t2.column_name `label`
-from       information_schema.columns t1
-inner join information_schema.columns t2 on t1.table_name = t2.table_name
-where t1.table_schema = database()
-and   t1.extra        = 'auto_increment'
-and   t2.table_schema = database()
-and   t2.column_name like '%%\\_label'";
-
-    $tables = DataLayer::executeRows($query_string);
+    $tables = DataLayer::getLabelTables();
     foreach ($tables as $table)
     {
-      $query_string = "
-select `%s`  as `id`
-,      `%s`  as `label`
-from   `%s`
-where   nullif(`%s`,'') is not null";
-
-      $query_string = sprintf($query_string, $table['id'], $table['label'], $table['table_name'], $table['label']);
-      $rows         = DataLayer::executeRows($query_string);
+      $rows = DataLayer::getLabelsFromTable($table['table_name'], $table['id'], $table['label']);
       foreach ($rows as $row)
       {
         $this->myLabels[$row['label']] = $row['id'];
@@ -494,6 +476,20 @@ where   nullif(`%s`,'') is not null";
   }
 
   //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Logs the number of constants generated.
+   */
+  private function logNumberOfConstants()
+  {
+    $n_id  = sizeof($this->myLabels);
+    $n_len = sizeof($this->myConstants) - $n_id;
+
+    $this->io->writeln('');
+    $this->io->text(sprintf('Number of constants based on column widths: %d', $n_len));
+    $this->io->text(sprintf('Number of constants based on database IDs : %d', $n_id));
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
   private function makeConstantStatements()
   {
     $width1    = 0;
@@ -531,6 +527,24 @@ where   nullif(`%s`,'') is not null";
         }
       }
     }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Reads configuration parameters from the configuration file.
+   *
+   * @param string $configFilename
+   *
+   * @return array
+   */
+  private function readConfigFile($configFilename)
+  {
+    $settings = parse_ini_file($configFilename, true);
+
+    $this->myConstantsFilename = self::getSetting($settings, false, 'constants', 'columns');
+    $this->myClassName         = self::getSetting($settings, false, 'constants', 'class');
+
+    return $settings;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -579,7 +593,7 @@ where   nullif(`%s`,'') is not null";
     }
 
     // Save the columns, width and constants to the filesystem.
-    Util::writeTwoPhases($this->myConstantsFilename, $content);
+    $this->writeTwoPhases($this->myConstantsFilename, $content);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -596,11 +610,11 @@ where   nullif(`%s`,'') is not null";
     $file_name = $loader->findFile($this->myClassName);
     if ($file_name===false)
     {
-      throw new RuntimeException("Composer can not find class '%s'.", $this->myClassName);
+      throw new RuntimeException("ClassLoader can not find class '%s'.", $this->myClassName);
     }
 
     // Read the source of the class without actually loading the class. Otherwise, we can not (re)load the class in
-    // \SetBased\Stratum\MySql\RoutineLoader::getConstants.
+    // \SetBased\Stratum\MySql\RoutineLoaderCommand::getConstants.
     $source = file_get_contents($file_name);
     if ($source===false)
     {
@@ -624,7 +638,7 @@ where   nullif(`%s`,'') is not null";
     $source_lines = array_merge($tmp1, $constants, $tmp2);
 
     // Save the configuration file.
-    Util::writeTwoPhases($file_name, implode("\n", $source_lines));
+    $this->writeTwoPhases($file_name, implode("\n", $source_lines));
   }
 
   //--------------------------------------------------------------------------------------------------------------------

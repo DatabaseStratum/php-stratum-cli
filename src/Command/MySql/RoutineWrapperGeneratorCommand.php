@@ -8,18 +8,21 @@
  * @link
  */
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\Stratum\MySql;
+namespace SetBased\Stratum\Command\MySql;
 
 use SetBased\Exception\RuntimeException;
+use SetBased\Stratum\Command\BaseCommand;
 use SetBased\Stratum\MySql\Wrapper\Wrapper;
 use SetBased\Stratum\NameMangler\NameMangler;
-use SetBased\Stratum\Util;
+use SetBased\Stratum\Style\StratumStyle;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class for generating a class with wrapper methods for calling stored routines in a MySQL database.
+ * Command for generating a class with wrapper methods for calling stored routines in a MySQL database.
  */
-class RoutineWrapperGenerator
+class RoutineWrapperGeneratorCommand extends BaseCommand
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -27,14 +30,14 @@ class RoutineWrapperGenerator
    *
    * @var string
    */
-  private $myCode = '';
+  private $code = '';
 
   /**
    * Array with fully qualified names that must be imported.
    *
    * @var array
    */
-  private $myImports = [];
+  private $imports = [];
 
   /**
    * If true BLOBs and CLOBs must be treated as strings.
@@ -80,15 +83,41 @@ class RoutineWrapperGenerator
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * The "main" of the wrapper generator.
-   *
-   * @param $theConfigurationFilename string The name of the configuration file.
-   *
-   * @return int Returns 0 on success, 1 if one or more errors occured.
+   * {@inheritdoc}
    */
-  public function run($theConfigurationFilename)
+  protected function configure()
   {
-    $this->readConfigurationFile($theConfigurationFilename);
+    $this->setName('wrapper')
+         ->setDescription('Generates constants based on database IDs');
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * {@inheritdoc}
+   */
+  protected function execute(InputInterface $input, OutputInterface $output)
+  {
+    $this->io = new StratumStyle($input, $output);
+
+    $configFileName = $input->getArgument('config file');
+
+    $this->readConfigurationFile($configFileName);
+
+    if ($this->myWrapperClassName!==null)
+    {
+      $this->generateWrapperClass();
+    }
+
+    return 0;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Generates the wrapper class.
+   */
+  private function generateWrapperClass()
+  {
+    $this->io->title('Wrapper');
 
     /** @var NameMangler $mangler */
     $mangler  = new $this->myNameMangler();
@@ -120,34 +149,32 @@ class RoutineWrapperGenerator
       echo "No files with stored routines found.\n";
     }
 
-    $methods      = $this->myCode;
-    $this->myCode = '';
+    $methods    = $this->code;
+    $this->code = '';
 
     // Write the header of the wrapper class.
     $this->writeClassHeader();
 
     // Write methods of the wrapper calls.
-    $this->myCode .= $methods;
+    $this->code .= $methods;
 
     // Write the trailer of the wrapper class.
     $this->writeClassTrailer();
 
     // Write the wrapper class to the filesystem.
-    Util::writeTwoPhases($this->myWrapperFilename, $this->myCode);
-
-    return 0;
+    $this->writeTwoPhases($this->myWrapperFilename, $this->code);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Reads parameters from the configuration file.
    *
-   * @param string $theConfigFilename The filename of the configuration file.
+   * @param string $configFilename The filename of the configuration file.
    */
-  private function readConfigurationFile($theConfigFilename)
+  private function readConfigurationFile($configFilename)
   {
     // Read the configuration file.
-    $settings = parse_ini_file($theConfigFilename, true);
+    $settings = parse_ini_file($configFilename, true);
 
     // Set default values.
     if (!isset($settings['wrapper']['lob_as_string']))
@@ -155,12 +182,15 @@ class RoutineWrapperGenerator
       $settings['wrapper']['lob_as_string'] = false;
     }
 
-    $this->myParentClassName  = Util::getSetting($settings, true, 'wrapper', 'parent_class');
-    $this->myNameMangler      = Util::getSetting($settings, true, 'wrapper', 'mangler_class');
-    $this->myWrapperClassName = Util::getSetting($settings, true, 'wrapper', 'wrapper_class');
-    $this->myWrapperFilename  = Util::getSetting($settings, true, 'wrapper', 'wrapper_file');
-    $this->myMetadataFilename = Util::getSetting($settings, true, 'wrapper', 'metadata');
-    $this->myLobAsStringFlag  = (Util::getSetting($settings, true, 'wrapper', 'lob_as_string')) ? true : false;
+    $this->myWrapperClassName = self::getSetting($settings, false, 'wrapper', 'wrapper_class');
+    if ($this->myWrapperClassName!==null)
+    {
+      $this->myParentClassName  = self::getSetting($settings, true, 'wrapper', 'parent_class');
+      $this->myNameMangler      = self::getSetting($settings, true, 'wrapper', 'mangler_class');
+      $this->myWrapperFilename  = self::getSetting($settings, true, 'wrapper', 'wrapper_file');
+      $this->myLobAsStringFlag  = (self::getSetting($settings, true, 'wrapper', 'lob_as_string')) ? true : false;
+      $this->myMetadataFilename = self::getSetting($settings, true, 'loader', 'metadata');
+    }
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -201,12 +231,12 @@ class RoutineWrapperGenerator
     }
 
     // Write PHP tag.
-    $this->myCode .= "<?php\n";
+    $this->code .= "<?php\n";
     if ($namespace!==null)
     {
-      $this->myCode .= '//'.str_repeat('-', Wrapper::C_PAGE_WIDTH - 2)."\n";
-      $this->myCode .= "namespace ${namespace};\n";
-      $this->myCode .= "\n";
+      $this->code .= '//'.str_repeat('-', Wrapper::C_PAGE_WIDTH - 2)."\n";
+      $this->code .= "namespace ${namespace};\n";
+      $this->code .= "\n";
     }
 
     // If the child class and parent class have different names import the parent class. Otherwise use the fully
@@ -214,26 +244,26 @@ class RoutineWrapperGenerator
     $parent_class_name = substr($this->myParentClassName, strrpos($this->myParentClassName, '\\') + 1);
     if ($class_name!=$parent_class_name)
     {
-      $this->myImports[]       = $this->myParentClassName;
+      $this->imports[]         = $this->myParentClassName;
       $this->myParentClassName = $parent_class_name;
     }
 
     // Write use statements.
-    if (!empty($this->myImports))
+    if (!empty($this->imports))
     {
-      $this->myImports = array_unique($this->myImports, SORT_REGULAR);
-      $this->myCode .= '//'.str_repeat('-', Wrapper::C_PAGE_WIDTH - 2)."\n";
-      foreach ($this->myImports as $import)
+      $this->imports = array_unique($this->imports, SORT_REGULAR);
+      $this->code .= '//'.str_repeat('-', Wrapper::C_PAGE_WIDTH - 2)."\n";
+      foreach ($this->imports as $import)
       {
-        $this->myCode .= 'use '.$import.";\n";
+        $this->code .= 'use '.$import.";\n";
       }
-      $this->myCode .= "\n";
+      $this->code .= "\n";
     }
 
     // Write class name.
-    $this->myCode .= '//'.str_repeat('-', Wrapper::C_PAGE_WIDTH - 2)."\n";
-    $this->myCode .= 'class '.$class_name.' extends '.$this->myParentClassName."\n";
-    $this->myCode .= "{\n";
+    $this->code .= '//'.str_repeat('-', Wrapper::C_PAGE_WIDTH - 2)."\n";
+    $this->code .= 'class '.$class_name.' extends '.$this->myParentClassName."\n";
+    $this->code .= "{\n";
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -242,25 +272,25 @@ class RoutineWrapperGenerator
    */
   private function writeClassTrailer()
   {
-    $this->myCode .= '  //'.str_repeat('-', Wrapper::C_PAGE_WIDTH - 4)."\n";
-    $this->myCode .= "}\n";
-    $this->myCode .= "\n";
-    $this->myCode .= '//'.str_repeat('-', Wrapper::C_PAGE_WIDTH - 2)."\n";
+    $this->code .= '  //'.str_repeat('-', Wrapper::C_PAGE_WIDTH - 4)."\n";
+    $this->code .= "}\n";
+    $this->code .= "\n";
+    $this->code .= '//'.str_repeat('-', Wrapper::C_PAGE_WIDTH - 2)."\n";
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Generates a complete wrapper method for a stored routine.
    *
-   * @param array       $theRoutine     The metadata of the stored routine.
-   * @param NameMangler $theNameMangler The mangler for wrapper and parameter names.
+   * @param array       $routine     The metadata of the stored routine.
+   * @param NameMangler $nameMangler The mangler for wrapper and parameter names.
    */
-  private function writeRoutineFunction($theRoutine, $theNameMangler)
+  private function writeRoutineFunction($routine, $nameMangler)
   {
-    $wrapper = Wrapper::createRoutineWrapper($theRoutine, $this->myLobAsStringFlag);
-    $this->myCode .= $wrapper->writeRoutineFunction($theRoutine, $theNameMangler);
+    $wrapper = Wrapper::createRoutineWrapper($routine, $this->myLobAsStringFlag);
+    $this->code .= $wrapper->writeRoutineFunction($routine, $nameMangler);
 
-    $this->myImports = array_merge($this->myImports, $wrapper->getImports());
+    $this->imports = array_merge($this->imports, $wrapper->getImports());
   }
 
   //--------------------------------------------------------------------------------------------------------------------

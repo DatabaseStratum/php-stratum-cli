@@ -20,13 +20,13 @@ interface BulkHandler
   /**
    * Will be invoked for each row in the result set.
    *
-   * @param string[] $theRow A row from the result set.
+   * @param string[] $row A row from the result set.
    *
    * @return void
    *
    * @api
    */
-  public function row($theRow);
+  public function row($row);
 
   // -------------------------------------------------------------------------------------------------------------------
   /**

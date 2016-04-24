@@ -12,31 +12,31 @@ class SetBasedNameMangler implements NameMangler
   /**
    * Returns the routine name after the first underscore in camelCase. I.e. abc_foo_bar => fooBar.
    *
-   * @param string $theRoutineName The name of the stored routine.
+   * @param string $routineName The name of the stored routine.
    *
    * @return string
    */
-  public static function getMethodName($theRoutineName)
+  public static function getMethodName($routineName)
   {
     return lcfirst(preg_replace_callback('/(_)([a-z])/',
       function ($matches)
       {
         return strtoupper($matches[2]);
       },
-                                         stristr($theRoutineName, '_')));
+                                         stristr($routineName, '_')));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Returns the parameter name unchanged.
    *
-   * @param string $theRoutineParameterName The name of the parameter in the stored routine.
+   * @param string $routineParameterName The name of the parameter in the stored routine.
    *
    * @return string
    */
-  public static function getParameterName($theRoutineParameterName)
+  public static function getParameterName($routineParameterName)
   {
-    return $theRoutineParameterName;
+    return $routineParameterName;
   }
 
   //--------------------------------------------------------------------------------------------------------------------

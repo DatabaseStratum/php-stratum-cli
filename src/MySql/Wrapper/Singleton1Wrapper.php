@@ -22,12 +22,12 @@ class Singleton1Wrapper extends Wrapper
   /**
    * {@inheritdoc}
    */
-  public function __construct($theLobAsStringFlag)
+  public function __construct($lobAsString)
   {
-    parent::__construct($theLobAsStringFlag);
+    parent::__construct($lobAsString);
 
-    $this->myExceptions[] = 'ResultException';
-    $this->myImports[]    = '\SetBased\Stratum\Exception\ResultException';
+    $this->exceptions[] = 'ResultException';
+    $this->imports[]    = '\SetBased\Stratum\Exception\ResultException';
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -43,17 +43,17 @@ class Singleton1Wrapper extends Wrapper
   /**
    * {@inheritdoc}
    */
-  protected function writeResultHandler($theRoutine)
+  protected function writeResultHandler($routine)
   {
-    $routine_args = $this->getRoutineArgs($theRoutine);
-    $this->writeLine('return self::executeSingleton1(\'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');');
+    $routine_args = $this->getRoutineArgs($routine);
+    $this->writeLine('return self::executeSingleton1(\'CALL '.$routine['routine_name'].'('.$routine_args.')\');');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * {@inheritdoc}
    */
-  protected function writeRoutineFunctionLobFetchData($theRoutine)
+  protected function writeRoutineFunctionLobFetchData($routine)
   {
     $this->writeLine('$row = [];');
     $this->writeLine('self::bindAssoc($stmt, $row);');

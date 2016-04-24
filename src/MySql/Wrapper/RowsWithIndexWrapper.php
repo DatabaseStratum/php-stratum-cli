@@ -32,21 +32,21 @@ class RowsWithIndexWrapper extends Wrapper
   /**
    * {@inheritdoc}
    */
-  protected function writeResultHandler($theRoutine)
+  protected function writeResultHandler($routine)
   {
-    $routine_args = $this->getRoutineArgs($theRoutine);
+    $routine_args = $this->getRoutineArgs($routine);
 
     $index = '';
-    foreach ($theRoutine['columns'] as $column)
+    foreach ($routine['columns'] as $column)
     {
       $index .= '[$row[\''.$column.'\']]';
     }
 
-    $this->writeLine('$result = self::query(\'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');');
+    $this->writeLine('$result = self::query(\'CALL '.$routine['routine_name'].'('.$routine_args.')\');');
     $this->writeLine('$ret = [];');
     $this->writeLine('while($row = $result->fetch_array(MYSQLI_ASSOC)) $ret'.$index.'[] = $row;');
     $this->writeLine('$result->free();');
-    $this->writeLine('if (self::$ourMySql->more_results()) self::$ourMySql->next_result();');
+    $this->writeLine('if (self::$mysqli->more_results()) self::$mysqli->next_result();');
     $this->writeLine();
     $this->writeLine('return $ret;');
   }
@@ -55,10 +55,10 @@ class RowsWithIndexWrapper extends Wrapper
   /**
    * {@inheritdoc}
    */
-  protected function writeRoutineFunctionLobFetchData($theRoutine)
+  protected function writeRoutineFunctionLobFetchData($routine)
   {
     $index = '';
-    foreach ($theRoutine['columns'] as $column)
+    foreach ($routine['columns'] as $column)
     {
       $index .= '[$new[\''.$column.'\']]';
     }

@@ -8,20 +8,23 @@
  * @link
  */
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\Stratum\MySql;
+namespace SetBased\Stratum\Command\MySql;
 
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SetBased\Exception\RuntimeException;
-use SetBased\Stratum\MySql\StaticDataLayer as DataLayer;
+use SetBased\Stratum\MySql\MetadataDataLayer as DataLayer;
+use SetBased\Stratum\MySql\RoutineLoaderHelper;
 use SetBased\Stratum\NameMangler\NameMangler;
-use SetBased\Stratum\Util;
+use SetBased\Stratum\Style\StratumStyle;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class for loading stored routines into a MySQL instance from pseudo SQL files.
+ * Command for loading stored routines into a MySQL instance from pseudo SQL files.
  */
-class RoutineLoader
+class RoutineLoaderCommand extends MySqlCommand
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -37,13 +40,6 @@ class RoutineLoader
    * @var string
    */
   private $myCollate;
-
-  /**
-   * Object for connection to a database instance.
-   *
-   * @var Connector.
-   */
-  private $myConnector;
 
   /**
    * Name of the class that contains all constants.
@@ -129,28 +125,40 @@ class RoutineLoader
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Loads stored routines into the current schema.
-   *
-   * @param string   $theConfigFilename The name of the configuration file of the current project
-   * @param string[] $theFileNames      The source filenames that must be loaded. If empty all sources (if required)
-   *                                    will loaded.
-   *
-   * @return int Returns 0 on success, 1 if one or more errors occurred.
+   * {@inheritdoc}
    */
-  public function main($theConfigFilename, $theFileNames)
+  protected function configure()
   {
-    $this->myConnector = new Connector();
+    $this->setName('loader')
+         ->setDescription('Generates the routine wrapper class');
+  }
 
-    if (empty($theFileNames))
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * {@inheritdoc}
+   */
+  protected function execute(InputInterface $input, OutputInterface $output)
+  {
+    $this->io = new StratumStyle($input, $output);
+
+    $configFileName = $input->getArgument('config file');
+    $file_names     = $input->getArgument('sources');
+    $settings       = $this->readConfigFile($configFileName);
+
+    $this->connect($settings);
+
+    if (empty($file_names))
     {
-      $this->loadAll($theConfigFilename);
+      $this->loadAll();
     }
     else
     {
-      $this->loadList($theConfigFilename, $theFileNames);
+      $this->loadList($file_names);
     }
 
     $this->logOverviewErrors();
+
+    $this->disconnect();
 
     return ($this->myErrorFileNames) ? 1 : 0;
   }
@@ -159,22 +167,24 @@ class RoutineLoader
   /**
    * Reads parameters from the configuration file.
    *
-   * @param string $theConfigFilename
+   * @param string $configFilename
+   *
+   * @return array
    */
-  protected function readConfigFile($theConfigFilename)
+  protected function readConfigFile($configFilename)
   {
-    $this->myConnector->readConfigFile($theConfigFilename);
+    $settings = parse_ini_file($configFilename, true);
 
-    $settings = parse_ini_file($theConfigFilename, true);
+    $this->myPhpStratumMetadataFilename = self::getSetting($settings, true, 'loader', 'metadata');
+    $this->mySourceDirectory            = self::getSetting($settings, true, 'loader', 'source_directory');
+    $this->mySourceFileExtension        = self::getSetting($settings, true, 'loader', 'extension');
+    $this->mySqlMode                    = self::getSetting($settings, true, 'loader', 'sql_mode');
+    $this->myCharacterSet               = self::getSetting($settings, true, 'loader', 'character_set');
+    $this->myCollate                    = self::getSetting($settings, true, 'loader', 'collate');
+    $this->myConstantClassName          = self::getSetting($settings, false, 'constants', 'class');
+    $this->myNameMangler                = self::getSetting($settings, false, 'wrapper', 'mangler_class');
 
-    $this->myPhpStratumMetadataFilename = Util::getSetting($settings, true, 'wrapper', 'metadata');
-    $this->myNameMangler                = Util::getSetting($settings, true, 'wrapper', 'mangler_class');
-    $this->mySourceDirectory            = Util::getSetting($settings, true, 'loader', 'source_directory');
-    $this->mySourceFileExtension        = Util::getSetting($settings, true, 'loader', 'extension');
-    $this->myConstantClassName          = Util::getSetting($settings, false, 'loader', 'constant_class');
-    $this->mySqlMode                    = Util::getSetting($settings, true, 'loader', 'sql_mode');
-    $this->myCharacterSet               = Util::getSetting($settings, true, 'loader', 'character_set');
-    $this->myCollate                    = Util::getSetting($settings, true, 'loader', 'collate');
+    return $settings;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -195,11 +205,14 @@ class RoutineLoader
     // Log the sources files with duplicate method names.
     foreach ($sources_by_method as $method => $sources)
     {
-      echo "The following source files would result wrapper methods with equal name '$method'\n";
+      $tmp = [];
       foreach ($sources as $source)
       {
-        echo '  '.$source['path_name'], "\n";
+        $tmp[] = $source['path_name'];
       }
+
+      $this->io->error("The following source files would result wrapper methods with equal name '$method'");
+      $this->io->listing($tmp);
     }
 
     // Remove duplicates from mySources.
@@ -231,12 +244,11 @@ class RoutineLoader
     {
       if (!isset($lookup[$old_routine['routine_name']]))
       {
-        echo sprintf("Dropping %s %s\n",
-                     strtolower($old_routine['routine_type']),
-                     $old_routine['routine_name']);
+        $this->io->logInfo("Dropping %s <dbo>%s</dbo>",
+                           strtolower($old_routine['routine_type']),
+                           $old_routine['routine_name']);
 
-        $sql = sprintf('drop %s if exists %s', $old_routine['routine_type'], $old_routine['routine_name']);
-        DataLayer::executeNone($sql);
+        DataLayer::dropRoutine($old_routine['routine_type'], $old_routine['routine_name']);
       }
     }
   }
@@ -245,15 +257,13 @@ class RoutineLoader
   /**
    * Searches recursively for all source files in a directory.
    *
-   * @param string|null $theSourceDir The directory.
+   * @param string|null $sourceDir The directory.
    */
-  private function findSourceFiles($theSourceDir = null)
+  private function findSourceFiles($sourceDir = null)
   {
-    if ($theSourceDir===null) $theSourceDir = $this->mySourceDirectory;
+    if ($sourceDir===null) $sourceDir = $this->mySourceDirectory;
 
-    /** @var NameMangler $mangler */
-    $mangler   = $this->myNameMangler;
-    $directory = new RecursiveDirectoryIterator($theSourceDir);
+    $directory = new RecursiveDirectoryIterator($sourceDir);
     $directory->setFlags(RecursiveDirectoryIterator::FOLLOW_SYMLINKS);
     $files = new RecursiveIteratorIterator($directory);
     foreach ($files as $full_path => $file)
@@ -263,7 +273,7 @@ class RoutineLoader
       {
         $this->mySources[] = ['path_name'    => $full_path,
                               'routine_name' => $file->getBasename($this->mySourceFileExtension),
-                              'method_name'  => $mangler::getMethodName($file->getFilename())];
+                              'method_name'  => $this->methodName($file->getFilename())];
       }
     }
   }
@@ -272,25 +282,27 @@ class RoutineLoader
   /**
    * Finds all source files that actually exists from a list of file names.
    *
-   * @param string[] $theFileNames The list of file names.
+   * @param string[] $fileNames The list of file names.
    */
-  private function findSourceFilesFromList($theFileNames)
+  private function findSourceFilesFromList($fileNames)
   {
-    /** @var NameMangler $mangler */
-    $mangler = $this->myNameMangler;
-    foreach ($theFileNames as $psql_filename)
+    foreach ($fileNames as $psql_filename)
     {
       if (!file_exists($psql_filename))
       {
-        echo sprintf("File not exists: '%s'.\n", $psql_filename);
+        $this->io->logError("File not exists: '%s'", $psql_filename);
         $this->myErrorFileNames[] = $psql_filename;
       }
-      $extension = '.'.pathinfo($psql_filename, PATHINFO_EXTENSION);
-      if ($extension==$this->mySourceFileExtension)
+      else
       {
-        $this->mySources[] = ['path_name'    => $psql_filename,
-                              'routine_name' => pathinfo($psql_filename, PATHINFO_FILENAME),
-                              'method_name'  => $mangler::getMethodName(pathinfo($psql_filename, PATHINFO_FILENAME))];
+        $extension = '.'.pathinfo($psql_filename, PATHINFO_EXTENSION);
+        if ($extension==$this->mySourceFileExtension)
+        {
+          $routine_name      = pathinfo($psql_filename, PATHINFO_FILENAME);
+          $this->mySources[] = ['path_name'    => $psql_filename,
+                                'routine_name' => $routine_name,
+                                'method_name'  => $this->methodName($routine_name)];
+        }
       }
     }
   }
@@ -301,31 +313,10 @@ class RoutineLoader
    */
   private function getColumnTypes()
   {
-    $query = '
-select table_name                                    table_name
-,      column_name                                   column_name
-,      column_type                                   column_type
-,      character_set_name                            character_set_name
-,      null                                          table_schema
-from   information_schema.COLUMNS
-where  table_schema = database()
-union all
-select table_name                                    table_name
-,      column_name                                   column_name
-,      column_type                                   column_type
-,      character_set_name                            character_set_name
-,      table_schema                                  table_schema
-from   information_schema.COLUMNS
-order by table_schema
-,        table_name
-,        column_name';
-
-    $rows = DataLayer::executeRows($query);
+    $rows = DataLayer::getAllTableColumns();
     foreach ($rows as $row)
     {
-      $key = '@';
-      if (isset($row['table_schema'])) $key .= $row['table_schema'].'.';
-      $key .= $row['table_name'].'.'.$row['column_name'].'%type@';
+      $key = '@'.$row['table_name'].'.'.$row['column_name'].'%type@';
       $key = strtoupper($key);
 
       $value = $row['column_type'];
@@ -333,6 +324,8 @@ order by table_schema
 
       $this->myReplacePairs[$key] = $value;
     }
+
+    $this->io->text(sprintf("Selected %d column types for substitution", sizeof($rows)));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -346,12 +339,17 @@ order by table_schema
 
     $reflection = new \ReflectionClass($this->myConstantClassName);
 
-    foreach ($reflection->getConstants() as $name => $value)
+    $constants = $reflection->getConstants();
+    foreach ($constants as $name => $value)
     {
       if (!is_numeric($value)) $value = "'$value'";
 
       $this->myReplacePairs['@'.$name.'@'] = $value;
     }
+
+    $this->io->text(sprintf("Read %d constants for substitution from <fso>%s</fso>",
+                            sizeof($constants),
+                            $reflection->getFileName()));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -360,12 +358,7 @@ order by table_schema
    */
   private function getCorrectSqlMode()
   {
-    $sql = sprintf("set sql_mode ='%s'", $this->mySqlMode);
-    DataLayer::executeNone($sql);
-
-    $query           = 'select @@sql_mode;';
-    $tmp             = DataLayer::executeRows($query);
-    $this->mySqlMode = $tmp[0]['@@sql_mode'];
+    $this->mySqlMode = DataLayer::getCorrectSqlMode($this->mySqlMode);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -380,12 +373,15 @@ order by table_schema
     $lookup = [];
     foreach ($this->mySources as $source)
     {
-      if (!isset($lookup[$source['method_name']]))
+      if (isset($source['method_name']))
       {
-        $lookup[$source['method_name']] = [];
-      }
+        if (!isset($lookup[$source['method_name']]))
+        {
+          $lookup[$source['method_name']] = [];
+        }
 
-      $lookup[$source['method_name']][] = $source;
+        $lookup[$source['method_name']][] = $source;
+      }
     }
 
     // Second pass find duplicate sources.
@@ -409,36 +405,22 @@ order by table_schema
    */
   private function getOldStoredRoutinesInfo()
   {
-    $query = '
-select routine_name
-,      routine_type
-,      sql_mode
-,      character_set_client
-,      collation_connection
-from  information_schema.ROUTINES
-where ROUTINE_SCHEMA = database()
-order by routine_name';
-
-    $rows = DataLayer::executeRows($query);
-
     $this->myRdbmsOldMetadata = [];
-    foreach ($rows as $row)
+
+    $routines = DataLayer::getRoutines();
+    foreach ($routines as $routine)
     {
-      $this->myRdbmsOldMetadata[$row['routine_name']] = $row;
+      $this->myRdbmsOldMetadata[$routine['routine_name']] = $routine;
     }
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Loads all stored routines into MySQL.
-   *
-   * @param string $theConfigFilename The filename of the configuration file.
    */
-  private function loadAll($theConfigFilename)
+  private function loadAll()
   {
-    $this->readConfigFile($theConfigFilename);
-
-    $this->myConnector->connect();
+    $this->io->title('Loader');
 
     $this->findSourceFiles();
     $this->detectNameConflicts();
@@ -456,26 +438,23 @@ order by routine_name';
     // Remove metadata of stored routines that have been removed.
     $this->removeObsoleteMetadata();
 
+    $this->io->writeln('');
+
     // Write the metadata to file.
     $this->writeStoredRoutineMetadata();
-
-    $this->myConnector->disconnect();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Loads all stored routines in a list into MySQL.
    *
-   * @param string   $theConfigFilename The filename of the configuration file.
-   * @param string[] $theFileNames      The list of files to be loaded.
+   * @param string[] $fileNames The list of files to be loaded.
    */
-  private function loadList($theConfigFilename, $theFileNames)
+  private function loadList($fileNames)
   {
-    $this->readConfigFile($theConfigFilename);
+    $this->io->title('Loader');
 
-    $this->myConnector->connect();
-
-    $this->findSourceFilesFromList($theFileNames);
+    $this->findSourceFilesFromList($fileNames);
     $this->detectNameConflicts();
     $this->getColumnTypes();
     $this->readStoredRoutineMetadata();
@@ -485,10 +464,8 @@ order by routine_name';
 
     $this->loadStoredRoutines();
 
-    // Write the metadata to @c $myPhpStratumMetadataFilename.
+    // Write the metadata to file.
     $this->writeStoredRoutineMetadata();
-
-    $this->myConnector->disconnect();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -497,6 +474,9 @@ order by routine_name';
    */
   private function loadStoredRoutines()
   {
+    // Log an empty line.
+    $this->io->writeln('');
+
     // Sort the sources by routine name.
     usort($this->mySources, function ($a, $b)
     {
@@ -508,7 +488,8 @@ order by routine_name';
     {
       $routine_name = $filename['routine_name'];
 
-      $helper = new RoutineLoaderHelper($filename['path_name'],
+      $helper = new RoutineLoaderHelper($this->io,
+                                        $filename['path_name'],
                                         $this->mySourceFileExtension,
                                         isset($this->myPhpStratumMetadata[$routine_name]) ? $this->myPhpStratumMetadata[$routine_name] : null,
                                         $this->myReplacePairs,
@@ -538,10 +519,32 @@ order by routine_name';
    */
   private function logOverviewErrors()
   {
-    foreach ($this->myErrorFileNames as $filename)
+    if (!empty($this->myErrorFileNames))
     {
-      echo sprintf("Error loading file '%s'.\n", $filename);
+      $this->io->warning("The files below are not loaded:");
+      $this->io->listing($this->myErrorFileNames);
     }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns the method name in the wrapper for a stored routine. Returns null when name mangler is not set.
+   *
+   * @param string $routineName The name of the routine.
+   *
+   * @return null|string
+   */
+  private function methodName($routineName)
+  {
+    if ($this->myNameMangler!==null)
+    {
+      /** @var NameMangler $mangler */
+      $mangler = $this->myNameMangler;
+
+      return $mangler::getMethodName($routineName);
+    }
+
+    return null;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -593,7 +596,7 @@ order by routine_name';
     }
 
     // Save the metadata.
-    Util::writeTwoPhases($this->myPhpStratumMetadataFilename, $json_data);
+    $this->writeTwoPhases($this->myPhpStratumMetadataFilename, $json_data);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

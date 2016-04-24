@@ -1,19 +1,8 @@
 #!/usr/bin/php
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-/**
- * PhpStratum
- *
- * @copyright 2005-2015 Paul Water / Set Based IT Consultancy (https://www.setbased.nl)
- * @license   http://www.opensource.org/licenses/mit-license.php MIT
- * @link
- */
-//----------------------------------------------------------------------------------------------------------------------
 use SetBased\Affirm\ErrorHandler;
-use SetBased\Exception\RuntimeException;
-use SetBased\Stratum\MySql\Constants;
-use SetBased\Stratum\MySql\RoutineLoader;
-use SetBased\Stratum\MySql\RoutineWrapperGenerator;
+use SetBased\Stratum\Stratum;
 
 //----------------------------------------------------------------------------------------------------------------------
 $files = [__DIR__.'/../vendor/autoload.php',
@@ -28,80 +17,6 @@ foreach ($files as $file)
     require $file;
     break;
   }
-}
-
-//----------------------------------------------------------------------------------------------------------------------
-/**
- * Prints the synopsis of this program and terminates this program.
- */
-function synopsis()
-{
-  echo "Synopsis: stratum [-f] [-t] -c <configuration file> [routine.psql] ... \n";
-  echo "          stratum -h\n";
-  echo "\n";
-  echo "Options:\n";
-  echo "  -f --fast : Fast mode. Load stored routines but don't generate PHP classes.\n";
-  echo "  -h --help : Print this help text.\n";
-  echo "  -t --trace: Print a trace when an exception is caught.\n";
-
-  exit(1);
-}
-
-//----------------------------------------------------------------------------------------------------------------------
-/**
- * Parses the arguments of this program.
- *
- * @param array $options The arguments of this programs (i.e. $argv).
- *
- * @return array  The parameters.
- * @throws Exception
- */
-function getOptions($options)
-{
-  // skip first key with current file name.
-  array_shift($options);
-  $setting['psql_files'] = [];
-  while (($param = array_shift($options))!==null)
-  {
-    switch ($param)
-    {
-      case '-f':
-      case '--fast':
-        $setting['fast'] = true;
-        break;
-
-      case '-c':
-      case '--config':
-        $setting['config'] = array_shift($options);
-        break;
-
-      case '-h':
-      case '--help':
-        synopsis();
-        break;
-
-      case '-t':
-      case '--trace':
-        $setting['trace'] = true;
-        break;
-
-      default:
-        $n = preg_match('([A-Za-z0-9\_/]+.psql)', $param, $regs);
-        if ($n==1)
-        {
-          $setting['psql_files'][] = $regs[0];
-        }
-        else
-        {
-          synopsis();
-        }
-        break;
-    }
-  }
-
-  if (!isset($setting['config'])) synopsis();
-
-  return $setting;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -129,65 +44,10 @@ if (!function_exists('json_last_error_msg'))
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-/**
- * Starts the execution of this program.
- *
- * @param array $argv The arguments of this programs (i.e. $argv).
- */
-function main($argv)
-{
-  // Set error handler.
-  $handler = new ErrorHandler();
-  $handler->register();
-  
-  // Read the ini file.
-  $options = getOptions($argv);
+// Set error handler.
+$handler = new ErrorHandler();
+$handler->register();
 
-  try
-  {
-    if (isset($options['fast']))
-    {
-      // Fast mode: only load stored routines.
-      $loader = new RoutineLoader;
-      $ret    = $loader->main($options['config'], $options['psql_files']);
-      if ($ret!=0) exit($ret);
-    }
-    else
-    {
-      // Normal mode: create constants, config file, load routines, and create routine wrapper class.
-      $constants = new Constants;
-      $ret       = $constants->main($options['config']);
-      if ($ret!=0) exit($ret);
+$application = new Stratum();
+$application->run();
 
-      $loader = new RoutineLoader;
-      $ret    = $loader->main($options['config'], $options['psql_files']);
-      if ($ret!=0) exit($ret);
-
-      $wrapper = new RoutineWrapperGenerator;
-      $ret     = $wrapper->run($options['config']);
-      if ($ret!=0) exit($ret);
-    }
-  }
-  catch (RuntimeException $e)
-  {
-    if (!isset($options['trace']))
-    {
-      // Only print the message.
-      file_put_contents('php://stderr', $e->getMessage());
-      file_put_contents('php://stderr', "\n");
-    }
-    else
-    {
-      // Print the exception with trace.
-      file_put_contents('php://stderr', $e);
-      file_put_contents('php://stderr', "\n");
-    }
-
-    exit(-1);
-  }
-
-  exit(0);
-}
-
-//----------------------------------------------------------------------------------------------------------------------
-main($argv);

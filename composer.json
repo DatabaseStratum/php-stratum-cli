@@ -19,7 +19,8 @@
     "php": ">=5.4.0",
     "phpdocumentor/reflection-docblock": "2.*",
     "setbased/exception": "1.*",
-    "setbased/php-affirm": "*"
+    "setbased/php-affirm": "*",
+    "symfony/console": "^2.8 || ^3.0"
   },
   "bin": [
     "bin/stratum"

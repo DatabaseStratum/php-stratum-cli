@@ -31,17 +31,17 @@ class RowsWrapper extends Wrapper
   /**
    * {@inheritdoc}
    */
-  protected function writeResultHandler($theRoutine)
+  protected function writeResultHandler($routine)
   {
-    $routine_args = $this->getRoutineArgs($theRoutine);
-    $this->writeLine('return self::executeRows(\'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');');
+    $routine_args = $this->getRoutineArgs($routine);
+    $this->writeLine('return self::executeRows(\'CALL '.$routine['routine_name'].'('.$routine_args.')\');');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * {@inheritdoc}
    */
-  protected function writeRoutineFunctionLobFetchData($theRoutine)
+  protected function writeRoutineFunctionLobFetchData($routine)
   {
     $this->writeLine('$row = [];');
     $this->writeLine('self::bindAssoc($stmt, $row);');

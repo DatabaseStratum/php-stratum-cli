@@ -34,47 +34,47 @@ class BulkInsertWrapper extends Wrapper
   /**
    * {@inheritdoc}
    */
-  protected function getWrapperArgs($theRoutine, $theNameMangler)
+  protected function getWrapperArgs($routine, $nameMangler)
   {
-    return '$theData';
+    return '$rows';
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * {@inheritdoc}
    */
-  protected function writeResultHandler($theRoutine)
+  protected function writeResultHandler($routine)
   {
     // Validate number of column names and number of column types are equal.
-    $n1 = count($theRoutine['columns']);
-    $n2 = count($theRoutine['column_types']);
+    $n1 = count($routine['columns']);
+    $n2 = count($routine['column_types']);
     if ($n1!=$n2)
     {
       throw new LogicException("Number of fields %d and number of columns %d don't match.", $n1, $n2);
     }
 
-    $routine_args = $this->getRoutineArgs($theRoutine);
-    $this->writeLine('self::query(\'CALL '.$theRoutine['routine_name'].'('.$routine_args.')\');');
+    $routine_args = $this->getRoutineArgs($routine);
+    $this->writeLine('self::query(\'CALL '.$routine['routine_name'].'('.$routine_args.')\');');
 
     $columns = '';
     $fields  = '';
-    foreach ($theRoutine['columns'] as $i => $field)
+    foreach ($routine['columns'] as $i => $field)
     {
       if ($field!='_')
       {
         if ($columns) $columns .= ',';
-        $columns .= '`'.$theRoutine['fields'][$i].'`';
+        $columns .= '`'.$routine['fields'][$i].'`';
 
         if ($fields) $fields .= ',';
-        $fields .= $this->writeEscapesValue($theRoutine['column_types'][$i], '$row[\''.$field.'\']');
+        $fields .= $this->writeEscapesValue($routine['column_types'][$i], '$row[\''.$field.'\']');
       }
     }
 
-    $this->writeLine('if (is_array($theData) &&!empty($theData))');
+    $this->writeLine('if (is_array($rows) && !empty($rows))');
     $this->writeLine('{');
-    $this->writeLine('$sql = "INSERT INTO `'.$theRoutine['table_name'].'`('.$columns.')";');
+    $this->writeLine('$sql = "INSERT INTO `'.$routine['table_name'].'`('.$columns.')";');
     $this->writeLine('$first = true;');
-    $this->writeLine('foreach($theData as $row)');
+    $this->writeLine('foreach($rows as $row)');
     $this->writeLine('{');
 
     $this->writeLine('if ($first) $sql .=\' values('.$fields.')\';');
@@ -91,7 +91,7 @@ class BulkInsertWrapper extends Wrapper
   /**
    * {@inheritdoc}
    */
-  protected function writeRoutineFunctionLobFetchData($theRoutine)
+  protected function writeRoutineFunctionLobFetchData($routine)
   {
     // Nothing to do.
   }
@@ -109,14 +109,14 @@ class BulkInsertWrapper extends Wrapper
   /**
    * Generates code for escaping data.
    *
-   * @param string $theValueType       The column type.
-   * @param string $theFieldExpression The expression of the field in the PHP array, e.g. $row['first_name'].
+   * @param string $valueType       The column type.
+   * @param string $fieldExpression The expression of the field in the PHP array, e.g. $row['first_name'].
    *
    * @return string The generated PHP code.
    */
-  private function writeEscapesValue($theValueType, $theFieldExpression)
+  private function writeEscapesValue($valueType, $fieldExpression)
   {
-    switch ($theValueType)
+    switch ($valueType)
     {
       case 'tinyint':
       case 'smallint':
@@ -129,7 +129,7 @@ class BulkInsertWrapper extends Wrapper
       case 'decimal':
       case 'float':
       case 'double':
-        $ret = '\'.self::quoteNum('.$theFieldExpression.').\'';
+        $ret = '\'.self::quoteNum('.$fieldExpression.').\'';
         break;
 
       case 'varbinary':
@@ -137,7 +137,7 @@ class BulkInsertWrapper extends Wrapper
 
       case 'char':
       case 'varchar':
-        $ret = '\'.self::quoteString('.$theFieldExpression.').\'';
+        $ret = '\'.self::quoteString('.$fieldExpression.').\'';
         break;
 
       case 'time':
@@ -145,16 +145,16 @@ class BulkInsertWrapper extends Wrapper
 
       case 'date':
       case 'datetime':
-        $ret = '\'.self::quoteString('.$theFieldExpression.').\'';
+        $ret = '\'.self::quoteString('.$fieldExpression.').\'';
         break;
 
       case 'enum':
       case 'set':
-        $ret = '\'.self::quoteString('.$theFieldExpression.').\'';
+        $ret = '\'.self::quoteString('.$fieldExpression.').\'';
         break;
 
       case 'bit':
-        $ret = '\'.self::quoteBit('.$theFieldExpression.').\'';
+        $ret = '\'.self::quoteBit('.$fieldExpression.').\'';
         break;
 
       case 'tinytext':
@@ -169,7 +169,7 @@ class BulkInsertWrapper extends Wrapper
         throw new RuntimeException('LOBs are not possible in temporary tables');
 
       default:
-        throw new FallenException('column type', $theValueType);
+        throw new FallenException('column type', $valueType);
     }
 
     return $ret;

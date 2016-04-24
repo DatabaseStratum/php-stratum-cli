@@ -31,19 +31,19 @@ class FunctionsWrapper extends Wrapper
   /**
    * {@inheritdoc}
    */
-  protected function writeResultHandler($theRoutine)
+  protected function writeResultHandler($routine)
   {
-    $routine_args = $this->getRoutineArgs($theRoutine);
-    $this->writeLine('return self::executeSingleton0(\'SELECT '.$theRoutine['routine_name'].'('.$routine_args.')\');');
+    $routine_args = $this->getRoutineArgs($routine);
+    $this->writeLine('return self::executeSingleton0(\'SELECT '.$routine['routine_name'].'('.$routine_args.')\');');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * {@inheritdoc}
    */
-  protected function writeRoutineFunctionLobFetchData($theRoutine)
+  protected function writeRoutineFunctionLobFetchData($routine)
   {
-    $this->writeLine('$ret = self::$ourMySql->affected_rows;');
+    $this->writeLine('$ret = self::$mysqli->affected_rows;');
     $this->writeLine();
   }
 

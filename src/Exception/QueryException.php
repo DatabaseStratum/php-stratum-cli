@@ -1,33 +1,34 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\Stratum\NameMangler;
+namespace SetBased\Stratum\Exception;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Interface for mangling routine names to method names and stored routine parameter names to parameters names in
- * the data layer.
+ * Exception for situations where the execution of SQL query has failed.
  */
-interface NameMangler
+class QueryException extends MySqlException
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns the name of the wrapper method in the data layer for a stored routine.
+   * Object constructor.
    *
-   * @param string $routineName The name of the stored routine.
-   *
-   * @return string
+   * @param int    $errno   The error code value of the error ($mysqli->errno).
+   * @param string $error   Description of the last error ($mysqli->error).
+   * @param string $message The SQL query.
    */
-  static function getMethodName($routineName);
+  public function __construct($errno, $error, $message)
+  {
+    parent::__construct($errno, $error, $message);
+  }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns the parameter name in the wrapper method.
-   *
-   * @param string $routineParameterName The name of the parameter in the stored routine.
-   *
-   * @return string
+   * {@inheritdoc}
    */
-  static function getParameterName($routineParameterName);
+  public function getName()
+  {
+    return 'SQL Error';
+  }
 
   //--------------------------------------------------------------------------------------------------------------------
 }
