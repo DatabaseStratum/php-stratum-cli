@@ -30,7 +30,7 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
    *
    * @var string
    */
-  private $code = '';
+  private $phpCode = '';
 
   /**
    * Array with fully qualified names that must be imported.
@@ -149,20 +149,20 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
       echo "No files with stored routines found.\n";
     }
 
-    $methods    = $this->code;
-    $this->code = '';
+    $methods       = $this->phpCode;
+    $this->phpCode = '';
 
     // Write the header of the wrapper class.
     $this->writeClassHeader();
 
     // Write methods of the wrapper calls.
-    $this->code .= $methods;
+    $this->phpCode .= $methods;
 
     // Write the trailer of the wrapper class.
     $this->writeClassTrailer();
 
     // Write the wrapper class to the filesystem.
-    $this->writeTwoPhases($this->myWrapperFilename, $this->code);
+    $this->writeTwoPhases($this->myWrapperFilename, $this->phpCode);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -203,7 +203,7 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
   {
     $data = file_get_contents($this->myMetadataFilename);
 
-    $routines = json_decode($data, true);
+    $routines = (array)json_decode($data, true);
     if (json_last_error()!=JSON_ERROR_NONE)
     {
       throw new RuntimeException("Error decoding JSON: '%s'.", json_last_error_msg());
@@ -231,12 +231,12 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
     }
 
     // Write PHP tag.
-    $this->code .= "<?php\n";
+    $this->phpCode .= "<?php\n";
     if ($namespace!==null)
     {
-      $this->code .= '//'.str_repeat('-', Wrapper::C_PAGE_WIDTH - 2)."\n";
-      $this->code .= "namespace ${namespace};\n";
-      $this->code .= "\n";
+      $this->phpCode .= '//'.str_repeat('-', Wrapper::C_PAGE_WIDTH - 2)."\n";
+      $this->phpCode .= "namespace ${namespace};\n";
+      $this->phpCode .= "\n";
     }
 
     // If the child class and parent class have different names import the parent class. Otherwise use the fully
@@ -252,18 +252,18 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
     if (!empty($this->imports))
     {
       $this->imports = array_unique($this->imports, SORT_REGULAR);
-      $this->code .= '//'.str_repeat('-', Wrapper::C_PAGE_WIDTH - 2)."\n";
+      $this->phpCode .= '//'.str_repeat('-', Wrapper::C_PAGE_WIDTH - 2)."\n";
       foreach ($this->imports as $import)
       {
-        $this->code .= 'use '.$import.";\n";
+        $this->phpCode .= 'use '.$import.";\n";
       }
-      $this->code .= "\n";
+      $this->phpCode .= "\n";
     }
 
     // Write class name.
-    $this->code .= '//'.str_repeat('-', Wrapper::C_PAGE_WIDTH - 2)."\n";
-    $this->code .= 'class '.$class_name.' extends '.$this->myParentClassName."\n";
-    $this->code .= "{\n";
+    $this->phpCode .= '//'.str_repeat('-', Wrapper::C_PAGE_WIDTH - 2)."\n";
+    $this->phpCode .= 'class '.$class_name.' extends '.$this->myParentClassName."\n";
+    $this->phpCode .= "{\n";
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -272,10 +272,10 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
    */
   private function writeClassTrailer()
   {
-    $this->code .= '  //'.str_repeat('-', Wrapper::C_PAGE_WIDTH - 4)."\n";
-    $this->code .= "}\n";
-    $this->code .= "\n";
-    $this->code .= '//'.str_repeat('-', Wrapper::C_PAGE_WIDTH - 2)."\n";
+    $this->phpCode .= '  //'.str_repeat('-', Wrapper::C_PAGE_WIDTH - 4)."\n";
+    $this->phpCode .= "}\n";
+    $this->phpCode .= "\n";
+    $this->phpCode .= '//'.str_repeat('-', Wrapper::C_PAGE_WIDTH - 2)."\n";
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -288,7 +288,7 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
   private function writeRoutineFunction($routine, $nameMangler)
   {
     $wrapper = Wrapper::createRoutineWrapper($routine, $this->myLobAsStringFlag);
-    $this->code .= $wrapper->writeRoutineFunction($routine, $nameMangler);
+    $this->phpCode .= $wrapper->writeRoutineFunction($routine, $nameMangler);
 
     $this->imports = array_merge($this->imports, $wrapper->getImports());
   }

@@ -369,7 +369,7 @@ class StaticDataLayer
    *
    * @param string $query The SQL statement.
    *
-   * @return array[] The selected rows.
+   * @return \array[] The selected rows.
    *
    * @api
    */
@@ -402,7 +402,7 @@ class StaticDataLayer
    *
    * @param string $query The SQL statement.
    *
-   * @return int|string The selected value.
+   * @return int|string|null The selected value.
    * @throws ResultException
    *
    * @api
@@ -539,7 +539,7 @@ class StaticDataLayer
       // with size $maxAllowedPacket bytes (but only $maxAllowedPacket - 8 bytes). But when setting the size of
       // $chunkSize less than $maxAllowedPacket than it is possible to transmit a LOB with size
       // $maxAllowedPacket bytes.
-      self::$chunkSize = min(self::$maxAllowedPacket - 8, 1024 * 1024);
+      self::$chunkSize = (int)min(self::$maxAllowedPacket - 8, 1024 * 1024);
     }
 
     return self::$maxAllowedPacket;
@@ -551,7 +551,7 @@ class StaticDataLayer
    *
    * To enable the query log set {@link $queryLog} to true.
    *
-   * @return array[]
+   * @return \array[]
    *
    * @api
    */

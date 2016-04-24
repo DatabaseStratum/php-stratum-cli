@@ -44,7 +44,7 @@ class MetadataDataLayer
    *
    * @param string $tableName The name of the table.
    *
-   * @return int
+   * @return int|null
    */
   public static function checkTableExists($tableName)
   {
@@ -54,7 +54,7 @@ from   information_schema.TABLES
 where table_schema = database()
 and   table_name   = %s', self::$dl->quoteString($tableName));
 
-    return self::executeSingleton0($query);
+    return (int)self::executeSingleton0($query);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -183,7 +183,7 @@ and   table_name   = %s', self::$dl->quoteString($tableName));
    *
    * @param string $query The SQL statement.
    *
-   * @return array[] The selected rows.
+   * @return \array[]
    */
   public static function executeRows($query)
   {
@@ -199,7 +199,7 @@ and   table_name   = %s', self::$dl->quoteString($tableName));
    *
    * @param string $query The SQL statement.
    *
-   * @return array|null The selected row.
+   * @return int|string|null The selected row.
    */
   public static function executeSingleton0($query)
   {
@@ -215,7 +215,7 @@ and   table_name   = %s', self::$dl->quoteString($tableName));
    *
    * @param string $query The SQL statement.
    *
-   * @return array|null The selected row.
+   * @return int|string The selected row.
    */
   public static function executeSingleton1($query)
   {
@@ -279,12 +279,12 @@ union all
    */
   public static function getCorrectSqlMode($sqlMode)
   {
-    $query = sprintf("set sql_mode = %s", self::$dl->quoteString($sqlMode));
+    $query = sprintf('set sql_mode = %s', self::$dl->quoteString($sqlMode));
     self::executeNone($query);
 
     $query = 'select @@sql_mode;';
 
-    return self::executeSingleton1($query);
+    return (string)self::executeSingleton1($query);
   }
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -312,13 +312,13 @@ and   t2.column_name like '%%\\_label'";
   /**
    * Selects all labels from a table with labels.
    *
-   * @param string $table_name        The table name.
-   * @param string $id_column_name    The name of the auto increment column.
-   * @param string $label_column_name The name of the column with labels.
+   * @param string $tableName       The table name.
+   * @param string $idColumnName    The name of the auto increment column.
+   * @param string $labelColumnName The name of the column with labels.
    *
    * @return \array[]
    */
-  public static function getLabelsFromTable($table_name, $id_column_name, $label_column_name)
+  public static function getLabelsFromTable($tableName, $idColumnName, $labelColumnName)
   {
     $query = "
 select `%s`  id
@@ -326,7 +326,7 @@ select `%s`  id
 from   `%s`
 where   nullif(`%s`,'') is not null";
 
-    $query = sprintf($query, $id_column_name, $label_column_name, $table_name, $label_column_name);
+    $query = sprintf($query, $idColumnName, $labelColumnName, $tableName, $labelColumnName);
 
     return self::executeRows($query);
   }
@@ -415,7 +415,7 @@ order by routine_name';
    */
   public static function setCharacterSet($characterSet, $collate)
   {
-    $sql = sprintf("set names %s collate %s", self::$dl->quoteString($characterSet), self::$dl->quoteString($collate));
+    $sql = sprintf('set names %s collate %s', self::$dl->quoteString($characterSet), self::$dl->quoteString($collate));
 
     self::executeNone($sql);
   }
@@ -439,7 +439,7 @@ order by routine_name';
    */
   public static function setSqlMode($sqlMode)
   {
-    $sql = sprintf("set sql_mode = %s", self::$dl->quoteString($sqlMode));
+    $sql = sprintf('set sql_mode = %s', self::$dl->quoteString($sqlMode));
 
     self::executeNone($sql);
   }

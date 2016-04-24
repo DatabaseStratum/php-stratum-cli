@@ -16,7 +16,6 @@ use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\Exception\QueryException;
 use SetBased\Stratum\MySql\MetadataDataLayer as DataLayer;
 use SetBased\Stratum\Style\StratumStyle;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
@@ -211,7 +210,7 @@ class RoutineLoaderHelper
   /**
    * Object constructor.
    *
-   * @param SymfonyStyle $io                            The output for log messages.
+   * @param StratumStyle $io                            The output for log messages.
    * @param string       $routineFilename               The filename of the source of the stored routine.
    * @param string       $routineFileExtension          The extension of the source file of the stored routine.
    * @param array        $phpStratumMetadata            The metadata of the stored routine from PhpStratum.
@@ -270,7 +269,7 @@ class RoutineLoaderHelper
       $load = $this->getMustReload();
       if ($load)
       {
-        $this->io->text(sprintf("Loading routine <dbo>%s</dbo>", $this->routineName));
+        $this->io->text(sprintf('Loading routine <dbo>%s</dbo>', $this->routineName));
 
         // Read the stored routine source code.
         $this->routineSourceCode = file_get_contents($this->sourceFilename);
@@ -970,14 +969,14 @@ class RoutineLoaderHelper
     $tmp = array_diff($database_parameters_names, $doc_block_parameters_names);
     foreach ($tmp as $name)
     {
-      $this->io->logNote("Parameter <dbo>%s</dbo> is missing from doc block", $name);
+      $this->io->logNote('Parameter <dbo>%s</dbo> is missing from doc block', $name);
     }
 
     // Check and show warning if find unknown parameters in doc block.
     $tmp = array_diff($doc_block_parameters_names, $database_parameters_names);
     foreach ($tmp as $name)
     {
-      $this->io->logNote("Unknown parameter <dbo>%s</dbo> found in doc block", $name);
+      $this->io->logNote('Unknown parameter <dbo>%s</dbo> found in doc block', $name);
     }
   }
 

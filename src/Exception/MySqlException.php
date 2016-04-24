@@ -57,7 +57,7 @@ class MySqlException extends RuntimeException
    */
   public function getErrno()
   {
-    return $this->query;
+    return $this->errno;
   }
 
   //--------------------------------------------------------------------------------------------------------------------

@@ -211,7 +211,8 @@ class RoutineLoaderCommand extends MySqlCommand
         $tmp[] = $source['path_name'];
       }
 
-      $this->io->error("The following source files would result wrapper methods with equal name '$method'");
+      $this->io->error(sprintf("The following source files would result wrapper methods with equal name '%s'",
+                               $method));
       $this->io->listing($tmp);
     }
 
@@ -244,7 +245,7 @@ class RoutineLoaderCommand extends MySqlCommand
     {
       if (!isset($lookup[$old_routine['routine_name']]))
       {
-        $this->io->logInfo("Dropping %s <dbo>%s</dbo>",
+        $this->io->logInfo('Dropping %s <dbo>%s</dbo>',
                            strtolower($old_routine['routine_type']),
                            $old_routine['routine_name']);
 
@@ -325,7 +326,7 @@ class RoutineLoaderCommand extends MySqlCommand
       $this->myReplacePairs[$key] = $value;
     }
 
-    $this->io->text(sprintf("Selected %d column types for substitution", sizeof($rows)));
+    $this->io->text(sprintf('Selected %d column types for substitution', sizeof($rows)));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -342,12 +343,12 @@ class RoutineLoaderCommand extends MySqlCommand
     $constants = $reflection->getConstants();
     foreach ($constants as $name => $value)
     {
-      if (!is_numeric($value)) $value = "'$value'";
+      if (!is_numeric($value)) $value = "'".$value."'";
 
       $this->myReplacePairs['@'.$name.'@'] = $value;
     }
 
-    $this->io->text(sprintf("Read %d constants for substitution from <fso>%s</fso>",
+    $this->io->text(sprintf('Read %d constants for substitution from <fso>%s</fso>',
                             sizeof($constants),
                             $reflection->getFileName()));
   }
@@ -365,7 +366,7 @@ class RoutineLoaderCommand extends MySqlCommand
   /**
    * Returns all elements in {@link $mySources} with duplicate method names.
    *
-   * @return array[]
+   * @return \array[]
    */
   private function getDuplicates()
   {
@@ -521,7 +522,7 @@ class RoutineLoaderCommand extends MySqlCommand
   {
     if (!empty($this->myErrorFileNames))
     {
-      $this->io->warning("The files below are not loaded:");
+      $this->io->warning('The files below are not loaded:');
       $this->io->listing($this->myErrorFileNames);
     }
   }
@@ -555,7 +556,7 @@ class RoutineLoaderCommand extends MySqlCommand
   {
     if (file_exists($this->myPhpStratumMetadataFilename))
     {
-      $this->myPhpStratumMetadata = json_decode(file_get_contents($this->myPhpStratumMetadataFilename), true);
+      $this->myPhpStratumMetadata = (array)json_decode(file_get_contents($this->myPhpStratumMetadataFilename), true);
       if (json_last_error()!=JSON_ERROR_NONE)
       {
         throw new RuntimeException("Error decoding JSON: '%s'.", json_last_error_msg());

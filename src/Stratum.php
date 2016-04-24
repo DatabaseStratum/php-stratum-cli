@@ -7,6 +7,7 @@ use SetBased\Stratum\Command\MySql\RoutineLoaderCommand;
 use SetBased\Stratum\Command\MySql\RoutineWrapperGeneratorCommand;
 use SetBased\Stratum\Command\StratumCommand;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -42,7 +43,7 @@ class Stratum extends Application
   /**
    * Gets the default commands that should always be available.
    *
-   * @return array An array of default Command instances
+   * @return Command[] An array of default Command instances
    */
   protected function getDefaultCommands()
   {

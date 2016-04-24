@@ -33,7 +33,12 @@ class StratumCommand extends Command
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * {@inheritdoc}
+   * Executes the actual PhpStratum program. Returns 0 is everything went fine. Otherwise, returns non-zero.
+   *
+   * @param InputInterface  $input  An InputInterface instance
+   * @param OutputInterface $output An OutputInterface instance
+   *
+   * @return int
    */
   protected function execute(InputInterface $input, OutputInterface $output)
   {

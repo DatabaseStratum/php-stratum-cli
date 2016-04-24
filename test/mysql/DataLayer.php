@@ -366,7 +366,7 @@ class DataLayer extends StaticDataLayer
   /**
    * Test for illegal query.
    *
-   * @return array[]
+   * @return \array[]
    * @throws RuntimeException
    */
   public static function testIllegalQuery()
@@ -380,7 +380,7 @@ class DataLayer extends StaticDataLayer
    * @param string|int[] $p_ids The id's in CSV format.
    *                            varchar(255) character set latin1 collation latin1_swedish_ci
    *
-   * @return array[]
+   * @return \array[]
    * @throws RuntimeException
    */
   public static function testListOfInt($p_ids)
@@ -766,7 +766,7 @@ class DataLayer extends StaticDataLayer
    *                     * 2 For a invalid test.
    *                     int(11)
    *
-   * @return array[]
+   * @return \array[]
    * @throws RuntimeException
    */
   public static function testRows1($p_count)
@@ -783,7 +783,7 @@ class DataLayer extends StaticDataLayer
    * @param string $p_blob  The BLOB.
    *                        blob
    *
-   * @return array[]
+   * @return \array[]
    * @throws RuntimeException
    */
   public static function testRows1WithLob($p_count, $p_blob)
@@ -852,7 +852,7 @@ class DataLayer extends StaticDataLayer
    * @param int $p_count The number of rows selected.
    *                     int(11)
    *
-   * @return array[]
+   * @return \array[]
    * @throws RuntimeException
    */
   public static function testRowsWithIndex1($p_count)
@@ -876,7 +876,7 @@ class DataLayer extends StaticDataLayer
    * @param string $p_blob  The BLOB.
    *                        blob
    *
-   * @return array[]
+   * @return \array[]
    * @throws RuntimeException
    */
   public static function testRowsWithIndex1WithLob($p_count, $p_blob)
@@ -945,7 +945,7 @@ class DataLayer extends StaticDataLayer
    * @param int $p_count Number of rows selected.
    *                     int(11)
    *
-   * @return array[]
+   * @return \array[]
    * @throws RuntimeException
    */
   public static function testRowsWithKey1($p_count)
@@ -968,7 +968,7 @@ class DataLayer extends StaticDataLayer
    * @param string $p_blob  The BLOB.
    *                        blob
    *
-   * @return array[]
+   * @return \array[]
    * @throws RuntimeException
    */
   public static function testRowsWithKey1WithLob($p_count, $p_blob)
