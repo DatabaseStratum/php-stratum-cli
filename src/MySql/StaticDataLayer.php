@@ -88,7 +88,7 @@ class StaticDataLayer
   /**
    * The query log.
    *
-   * @var array[]
+   * @var \array[]
    */
   protected static $queryLog;
 

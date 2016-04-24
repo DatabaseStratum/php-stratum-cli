@@ -54,7 +54,7 @@ from   information_schema.TABLES
 where table_schema = database()
 and   table_name   = %s', self::$dl->quoteString($tableName));
 
-    return (int)self::executeSingleton0($query);
+    return self::executeSingleton0($query);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
