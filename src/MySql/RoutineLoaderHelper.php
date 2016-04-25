@@ -16,6 +16,7 @@ use SetBased\Stratum\MySql\Exception\DataLayerException;
 use SetBased\Stratum\MySql\MetadataDataLayer as DataLayer;
 use SetBased\Stratum\Style\StratumStyle;
 use Symfony\Component\Console\Formatter\OutputFormatter;
+use Zend\Code\Reflection\DocBlock\Tag\ParamTag;
 use Zend\Code\Reflection\DocBlockReflection;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -547,11 +548,12 @@ class RoutineLoaderHelper
     $this->docBlockPartsSource['long_description'] = $phpdoc->getLongDescription();
 
     // Get the description for each parameter of the stored routine.
+    /* @var $tag ParamTag */
     foreach ($phpdoc->getTags() as $key => $tag)
     {
       if ($tag->getName()=='param')
       {
-        $this->docBlockPartsSource['parameters'][$key] = ['name'        => $tag->getType(),
+        $this->docBlockPartsSource['parameters'][$key] = ['name'        => $tag->getTypes()[0],
                                                           'description' => $tag->getDescription()];
       }
     }
