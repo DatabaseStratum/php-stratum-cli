@@ -8,7 +8,7 @@
  * @link
  */
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\Stratum\Command\MySql;
+namespace SetBased\Stratum\MySql\Command;
 
 use SetBased\Exception\FallenException;
 use SetBased\Exception\RuntimeException;

@@ -2,10 +2,10 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum;
 
-use SetBased\Stratum\Command\MySql\ConstantsCommand;
-use SetBased\Stratum\Command\MySql\RoutineLoaderCommand;
-use SetBased\Stratum\Command\MySql\RoutineWrapperGeneratorCommand;
 use SetBased\Stratum\Command\StratumCommand;
+use SetBased\Stratum\MySql\Command\ConstantsCommand;
+use SetBased\Stratum\MySql\Command\RoutineLoaderCommand;
+use SetBased\Stratum\MySql\Command\RoutineWrapperGeneratorCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

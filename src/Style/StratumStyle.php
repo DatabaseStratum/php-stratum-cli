@@ -51,18 +51,6 @@ class StratumStyle extends SymfonyStyle
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  public function logError()
-  {
-    if ($this->getVerbosity()>=OutputInterface::VERBOSITY_NORMAL)
-    {
-      $args   = func_get_args();
-      $format = array_shift($args);
-
-      $this->writeln(vsprintf('<error>'.$format.'</error>', $args));
-    }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
   public function logInfo()
   {
     if ($this->getVerbosity()>=OutputInterface::VERBOSITY_NORMAL)
@@ -107,18 +95,6 @@ class StratumStyle extends SymfonyStyle
       $format = array_shift($args);
 
       $this->writeln(vsprintf('<info>'.$format.'</info>', $args));
-    }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  public function logWarn()
-  {
-    if ($this->getVerbosity()>=OutputInterface::VERBOSITY_NORMAL)
-    {
-      $args   = func_get_args();
-      $format = array_shift($args);
-
-      $this->warning(vsprintf($format, $args));
     }
   }
 

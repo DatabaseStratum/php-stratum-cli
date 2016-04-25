@@ -8,7 +8,7 @@
  * @link
  */
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\Stratum\Command\MySql;
+namespace SetBased\Stratum\MySql\Command;
 
 use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\Command\BaseCommand;
@@ -25,13 +25,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 class RoutineWrapperGeneratorCommand extends BaseCommand
 {
   //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * The generated PHP code.
-   *
-   * @var string
-   */
-  private $phpCode = '';
-
   /**
    * Array with fully qualified names that must be imported.
    *
@@ -80,6 +73,13 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
    * @var string
    */
   private $myWrapperFilename;
+
+  /**
+   * The generated PHP code.
+   *
+   * @var string
+   */
+  private $phpCode = '';
 
   //--------------------------------------------------------------------------------------------------------------------
   /**

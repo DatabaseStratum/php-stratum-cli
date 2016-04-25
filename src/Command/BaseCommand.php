@@ -5,6 +5,7 @@ namespace SetBased\Stratum\Command;
 use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\Style\StratumStyle;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Formatter\OutputFormatter;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
@@ -96,11 +97,11 @@ class BaseCommand extends Command
       file_put_contents($tmp_filename, $data);
       rename($tmp_filename, $filename);
 
-      $this->io->text(sprintf('Wrote <fso>%s</fso>', $filename));
+      $this->io->text(sprintf('Wrote <fso>%s</fso>', OutputFormatter::escape($filename)));
     }
     else
     {
-      $this->io->text(sprintf('File <fso>%s</fso> is up to date', $filename));
+      $this->io->text(sprintf('File <fso>%s</fso> is up to date', OutputFormatter::escape($filename)));
     }
   }
 

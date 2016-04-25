@@ -13,8 +13,8 @@ namespace SetBased\Stratum\MySql;
 use SetBased\Exception\FallenException;
 use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\BulkHandler;
-use SetBased\Stratum\Exception\QueryException;
 use SetBased\Stratum\Exception\ResultException;
+use SetBased\Stratum\MySql\Exception\DataLayerException;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
@@ -610,7 +610,7 @@ class StaticDataLayer
       $ret = self::$mysqli->multi_query($queries);
       if ($ret===false)
       {
-        throw new QueryException(self::$mysqli->errno, self::$mysqli->error, $queries);
+        throw new DataLayerException(self::$mysqli->errno, self::$mysqli->error, $queries);
       }
 
       self::$queryLog[] = ['query' => $queries, 'time' => microtime(true) - $time0];
@@ -620,7 +620,7 @@ class StaticDataLayer
       $ret = self::$mysqli->multi_query($queries);
       if ($ret===false)
       {
-        throw new QueryException(self::$mysqli->errno, self::$mysqli->error, $queries);
+        throw new DataLayerException(self::$mysqli->errno, self::$mysqli->error, $queries);
       }
     }
 
@@ -636,6 +636,7 @@ class StaticDataLayer
    * @param string $query The SQL statement.
    *
    * @return \mysqli_result
+   * @throws DataLayerException
    */
   public static function query($query)
   {
@@ -646,7 +647,7 @@ class StaticDataLayer
       $ret = self::$mysqli->query($query);
       if ($ret===false)
       {
-        throw new QueryException(self::$mysqli->errno, self::$mysqli->error, $query);
+        throw new DataLayerException(self::$mysqli->errno, self::$mysqli->error, $query);
       }
 
       self::$queryLog[] = ['query' => $query, 'time' => microtime(true) - $time0];
@@ -656,7 +657,7 @@ class StaticDataLayer
       $ret = self::$mysqli->query($query);
       if ($ret===false)
       {
-        throw new QueryException(self::$mysqli->errno, self::$mysqli->error, $query);
+        throw new DataLayerException(self::$mysqli->errno, self::$mysqli->error, $query);
       }
     }
 
@@ -793,40 +794,6 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Execute an SQL query.
-   *
-   * Wrapper around [mysqli::real_query](http://php.net/manual/en/mysqli.real-query.php), however on failure an
-   * exception is thrown.
-   *
-   * @param string $query The SQL statement.
-   */
-  protected static function realQuery($query)
-  {
-    if (self::$logQueries)
-    {
-      $time0 = microtime(true);
-
-      $ret = self::$mysqli->real_query($query);
-      if ($ret===false)
-      {
-        throw new QueryException(self::$mysqli->errno, self::$mysqli->error, $query);
-      }
-
-      self::$queryLog[] = ['query' => $query,
-                           'time'  => microtime(true) - $time0];
-    }
-    else
-    {
-      $ret = self::$mysqli->real_query($query);
-      if ($ret===false)
-      {
-        throw new QueryException(self::$mysqli->errno, self::$mysqli->error, $query);
-      }
-    }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
    * Rollbacks the current transaction (and starts a new transaction).
    *
    * Wrapper around [mysqli::rollback](http://php.net/manual/en/mysqli.rollback.php), however on failure an exception
@@ -902,6 +869,40 @@ class StaticDataLayer
     $message .= "\n";
 
     throw new RuntimeException('%s', $message);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Execute an SQL query.
+   *
+   * Wrapper around [mysqli::real_query](http://php.net/manual/en/mysqli.real-query.php), however on failure an
+   * exception is thrown.
+   *
+   * @param string $query The SQL statement.
+   */
+  protected static function realQuery($query)
+  {
+    if (self::$logQueries)
+    {
+      $time0 = microtime(true);
+
+      $ret = self::$mysqli->real_query($query);
+      if ($ret===false)
+      {
+        throw new DataLayerException(self::$mysqli->errno, self::$mysqli->error, $query);
+      }
+
+      self::$queryLog[] = ['query' => $query,
+                           'time'  => microtime(true) - $time0];
+    }
+    else
+    {
+      $ret = self::$mysqli->real_query($query);
+      if ($ret===false)
+      {
+        throw new DataLayerException(self::$mysqli->errno, self::$mysqli->error, $query);
+      }
+    }
   }
 
   //--------------------------------------------------------------------------------------------------------------------

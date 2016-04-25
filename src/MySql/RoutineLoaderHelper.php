@@ -13,9 +13,10 @@ namespace SetBased\Stratum\MySql;
 use phpDocumentor\Reflection\DocBlock;
 use SetBased\Exception\FallenException;
 use SetBased\Exception\RuntimeException;
-use SetBased\Stratum\Exception\QueryException;
+use SetBased\Stratum\MySql\Exception\DataLayerException;
 use SetBased\Stratum\MySql\MetadataDataLayer as DataLayer;
 use SetBased\Stratum\Style\StratumStyle;
+use Symfony\Component\Console\Formatter\OutputFormatter;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
@@ -121,13 +122,6 @@ class RoutineLoaderHelper
    * @var array
    */
   private $phpStratumOldMetadata;
-
-  /**
-   * The placeholders in the source file.
-   *
-   * @var array
-   */
-  private $placeholders;
 
   /**
    * The old metadata of the stored routine. Note: this data comes from information_schema.ROUTINES.
@@ -269,7 +263,7 @@ class RoutineLoaderHelper
       $load = $this->getMustReload();
       if ($load)
       {
-        $this->io->text(sprintf('Loading routine <dbo>%s</dbo>', $this->routineName));
+        $this->io->text(sprintf('Loading routine <dbo>%s</dbo>', OutputFormatter::escape($this->routineName)));
 
         // Read the stored routine source code.
         $this->routineSourceCode = file_get_contents($this->sourceFilename);
@@ -318,12 +312,21 @@ class RoutineLoaderHelper
 
       return $this->phpStratumMetadata;
     }
-    catch (QueryException $e)
+    catch (DataLayerException $e)
     {
-      $this->io->error($e->getMessage());
-
-      return false;
+      if ($e->isQueryError())
+      {
+        // Exception is caused by a SQL error. Log the message and the SQL statement with highlighting the error.
+        $this->io->error($e->getShortMessage());
+        $this->io->text($e->getMarkedQuery());
+      }
+      else
+      {
+        $this->io->error($e->getMessage());
+      }
     }
+
+    return false;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -502,7 +505,7 @@ class RoutineLoaderHelper
           }
           break;
         }
-        if ($i==$key - 1) $ret = false;
+        if ($i==($key - 1)) $ret = false;
       }
     }
     else
@@ -715,9 +718,9 @@ class RoutineLoaderHelper
 
       if ($this->routineName!=$matches[2])
       {
-        $this->io->logError("Stored routine name '%s' does not match filename in file '%s'",
-                            $matches[2],
-                            $this->sourceFilename);
+        $this->io->error(sprintf("Stored routine name '%s' does not corresponds with filename '%s'",
+                                 $matches[2],
+                                 $this->sourceFilename));
         $ret = false;
       }
     }
@@ -728,8 +731,8 @@ class RoutineLoaderHelper
 
     if (!isset($this->routineType))
     {
-      $this->io->logError("Unable to find the stored routine name and type in file '%s'",
-                          $this->sourceFilename);
+      $this->io->error(sprintf("Unable to find the stored routine name and type in file '%s'",
+                               $this->sourceFilename));
     }
 
     return $ret;
@@ -764,38 +767,27 @@ class RoutineLoaderHelper
    */
   private function getPlaceholders()
   {
+    $unknown = [];
+
     preg_match_all('(@[A-Za-z0-9\_\.]+(\%type)?@)', $this->routineSourceCode, $matches);
-
-    $ret                = true;
-    $this->placeholders = [];
-
     if (!empty($matches[0]))
     {
       foreach ($matches[0] as $placeholder)
       {
-        if (!isset($this->replacePairs[strtoupper($placeholder)]))
+        if (isset($this->replacePairs[strtoupper($placeholder)]))
         {
-          $this->io->logError("Unknown placeholder '%s' in file '%s'", $placeholder, $this->sourceFilename);
-          $ret = false;
+          $this->replace[$placeholder] = $this->replacePairs[strtoupper($placeholder)];
         }
-
-        if (!isset($this->placeholders[$placeholder]))
+        else
         {
-          $this->placeholders[$placeholder] = $placeholder;
+          $unknown[] = $placeholder;
         }
       }
     }
 
-    if ($ret===true)
-    {
-      foreach ($this->placeholders as $placeholder)
-      {
-        $this->replace[$placeholder] = $this->replacePairs[strtoupper($placeholder)];
-      }
-      ksort($this->replace);
-    }
+    $this->logUnknownPlaceholders($unknown);
 
-    return $ret;
+    return (empty($unknown));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -862,6 +854,30 @@ class RoutineLoaderHelper
 
     // Finally, execute the SQL code for loading the stored routine.
     DataLayer::loadRoutine($routine_source);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   *
+   * @param array $unknown The unknown placeholders.
+   */
+  private function logUnknownPlaceholders($unknown)
+  {
+    // Return immediately if there are no unknown placeholders.
+    if (empty($unknown)) return;
+
+    sort($unknown);
+    $this->io->error('Unknown placeholder found');
+    $this->io->listing($unknown);
+
+    $replace = [];
+    foreach ($unknown as $placeholder)
+    {
+      $replace[$placeholder] = '<error>'.$placeholder.'</error>';
+    }
+    $code = strtr(OutputFormatter::escape($this->routineSourceCode), $replace);
+
+    $this->io->text(explode(PHP_EOL, $code));
   }
 
   //--------------------------------------------------------------------------------------------------------------------

@@ -8,7 +8,7 @@
  * @link
  */
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\Stratum\Command\MySql;
+namespace SetBased\Stratum\MySql\Command;
 
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -17,6 +17,7 @@ use SetBased\Stratum\MySql\MetadataDataLayer as DataLayer;
 use SetBased\Stratum\MySql\RoutineLoaderHelper;
 use SetBased\Stratum\NameMangler\NameMangler;
 use SetBased\Stratum\Style\StratumStyle;
+use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -291,7 +292,7 @@ class RoutineLoaderCommand extends MySqlCommand
     {
       if (!file_exists($psql_filename))
       {
-        $this->io->logError("File not exists: '%s'", $psql_filename);
+        $this->io->error(sprintf("File not exists: '%s'", $psql_filename));
         $this->myErrorFileNames[] = $psql_filename;
       }
       else
@@ -350,7 +351,7 @@ class RoutineLoaderCommand extends MySqlCommand
 
     $this->io->text(sprintf('Read %d constants for substitution from <fso>%s</fso>',
                             sizeof($constants),
-                            $reflection->getFileName()));
+                            OutputFormatter::escape($reflection->getFileName())));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -502,7 +503,7 @@ class RoutineLoaderCommand extends MySqlCommand
       $meta_data = $helper->loadStoredRoutine();
       if ($meta_data===false)
       {
-        // An error occurred during the loading og the stored routine.
+        // An error occurred during the loading of the stored routine.
         $this->myErrorFileNames[] = $filename['path_name'];
         unset($this->myPhpStratumMetadata[$routine_name]);
       }
@@ -522,7 +523,7 @@ class RoutineLoaderCommand extends MySqlCommand
   {
     if (!empty($this->myErrorFileNames))
     {
-      $this->io->warning('The files below are not loaded:');
+      $this->io->warning('Routines in the files below are not loaded:');
       $this->io->listing($this->myErrorFileNames);
     }
   }
