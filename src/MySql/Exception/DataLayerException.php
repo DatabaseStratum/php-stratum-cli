@@ -94,12 +94,12 @@ class DataLayerException extends RuntimeException
       // Prepend each line with line number.
       $lines  = explode(PHP_EOL, $query);
       $digits = ceil(log(sizeof($lines) + 1, 10));
-      $format = sprintf("%%%dd %%s", $digits);
+      $format = sprintf('%%%dd %%s', $digits);
       foreach ($lines as $i => $line)
       {
         if (($i + 1)==$error_line)
         {
-          $message[] = sprintf("<%s>".$format."</%s>", $style, $i + 1, OutputFormatter::escape($line), $style);
+          $message[] = sprintf('<%s>'.$format.'</%s>', $style, $i + 1, OutputFormatter::escape($line), $style);
         }
         else
         {
