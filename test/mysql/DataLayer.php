@@ -105,17 +105,17 @@ class DataLayer extends StaticDataLayer
    * @param int    $p_param13 Test parameter 13.
    *                          year(4)
    * @param string $p_param14 Test parameter 14.
-   *                          char(10) character set latin1 collation latin1_swedish_ci
+   *                          char(10) character set utf8 collation utf8_general_ci
    * @param string $p_param15 Test parameter 15.
-   *                          varchar(10) character set latin1 collation latin1_swedish_ci
+   *                          varchar(10) character set utf8 collation utf8_general_ci
    * @param string $p_param16 Test parameter 16.
    *                          binary(10)
    * @param string $p_param17 Test parameter 17.
    *                          varbinary(10)
    * @param string $p_param26 Test parameter 26.
-   *                          enum('a','b') character set latin1 collation latin1_swedish_ci
+   *                          enum('a','b') character set utf8 collation utf8_general_ci
    * @param string $p_param27 Test parameter 27.
-   *                          set('a','b') character set latin1 collation latin1_swedish_ci
+   *                          set('a','b') character set utf8 collation utf8_general_ci
    *
    * @return int
    * @throws RuntimeException
@@ -158,9 +158,9 @@ class DataLayer extends StaticDataLayer
    * @param int    $p_param13 Test parameter 13.
    *                          year(4)
    * @param string $p_param14 Test parameter 14.
-   *                          char(10) character set latin1 collation latin1_swedish_ci
+   *                          char(10) character set utf8 collation utf8_general_ci
    * @param string $p_param15 Test parameter 15.
-   *                          varchar(10) character set latin1 collation latin1_swedish_ci
+   *                          varchar(10) character set utf8 collation utf8_general_ci
    * @param string $p_param16 Test parameter 16.
    *                          binary(10)
    * @param string $p_param17 Test parameter 17.
@@ -174,17 +174,17 @@ class DataLayer extends StaticDataLayer
    * @param string $p_param21 Test parameter 21.
    *                          longblob
    * @param string $p_param22 Test parameter 22.
-   *                          tinytext character set latin1 collation latin1_swedish_ci
+   *                          tinytext character set utf8 collation utf8_general_ci
    * @param string $p_param23 Test parameter 23.
-   *                          text character set latin1 collation latin1_swedish_ci
+   *                          text character set utf8 collation utf8_general_ci
    * @param string $p_param24 Test parameter 24.
-   *                          mediumtext character set latin1 collation latin1_swedish_ci
+   *                          mediumtext character set utf8 collation utf8_general_ci
    * @param string $p_param25 Test parameter 25.
-   *                          longtext character set latin1 collation latin1_swedish_ci
+   *                          longtext character set utf8 collation utf8_general_ci
    * @param string $p_param26 Test parameter 26.
-   *                          enum('a','b') character set latin1 collation latin1_swedish_ci
+   *                          enum('a','b') character set utf8 collation utf8_general_ci
    * @param string $p_param27 Test parameter 27.
-   *                          set('a','b') character set latin1 collation latin1_swedish_ci
+   *                          set('a','b') character set utf8 collation utf8_general_ci
    *
    * @return int
    * @throws RuntimeException
@@ -378,7 +378,7 @@ class DataLayer extends StaticDataLayer
   /**
    *
    * @param string|int[] $p_ids The id's in CSV format.
-   *                            varchar(255) character set latin1 collation latin1_swedish_ci
+   *                            varchar(255) character set utf8 collation utf8_general_ci
    *
    * @return \array[]
    * @throws RuntimeException
@@ -494,6 +494,21 @@ class DataLayer extends StaticDataLayer
 
   //-------------------------------------------------------------------------------------------------------------------
   /**
+   * Test for designation type none.
+   *
+   * @param int $p_count The number of iterations.
+   *                     bigint(20)
+   *
+   * @return int
+   * @throws RuntimeException
+   */
+  public static function testNone2($p_count)
+  {
+    return self::executeNone('CALL foo_test_none2('.self::quoteNum($p_count).')');
+  }
+
+  //-------------------------------------------------------------------------------------------------------------------
+  /**
    * Test for designation type none with BLOB.
    *
    * @param int    $p_count The number of iterations.
@@ -570,10 +585,7 @@ class DataLayer extends StaticDataLayer
   /**
    * Test for designation type row0.
    *
-   * @param int $p_count The number of rows selected.
-   *                     * 0 For a valid test.
-   *                     * 1 For a valid test.
-   *                     * 2 For a invalid test.
+   * @param int $p_count The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test.
    *                     int(11)
    *
    * @return array
@@ -589,10 +601,7 @@ class DataLayer extends StaticDataLayer
   /**
    * Test for designation type row0 with BLOB.
    *
-   * @param int    $p_count The number of rows selected.
-   *                        * 0 For a valid test.
-   *                        * 1 For a valid test.
-   *                        * 2 For a invalid test.
+   * @param int    $p_count The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test.
    *                        int(11)
    * @param string $p_blob  The BLOB.
    *                        blob
@@ -665,10 +674,7 @@ class DataLayer extends StaticDataLayer
   /**
    * Test for designation type row1.
    *
-   * @param int $p_count The number of rows selected.
-   *                     * 0 For a invalid test.
-   *                     * 1 For a valid test.
-   *                     * 2 For a invalid test.
+   * @param int $p_count The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
    *                     int(11)
    *
    * @return array
@@ -684,10 +690,7 @@ class DataLayer extends StaticDataLayer
   /**
    * Test for designation type row1 with BLOB.
    *
-   * @param int    $p_count The number of rows selected.
-   *                        * 0 For a invalid test.
-   *                        * 1 For a valid test.
-   *                        * 2 For a invalid test.
+   * @param int    $p_count The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
    *                        int(11)
    * @param string $p_blob  The BLOB.
    *                        blob
@@ -760,10 +763,7 @@ class DataLayer extends StaticDataLayer
   /**
    * Test for designation type row1.
    *
-   * @param int $p_count The number of rows selected.
-   *                     * 0 For a invalid test.
-   *                     * 1 For a valid test.
-   *                     * 2 For a invalid test.
+   * @param int $p_count The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
    *                     int(11)
    *
    * @return \array[]
@@ -868,8 +868,7 @@ class DataLayer extends StaticDataLayer
 
   //-------------------------------------------------------------------------------------------------------------------
   /**
-   * Test for designation type rows_with_index with BLOB.
-   * .
+   * Test for designation type rows_with_index with BLOB..
    *
    * @param int    $p_count The number of rows selected.
    *                        int(11)
@@ -1034,10 +1033,7 @@ class DataLayer extends StaticDataLayer
   /**
    * Test for designation type singleton0.
    *
-   * @param int $p_count The number of rows selected.
-   *                     * 0 For a valid test.
-   *                     * 1 For a valid test.
-   *                     * 2 For a invalid test.
+   * @param int $p_count The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test.
    *                     int(11)
    *
    * @return string
@@ -1051,13 +1047,9 @@ class DataLayer extends StaticDataLayer
 
   //-------------------------------------------------------------------------------------------------------------------
   /**
-   * Test for designation type singleton0 with BLOB.
-   * .
+   * Test for designation type singleton0 with BLOB..
    *
-   * @param int    $p_count The number of rows selected.
-   *                        * 0 For a valid test.
-   *                        * 1 For a valid test.
-   *                        * 2 For a invalid test.
+   * @param int    $p_count The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test.
    *                        int(11)
    * @param string $p_blob  The BLOB.
    *                        blob
@@ -1130,10 +1122,7 @@ class DataLayer extends StaticDataLayer
   /**
    * Test for designation type singleton1.
    *
-   * @param int $p_count The number of rows selected.
-   *                     * 0 For a invalid test.
-   *                     * 1 For a valid test.
-   *                     * 2 For a invalid test.
+   * @param int $p_count The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
    *                     int(11)
    *
    * @return string
@@ -1149,10 +1138,7 @@ class DataLayer extends StaticDataLayer
   /**
    * Test for designation type singleton1 with BLOB.
    *
-   * @param int    $p_count The number of rows selected.
-   *                        * 0 For a invalid test.
-   *                        * 1 For a valid test.
-   *                        * 2 For a invalid test.
+   * @param int    $p_count The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
    *                        int(11)
    * @param string $p_blob  The BLOB.
    *                        blob
