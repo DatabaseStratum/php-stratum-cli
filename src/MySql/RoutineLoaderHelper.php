@@ -40,7 +40,7 @@ class RoutineLoaderHelper
   private $collate;
 
   /**
-   * The key or index columns (depending on the designation type) of the stored routine .
+   * The key or index columns (depending on the designation type) of the stored routine.
    *
    * @var string[]
    */
