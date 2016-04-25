@@ -537,6 +537,7 @@ class RoutineLoaderHelper
       else $tmp .= $line."\n";
     }
 
+
     $phpdoc = new DocBlockReflection($tmp);
 
     // Get the short description.

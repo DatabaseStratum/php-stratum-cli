@@ -299,7 +299,7 @@ class DataLayer extends StaticDataLayer
 
   //-------------------------------------------------------------------------------------------------------------------
   /**
-   * Test for designation bulk_insert.
+   *  Test for designation bulk_insert.
    *
    * @param array $rows
    * @throws RuntimeException
@@ -323,7 +323,7 @@ class DataLayer extends StaticDataLayer
 
   //-------------------------------------------------------------------------------------------------------------------
   /**
-   * Test for designation bulk_insert.
+   *  Test for designation bulk_insert.
    *
    * @param array $rows
    * @throws RuntimeException
