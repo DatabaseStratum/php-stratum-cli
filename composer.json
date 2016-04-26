@@ -20,7 +20,7 @@
     "setbased/exception": "1.*",
     "setbased/php-affirm": "*",
     "symfony/console": "^2.8 || ^3.0",
-    "zendframework/zend-code": "^3.0"
+    "zendframework/zend-code": ">=2.0"
   },
   "bin": [
     "bin/stratum"
