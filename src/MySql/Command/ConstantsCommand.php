@@ -29,41 +29,41 @@ class ConstantsCommand extends MySqlCommand
    *
    * @var string
    */
-  private $myClassName;
+  private $className;
 
   /**
    * All columns in the MySQL schema.
    *
    * @var array
    */
-  private $myColumns = [];
+  private $columns = [];
 
   /**
    * @var array All constants.
    */
-  private $myConstants = [];
+  private $constants = [];
 
   /**
    * Filename with column names, their widths, and constant names.
    *
    * @var string
    */
-  private $myConstantsFilename;
+  private $constantsFilename;
 
   /**
    * All primary key labels, their widths and constant names.
    *
    * @var array
    */
-  private $myLabels = [];
+  private $labels = [];
 
   /**
-   * The previous column names, widths, and constant names (i.e. the content of $myConstantsFilename upon starting
+   * The previous column names, widths, and constant names (i.e. the content of $constantsFilename upon starting
    * this program).
    *
    * @var array
    */
-  private $myOldColumns = [];
+  private $oldColumns = [];
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -86,7 +86,7 @@ class ConstantsCommand extends MySqlCommand
     $configFileName = $input->getArgument('config file');
     $settings       = $this->readConfigFile($configFileName);
 
-    if ($this->myConstantsFilename!==null || $this->myClassName!==null)
+    if ($this->constantsFilename!==null || $this->className!==null)
     {
       $this->io->title('Constants');
 
@@ -180,13 +180,13 @@ class ConstantsCommand extends MySqlCommand
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Enhances $myOldColumns as follows:
+   * Enhances $oldColumns as follows:
    * If the constant name is *, is is replaced with the column name prefixed by $this->myPrefix in uppercase.
    * Otherwise the constant name is set to uppercase.
    */
   private function enhanceColumns()
   {
-    foreach ($this->myOldColumns as $table)
+    foreach ($this->oldColumns as $table)
     {
       foreach ($table as $column)
       {
@@ -195,13 +195,13 @@ class ConstantsCommand extends MySqlCommand
 
         if ($column['constant_name']=='*')
         {
-          $constant_name                                                  = strtoupper($column['column_name']);
-          $this->myOldColumns[$table_name][$column_name]['constant_name'] = $constant_name;
+          $constant_name                                                = strtoupper($column['column_name']);
+          $this->oldColumns[$table_name][$column_name]['constant_name'] = $constant_name;
         }
         else
         {
-          $constant_name                                                  = strtoupper($this->myOldColumns[$table_name][$column_name]['constant_name']);
-          $this->myOldColumns[$table_name][$column_name]['constant_name'] = $constant_name;
+          $constant_name                                                = strtoupper($this->oldColumns[$table_name][$column_name]['constant_name']);
+          $this->oldColumns[$table_name][$column_name]['constant_name'] = $constant_name;
         }
       }
     }
@@ -243,12 +243,12 @@ class ConstantsCommand extends MySqlCommand
    */
   private function executeEnabled()
   {
-    if ($this->myConstantsFilename!==null)
+    if ($this->constantsFilename!==null)
     {
       $this->executeColumnWidths();
     }
 
-    if ($this->myClassName!==null)
+    if ($this->className!==null)
     {
       $this->executeCreateConstants();
     }
@@ -363,40 +363,40 @@ class ConstantsCommand extends MySqlCommand
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Merges $myColumns and $myLabels (i.e. all known constants) into $myConstants.
+   * Merges $columns and $labels (i.e. all known constants) into $constants.
    */
   private function fillConstants()
   {
-    foreach ($this->myColumns as $table_name => $table)
+    foreach ($this->columns as $table_name => $table)
     {
       foreach ($table as $column_name => $column)
       {
-        if (isset($this->myColumns[$table_name][$column_name]['constant_name']))
+        if (isset($this->columns[$table_name][$column_name]['constant_name']))
         {
-          $this->myConstants[$column['constant_name']] = $column['length'];
+          $this->constants[$column['constant_name']] = $column['length'];
         }
       }
     }
 
-    foreach ($this->myLabels as $label => $id)
+    foreach ($this->labels as $label => $id)
     {
-      $this->myConstants[$label] = $id;
+      $this->constants[$label] = $id;
     }
 
-    ksort($this->myConstants);
+    ksort($this->constants);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Loads the width of all columns in the MySQL schema into $myColumns.
+   * Loads the width of all columns in the MySQL schema into $columns.
    */
   private function getColumns()
   {
     $rows = DataLayer::getAllTableColumns();
     foreach ($rows as $row)
     {
-      $row['length']                                            = $this->deriveFieldLength($row);
-      $this->myColumns[$row['table_name']][$row['column_name']] = $row;
+      $row['length']                                          = $this->deriveFieldLength($row);
+      $this->columns[$row['table_name']][$row['column_name']] = $row;
     }
   }
 
@@ -412,21 +412,21 @@ class ConstantsCommand extends MySqlCommand
       $rows = DataLayer::getLabelsFromTable($table['table_name'], $table['id'], $table['label']);
       foreach ($rows as $row)
       {
-        $this->myLabels[$row['label']] = $row['id'];
+        $this->labels[$row['label']] = $row['id'];
       }
     }
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Reads from file $myConstantsFilename the previous table and column names, the width of the column,
-   * and the constant name (if assigned) and stores this data in $myOldColumns.
+   * Reads from file $constantsFilename the previous table and column names, the width of the column,
+   * and the constant name (if assigned) and stores this data in $oldColumns.
    */
   private function getOldColumns()
   {
-    if (file_exists($this->myConstantsFilename))
+    if (file_exists($this->constantsFilename))
     {
-      $handle = fopen($this->myConstantsFilename, 'r');
+      $handle = fopen($this->constantsFilename, 'r');
 
       $line_number = 0;
       while ($line = fgets($handle))
@@ -439,7 +439,7 @@ class ConstantsCommand extends MySqlCommand
           {
             throw new RuntimeException("Illegal format at line %d in file '%s'.",
                                        $line_number,
-                                       $this->myConstantsFilename);
+                                       $this->constantsFilename);
           }
 
           if (isset($matches[6]))
@@ -455,22 +455,22 @@ class ConstantsCommand extends MySqlCommand
               $table_name = $schema_name.'.'.$table_name;
             }
 
-            $this->myOldColumns[$table_name][$column_name] = ['table_name'    => $table_name,
-                                                              'column_name'   => $column_name,
-                                                              'length'        => $length,
-                                                              'constant_name' => $constant_name];
+            $this->oldColumns[$table_name][$column_name] = ['table_name'    => $table_name,
+                                                            'column_name'   => $column_name,
+                                                            'length'        => $length,
+                                                            'constant_name' => $constant_name];
           }
         }
       }
       if (!feof($handle))
       {
-        throw new RuntimeException("Error reading from file '%s'.", $this->myConstantsFilename);
+        throw new RuntimeException("Error reading from file '%s'.", $this->constantsFilename);
       }
 
       $ok = fclose($handle);
       if ($ok===false)
       {
-        throw new RuntimeException("Error closing file '%s'.", $this->myConstantsFilename);
+        throw new RuntimeException("Error closing file '%s'.", $this->constantsFilename);
       }
     }
   }
@@ -481,8 +481,8 @@ class ConstantsCommand extends MySqlCommand
    */
   private function logNumberOfConstants()
   {
-    $n_id  = sizeof($this->myLabels);
-    $n_len = sizeof($this->myConstants) - $n_id;
+    $n_id  = sizeof($this->labels);
+    $n_len = sizeof($this->constants) - $n_id;
 
     $this->io->writeln('');
     $this->io->text(sprintf('Number of constants based on column widths: %d', $n_len));
@@ -496,14 +496,14 @@ class ConstantsCommand extends MySqlCommand
     $width2    = 0;
     $constants = [];
 
-    foreach ($this->myConstants as $constant => $value)
+    foreach ($this->constants as $constant => $value)
     {
       $width1 = max(strlen($constant), $width1);
       $width2 = max(strlen($value), $width2);
     }
 
     $line_format = sprintf('  const %%-%ds = %%%dd;', $width1, $width2);
-    foreach ($this->myConstants as $constant => $value)
+    foreach ($this->constants as $constant => $value)
     {
       $constants[] = sprintf($line_format, $constant, $value);
     }
@@ -513,17 +513,17 @@ class ConstantsCommand extends MySqlCommand
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Preserves relevant data in $myOldColumns into $myColumns.
+   * Preserves relevant data in $oldColumns into $columns.
    */
   private function mergeColumns()
   {
-    foreach ($this->myOldColumns as $table_name => $table)
+    foreach ($this->oldColumns as $table_name => $table)
     {
       foreach ($table as $column_name => $column)
       {
-        if (isset($this->myColumns[$table_name][$column_name]))
+        if (isset($this->columns[$table_name][$column_name]))
         {
-          $this->myColumns[$table_name][$column_name]['constant_name'] = $column['constant_name'];
+          $this->columns[$table_name][$column_name]['constant_name'] = $column['constant_name'];
         }
       }
     }
@@ -541,8 +541,8 @@ class ConstantsCommand extends MySqlCommand
   {
     $settings = parse_ini_file($configFilename, true);
 
-    $this->myConstantsFilename = self::getSetting($settings, false, 'constants', 'columns');
-    $this->myClassName         = self::getSetting($settings, false, 'constants', 'class');
+    $this->constantsFilename = self::getSetting($settings, false, 'constants', 'columns');
+    $this->className         = self::getSetting($settings, false, 'constants', 'class');
 
     return $settings;
   }
@@ -550,12 +550,12 @@ class ConstantsCommand extends MySqlCommand
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Writes table and column names, the width of the column, and the constant name (if assigned) to
-   * $myConstantsFilename.
+   * $constantsFilename.
    */
   private function writeColumns()
   {
     $content = '';
-    foreach ($this->myColumns as $table)
+    foreach ($this->columns as $table)
     {
       $width1 = 0;
       $width2 = 0;
@@ -593,7 +593,7 @@ class ConstantsCommand extends MySqlCommand
     }
 
     // Save the columns, width and constants to the filesystem.
-    $this->writeTwoPhases($this->myConstantsFilename, $content);
+    $this->writeTwoPhases($this->constantsFilename, $content);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -607,10 +607,10 @@ class ConstantsCommand extends MySqlCommand
     $loader = spl_autoload_functions()[0][0];
 
     // Find the source file of the constant class.
-    $file_name = $loader->findFile($this->myClassName);
+    $file_name = $loader->findFile($this->className);
     if ($file_name===false)
     {
-      throw new RuntimeException("ClassLoader can not find class '%s'.", $this->myClassName);
+      throw new RuntimeException("ClassLoader can not find class '%s'.", $this->className);
     }
 
     // Read the source of the class without actually loading the class. Otherwise, we can not (re)load the class in

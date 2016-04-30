@@ -17,21 +17,21 @@ class ResultException extends RuntimeException
    *
    * @var int
    */
-  private $myActualRowCount;
+  private $actualRowCount;
 
   /**
    * The expected number selected of rows selected.
    *
    * @var int
    */
-  private $myExpectedRowCount;
+  private $expectedRowCount;
 
   /**
    * The executed SQL query.
    *
    * @var string
    */
-  private $myQuery;
+  private $query;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -45,9 +45,9 @@ class ResultException extends RuntimeException
   {
     parent::__construct('%s', self::message($expectedRowCount, $actualRowCount, $message));
 
-    $this->myExpectedRowCount = $expectedRowCount;
-    $this->myActualRowCount   = $actualRowCount;
-    $this->myQuery            = $message;
+    $this->expectedRowCount = $expectedRowCount;
+    $this->actualRowCount   = $actualRowCount;
+    $this->query            = $message;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -58,7 +58,7 @@ class ResultException extends RuntimeException
    */
   public function getActualNumberRows()
   {
-    return $this->myActualRowCount;
+    return $this->actualRowCount;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -69,7 +69,7 @@ class ResultException extends RuntimeException
    */
   public function getExpectedNumberRows()
   {
-    return $this->myExpectedRowCount;
+    return $this->expectedRowCount;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -89,7 +89,7 @@ class ResultException extends RuntimeException
    */
   public function getQuery()
   {
-    return $this->myQuery;
+    return $this->query;
   }
 
   //--------------------------------------------------------------------------------------------------------------------

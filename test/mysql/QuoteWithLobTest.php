@@ -11,38 +11,38 @@
 class QuoteWithLobTest extends DataLayerTestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
-  public function genericInvalid($theColumn, $theValue)
+  public function genericInvalid($column, $value)
   {
     try
     {
-      DataLayer::test02(($theColumn=='int') ? $theValue : null,        // tst_c00 int
-                        ($theColumn=='smallint') ? $theValue : null,        // tst_c01 smallint
-                        ($theColumn=='tinyint') ? $theValue : null,        // tst_c02 tinyint
-                        ($theColumn=='mediumint') ? $theValue : null,        // tst_c03 mediumint
-                        ($theColumn=='bigint') ? $theValue : null,        // tst_c04 bigint
-                        ($theColumn=='decimal)') ? $theValue : null,        // tst_c05 decimal(10,2)
-                        ($theColumn=='float') ? $theValue : null,        // tst_c06 float
-                        ($theColumn=='double') ? $theValue : null,        // tst_c07 double
-                        ($theColumn=='bit') ? $theValue : null,        // tst_c08 bit
-                        ($theColumn=='date') ? $theValue : null,        // tst_c09 date
-                        ($theColumn=='datetime') ? $theValue : null,        // tst_c10 datetime
-                        ($theColumn=='timestamp') ? $theValue : null,        // tst_c11 timestamp
-                        ($theColumn=='time') ? $theValue : null,        // tst_c12 time
-                        ($theColumn=='year') ? $theValue : null,        // tst_c13 year
-                        ($theColumn=='char') ? $theValue : null,        // tst_c14 char(10)
-                        ($theColumn=='varchar') ? $theValue : null,        // tst_c15 varchar(10)
-                        ($theColumn=='binary') ? $theValue : null,        // tst_c16 binary(10)
-                        ($theColumn=='varbinary') ? $theValue : null,        // tst_c17 varbinary(10)
-                        ($theColumn=='tinyblob') ? $theValue : null,        // tst_c18 tinyblob
-                        ($theColumn=='blob') ? $theValue : null,        // tst_c19 blob
-                        ($theColumn=='mediumblob') ? $theValue : null,        // tst_c20 mediumblob
-                        ($theColumn=='longblob') ? $theValue : null,        // tst_c21 longblob
-                        ($theColumn=='tinytext') ? $theValue : null,        // tst_c22 tinytext
-                        ($theColumn=='text') ? $theValue : null,        // tst_c23 text
-                        ($theColumn=='mediumtext') ? $theValue : null,        // tst_c24 mediumtext
-                        ($theColumn=='longtext') ? $theValue : null,        // tst_c25 longtext
-                        ($theColumn=='enum') ? $theValue : null,        // tst_c26 enum('a','b')
-                        ($theColumn=='set') ? $theValue : null);      // tst_c27 set('a','b')
+      DataLayer::test02(($column=='int') ? $value : null,        // tst_c00 int
+                        ($column=='smallint') ? $value : null,        // tst_c01 smallint
+                        ($column=='tinyint') ? $value : null,        // tst_c02 tinyint
+                        ($column=='mediumint') ? $value : null,        // tst_c03 mediumint
+                        ($column=='bigint') ? $value : null,        // tst_c04 bigint
+                        ($column=='decimal)') ? $value : null,        // tst_c05 decimal(10,2)
+                        ($column=='float') ? $value : null,        // tst_c06 float
+                        ($column=='double') ? $value : null,        // tst_c07 double
+                        ($column=='bit') ? $value : null,        // tst_c08 bit
+                        ($column=='date') ? $value : null,        // tst_c09 date
+                        ($column=='datetime') ? $value : null,        // tst_c10 datetime
+                        ($column=='timestamp') ? $value : null,        // tst_c11 timestamp
+                        ($column=='time') ? $value : null,        // tst_c12 time
+                        ($column=='year') ? $value : null,        // tst_c13 year
+                        ($column=='char') ? $value : null,        // tst_c14 char(10)
+                        ($column=='varchar') ? $value : null,        // tst_c15 varchar(10)
+                        ($column=='binary') ? $value : null,        // tst_c16 binary(10)
+                        ($column=='varbinary') ? $value : null,        // tst_c17 varbinary(10)
+                        ($column=='tinyblob') ? $value : null,        // tst_c18 tinyblob
+                        ($column=='blob') ? $value : null,        // tst_c19 blob
+                        ($column=='mediumblob') ? $value : null,        // tst_c20 mediumblob
+                        ($column=='longblob') ? $value : null,        // tst_c21 longblob
+                        ($column=='tinytext') ? $value : null,        // tst_c22 tinytext
+                        ($column=='text') ? $value : null,        // tst_c23 text
+                        ($column=='mediumtext') ? $value : null,        // tst_c24 mediumtext
+                        ($column=='longtext') ? $value : null,        // tst_c25 longtext
+                        ($column=='enum') ? $value : null,        // tst_c26 enum('a','b')
+                        ($column=='set') ? $value : null);      // tst_c27 set('a','b')
       $this->assertTrue(false);
     }
     catch (Exception $e)
@@ -52,36 +52,36 @@ class QuoteWithLobTest extends DataLayerTestCase
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  public function genericValid($theColumn, $theValue)
+  public function genericValid($column, $value)
   {
-    $n = DataLayer::test02(($theColumn=='int') ? $theValue : null,        // tst_c00 int
-                           ($theColumn=='smallint') ? $theValue : null,        // tst_c01 smallint
-                           ($theColumn=='tinyint') ? $theValue : null,        // tst_c02 tinyint
-                           ($theColumn=='mediumint') ? $theValue : null,        // tst_c03 mediumint
-                           ($theColumn=='bigint') ? $theValue : null,        // tst_c04 bigint
-                           ($theColumn=='decimal)') ? $theValue : null,        // tst_c05 decimal(10,2)
-                           ($theColumn=='float') ? $theValue : null,        // tst_c06 float
-                           ($theColumn=='double') ? $theValue : null,        // tst_c07 double
-                           ($theColumn=='bit') ? $theValue : null,        // tst_c08 bit
-                           ($theColumn=='date') ? $theValue : null,        // tst_c09 date
-                           ($theColumn=='datetime') ? $theValue : null,        // tst_c10 datetime
-                           ($theColumn=='timestamp') ? $theValue : null,        // tst_c11 timestamp
-                           ($theColumn=='time') ? $theValue : null,        // tst_c12 time
-                           ($theColumn=='year') ? $theValue : null,        // tst_c13 year
-                           ($theColumn=='char') ? $theValue : null,        // tst_c14 char(10)
-                           ($theColumn=='varchar') ? $theValue : null,        // tst_c15 varchar(10)
-                           ($theColumn=='binary') ? $theValue : null,        // tst_c16 binary(10)
-                           ($theColumn=='varbinary') ? $theValue : null,        // tst_c17 varbinary(10)
-                           ($theColumn=='tinyblob') ? $theValue : null,        // tst_c18 tinyblob
-                           ($theColumn=='blob') ? $theValue : null,        // tst_c19 blob
-                           ($theColumn=='mediumblob') ? $theValue : null,        // tst_c20 mediumblob
-                           ($theColumn=='longblob') ? $theValue : null,        // tst_c21 longblob
-                           ($theColumn=='tinytext') ? $theValue : null,        // tst_c22 tinytext
-                           ($theColumn=='text') ? $theValue : null,        // tst_c23 text
-                           ($theColumn=='mediumtext') ? $theValue : null,        // tst_c24 mediumtext
-                           ($theColumn=='longtext') ? $theValue : null,        // tst_c25 longtext
-                           ($theColumn=='enum') ? $theValue : null,        // tst_c26 enum('a','b')
-                           ($theColumn=='set') ? $theValue : null);      // tst_c27 set('a','b')
+    $n = DataLayer::test02(($column=='int') ? $value : null,        // tst_c00 int
+                           ($column=='smallint') ? $value : null,        // tst_c01 smallint
+                           ($column=='tinyint') ? $value : null,        // tst_c02 tinyint
+                           ($column=='mediumint') ? $value : null,        // tst_c03 mediumint
+                           ($column=='bigint') ? $value : null,        // tst_c04 bigint
+                           ($column=='decimal)') ? $value : null,        // tst_c05 decimal(10,2)
+                           ($column=='float') ? $value : null,        // tst_c06 float
+                           ($column=='double') ? $value : null,        // tst_c07 double
+                           ($column=='bit') ? $value : null,        // tst_c08 bit
+                           ($column=='date') ? $value : null,        // tst_c09 date
+                           ($column=='datetime') ? $value : null,        // tst_c10 datetime
+                           ($column=='timestamp') ? $value : null,        // tst_c11 timestamp
+                           ($column=='time') ? $value : null,        // tst_c12 time
+                           ($column=='year') ? $value : null,        // tst_c13 year
+                           ($column=='char') ? $value : null,        // tst_c14 char(10)
+                           ($column=='varchar') ? $value : null,        // tst_c15 varchar(10)
+                           ($column=='binary') ? $value : null,        // tst_c16 binary(10)
+                           ($column=='varbinary') ? $value : null,        // tst_c17 varbinary(10)
+                           ($column=='tinyblob') ? $value : null,        // tst_c18 tinyblob
+                           ($column=='blob') ? $value : null,        // tst_c19 blob
+                           ($column=='mediumblob') ? $value : null,        // tst_c20 mediumblob
+                           ($column=='longblob') ? $value : null,        // tst_c21 longblob
+                           ($column=='tinytext') ? $value : null,        // tst_c22 tinytext
+                           ($column=='text') ? $value : null,        // tst_c23 text
+                           ($column=='mediumtext') ? $value : null,        // tst_c24 mediumtext
+                           ($column=='longtext') ? $value : null,        // tst_c25 longtext
+                           ($column=='enum') ? $value : null,        // tst_c26 enum('a','b')
+                           ($column=='set') ? $value : null);      // tst_c27 set('a','b')
     $this->assertEquals(1, $n);
   }
 

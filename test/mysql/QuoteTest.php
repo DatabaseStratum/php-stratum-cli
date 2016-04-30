@@ -11,30 +11,30 @@
 class QuoteTest extends DataLayerTestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
-  public function genericInvalid($theColumn, $theValue)
+  public function genericInvalid($column, $value)
   {
     try
     {
-      DataLayer::test01(($theColumn=='int') ? $theValue : null,
-                        ($theColumn=='smallint') ? $theValue : null,
-                        ($theColumn=='tinyint') ? $theValue : null,
-                        ($theColumn=='mediumint') ? $theValue : null,
-                        ($theColumn=='bigint') ? $theValue : null,
-                        ($theColumn=='decimal)') ? $theValue : null,
-                        ($theColumn=='float') ? $theValue : null,
-                        ($theColumn=='double') ? $theValue : null,
-                        ($theColumn=='bit') ? $theValue : null,
-                        ($theColumn=='date') ? $theValue : null,
-                        ($theColumn=='datetime') ? $theValue : null,
-                        ($theColumn=='timestamp') ? $theValue : null,
-                        ($theColumn=='time') ? $theValue : null,
-                        ($theColumn=='year') ? $theValue : null,
-                        ($theColumn=='char') ? $theValue : null,
-                        ($theColumn=='varchar') ? $theValue : null,
-                        ($theColumn=='binary') ? $theValue : null,
-                        ($theColumn=='varbinary') ? $theValue : null,
-                        ($theColumn=='enum') ? $theValue : null,
-                        ($theColumn=='set') ? $theValue : null);
+      DataLayer::test01(($column=='int') ? $value : null,
+                        ($column=='smallint') ? $value : null,
+                        ($column=='tinyint') ? $value : null,
+                        ($column=='mediumint') ? $value : null,
+                        ($column=='bigint') ? $value : null,
+                        ($column=='decimal)') ? $value : null,
+                        ($column=='float') ? $value : null,
+                        ($column=='double') ? $value : null,
+                        ($column=='bit') ? $value : null,
+                        ($column=='date') ? $value : null,
+                        ($column=='datetime') ? $value : null,
+                        ($column=='timestamp') ? $value : null,
+                        ($column=='time') ? $value : null,
+                        ($column=='year') ? $value : null,
+                        ($column=='char') ? $value : null,
+                        ($column=='varchar') ? $value : null,
+                        ($column=='binary') ? $value : null,
+                        ($column=='varbinary') ? $value : null,
+                        ($column=='enum') ? $value : null,
+                        ($column=='set') ? $value : null);
       $this->assertTrue(false);
     }
     catch (Exception $e)
@@ -44,28 +44,28 @@ class QuoteTest extends DataLayerTestCase
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  public function genericValid($theColumn, $theValue)
+  public function genericValid($column, $value)
   {
-    $n = DataLayer::test01(($theColumn=='int') ? $theValue : null,
-                           ($theColumn=='smallint') ? $theValue : null,
-                           ($theColumn=='tinyint') ? $theValue : null,
-                           ($theColumn=='mediumint') ? $theValue : null,
-                           ($theColumn=='bigint') ? $theValue : null,
-                           ($theColumn=='decimal)') ? $theValue : null,
-                           ($theColumn=='float') ? $theValue : null,
-                           ($theColumn=='double') ? $theValue : null,
-                           ($theColumn=='bit') ? $theValue : null,
-                           ($theColumn=='date') ? $theValue : null,
-                           ($theColumn=='datetime') ? $theValue : null,
-                           ($theColumn=='timestamp') ? $theValue : null,
-                           ($theColumn=='time') ? $theValue : null,
-                           ($theColumn=='year') ? $theValue : null,
-                           ($theColumn=='char') ? $theValue : null,
-                           ($theColumn=='varchar') ? $theValue : null,
-                           ($theColumn=='binary') ? $theValue : null,
-                           ($theColumn=='varbinary') ? $theValue : null,
-                           ($theColumn=='enum') ? $theValue : null,
-                           ($theColumn=='set') ? $theValue : null);
+    $n = DataLayer::test01(($column=='int') ? $value : null,
+                           ($column=='smallint') ? $value : null,
+                           ($column=='tinyint') ? $value : null,
+                           ($column=='mediumint') ? $value : null,
+                           ($column=='bigint') ? $value : null,
+                           ($column=='decimal)') ? $value : null,
+                           ($column=='float') ? $value : null,
+                           ($column=='double') ? $value : null,
+                           ($column=='bit') ? $value : null,
+                           ($column=='date') ? $value : null,
+                           ($column=='datetime') ? $value : null,
+                           ($column=='timestamp') ? $value : null,
+                           ($column=='time') ? $value : null,
+                           ($column=='year') ? $value : null,
+                           ($column=='char') ? $value : null,
+                           ($column=='varchar') ? $value : null,
+                           ($column=='binary') ? $value : null,
+                           ($column=='varbinary') ? $value : null,
+                           ($column=='enum') ? $value : null,
+                           ($column=='set') ? $value : null);
     $this->assertEquals(1, $n);
   }
 

@@ -14,7 +14,7 @@ class MaxAllowedPacketTest extends DataLayerTestCase
   /**
    * Generate test for the data Lob type different size.
    */
-  public function crc32WithStoredRoutine($theSize)
+  public function crc32WithStoredRoutine($size)
   {
     $data  = '';
     $chars = 'abdefhiknrstyzABDEFGHKNQRSTYZ1234567890';
@@ -22,7 +22,7 @@ class MaxAllowedPacketTest extends DataLayerTestCase
     {
       $data .= substr($chars, rand(0, strlen($chars)), 1);
     }
-    $data = substr(str_repeat($data, $theSize / 1024 + 1024), 0, $theSize);
+    $data = substr(str_repeat($data, $size / 1024 + 1024), 0, $size);
 
     $crc32_php = sprintf("%u", crc32($data));
 

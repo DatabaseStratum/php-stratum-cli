@@ -365,7 +365,7 @@ class RoutineLoaderCommand extends MySqlCommand
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns all elements in {@link $mySources} with duplicate method names.
+   * Returns all elements in {@link $sources} with duplicate method names.
    *
    * @return \array[]
    */
