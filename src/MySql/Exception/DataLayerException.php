@@ -52,7 +52,7 @@ class DataLayerException extends RuntimeException
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns the error code value of the error
+   * Returns the error code of the error
    *
    * @return int
    */
@@ -74,7 +74,7 @@ class DataLayerException extends RuntimeException
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns an array with yhe lines of the SQL statement. The line where the error occurred will be styled.
+   * Returns an array with the lines of the SQL statement. The line where the error occurred will be styled.
    *
    * @param string $style The style for highlighting the line with error.
    *
