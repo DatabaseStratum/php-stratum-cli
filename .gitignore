@@ -4,5 +4,7 @@
 /build/
 /composer.lock
 /doc/
+/test/coverage.xml
 /test/MySql/etc/routines.json
+/test/
 /vendor/

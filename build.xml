@@ -56,7 +56,7 @@
         <!-- Rename folder for \MagicConstantTest::test5 -->
         <move file="test/MySql/psql/rename" tofile="test/MySql/psql/ test_escape ' &quot; @ $ ! ." overwrite="true"/>
         <exec command="bin/stratum -v test/MySql/etc/stratum.cfg" passthru="true" checkreturn="true"/>
-        <exec command="bin/phpunit --bootstrap=test/MySql/bootstrap.php test" passthru="true" checkreturn="true"/>
+        <exec command="bin/phpunit" passthru="true" checkreturn="true"/>
         <!-- Rename folder back for \MagicConstantTest::test5 -->
         <move file="test/MySql/psql/ test_escape ' &quot; @ $ ! ." tofile="test/MySql/psql/rename"  overwrite="true"/>
     </target>
