@@ -1,6 +1,6 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\Stratum;
+namespace SetBased\Stratum\Application;
 
 use SetBased\Stratum\Command\StratumCommand;
 use SetBased\Stratum\MySql\Command\ConstantsCommand;
