@@ -43,7 +43,7 @@
       "SetBased\\Stratum\\Test\\": "test/"
     },
     "classmap": [
-      "test/C.php"
+      "test/MySql/C.php"
     ]
   },
   "config": {
