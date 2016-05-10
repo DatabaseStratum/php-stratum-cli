@@ -1,8 +1,8 @@
-.idea
-bin/phing
-bin/phpunit
-build/
-composer.lock
-doc/
-test/mysql/etc/routines.json
-vendor/
+/.idea
+/bin/phing
+/bin/phpunit
+/build/
+/composer.lock
+/doc/
+/test/MySql/etc/routines.json
+/vendor/

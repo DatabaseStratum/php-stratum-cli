@@ -28,6 +28,9 @@ class BulkWrapper extends Wrapper
   }
 
   //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * {@inheritdoc}
+   */
   protected function writeResultHandler($routine)
   {
     $routine_args = $this->getRoutineArgs($routine);
@@ -35,6 +38,9 @@ class BulkWrapper extends Wrapper
   }
 
   //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * {@inheritdoc}
+   */
   protected function writeRoutineFunctionLobFetchData($routine)
   {
     // Nothing to do.

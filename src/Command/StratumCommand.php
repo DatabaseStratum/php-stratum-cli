@@ -9,6 +9,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 //----------------------------------------------------------------------------------------------------------------------
+/**
+ * The PhpStratum command.
+ */
 class StratumCommand extends Command
 {
   //--------------------------------------------------------------------------------------------------------------------

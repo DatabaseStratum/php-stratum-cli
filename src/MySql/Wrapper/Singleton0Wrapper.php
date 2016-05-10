@@ -22,9 +22,9 @@ class Singleton0Wrapper extends Wrapper
   /**
    * {@inheritdoc}
    */
-  public function __construct($lobAsString)
+  public function __construct($nameMangler, $lobAsString)
   {
-    parent::__construct($lobAsString);
+    parent::__construct($nameMangler, $lobAsString);
 
     $this->exceptions[] = 'ResultException';
     $this->imports[]    = '\SetBased\Stratum\Exception\ResultException';

@@ -18,7 +18,7 @@ class SetBasedNameMangler implements NameMangler
    */
   public static function getMethodName($routineName)
   {
-    return lcfirst(preg_replace_callback('/(_)([a-z])/',
+    return lcfirst(preg_replace_callback('/(_)([a-z0-9])/',
       function ($matches)
       {
         return strtoupper($matches[2]);
@@ -28,7 +28,7 @@ class SetBasedNameMangler implements NameMangler
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns the parameter name unchanged.
+   * Returns the parameter name into camelCase.
    *
    * @param string $routineParameterName The name of the parameter in the stored routine.
    *
@@ -36,7 +36,7 @@ class SetBasedNameMangler implements NameMangler
    */
   public static function getParameterName($routineParameterName)
   {
-    return $routineParameterName;
+    return lcfirst(str_replace(' ', '', ucwords(strtr($routineParameterName, '_', ' '))));
   }
 
   //--------------------------------------------------------------------------------------------------------------------

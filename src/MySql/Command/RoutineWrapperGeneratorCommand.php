@@ -287,8 +287,8 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
    */
   private function writeRoutineFunction($routine, $nameMangler)
   {
-    $wrapper = Wrapper::createRoutineWrapper($routine, $this->myLobAsStringFlag);
-    $this->phpCode .= $wrapper->writeRoutineFunction($routine, $nameMangler);
+    $wrapper = Wrapper::createRoutineWrapper($routine, $nameMangler, $this->myLobAsStringFlag);
+    $this->phpCode .= $wrapper->writeRoutineFunction($routine);
 
     $this->imports = array_merge($this->imports, $wrapper->getImports());
   }

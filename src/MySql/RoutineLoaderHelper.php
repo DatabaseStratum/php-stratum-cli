@@ -583,10 +583,10 @@ class RoutineLoaderHelper
     $parameters = [];
     foreach ($this->parameters as $parameter_info)
     {
-      $parameters[] = ['name'                 => $parameter_info['name'],
+      $parameters[] = ['parameter_name'       => $parameter_info['parameter_name'],
                        'php_type'             => $this->columnTypeToPhpType($parameter_info),
                        'data_type_descriptor' => $parameter_info['data_type_descriptor'],
-                       'description'          => $this->getParameterDocDescription($parameter_info['name'])];
+                       'description'          => $this->getParameterDocDescription($parameter_info['parameter_name'])];
     }
 
     // Compose all the DocBlock parts to be used by the wrapper generator.
@@ -811,7 +811,6 @@ class RoutineLoaderHelper
           $data_type_descriptor .= ' collation '.$routine_parameter['collation_name'];
         }
 
-        $routine_parameter['name']                 = $routine_parameter['parameter_name'];
         $routine_parameter['data_type_descriptor'] = $data_type_descriptor;
 
         $this->parameters[$key] = $routine_parameter;
@@ -940,7 +939,7 @@ class RoutineLoaderHelper
         $param_not_exist = true;
         foreach ($this->parameters as $key => $param_info)
         {
-          if ($param_info['name']==$spec_param_name)
+          if ($param_info['parameter_name']==$spec_param_name)
           {
             $this->parameters[$key] = array_merge($this->parameters[$key], $spec_param_info);
             $param_not_exist        = false;
@@ -968,7 +967,7 @@ class RoutineLoaderHelper
     $database_parameters_names = [];
     foreach ($this->parameters as $parameter_info)
     {
-      $database_parameters_names[] = $parameter_info['name'];
+      $database_parameters_names[] = $parameter_info['parameter_name'];
     }
 
     // Make list with names of parameters used in dock block of routine.
