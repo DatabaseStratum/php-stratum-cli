@@ -9,6 +9,7 @@ build:
             - mysql -u root -e "set global log_bin_trust_function_creators = 1;"
 
         override:
+            -
                 command: './bin/phing unit'
                 coverage:
                     file: 'test/coverage.xml'
