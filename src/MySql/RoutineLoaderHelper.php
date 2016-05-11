@@ -10,13 +10,14 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\MySql;
 
-use phpDocumentor\Reflection\DocBlock;
 use SetBased\Exception\FallenException;
 use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\MySql\Exception\DataLayerException;
 use SetBased\Stratum\MySql\MetadataDataLayer as DataLayer;
 use SetBased\Stratum\Style\StratumStyle;
 use Symfony\Component\Console\Formatter\OutputFormatter;
+use Zend\Code\Reflection\DocBlock\Tag\ParamTag;
+use Zend\Code\Reflection\DocBlockReflection;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
@@ -40,7 +41,7 @@ class RoutineLoaderHelper
   private $collate;
 
   /**
-   * The key or index columns (depending on the designation type) of the stored routine .
+   * The key or index columns (depending on the designation type) of the stored routine.
    *
    * @var string[]
    */
@@ -537,35 +538,22 @@ class RoutineLoaderHelper
       else $tmp .= $line."\n";
     }
 
-    $phpdoc = new DocBlock($tmp);
+    $phpdoc = new DocBlockReflection($tmp);
 
     // Get the short description.
     $this->docBlockPartsSource['sort_description'] = $phpdoc->getShortDescription();
 
     // Get the long description.
-    $this->docBlockPartsSource['long_description'] = $phpdoc->getLongDescription()->getContents();
+    $this->docBlockPartsSource['long_description'] = $phpdoc->getLongDescription();
 
     // Get the description for each parameter of the stored routine.
+    /* @var $tag ParamTag */
     foreach ($phpdoc->getTags() as $key => $tag)
     {
       if ($tag->getName()=='param')
       {
-        $content     = $tag->getContent();
-        $description = $tag->getDescription();
-
-        // Gets name of parameter from routine doc block.
-        $name = trim(substr($content, 0, strlen($content) - strlen($description)));
-
-        $tmp   = [];
-        $lines = explode("\n", $description);
-        foreach ($lines as $line)
-        {
-          $tmp[] = trim($line);
-        }
-        $description = implode("\n", $tmp);
-
-        $this->docBlockPartsSource['parameters'][$key] = ['name'        => $name,
-                                                          'description' => $description];
+        $this->docBlockPartsSource['parameters'][$key] = ['name'        => $tag->getTypes()[0],
+                                                          'description' => $tag->getDescription()];
       }
     }
   }
