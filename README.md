@@ -2,15 +2,34 @@
 
 A stored procedure and function loader, wrapper generator for MySQL in PHP.
 
-[![Join the chat at https://gitter.im/SetBased/php-stratum](https://badges.gitter.im/SetBased/php-stratum.svg)](https://gitter.im/SetBased/php-stratum?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![License](https://poser.pugx.org/setbased/php-stratum/license)](https://packagist.org/packages/setbased/php-stratum)
-[![Latest Stable Version](https://poser.pugx.org/setbased/php-stratum/v/stable)](https://packagist.org/packages/setbased/php-stratum)
-[![Build Status](https://travis-ci.org/SetBased/php-stratum.svg?branch=master)](https://travis-ci.org/SetBased/php-stratum)
-[![Dependency Status](https://www.versioneye.com/user/projects/56c9d79918b27104252dcca1/badge.svg?style=flat)](https://www.versioneye.com/user/projects/56c9d79918b27104252dcca1)
-[![Codacy Badge](https://api.codacy.com/project/badge/grade/f82e67624cda4501a65fd2d1a6d35f84)](https://www.codacy.com/app/p-r-water/php-stratum)
-[![PHP 7 ready](http://php7ready.timesplinter.ch/SetBased/php-stratum/badge.svg)](https://travis-ci.org/SetBased/php-stratum)
-
-
+<table>
+<thead>
+<tr>
+<th>Social</th>
+<th>Legal</th>
+<th>Release</th>
+<th>Code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://gitter.im/SetBased/php-stratum?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge"><img src="https://badges.gitter.im/SetBased/php-stratum.svg" alt="Gitter"/></a>
+</td>
+<td>
+<a href="https://packagist.org/packages/setbased/php-stratum"><img src="https://poser.pugx.org/setbased/php-stratum/license" alt="License"/></a>
+</td>
+<td>
+<a href="https://packagist.org/packages/setbased/php-stratum"><img src="https://poser.pugx.org/setbased/php-stratum/v/stable" alt="Latest Stable Version"/></a><br/>
+<a href="https://www.versioneye.com/user/projects/56c9d79918b27104252dcca1"><img src="https://www.versioneye.com/user/projects/56c9d79918b27104252dcca1/badge.svg?style=flat" alt="Dependency Status"/></a>
+</td>
+<td><a href="https://travis-ci.org/SetBased/php-abc-url"><img src="https://travis-ci.org/SetBased/php-abc-url.svg?branch=master" alt="Build Status"/></a><br/>
+<a href="https://scrutinizer-ci.com/g/SetBased/php-stratum/?branch=master"><img src="https://scrutinizer-ci.com/g/SetBased/php-stratum/badges/coverage.png?b=master" alt="Code Coverage"/></a><br/>
+<a href="https://scrutinizer-ci.com/g/SetBased/php-stratum/?branch=master"><img src="https://scrutinizer-ci.com/g/SetBased/php-stratum/badges/quality-score.png?b=master" alt="Scrutinizer Code Quality"/></a><br/>
+</td>
+</tr>
+</tbody>
+</table>
 
 # Overview
 PhpStratum is a tool and library with the following mayor functionalities:  
