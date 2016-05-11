@@ -679,7 +679,7 @@ class RoutineLoaderHelper
     // If current sql-mode is different the source file must reload.
     if ($this->rdbmsOldRoutineMetadata['sql_mode']!=$this->sqlMode) return true;
 
-    // If current character is different the source file must reload.
+    // If current character set is different the source file must reload.
     if ($this->rdbmsOldRoutineMetadata['character_set_client']!=$this->characterSet) return true;
 
     // If current collation is different the source file must reload.
