@@ -547,11 +547,11 @@ class RoutineLoaderHelper
     $this->docBlockPartsSource['long_description'] = $phpdoc->getLongDescription();
 
     // Get the description for each parameter of the stored routine.
-    /* @var $tag ParamTag */
     foreach ($phpdoc->getTags() as $key => $tag)
     {
       if ($tag->getName()=='param')
       {
+        /* @var $tag ParamTag */
         $this->docBlockPartsSource['parameters'][$key] = ['name'        => $tag->getTypes()[0],
                                                           'description' => $tag->getDescription()];
       }
