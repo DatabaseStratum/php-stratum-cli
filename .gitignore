@@ -6,5 +6,5 @@
 /doc/
 /test/coverage.xml
 /test/MySql/etc/routines.json
-/test/
+/test/report/
 /vendor/
