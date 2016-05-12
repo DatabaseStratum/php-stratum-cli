@@ -1,3 +1,11 @@
+tools:
+    php_analyzer:
+        config:
+            metrics_coupling:
+                stable_code:
+                    namespace_prefixes:
+                        - SetBased\Stratum\MySql\Wrapper
+
 build:
     tests:
         before:
