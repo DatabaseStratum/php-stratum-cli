@@ -12,6 +12,7 @@ namespace SetBased\Stratum\MySql\Command;
 
 use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\Command\BaseCommand;
+use SetBased\Stratum\Helper\PhpCodeStore;
 use SetBased\Stratum\MySql\Wrapper\Wrapper;
 use SetBased\Stratum\NameMangler\NameMangler;
 use SetBased\Stratum\Style\StratumStyle;
@@ -234,7 +235,7 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
     $this->phpCode .= "<?php\n";
     if ($namespace!==null)
     {
-      $this->phpCode .= '//'.str_repeat('-', Wrapper::C_PAGE_WIDTH - 2)."\n";
+      $this->phpCode .= '//'.str_repeat('-', PhpCodeStore::C_PAGE_WIDTH - 2)."\n";
       $this->phpCode .= "namespace ${namespace};\n";
       $this->phpCode .= "\n";
     }
@@ -252,7 +253,7 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
     if (!empty($this->imports))
     {
       $this->imports = array_unique($this->imports, SORT_REGULAR);
-      $this->phpCode .= '//'.str_repeat('-', Wrapper::C_PAGE_WIDTH - 2)."\n";
+      $this->phpCode .= '//'.str_repeat('-', PhpCodeStore::C_PAGE_WIDTH - 2)."\n";
       foreach ($this->imports as $import)
       {
         $this->phpCode .= 'use '.$import.";\n";
@@ -261,7 +262,7 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
     }
 
     // Write class name.
-    $this->phpCode .= '//'.str_repeat('-', Wrapper::C_PAGE_WIDTH - 2)."\n";
+    $this->phpCode .= '//'.str_repeat('-', PhpCodeStore::C_PAGE_WIDTH - 2)."\n";
     $this->phpCode .= 'class '.$class_name.' extends '.$this->myParentClassName."\n";
     $this->phpCode .= "{\n";
   }
@@ -272,10 +273,10 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
    */
   private function writeClassTrailer()
   {
-    $this->phpCode .= '  //'.str_repeat('-', Wrapper::C_PAGE_WIDTH - 4)."\n";
+    $this->phpCode .= '  //'.str_repeat('-', PhpCodeStore::C_PAGE_WIDTH - 4)."\n";
     $this->phpCode .= "}\n";
     $this->phpCode .= "\n";
-    $this->phpCode .= '//'.str_repeat('-', Wrapper::C_PAGE_WIDTH - 2)."\n";
+    $this->phpCode .= '//'.str_repeat('-', PhpCodeStore::C_PAGE_WIDTH - 2)."\n";
   }
 
   //--------------------------------------------------------------------------------------------------------------------

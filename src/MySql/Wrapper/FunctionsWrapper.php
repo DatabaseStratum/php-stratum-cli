@@ -34,7 +34,7 @@ class FunctionsWrapper extends Wrapper
   protected function writeResultHandler($routine)
   {
     $routine_args = $this->getRoutineArgs($routine);
-    $this->writeLine('return self::executeSingleton0(\'SELECT '.$routine['routine_name'].'('.$routine_args.')\');');
+    $this->codeStore->append('return self::executeSingleton0(\'SELECT '.$routine['routine_name'].'('.$routine_args.')\');');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -43,8 +43,8 @@ class FunctionsWrapper extends Wrapper
    */
   protected function writeRoutineFunctionLobFetchData($routine)
   {
-    $this->writeLine('$ret = self::$mysqli->affected_rows;');
-    $this->writeLine();
+    $this->codeStore->append('$ret = self::$mysqli->affected_rows;');
+    $this->codeStore->append('');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -53,7 +53,7 @@ class FunctionsWrapper extends Wrapper
    */
   protected function writeRoutineFunctionLobReturnData()
   {
-    $this->writeLine('return $ret;');
+    $this->codeStore->append('return $ret;');
   }
 
   //--------------------------------------------------------------------------------------------------------------------

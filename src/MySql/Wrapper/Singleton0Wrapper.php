@@ -46,7 +46,7 @@ class Singleton0Wrapper extends Wrapper
   protected function writeResultHandler($routine)
   {
     $routine_args = $this->getRoutineArgs($routine);
-    $this->writeLine('return self::executeSingleton0(\'CALL '.$routine['routine_name'].'('.$routine_args.')\');');
+    $this->codeStore->append('return self::executeSingleton0(\'CALL '.$routine['routine_name'].'('.$routine_args.')\');');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -55,20 +55,20 @@ class Singleton0Wrapper extends Wrapper
    */
   protected function writeRoutineFunctionLobFetchData($routine)
   {
-    $this->writeLine('$row = [];');
-    $this->writeLine('self::bindAssoc($stmt, $row);');
-    $this->writeLine();
-    $this->writeLine('$tmp = [];');
-    $this->writeLine('while (($b = $stmt->fetch()))');
-    $this->writeLine('{');
-    $this->writeLine('$new = [];');
-    $this->writeLine('foreach($row as $value)');
-    $this->writeLine('{');
-    $this->writeLine('$new[] = $value;');
-    $this->writeLine('}');
-    $this->writeLine('$tmp[] = $new;');
-    $this->writeLine('}');
-    $this->writeLine();
+    $this->codeStore->append('$row = [];');
+    $this->codeStore->append('self::bindAssoc($stmt, $row);');
+    $this->codeStore->append('');
+    $this->codeStore->append('$tmp = [];');
+    $this->codeStore->append('while (($b = $stmt->fetch()))');
+    $this->codeStore->append('{');
+    $this->codeStore->append('$new = [];');
+    $this->codeStore->append('foreach($row as $value)');
+    $this->codeStore->append('{');
+    $this->codeStore->append('$new[] = $value;');
+    $this->codeStore->append('}');
+    $this->codeStore->append('$tmp[] = $new;');
+    $this->codeStore->append('}');
+    $this->codeStore->append('');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -77,10 +77,10 @@ class Singleton0Wrapper extends Wrapper
    */
   protected function writeRoutineFunctionLobReturnData()
   {
-    $this->writeLine('if ($b===false) self::mySqlError(\'mysqli_stmt::fetch\');');
-    $this->writeLine('if (count($tmp)>1) throw new ResultException(\'0 or 1\', count($tmp), $query);');
-    $this->writeLine();
-    $this->writeLine('return ($tmp) ? $tmp[0][0] : null;');
+    $this->codeStore->append('if ($b===false) self::mySqlError(\'mysqli_stmt::fetch\');');
+    $this->codeStore->append('if (count($tmp)>1) throw new ResultException(\'0 or 1\', count($tmp), $query);');
+    $this->codeStore->append('');
+    $this->codeStore->append('return ($tmp) ? $tmp[0][0] : null;');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
