@@ -47,7 +47,7 @@ class RowsWithKeyWrapper extends Wrapper
     $this->codeStore->append('while($row = $result->fetch_array(MYSQLI_ASSOC)) $ret'.$key.' = $row;');
     $this->codeStore->append('$result->free();');
     $this->codeStore->append('if (self::$mysqli->more_results()) self::$mysqli->next_result();');
-    $this->codeStore->append('');
+    $this->codeStore->append();
     $this->codeStore->append('return  $ret;');
   }
 
@@ -65,7 +65,7 @@ class RowsWithKeyWrapper extends Wrapper
 
     $this->codeStore->append('$row = [];');
     $this->codeStore->append('self::bindAssoc($stmt, $row);');
-    $this->codeStore->append('');
+    $this->codeStore->append();
     $this->codeStore->append('$ret = [];');
     $this->codeStore->append('while (($b = $stmt->fetch()))');
     $this->codeStore->append('{');
@@ -76,7 +76,7 @@ class RowsWithKeyWrapper extends Wrapper
     $this->codeStore->append('}');
     $this->codeStore->append('$ret'.$key.' = $new;');
     $this->codeStore->append('}');
-    $this->codeStore->append('');
+    $this->codeStore->append();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -86,7 +86,7 @@ class RowsWithKeyWrapper extends Wrapper
   protected function writeRoutineFunctionLobReturnData()
   {
     $this->codeStore->append('if ($b===false) self::mySqlError(\'mysqli_stmt::fetch\');');
-    $this->codeStore->append('');
+    $this->codeStore->append();
     $this->codeStore->append('return $ret;');
   }
 

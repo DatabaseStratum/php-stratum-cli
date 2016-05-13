@@ -57,7 +57,7 @@ class Singleton1Wrapper extends Wrapper
   {
     $this->codeStore->append('$row = [];');
     $this->codeStore->append('self::bindAssoc($stmt, $row);');
-    $this->codeStore->append('');
+    $this->codeStore->append();
     $this->codeStore->append('$tmp = [];');
     $this->codeStore->append('while (($b = $stmt->fetch()))');
     $this->codeStore->append('{');
@@ -68,7 +68,7 @@ class Singleton1Wrapper extends Wrapper
     $this->codeStore->append('}');
     $this->codeStore->append('$tmp[] = $new;');
     $this->codeStore->append('}');
-    $this->codeStore->append('');
+    $this->codeStore->append();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -79,7 +79,7 @@ class Singleton1Wrapper extends Wrapper
   {
     $this->codeStore->append('if ($b===false) self::mySqlError(\'mysqli_stmt::fetch\');');
     $this->codeStore->append('if (count($tmp)!=1) throw new ResultException(\'1\', count($tmp), $query);');
-    $this->codeStore->append('');
+    $this->codeStore->append();
     $this->codeStore->append('return $tmp[0][0];');
   }
 

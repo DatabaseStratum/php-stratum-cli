@@ -44,7 +44,7 @@ class FunctionsWrapper extends Wrapper
   protected function writeRoutineFunctionLobFetchData($routine)
   {
     $this->codeStore->append('$ret = self::$mysqli->affected_rows;');
-    $this->codeStore->append('');
+    $this->codeStore->append();
   }
 
   //--------------------------------------------------------------------------------------------------------------------

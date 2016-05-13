@@ -64,7 +64,7 @@ abstract class Wrapper
    */
   public function __construct($nameMangler, $lobAsString)
   {
-    $this->codeStore       = new PhpCodeStore();
+    $this->codeStore       = new PhpCodeStore(1);
     $this->nameMangler     = $nameMangler;
     $this->lobAsStringFlag = $lobAsString;
     $this->exceptions[]    = 'RuntimeException';
@@ -276,13 +276,13 @@ abstract class Wrapper
     $this->codeStore->append('$query = \'CALL '.$routine['routine_name'].'('.$routine_args.')\';');
     $this->codeStore->append('$stmt  = self::$mysqli->prepare($query);');
     $this->codeStore->append('if (!$stmt) self::mySqlError(\'mysqli::prepare\');');
-    $this->codeStore->append('');
+    $this->codeStore->append();
     $this->codeStore->append('$null = null;');
     $this->codeStore->append('$b = $stmt->bind_param(\''.$bindings.'\', '.$nulls.');');
     $this->codeStore->append('if (!$b) self::mySqlError(\'mysqli_stmt::bind_param\');');
-    $this->codeStore->append('');
+    $this->codeStore->append();
     $this->codeStore->append('self::getMaxAllowedPacket();');
-    $this->codeStore->append('');
+    $this->codeStore->append();
 
     $blob_argument_index = 0;
     foreach ($routine['parameters'] as $parameter_info)
@@ -299,7 +299,7 @@ abstract class Wrapper
         $this->codeStore->append('if (!$b) self::mySqlError(\'mysqli_stmt::send_long_data\');');
         $this->codeStore->append('$p += self::$chunkSize;');
         $this->codeStore->append('}');
-        $this->codeStore->append('');
+        $this->codeStore->append();
 
         $blob_argument_index++;
       }
@@ -308,10 +308,10 @@ abstract class Wrapper
     $this->codeStore->append('if (self::$logQueries)');
     $this->codeStore->append('{');
     $this->codeStore->append('$time0 = microtime(true);');
-    $this->codeStore->append('');
+    $this->codeStore->append();
     $this->codeStore->append('$b = $stmt->execute();');
     $this->codeStore->append('if (!$b) self::mySqlError(\'mysqli_stmt::execute\');');
-    $this->codeStore->append('');
+    $this->codeStore->append();
     $this->codeStore->append('self::$queryLog[] = [\'query\' => $query,');
     $this->codeStore->append('                     \'time\'  => microtime(true) - $time0];');
     $this->codeStore->append('}');
@@ -320,14 +320,14 @@ abstract class Wrapper
     $this->codeStore->append('$b = $stmt->execute();');
     $this->codeStore->append('if (!$b) self::mySqlError(\'mysqli_stmt::execute\');');
     $this->codeStore->append('}');
-    $this->codeStore->append('');
+    $this->codeStore->append();
     $this->writeRoutineFunctionLobFetchData($routine);
     $this->codeStore->append('$stmt->close();');
     $this->codeStore->append('if (self::$mysqli->more_results()) self::$mysqli->next_result();');
-    $this->codeStore->append('');
+    $this->codeStore->append();
     $this->writeRoutineFunctionLobReturnData();
     $this->codeStore->append('}');
-    $this->codeStore->append('');
+    $this->codeStore->append();
 
     return $this->codeStore->getCode();
   }
@@ -352,7 +352,7 @@ abstract class Wrapper
 
     $this->writeResultHandler($routine);
     $this->codeStore->append('}');
-    $this->codeStore->append('');
+    $this->codeStore->append();
 
     return $this->codeStore->getCode();
   }

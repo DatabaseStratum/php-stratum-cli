@@ -45,7 +45,7 @@ class RowsWrapper extends Wrapper
   {
     $this->codeStore->append('$row = [];');
     $this->codeStore->append('self::bindAssoc($stmt, $row);');
-    $this->codeStore->append('');
+    $this->codeStore->append();
     $this->codeStore->append('$tmp = [];');
     $this->codeStore->append('while (($b = $stmt->fetch()))');
     $this->codeStore->append('{');
@@ -56,7 +56,7 @@ class RowsWrapper extends Wrapper
     $this->codeStore->append('}');
     $this->codeStore->append(' $tmp[] = $new;');
     $this->codeStore->append('}');
-    $this->codeStore->append('');
+    $this->codeStore->append();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -66,7 +66,7 @@ class RowsWrapper extends Wrapper
   protected function writeRoutineFunctionLobReturnData()
   {
     $this->codeStore->append('if ($b===false) self::mySqlError(\'mysqli_stmt::fetch\');');
-    $this->codeStore->append('');
+    $this->codeStore->append();
     $this->codeStore->append('return $tmp;');
   }
 

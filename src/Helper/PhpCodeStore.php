@@ -28,7 +28,7 @@ class PhpCodeStore
    *
    * @var int
    */
-  private $indentLevel = 1;
+  private $indentLevel = 0;
 
   /**
    * The source code. Each element is a line.
@@ -40,10 +40,12 @@ class PhpCodeStore
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Object constructor.
+   *
+   * @param int $theIndentLevel Start indent level.
    */
-  public function __construct()
+  public function __construct($theIndentLevel)
   {
-    // Nothing to do.
+    $this->indentLevel = $theIndentLevel;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -53,7 +55,7 @@ class PhpCodeStore
    * @param null|string|string[] $line The line or lines of code to be appended.
    * @param bool                 $trim If true the line or lines of code will be trimmed before appending.
    */
-  public function append($line, $trim = true)
+  public function append($line = null, $trim = true)
   {
     switch (true)
     {
@@ -66,7 +68,7 @@ class PhpCodeStore
         break;
 
       case is_null($line):
-        // Nothing to do.
+        $this->appendLine('', true);
         break;
 
       default:
@@ -171,12 +173,11 @@ class PhpCodeStore
 
     $separator .= '//';
 
-    for ($i = 0; $i<(self::C_PAGE_WIDTH - 2 * $this->indentLevel - 2 - 1); $i++)
+    for ($i = 0; $i<(self::C_PAGE_WIDTH - 2 * $this->indentLevel - 2); $i++)
     {
       $separator .= '-';
     }
-    $this->append('');
-    $this->append($separator);
+    $this->append($separator, false);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
