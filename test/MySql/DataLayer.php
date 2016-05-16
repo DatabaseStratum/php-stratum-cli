@@ -22,7 +22,7 @@ class DataLayer extends StaticDataLayer
   {
     return self::executeSingleton1('CALL tst_magic_constant01()');
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for magic constant.
@@ -35,7 +35,7 @@ class DataLayer extends StaticDataLayer
   {
     return self::executeSingleton1('CALL tst_magic_constant02()');
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for magic constant.
@@ -48,7 +48,7 @@ class DataLayer extends StaticDataLayer
   {
     return self::executeSingleton1('CALL tst_magic_constant03()');
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for magic constant.
@@ -61,7 +61,7 @@ class DataLayer extends StaticDataLayer
   {
     return self::executeSingleton1('CALL tst_magic_constant04()');
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for magic constant.
@@ -74,7 +74,7 @@ class DataLayer extends StaticDataLayer
   {
     return self::executeSingleton1('CALL tst_magic_constant05()');
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for all possible types of parameters excluding LOB's.
@@ -127,7 +127,7 @@ class DataLayer extends StaticDataLayer
   {
     return self::executeNone('CALL tst_test01('.self::quoteNum($pParam00).','.self::quoteNum($pParam01).','.self::quoteNum($pParam02).','.self::quoteNum($pParam03).','.self::quoteNum($pParam04).','.self::quoteNum($pParam05).','.self::quoteNum($pParam06).','.self::quoteNum($pParam07).','.self::quoteBit($pParam08).','.self::quoteString($pParam09).','.self::quoteString($pParam10).','.self::quoteString($pParam11).','.self::quoteString($pParam12).','.self::quoteNum($pParam13).','.self::quoteString($pParam14).','.self::quoteString($pParam15).','.self::quoteString($pParam16).','.self::quoteString($pParam17).','.self::quoteString($pParam26).','.self::quoteString($pParam27).')');
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for all possible types of parameters including LOB's.
@@ -197,13 +197,13 @@ class DataLayer extends StaticDataLayer
     $query = 'CALL tst_test02('.self::quoteNum($pParam00).','.self::quoteNum($pParam01).','.self::quoteNum($pParam02).','.self::quoteNum($pParam03).','.self::quoteNum($pParam04).','.self::quoteNum($pParam05).','.self::quoteNum($pParam06).','.self::quoteNum($pParam07).','.self::quoteBit($pParam08).','.self::quoteString($pParam09).','.self::quoteString($pParam10).','.self::quoteString($pParam11).','.self::quoteString($pParam12).','.self::quoteNum($pParam13).','.self::quoteString($pParam14).','.self::quoteString($pParam15).','.self::quoteString($pParam16).','.self::quoteString($pParam17).',?,?,?,?,?,?,?,?,'.self::quoteString($pParam26).','.self::quoteString($pParam27).')';
     $stmt  = self::$mysqli->prepare($query);
     if (!$stmt) self::mySqlError('mysqli::prepare');
-    
+
     $null = null;
     $b = $stmt->bind_param('bbbbbbbb', $null,$null,$null,$null,$null,$null,$null,$null);
     if (!$b) self::mySqlError('mysqli_stmt::bind_param');
-    
+
     self::getMaxAllowedPacket();
-    
+
     $n = strlen($pParam18);
     $p = 0;
     while ($p<$n)
@@ -212,7 +212,7 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
       $p += self::$chunkSize;
     }
-    
+
     $n = strlen($pParam19);
     $p = 0;
     while ($p<$n)
@@ -221,7 +221,7 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
       $p += self::$chunkSize;
     }
-    
+
     $n = strlen($pParam20);
     $p = 0;
     while ($p<$n)
@@ -230,7 +230,7 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
       $p += self::$chunkSize;
     }
-    
+
     $n = strlen($pParam21);
     $p = 0;
     while ($p<$n)
@@ -239,7 +239,7 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
       $p += self::$chunkSize;
     }
-    
+
     $n = strlen($pParam22);
     $p = 0;
     while ($p<$n)
@@ -248,7 +248,7 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
       $p += self::$chunkSize;
     }
-    
+
     $n = strlen($pParam23);
     $p = 0;
     while ($p<$n)
@@ -257,7 +257,7 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
       $p += self::$chunkSize;
     }
-    
+
     $n = strlen($pParam24);
     $p = 0;
     while ($p<$n)
@@ -266,7 +266,7 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
       $p += self::$chunkSize;
     }
-    
+
     $n = strlen($pParam25);
     $p = 0;
     while ($p<$n)
@@ -275,14 +275,14 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
       $p += self::$chunkSize;
     }
-    
+
     if (self::$logQueries)
     {
       $time0 = microtime(true);
-      
+
       $b = $stmt->execute();
       if (!$b) self::mySqlError('mysqli_stmt::execute');
-      
+
       self::$queryLog[] = ['query' => $query,
       'time'  => microtime(true) - $time0];
     }
@@ -291,15 +291,15 @@ class DataLayer extends StaticDataLayer
       $b = $stmt->execute();
       if (!$b) self::mySqlError('mysqli_stmt::execute');
     }
-    
+
     $ret = self::$mysqli->affected_rows;
-    
+
     $stmt->close();
     if (self::$mysqli->more_results()) self::$mysqli->next_result();
-    
+
     return $ret;
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation bulk_insert.
@@ -323,7 +323,7 @@ class DataLayer extends StaticDataLayer
       self::query($sql);
     }
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation bulk_insert.
@@ -347,7 +347,7 @@ class DataLayer extends StaticDataLayer
       self::query($sql);
     }
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for stored function wrapper.
@@ -364,7 +364,7 @@ class DataLayer extends StaticDataLayer
   {
     return self::executeSingleton0('SELECT tst_test_function('.self::quoteNum($pA).','.self::quoteNum($pB).')');
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for illegal query.
@@ -376,7 +376,7 @@ class DataLayer extends StaticDataLayer
   {
     return self::executeRows('CALL tst_test_illegal_query()');
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    *
@@ -393,10 +393,10 @@ class DataLayer extends StaticDataLayer
     while($row = $result->fetch_array(MYSQLI_ASSOC)) $ret[$row['tst_id']] = $row;
     $result->free();
     if (self::$mysqli->more_results()) self::$mysqli->next_result();
-    
+
     return  $ret;
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type log.
@@ -408,7 +408,7 @@ class DataLayer extends StaticDataLayer
   {
     return self::executeLog('CALL tst_test_log()');
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for sending data larger than max_allowed_packet.
@@ -425,13 +425,13 @@ class DataLayer extends StaticDataLayer
     $query = 'CALL tst_test_max_allowed_packet(?)';
     $stmt  = self::$mysqli->prepare($query);
     if (!$stmt) self::mySqlError('mysqli::prepare');
-    
+
     $null = null;
     $b = $stmt->bind_param('b', $null);
     if (!$b) self::mySqlError('mysqli_stmt::bind_param');
-    
+
     self::getMaxAllowedPacket();
-    
+
     $n = strlen($pTmpBlob);
     $p = 0;
     while ($p<$n)
@@ -440,14 +440,14 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
       $p += self::$chunkSize;
     }
-    
+
     if (self::$logQueries)
     {
       $time0 = microtime(true);
-      
+
       $b = $stmt->execute();
       if (!$b) self::mySqlError('mysqli_stmt::execute');
-      
+
       self::$queryLog[] = ['query' => $query,
       'time'  => microtime(true) - $time0];
     }
@@ -456,10 +456,10 @@ class DataLayer extends StaticDataLayer
       $b = $stmt->execute();
       if (!$b) self::mySqlError('mysqli_stmt::execute');
     }
-    
+
     $row = [];
     self::bindAssoc($stmt, $row);
-    
+
     $tmp = [];
     while (($b = $stmt->fetch()))
     {
@@ -470,16 +470,16 @@ class DataLayer extends StaticDataLayer
       }
       $tmp[] = $new;
     }
-    
+
     $stmt->close();
     if (self::$mysqli->more_results()) self::$mysqli->next_result();
-    
+
     if ($b===false) self::mySqlError('mysqli_stmt::fetch');
     if (count($tmp)!=1) throw new ResultException('1', count($tmp), $query);
-    
+
     return $tmp[0][0];
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type none.
@@ -494,7 +494,7 @@ class DataLayer extends StaticDataLayer
   {
     return self::executeNone('CALL tst_test_none('.self::quoteNum($pCount).')');
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type none with BLOB.
@@ -512,13 +512,13 @@ class DataLayer extends StaticDataLayer
     $query = 'CALL tst_test_none_with_lob('.self::quoteNum($pCount).',?)';
     $stmt  = self::$mysqli->prepare($query);
     if (!$stmt) self::mySqlError('mysqli::prepare');
-    
+
     $null = null;
     $b = $stmt->bind_param('b', $null);
     if (!$b) self::mySqlError('mysqli_stmt::bind_param');
-    
+
     self::getMaxAllowedPacket();
-    
+
     $n = strlen($pBlob);
     $p = 0;
     while ($p<$n)
@@ -527,14 +527,14 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
       $p += self::$chunkSize;
     }
-    
+
     if (self::$logQueries)
     {
       $time0 = microtime(true);
-      
+
       $b = $stmt->execute();
       if (!$b) self::mySqlError('mysqli_stmt::execute');
-      
+
       self::$queryLog[] = ['query' => $query,
       'time'  => microtime(true) - $time0];
     }
@@ -543,15 +543,15 @@ class DataLayer extends StaticDataLayer
       $b = $stmt->execute();
       if (!$b) self::mySqlError('mysqli_stmt::execute');
     }
-    
+
     $ret = self::$mysqli->affected_rows;
-    
+
     $stmt->close();
     if (self::$mysqli->more_results()) self::$mysqli->next_result();
-    
+
     return $ret;
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for conversion of MySQL types to PHP types.
@@ -568,7 +568,7 @@ class DataLayer extends StaticDataLayer
   {
     return self::executeNone('CALL tst_test_parameter_type('.self::quoteNum($pPhpType1).','.self::quoteNum($pPhpType2).')');
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type row0.
@@ -584,7 +584,7 @@ class DataLayer extends StaticDataLayer
   {
     return self::executeRow0('CALL tst_test_row0a('.self::quoteNum($pCount).')');
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type row0 with BLOB.
@@ -603,13 +603,13 @@ class DataLayer extends StaticDataLayer
     $query = 'CALL tst_test_row0a_with_lob('.self::quoteNum($pCount).',?)';
     $stmt  = self::$mysqli->prepare($query);
     if (!$stmt) self::mySqlError('mysqli::prepare');
-    
+
     $null = null;
     $b = $stmt->bind_param('b', $null);
     if (!$b) self::mySqlError('mysqli_stmt::bind_param');
-    
+
     self::getMaxAllowedPacket();
-    
+
     $n = strlen($pBlob);
     $p = 0;
     while ($p<$n)
@@ -618,14 +618,14 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
       $p += self::$chunkSize;
     }
-    
+
     if (self::$logQueries)
     {
       $time0 = microtime(true);
-      
+
       $b = $stmt->execute();
       if (!$b) self::mySqlError('mysqli_stmt::execute');
-      
+
       self::$queryLog[] = ['query' => $query,
       'time'  => microtime(true) - $time0];
     }
@@ -634,10 +634,10 @@ class DataLayer extends StaticDataLayer
       $b = $stmt->execute();
       if (!$b) self::mySqlError('mysqli_stmt::execute');
     }
-    
+
     $row = [];
     self::bindAssoc($stmt, $row);
-    
+
     $tmp = [];
     while (($b = $stmt->fetch()))
     {
@@ -648,16 +648,16 @@ class DataLayer extends StaticDataLayer
       }
       $tmp[] = $new;
     }
-    
+
     $stmt->close();
     if (self::$mysqli->more_results()) self::$mysqli->next_result();
-    
+
     if ($b===false) self::mySqlError('mysqli_stmt::fetch');
     if (count($tmp)>1) throw new ResultException('0 or 1', count($tmp), $query);
-    
+
     return ($tmp) ? $tmp[0] : null;
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type row1.
@@ -673,7 +673,7 @@ class DataLayer extends StaticDataLayer
   {
     return self::executeRow1('CALL tst_test_row1a('.self::quoteNum($pCount).')');
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type row1 with BLOB.
@@ -692,13 +692,13 @@ class DataLayer extends StaticDataLayer
     $query = 'CALL tst_test_row1a_with_lob('.self::quoteNum($pCount).',?)';
     $stmt  = self::$mysqli->prepare($query);
     if (!$stmt) self::mySqlError('mysqli::prepare');
-    
+
     $null = null;
     $b = $stmt->bind_param('b', $null);
     if (!$b) self::mySqlError('mysqli_stmt::bind_param');
-    
+
     self::getMaxAllowedPacket();
-    
+
     $n = strlen($pBlob);
     $p = 0;
     while ($p<$n)
@@ -707,14 +707,14 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
       $p += self::$chunkSize;
     }
-    
+
     if (self::$logQueries)
     {
       $time0 = microtime(true);
-      
+
       $b = $stmt->execute();
       if (!$b) self::mySqlError('mysqli_stmt::execute');
-      
+
       self::$queryLog[] = ['query' => $query,
       'time'  => microtime(true) - $time0];
     }
@@ -723,10 +723,10 @@ class DataLayer extends StaticDataLayer
       $b = $stmt->execute();
       if (!$b) self::mySqlError('mysqli_stmt::execute');
     }
-    
+
     $row = [];
     self::bindAssoc($stmt, $row);
-    
+
     $tmp = [];
     while (($b = $stmt->fetch()))
     {
@@ -737,16 +737,16 @@ class DataLayer extends StaticDataLayer
       }
       $tmp[] = $new;
     }
-    
+
     $stmt->close();
     if (self::$mysqli->more_results()) self::$mysqli->next_result();
-    
+
     if ($b===false) self::mySqlError('mysqli_stmt::fetch');
     if (count($tmp)!=1) throw new ResultException('1', count($tmp), $query);
-    
+
     return $row;
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type row1.
@@ -761,7 +761,7 @@ class DataLayer extends StaticDataLayer
   {
     return self::executeRows('CALL tst_test_rows1('.self::quoteNum($pCount).')');
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type rows.
@@ -779,13 +779,13 @@ class DataLayer extends StaticDataLayer
     $query = 'CALL tst_test_rows1_with_lob('.self::quoteNum($pCount).',?)';
     $stmt  = self::$mysqli->prepare($query);
     if (!$stmt) self::mySqlError('mysqli::prepare');
-    
+
     $null = null;
     $b = $stmt->bind_param('b', $null);
     if (!$b) self::mySqlError('mysqli_stmt::bind_param');
-    
+
     self::getMaxAllowedPacket();
-    
+
     $n = strlen($pBlob);
     $p = 0;
     while ($p<$n)
@@ -794,14 +794,14 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
       $p += self::$chunkSize;
     }
-    
+
     if (self::$logQueries)
     {
       $time0 = microtime(true);
-      
+
       $b = $stmt->execute();
       if (!$b) self::mySqlError('mysqli_stmt::execute');
-      
+
       self::$queryLog[] = ['query' => $query,
       'time'  => microtime(true) - $time0];
     }
@@ -810,10 +810,10 @@ class DataLayer extends StaticDataLayer
       $b = $stmt->execute();
       if (!$b) self::mySqlError('mysqli_stmt::execute');
     }
-    
+
     $row = [];
     self::bindAssoc($stmt, $row);
-    
+
     $tmp = [];
     while (($b = $stmt->fetch()))
     {
@@ -824,15 +824,15 @@ class DataLayer extends StaticDataLayer
       }
       $tmp[] = $new;
     }
-    
+
     $stmt->close();
     if (self::$mysqli->more_results()) self::$mysqli->next_result();
-    
+
     if ($b===false) self::mySqlError('mysqli_stmt::fetch');
-    
+
     return $tmp;
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type rows_with_index.
@@ -850,10 +850,10 @@ class DataLayer extends StaticDataLayer
     while($row = $result->fetch_array(MYSQLI_ASSOC)) $ret[$row['tst_c01']][$row['tst_c02']][] = $row;
     $result->free();
     if (self::$mysqli->more_results()) self::$mysqli->next_result();
-    
+
     return $ret;
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type rows_with_index with BLOB..
@@ -871,13 +871,13 @@ class DataLayer extends StaticDataLayer
     $query = 'CALL tst_test_rows_with_index1_with_lob('.self::quoteNum($pCount).',?)';
     $stmt  = self::$mysqli->prepare($query);
     if (!$stmt) self::mySqlError('mysqli::prepare');
-    
+
     $null = null;
     $b = $stmt->bind_param('b', $null);
     if (!$b) self::mySqlError('mysqli_stmt::bind_param');
-    
+
     self::getMaxAllowedPacket();
-    
+
     $n = strlen($pBlob);
     $p = 0;
     while ($p<$n)
@@ -886,14 +886,14 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
       $p += self::$chunkSize;
     }
-    
+
     if (self::$logQueries)
     {
       $time0 = microtime(true);
-      
+
       $b = $stmt->execute();
       if (!$b) self::mySqlError('mysqli_stmt::execute');
-      
+
       self::$queryLog[] = ['query' => $query,
       'time'  => microtime(true) - $time0];
     }
@@ -902,10 +902,10 @@ class DataLayer extends StaticDataLayer
       $b = $stmt->execute();
       if (!$b) self::mySqlError('mysqli_stmt::execute');
     }
-    
+
     $row = [];
     self::bindAssoc($stmt, $row);
-    
+
     $ret = [];
     while (($b = $stmt->fetch()))
     {
@@ -916,15 +916,15 @@ class DataLayer extends StaticDataLayer
       }
       $ret[$new['tst_c01']][$new['tst_c02']][] = $new;
     }
-    
+
     $stmt->close();
     if (self::$mysqli->more_results()) self::$mysqli->next_result();
-    
+
     if ($b===false) self::mySqlError('mysqli_stmt::fetch');
-    
+
     return $ret;
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type rows_with_key.
@@ -942,10 +942,10 @@ class DataLayer extends StaticDataLayer
     while($row = $result->fetch_array(MYSQLI_ASSOC)) $ret[$row['tst_c01']][$row['tst_c02']][$row['tst_c03']] = $row;
     $result->free();
     if (self::$mysqli->more_results()) self::$mysqli->next_result();
-    
+
     return  $ret;
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type rows_with_key with BLOB.
@@ -963,13 +963,13 @@ class DataLayer extends StaticDataLayer
     $query = 'CALL tst_test_rows_with_key1_with_lob('.self::quoteNum($pCount).',?)';
     $stmt  = self::$mysqli->prepare($query);
     if (!$stmt) self::mySqlError('mysqli::prepare');
-    
+
     $null = null;
     $b = $stmt->bind_param('b', $null);
     if (!$b) self::mySqlError('mysqli_stmt::bind_param');
-    
+
     self::getMaxAllowedPacket();
-    
+
     $n = strlen($pBlob);
     $p = 0;
     while ($p<$n)
@@ -978,14 +978,14 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
       $p += self::$chunkSize;
     }
-    
+
     if (self::$logQueries)
     {
       $time0 = microtime(true);
-      
+
       $b = $stmt->execute();
       if (!$b) self::mySqlError('mysqli_stmt::execute');
-      
+
       self::$queryLog[] = ['query' => $query,
       'time'  => microtime(true) - $time0];
     }
@@ -994,10 +994,10 @@ class DataLayer extends StaticDataLayer
       $b = $stmt->execute();
       if (!$b) self::mySqlError('mysqli_stmt::execute');
     }
-    
+
     $row = [];
     self::bindAssoc($stmt, $row);
-    
+
     $ret = [];
     while (($b = $stmt->fetch()))
     {
@@ -1008,15 +1008,15 @@ class DataLayer extends StaticDataLayer
       }
       $ret[$new['tst_c01']][$new['tst_c02']][$new['tst_c03']] = $new;
     }
-    
+
     $stmt->close();
     if (self::$mysqli->more_results()) self::$mysqli->next_result();
-    
+
     if ($b===false) self::mySqlError('mysqli_stmt::fetch');
-    
+
     return $ret;
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type singleton0.
@@ -1032,7 +1032,7 @@ class DataLayer extends StaticDataLayer
   {
     return self::executeSingleton0('CALL tst_test_singleton0a('.self::quoteNum($pCount).')');
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type singleton0 with BLOB..
@@ -1051,13 +1051,13 @@ class DataLayer extends StaticDataLayer
     $query = 'CALL tst_test_singleton0a_with_lob('.self::quoteNum($pCount).',?)';
     $stmt  = self::$mysqli->prepare($query);
     if (!$stmt) self::mySqlError('mysqli::prepare');
-    
+
     $null = null;
     $b = $stmt->bind_param('b', $null);
     if (!$b) self::mySqlError('mysqli_stmt::bind_param');
-    
+
     self::getMaxAllowedPacket();
-    
+
     $n = strlen($pBlob);
     $p = 0;
     while ($p<$n)
@@ -1066,14 +1066,14 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
       $p += self::$chunkSize;
     }
-    
+
     if (self::$logQueries)
     {
       $time0 = microtime(true);
-      
+
       $b = $stmt->execute();
       if (!$b) self::mySqlError('mysqli_stmt::execute');
-      
+
       self::$queryLog[] = ['query' => $query,
       'time'  => microtime(true) - $time0];
     }
@@ -1082,10 +1082,10 @@ class DataLayer extends StaticDataLayer
       $b = $stmt->execute();
       if (!$b) self::mySqlError('mysqli_stmt::execute');
     }
-    
+
     $row = [];
     self::bindAssoc($stmt, $row);
-    
+
     $tmp = [];
     while (($b = $stmt->fetch()))
     {
@@ -1096,16 +1096,16 @@ class DataLayer extends StaticDataLayer
       }
       $tmp[] = $new;
     }
-    
+
     $stmt->close();
     if (self::$mysqli->more_results()) self::$mysqli->next_result();
-    
+
     if ($b===false) self::mySqlError('mysqli_stmt::fetch');
     if (count($tmp)>1) throw new ResultException('0 or 1', count($tmp), $query);
-    
+
     return ($tmp) ? $tmp[0][0] : null;
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type singleton1.
@@ -1121,7 +1121,7 @@ class DataLayer extends StaticDataLayer
   {
     return self::executeSingleton1('CALL tst_test_singleton1a('.self::quoteNum($pCount).')');
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type singleton1 with BLOB.
@@ -1140,13 +1140,13 @@ class DataLayer extends StaticDataLayer
     $query = 'CALL tst_test_singleton1a_with_lob('.self::quoteNum($pCount).',?)';
     $stmt  = self::$mysqli->prepare($query);
     if (!$stmt) self::mySqlError('mysqli::prepare');
-    
+
     $null = null;
     $b = $stmt->bind_param('b', $null);
     if (!$b) self::mySqlError('mysqli_stmt::bind_param');
-    
+
     self::getMaxAllowedPacket();
-    
+
     $n = strlen($pBlob);
     $p = 0;
     while ($p<$n)
@@ -1155,14 +1155,14 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
       $p += self::$chunkSize;
     }
-    
+
     if (self::$logQueries)
     {
       $time0 = microtime(true);
-      
+
       $b = $stmt->execute();
       if (!$b) self::mySqlError('mysqli_stmt::execute');
-      
+
       self::$queryLog[] = ['query' => $query,
       'time'  => microtime(true) - $time0];
     }
@@ -1171,10 +1171,10 @@ class DataLayer extends StaticDataLayer
       $b = $stmt->execute();
       if (!$b) self::mySqlError('mysqli_stmt::execute');
     }
-    
+
     $row = [];
     self::bindAssoc($stmt, $row);
-    
+
     $tmp = [];
     while (($b = $stmt->fetch()))
     {
@@ -1185,16 +1185,16 @@ class DataLayer extends StaticDataLayer
       }
       $tmp[] = $new;
     }
-    
+
     $stmt->close();
     if (self::$mysqli->more_results()) self::$mysqli->next_result();
-    
+
     if ($b===false) self::mySqlError('mysqli_stmt::fetch');
     if (count($tmp)!=1) throw new ResultException('1', count($tmp), $query);
-    
+
     return $tmp[0][0];
   }
-  
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type table.
@@ -1206,7 +1206,8 @@ class DataLayer extends StaticDataLayer
   {
     return self::executeTable('CALL tst_test_table()');
   }
-    //--------------------------------------------------------------------------------------------------------------------
+
+  //--------------------------------------------------------------------------------------------------------------------
 }
 
 //----------------------------------------------------------------------------------------------------------------------

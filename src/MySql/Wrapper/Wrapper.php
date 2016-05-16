@@ -329,7 +329,7 @@ abstract class Wrapper
     $this->codeStore->append('}');
     $this->codeStore->append();
 
-    return $this->codeStore->getCode();
+    return $this->codeStore->getCode(1);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -354,7 +354,7 @@ abstract class Wrapper
     $this->codeStore->append('}');
     $this->codeStore->append();
 
-    return $this->codeStore->getCode();
+    return $this->codeStore->getCode(1);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

@@ -153,7 +153,7 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
       echo "No files with stored routines found.\n";
     }
 
-    $methods         = $this->codeStore->getCode();
+    $methods         = $this->codeStore->getCode(1);
     $this->codeStore = new PhpCodeStore(0);
 
     // Write the header of the wrapper class.
@@ -166,7 +166,7 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
     $this->writeClassTrailer();
 
     // Write the wrapper class to the filesystem.
-    $this->writeTwoPhases($this->myWrapperFilename, $this->codeStore->getCode());
+    $this->writeTwoPhases($this->myWrapperFilename, $this->codeStore->getCode(0));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -276,6 +276,7 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
    */
   private function writeClassTrailer()
   {
+    $this->codeStore->append();
     $this->codeStore->appendSeparator();
     $this->codeStore->append('}');
     $this->codeStore->append();
