@@ -2,15 +2,17 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\Test\MySql;
 
-//----------------------------------------------------------------------------------------------------------------------
 use \SetBased\Exception\RuntimeException;
 use \SetBased\Stratum\Exception\ResultException;
 use \SetBased\Stratum\MySql\StaticDataLayer;
 
 //----------------------------------------------------------------------------------------------------------------------
+/**
+ * The data layer.
+ */
 class DataLayer extends StaticDataLayer
 {
-  //-------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for magic constant.
    *
@@ -23,7 +25,7 @@ class DataLayer extends StaticDataLayer
     return self::executeSingleton1('CALL tst_magic_constant01()');
   }
 
-  //-------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for magic constant.
    *
@@ -36,7 +38,7 @@ class DataLayer extends StaticDataLayer
     return self::executeSingleton1('CALL tst_magic_constant02()');
   }
 
-  //-------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for magic constant.
    *
@@ -49,7 +51,7 @@ class DataLayer extends StaticDataLayer
     return self::executeSingleton1('CALL tst_magic_constant03()');
   }
 
-  //-------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for magic constant.
    *
@@ -62,7 +64,7 @@ class DataLayer extends StaticDataLayer
     return self::executeSingleton1('CALL tst_magic_constant04()');
   }
 
-  //-------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for magic constant.
    *
@@ -75,7 +77,7 @@ class DataLayer extends StaticDataLayer
     return self::executeSingleton1('CALL tst_magic_constant05()');
   }
 
-  //-------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for all possible types of parameters excluding LOB's.
    *
@@ -128,7 +130,7 @@ class DataLayer extends StaticDataLayer
     return self::executeNone('CALL tst_test01('.self::quoteNum($pParam00).','.self::quoteNum($pParam01).','.self::quoteNum($pParam02).','.self::quoteNum($pParam03).','.self::quoteNum($pParam04).','.self::quoteNum($pParam05).','.self::quoteNum($pParam06).','.self::quoteNum($pParam07).','.self::quoteBit($pParam08).','.self::quoteString($pParam09).','.self::quoteString($pParam10).','.self::quoteString($pParam11).','.self::quoteString($pParam12).','.self::quoteNum($pParam13).','.self::quoteString($pParam14).','.self::quoteString($pParam15).','.self::quoteString($pParam16).','.self::quoteString($pParam17).','.self::quoteString($pParam26).','.self::quoteString($pParam27).')');
   }
 
-  //-------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for all possible types of parameters including LOB's.
    *
@@ -284,7 +286,7 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::execute');
 
       self::$queryLog[] = ['query' => $query,
-                           'time'  => microtime(true) - $time0];
+      'time'  => microtime(true) - $time0];
     }
     else
     {
@@ -300,7 +302,7 @@ class DataLayer extends StaticDataLayer
     return $ret;
   }
 
-  //-------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation bulk_insert.
    *
@@ -324,7 +326,7 @@ class DataLayer extends StaticDataLayer
     }
   }
 
-  //-------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation bulk_insert.
    *
@@ -348,7 +350,7 @@ class DataLayer extends StaticDataLayer
     }
   }
 
-  //-------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for stored function wrapper.
    *
@@ -365,7 +367,7 @@ class DataLayer extends StaticDataLayer
     return self::executeSingleton0('SELECT tst_test_function('.self::quoteNum($pA).','.self::quoteNum($pB).')');
   }
 
-  //-------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for illegal query.
    *
@@ -377,7 +379,7 @@ class DataLayer extends StaticDataLayer
     return self::executeRows('CALL tst_test_illegal_query()');
   }
 
-  //-------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    *
    * @param string|int[] $pIds The id's in CSV format.
@@ -397,7 +399,7 @@ class DataLayer extends StaticDataLayer
     return  $ret;
   }
 
-  //-------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type log.
    *
@@ -409,7 +411,7 @@ class DataLayer extends StaticDataLayer
     return self::executeLog('CALL tst_test_log()');
   }
 
-  //-------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for sending data larger than max_allowed_packet.
    *
@@ -449,7 +451,7 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::execute');
 
       self::$queryLog[] = ['query' => $query,
-                           'time'  => microtime(true) - $time0];
+      'time'  => microtime(true) - $time0];
     }
     else
     {
@@ -480,7 +482,7 @@ class DataLayer extends StaticDataLayer
     return $tmp[0][0];
   }
 
-  //-------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type none.
    *
@@ -495,7 +497,7 @@ class DataLayer extends StaticDataLayer
     return self::executeNone('CALL tst_test_none('.self::quoteNum($pCount).')');
   }
 
-  //-------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type none with BLOB.
    *
@@ -536,7 +538,7 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::execute');
 
       self::$queryLog[] = ['query' => $query,
-                           'time'  => microtime(true) - $time0];
+      'time'  => microtime(true) - $time0];
     }
     else
     {
@@ -552,7 +554,7 @@ class DataLayer extends StaticDataLayer
     return $ret;
   }
 
-  //-------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for conversion of MySQL types to PHP types.
    *
@@ -569,14 +571,11 @@ class DataLayer extends StaticDataLayer
     return self::executeNone('CALL tst_test_parameter_type('.self::quoteNum($pPhpType1).','.self::quoteNum($pPhpType2).')');
   }
 
-  //-------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type row0.
    *
-   * @param int $pCount The number of rows selected.
-   *                    * 0 For a valid test.
-   *                    * 1 For a valid test.
-   *                    * 2 For a invalid test.
+   * @param int $pCount The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test.
    *                    int(11)
    *
    * @return array
@@ -588,14 +587,11 @@ class DataLayer extends StaticDataLayer
     return self::executeRow0('CALL tst_test_row0a('.self::quoteNum($pCount).')');
   }
 
-  //-------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type row0 with BLOB.
    *
-   * @param int    $pCount The number of rows selected.
-   *                       * 0 For a valid test.
-   *                       * 1 For a valid test.
-   *                       * 2 For a invalid test.
+   * @param int    $pCount The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test.
    *                       int(11)
    * @param string $pBlob  The BLOB.
    *                       blob
@@ -633,7 +629,7 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::execute');
 
       self::$queryLog[] = ['query' => $query,
-                           'time'  => microtime(true) - $time0];
+      'time'  => microtime(true) - $time0];
     }
     else
     {
@@ -664,14 +660,11 @@ class DataLayer extends StaticDataLayer
     return ($tmp) ? $tmp[0] : null;
   }
 
-  //-------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type row1.
    *
-   * @param int $pCount The number of rows selected.
-   *                    * 0 For a invalid test.
-   *                    * 1 For a valid test.
-   *                    * 2 For a invalid test.
+   * @param int $pCount The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
    *                    int(11)
    *
    * @return array
@@ -683,14 +676,11 @@ class DataLayer extends StaticDataLayer
     return self::executeRow1('CALL tst_test_row1a('.self::quoteNum($pCount).')');
   }
 
-  //-------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type row1 with BLOB.
    *
-   * @param int    $pCount The number of rows selected.
-   *                       * 0 For a invalid test.
-   *                       * 1 For a valid test.
-   *                       * 2 For a invalid test.
+   * @param int    $pCount The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
    *                       int(11)
    * @param string $pBlob  The BLOB.
    *                       blob
@@ -728,7 +718,7 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::execute');
 
       self::$queryLog[] = ['query' => $query,
-                           'time'  => microtime(true) - $time0];
+      'time'  => microtime(true) - $time0];
     }
     else
     {
@@ -759,14 +749,11 @@ class DataLayer extends StaticDataLayer
     return $row;
   }
 
-  //-------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type row1.
    *
-   * @param int $pCount The number of rows selected.
-   *                    * 0 For a invalid test.
-   *                    * 1 For a valid test.
-   *                    * 2 For a invalid test.
+   * @param int $pCount The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
    *                    int(11)
    *
    * @return \array[]
@@ -777,7 +764,7 @@ class DataLayer extends StaticDataLayer
     return self::executeRows('CALL tst_test_rows1('.self::quoteNum($pCount).')');
   }
 
-  //-------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type rows.
    *
@@ -818,7 +805,7 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::execute');
 
       self::$queryLog[] = ['query' => $query,
-                           'time'  => microtime(true) - $time0];
+      'time'  => microtime(true) - $time0];
     }
     else
     {
@@ -837,7 +824,7 @@ class DataLayer extends StaticDataLayer
       {
         $new[$key] = $value;
       }
-       $tmp[] = $new;
+      $tmp[] = $new;
     }
 
     $stmt->close();
@@ -848,7 +835,7 @@ class DataLayer extends StaticDataLayer
     return $tmp;
   }
 
-  //-------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type rows_with_index.
    *
@@ -869,10 +856,9 @@ class DataLayer extends StaticDataLayer
     return $ret;
   }
 
-  //-------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Test for designation type rows_with_index with BLOB.
-   * .
+   * Test for designation type rows_with_index with BLOB..
    *
    * @param int    $pCount The number of rows selected.
    *                       int(11)
@@ -911,7 +897,7 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::execute');
 
       self::$queryLog[] = ['query' => $query,
-                           'time'  => microtime(true) - $time0];
+      'time'  => microtime(true) - $time0];
     }
     else
     {
@@ -941,7 +927,7 @@ class DataLayer extends StaticDataLayer
     return $ret;
   }
 
-  //-------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type rows_with_key.
    *
@@ -962,7 +948,7 @@ class DataLayer extends StaticDataLayer
     return  $ret;
   }
 
-  //-------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type rows_with_key with BLOB.
    *
@@ -1003,7 +989,7 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::execute');
 
       self::$queryLog[] = ['query' => $query,
-                           'time'  => microtime(true) - $time0];
+      'time'  => microtime(true) - $time0];
     }
     else
     {
@@ -1033,14 +1019,11 @@ class DataLayer extends StaticDataLayer
     return $ret;
   }
 
-  //-------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type singleton0.
    *
-   * @param int $pCount The number of rows selected.
-   *                    * 0 For a valid test.
-   *                    * 1 For a valid test.
-   *                    * 2 For a invalid test.
+   * @param int $pCount The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test.
    *                    int(11)
    *
    * @return string
@@ -1052,15 +1035,11 @@ class DataLayer extends StaticDataLayer
     return self::executeSingleton0('CALL tst_test_singleton0a('.self::quoteNum($pCount).')');
   }
 
-  //-------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Test for designation type singleton0 with BLOB.
-   * .
+   * Test for designation type singleton0 with BLOB..
    *
-   * @param int    $pCount The number of rows selected.
-   *                       * 0 For a valid test.
-   *                       * 1 For a valid test.
-   *                       * 2 For a invalid test.
+   * @param int    $pCount The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test.
    *                       int(11)
    * @param string $pBlob  The BLOB.
    *                       blob
@@ -1098,7 +1077,7 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::execute');
 
       self::$queryLog[] = ['query' => $query,
-                           'time'  => microtime(true) - $time0];
+      'time'  => microtime(true) - $time0];
     }
     else
     {
@@ -1129,14 +1108,11 @@ class DataLayer extends StaticDataLayer
     return ($tmp) ? $tmp[0][0] : null;
   }
 
-  //-------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type singleton1.
    *
-   * @param int $pCount The number of rows selected.
-   *                    * 0 For a invalid test.
-   *                    * 1 For a valid test.
-   *                    * 2 For a invalid test.
+   * @param int $pCount The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
    *                    int(11)
    *
    * @return string
@@ -1148,14 +1124,11 @@ class DataLayer extends StaticDataLayer
     return self::executeSingleton1('CALL tst_test_singleton1a('.self::quoteNum($pCount).')');
   }
 
-  //-------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type singleton1 with BLOB.
    *
-   * @param int    $pCount The number of rows selected.
-   *                       * 0 For a invalid test.
-   *                       * 1 For a valid test.
-   *                       * 2 For a invalid test.
+   * @param int    $pCount The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
    *                       int(11)
    * @param string $pBlob  The BLOB.
    *                       blob
@@ -1193,7 +1166,7 @@ class DataLayer extends StaticDataLayer
       if (!$b) self::mySqlError('mysqli_stmt::execute');
 
       self::$queryLog[] = ['query' => $query,
-                           'time'  => microtime(true) - $time0];
+      'time'  => microtime(true) - $time0];
     }
     else
     {
@@ -1224,7 +1197,7 @@ class DataLayer extends StaticDataLayer
     return $tmp[0][0];
   }
 
-  //-------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type table.
    *

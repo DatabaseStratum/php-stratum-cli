@@ -101,7 +101,7 @@
         "columns": null,
         "fields": null,
         "column_types": null,
-        "timestamp": 1462979443,
+        "timestamp": 1463403583,
         "replace": [
 
         ],
@@ -1481,7 +1481,7 @@
                     "parameter_name": "p_count",
                     "php_type": "int",
                     "data_type_descriptor": "int(11)",
-                    "description": "The number of rows selected.\n* 0 For a valid test.\n* 1 For a valid test.\n* 2 For a invalid test."
+                    "description": "The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test."
                 }
             ]
         },
@@ -1528,7 +1528,7 @@
                     "parameter_name": "p_count",
                     "php_type": "int",
                     "data_type_descriptor": "int(11)",
-                    "description": "The number of rows selected.\n* 0 For a valid test.\n* 1 For a valid test.\n* 2 For a invalid test."
+                    "description": "The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test."
                 },
                 {
                     "parameter_name": "p_blob",
@@ -1571,7 +1571,7 @@
                     "parameter_name": "p_count",
                     "php_type": "int",
                     "data_type_descriptor": "int(11)",
-                    "description": "The number of rows selected.\n* 0 For a invalid test.\n* 1 For a valid test.\n* 2 For a invalid test."
+                    "description": "The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test."
                 }
             ]
         },
@@ -1618,7 +1618,7 @@
                     "parameter_name": "p_count",
                     "php_type": "int",
                     "data_type_descriptor": "int(11)",
-                    "description": "The number of rows selected.\n* 0 For a invalid test.\n* 1 For a valid test.\n* 2 For a invalid test."
+                    "description": "The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test."
                 },
                 {
                     "parameter_name": "p_blob",
@@ -1661,7 +1661,7 @@
                     "parameter_name": "p_count",
                     "php_type": "int",
                     "data_type_descriptor": "int(11)",
-                    "description": "The number of rows selected.\n* 0 For a invalid test.\n* 1 For a valid test.\n* 2 For a invalid test."
+                    "description": "The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test."
                 }
             ]
         },
@@ -1797,8 +1797,8 @@
 
         ],
         "phpdoc": {
-            "sort_description": "Test for designation type rows_with_index with BLOB.",
-            "long_description": ".",
+            "sort_description": "Test for designation type rows_with_index with BLOB..",
+            "long_description": "",
             "parameters": [
                 {
                     "parameter_name": "p_count",
@@ -1945,7 +1945,7 @@
                     "parameter_name": "p_count",
                     "php_type": "int",
                     "data_type_descriptor": "int(11)",
-                    "description": "The number of rows selected.\n* 0 For a valid test.\n* 1 For a valid test.\n* 2 For a invalid test."
+                    "description": "The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test."
                 }
             ]
         },
@@ -1985,14 +1985,14 @@
 
         ],
         "phpdoc": {
-            "sort_description": "Test for designation type singleton0 with BLOB.",
-            "long_description": ".",
+            "sort_description": "Test for designation type singleton0 with BLOB..",
+            "long_description": "",
             "parameters": [
                 {
                     "parameter_name": "p_count",
                     "php_type": "int",
                     "data_type_descriptor": "int(11)",
-                    "description": "The number of rows selected.\n* 0 For a valid test.\n* 1 For a valid test.\n* 2 For a invalid test."
+                    "description": "The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test."
                 },
                 {
                     "parameter_name": "p_blob",
@@ -2035,7 +2035,7 @@
                     "parameter_name": "p_count",
                     "php_type": "int",
                     "data_type_descriptor": "int(11)",
-                    "description": "The number of rows selected.\n* 0 For a invalid test.\n* 1 For a valid test.\n* 2 For a invalid test."
+                    "description": "The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test."
                 }
             ]
         },
@@ -2082,7 +2082,7 @@
                     "parameter_name": "p_count",
                     "php_type": "int",
                     "data_type_descriptor": "int(11)",
-                    "description": "The number of rows selected.\n* 0 For a invalid test.\n* 1 For a valid test.\n* 2 For a invalid test."
+                    "description": "The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test."
                 },
                 {
                     "parameter_name": "p_blob",

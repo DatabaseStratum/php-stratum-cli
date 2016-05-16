@@ -22,9 +22,9 @@ class Row1Wrapper extends Wrapper
   /**
    * {@inheritdoc}
    */
-  public function __construct($nameMangler, $lobAsString)
+  public function __construct($codeStore, $nameMangler, $lobAsString)
   {
-    parent::__construct($nameMangler, $lobAsString);
+    parent::__construct($codeStore, $nameMangler, $lobAsString);
 
     $this->exceptions[] = 'ResultException';
     $this->imports[]    = '\SetBased\Stratum\Exception\ResultException';
@@ -46,7 +46,7 @@ class Row1Wrapper extends Wrapper
   protected function writeResultHandler($routine)
   {
     $routine_args = $this->getRoutineArgs($routine);
-    $this->writeLine('return self::executeRow1(\'CALL '.$routine['routine_name'].'('.$routine_args.')\');');
+    $this->codeStore->append('return self::executeRow1(\'CALL '.$routine['routine_name'].'('.$routine_args.')\');');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -55,20 +55,20 @@ class Row1Wrapper extends Wrapper
    */
   protected function writeRoutineFunctionLobFetchData($routine)
   {
-    $this->writeLine('$row = [];');
-    $this->writeLine('self::bindAssoc($stmt, $row);');
-    $this->writeLine();
-    $this->writeLine('$tmp = [];');
-    $this->writeLine('while (($b = $stmt->fetch()))');
-    $this->writeLine('{');
-    $this->writeLine('$new = [];');
-    $this->writeLine('foreach($row as $key => $value)');
-    $this->writeLine('{');
-    $this->writeLine('$new[$key] = $value;');
-    $this->writeLine('}');
-    $this->writeLine('$tmp[] = $new;');
-    $this->writeLine('}');
-    $this->writeLine();
+    $this->codeStore->append('$row = [];');
+    $this->codeStore->append('self::bindAssoc($stmt, $row);');
+    $this->codeStore->append();
+    $this->codeStore->append('$tmp = [];');
+    $this->codeStore->append('while (($b = $stmt->fetch()))');
+    $this->codeStore->append('{');
+    $this->codeStore->append('$new = [];');
+    $this->codeStore->append('foreach($row as $key => $value)');
+    $this->codeStore->append('{');
+    $this->codeStore->append('$new[$key] = $value;');
+    $this->codeStore->append('}');
+    $this->codeStore->append('$tmp[] = $new;');
+    $this->codeStore->append('}');
+    $this->codeStore->append();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -77,10 +77,10 @@ class Row1Wrapper extends Wrapper
    */
   protected function writeRoutineFunctionLobReturnData()
   {
-    $this->writeLine('if ($b===false) self::mySqlError(\'mysqli_stmt::fetch\');');
-    $this->writeLine('if (count($tmp)!=1) throw new ResultException(\'1\', count($tmp), $query);');
-    $this->writeLine();
-    $this->writeLine('return $row;');
+    $this->codeStore->append('if ($b===false) self::mySqlError(\'mysqli_stmt::fetch\');');
+    $this->codeStore->append('if (count($tmp)!=1) throw new ResultException(\'1\', count($tmp), $query);');
+    $this->codeStore->append();
+    $this->codeStore->append('return $row;');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
