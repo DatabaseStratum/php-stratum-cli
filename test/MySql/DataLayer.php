@@ -2,12 +2,14 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\Test\MySql;
 
-//----------------------------------------------------------------------------------------------------------------------
 use \SetBased\Exception\RuntimeException;
 use \SetBased\Stratum\Exception\ResultException;
 use \SetBased\Stratum\MySql\StaticDataLayer;
 
 //----------------------------------------------------------------------------------------------------------------------
+/**
+ * The data layer.
+ */
 class DataLayer extends StaticDataLayer
 {
   //--------------------------------------------------------------------------------------------------------------------
@@ -108,17 +110,17 @@ class DataLayer extends StaticDataLayer
    * @param int    $pParam13 Test parameter 13.
    *                         year(4)
    * @param string $pParam14 Test parameter 14.
-   *                         char(10) character set utf8 collation utf8_general_ci
+   *                         char(10) character set latin1 collation latin1_swedish_ci
    * @param string $pParam15 Test parameter 15.
-   *                         varchar(10) character set utf8 collation utf8_general_ci
+   *                         varchar(10) character set latin1 collation latin1_swedish_ci
    * @param string $pParam16 Test parameter 16.
    *                         binary(10)
    * @param string $pParam17 Test parameter 17.
    *                         varbinary(10)
    * @param string $pParam26 Test parameter 26.
-   *                         enum('a','b') character set utf8 collation utf8_general_ci
+   *                         enum('a','b') character set latin1 collation latin1_swedish_ci
    * @param string $pParam27 Test parameter 27.
-   *                         set('a','b') character set utf8 collation utf8_general_ci
+   *                         set('a','b') character set latin1 collation latin1_swedish_ci
    *
    * @return int
    * @throws RuntimeException
@@ -161,9 +163,9 @@ class DataLayer extends StaticDataLayer
    * @param int    $pParam13 Test parameter 13.
    *                         year(4)
    * @param string $pParam14 Test parameter 14.
-   *                         char(10) character set utf8 collation utf8_general_ci
+   *                         char(10) character set latin1 collation latin1_swedish_ci
    * @param string $pParam15 Test parameter 15.
-   *                         varchar(10) character set utf8 collation utf8_general_ci
+   *                         varchar(10) character set latin1 collation latin1_swedish_ci
    * @param string $pParam16 Test parameter 16.
    *                         binary(10)
    * @param string $pParam17 Test parameter 17.
@@ -177,17 +179,17 @@ class DataLayer extends StaticDataLayer
    * @param string $pParam21 Test parameter 21.
    *                         longblob
    * @param string $pParam22 Test parameter 22.
-   *                         tinytext character set utf8 collation utf8_general_ci
+   *                         tinytext character set latin1 collation latin1_swedish_ci
    * @param string $pParam23 Test parameter 23.
-   *                         text character set utf8 collation utf8_general_ci
+   *                         text character set latin1 collation latin1_swedish_ci
    * @param string $pParam24 Test parameter 24.
-   *                         mediumtext character set utf8 collation utf8_general_ci
+   *                         mediumtext character set latin1 collation latin1_swedish_ci
    * @param string $pParam25 Test parameter 25.
-   *                         longtext character set utf8 collation utf8_general_ci
+   *                         longtext character set latin1 collation latin1_swedish_ci
    * @param string $pParam26 Test parameter 26.
-   *                         enum('a','b') character set utf8 collation utf8_general_ci
+   *                         enum('a','b') character set latin1 collation latin1_swedish_ci
    * @param string $pParam27 Test parameter 27.
-   *                         set('a','b') character set utf8 collation utf8_general_ci
+   *                         set('a','b') character set latin1 collation latin1_swedish_ci
    *
    * @return int
    * @throws RuntimeException
@@ -381,7 +383,7 @@ class DataLayer extends StaticDataLayer
   /**
    *
    * @param string|int[] $pIds The id's in CSV format.
-   *                           varchar(255) character set utf8 collation utf8_general_ci
+   *                           varchar(255) character set latin1 collation latin1_swedish_ci
    *
    * @return \array[]
    * @throws RuntimeException

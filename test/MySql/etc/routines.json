@@ -3,16 +3,22 @@
         "routine_name": "tst_magic_constant01",
         "designation": "singleton1",
         "table_name": null,
-        "parameters": [],
+        "parameters": [
+
+        ],
         "columns": null,
         "fields": null,
         "column_types": null,
-        "timestamp": 1462970396,
-        "replace": [],
+        "timestamp": 1428319749,
+        "replace": [
+
+        ],
         "phpdoc": {
             "sort_description": "Test for magic constant.",
             "long_description": "",
-            "parameters": []
+            "parameters": [
+
+            ]
         },
         "spec_params": null
     },
@@ -20,16 +26,22 @@
         "routine_name": "tst_magic_constant02",
         "designation": "singleton1",
         "table_name": null,
-        "parameters": [],
+        "parameters": [
+
+        ],
         "columns": null,
         "fields": null,
         "column_types": null,
-        "timestamp": 1462970396,
-        "replace": [],
+        "timestamp": 1461530972,
+        "replace": [
+
+        ],
         "phpdoc": {
             "sort_description": "Test for magic constant.",
             "long_description": "",
-            "parameters": []
+            "parameters": [
+
+            ]
         },
         "spec_params": null
     },
@@ -37,16 +49,22 @@
         "routine_name": "tst_magic_constant03",
         "designation": "singleton1",
         "table_name": null,
-        "parameters": [],
+        "parameters": [
+
+        ],
         "columns": null,
         "fields": null,
         "column_types": null,
-        "timestamp": 1462970396,
-        "replace": [],
+        "timestamp": 1461536152,
+        "replace": [
+
+        ],
         "phpdoc": {
             "sort_description": "Test for magic constant.",
             "long_description": "",
-            "parameters": []
+            "parameters": [
+
+            ]
         },
         "spec_params": null
     },
@@ -54,16 +72,22 @@
         "routine_name": "tst_magic_constant04",
         "designation": "singleton1",
         "table_name": null,
-        "parameters": [],
+        "parameters": [
+
+        ],
         "columns": null,
         "fields": null,
         "column_types": null,
-        "timestamp": 1462970396,
-        "replace": [],
+        "timestamp": 1461532514,
+        "replace": [
+
+        ],
         "phpdoc": {
             "sort_description": "Test for magic constant.",
             "long_description": "",
-            "parameters": []
+            "parameters": [
+
+            ]
         },
         "spec_params": null
     },
@@ -71,16 +95,22 @@
         "routine_name": "tst_magic_constant05",
         "designation": "singleton1",
         "table_name": null,
-        "parameters": [],
+        "parameters": [
+
+        ],
         "columns": null,
         "fields": null,
         "column_types": null,
-        "timestamp": 1463392334,
-        "replace": [],
+        "timestamp": 1463403583,
+        "replace": [
+
+        ],
         "phpdoc": {
             "sort_description": "Test for magic constant.",
             "long_description": "",
-            "parameters": []
+            "parameters": [
+
+            ]
         },
         "spec_params": null
     },
@@ -234,20 +264,20 @@
                 "data_type": "char",
                 "numeric_precision": null,
                 "numeric_scale": null,
-                "character_set_name": "utf8",
-                "collation_name": "utf8_general_ci",
+                "character_set_name": "latin1",
+                "collation_name": "latin1_swedish_ci",
                 "dtd_identifier": "char(10)",
-                "data_type_descriptor": "char(10) character set utf8 collation utf8_general_ci"
+                "data_type_descriptor": "char(10) character set latin1 collation latin1_swedish_ci"
             },
             {
                 "parameter_name": "p_param15",
                 "data_type": "varchar",
                 "numeric_precision": null,
                 "numeric_scale": null,
-                "character_set_name": "utf8",
-                "collation_name": "utf8_general_ci",
+                "character_set_name": "latin1",
+                "collation_name": "latin1_swedish_ci",
                 "dtd_identifier": "varchar(10)",
-                "data_type_descriptor": "varchar(10) character set utf8 collation utf8_general_ci"
+                "data_type_descriptor": "varchar(10) character set latin1 collation latin1_swedish_ci"
             },
             {
                 "parameter_name": "p_param16",
@@ -274,26 +304,26 @@
                 "data_type": "enum",
                 "numeric_precision": null,
                 "numeric_scale": null,
-                "character_set_name": "utf8",
-                "collation_name": "utf8_general_ci",
+                "character_set_name": "latin1",
+                "collation_name": "latin1_swedish_ci",
                 "dtd_identifier": "enum('a','b')",
-                "data_type_descriptor": "enum('a','b') character set utf8 collation utf8_general_ci"
+                "data_type_descriptor": "enum('a','b') character set latin1 collation latin1_swedish_ci"
             },
             {
                 "parameter_name": "p_param27",
                 "data_type": "set",
                 "numeric_precision": null,
                 "numeric_scale": null,
-                "character_set_name": "utf8",
-                "collation_name": "utf8_general_ci",
+                "character_set_name": "latin1",
+                "collation_name": "latin1_swedish_ci",
                 "dtd_identifier": "set('a','b')",
-                "data_type_descriptor": "set('a','b') character set utf8 collation utf8_general_ci"
+                "data_type_descriptor": "set('a','b') character set latin1 collation latin1_swedish_ci"
             }
         ],
         "columns": null,
         "fields": null,
         "column_types": null,
-        "timestamp": 1462970396,
+        "timestamp": 1461534999,
         "replace": {
             "@tst_foo1.tst_c00%type@": "int(11)",
             "@tst_foo1.tst_c01%type@": "smallint(6)",
@@ -407,13 +437,13 @@
                 {
                     "parameter_name": "p_param14",
                     "php_type": "string",
-                    "data_type_descriptor": "char(10) character set utf8 collation utf8_general_ci",
+                    "data_type_descriptor": "char(10) character set latin1 collation latin1_swedish_ci",
                     "description": "Test parameter 14."
                 },
                 {
                     "parameter_name": "p_param15",
                     "php_type": "string",
-                    "data_type_descriptor": "varchar(10) character set utf8 collation utf8_general_ci",
+                    "data_type_descriptor": "varchar(10) character set latin1 collation latin1_swedish_ci",
                     "description": "Test parameter 15."
                 },
                 {
@@ -431,13 +461,13 @@
                 {
                     "parameter_name": "p_param26",
                     "php_type": "string",
-                    "data_type_descriptor": "enum('a','b') character set utf8 collation utf8_general_ci",
+                    "data_type_descriptor": "enum('a','b') character set latin1 collation latin1_swedish_ci",
                     "description": "Test parameter 26."
                 },
                 {
                     "parameter_name": "p_param27",
                     "php_type": "string",
-                    "data_type_descriptor": "set('a','b') character set utf8 collation utf8_general_ci",
+                    "data_type_descriptor": "set('a','b') character set latin1 collation latin1_swedish_ci",
                     "description": "Test parameter 27."
                 }
             ]
@@ -594,20 +624,20 @@
                 "data_type": "char",
                 "numeric_precision": null,
                 "numeric_scale": null,
-                "character_set_name": "utf8",
-                "collation_name": "utf8_general_ci",
+                "character_set_name": "latin1",
+                "collation_name": "latin1_swedish_ci",
                 "dtd_identifier": "char(10)",
-                "data_type_descriptor": "char(10) character set utf8 collation utf8_general_ci"
+                "data_type_descriptor": "char(10) character set latin1 collation latin1_swedish_ci"
             },
             {
                 "parameter_name": "p_param15",
                 "data_type": "varchar",
                 "numeric_precision": null,
                 "numeric_scale": null,
-                "character_set_name": "utf8",
-                "collation_name": "utf8_general_ci",
+                "character_set_name": "latin1",
+                "collation_name": "latin1_swedish_ci",
                 "dtd_identifier": "varchar(10)",
-                "data_type_descriptor": "varchar(10) character set utf8 collation utf8_general_ci"
+                "data_type_descriptor": "varchar(10) character set latin1 collation latin1_swedish_ci"
             },
             {
                 "parameter_name": "p_param16",
@@ -674,66 +704,66 @@
                 "data_type": "tinytext",
                 "numeric_precision": null,
                 "numeric_scale": null,
-                "character_set_name": "utf8",
-                "collation_name": "utf8_general_ci",
+                "character_set_name": "latin1",
+                "collation_name": "latin1_swedish_ci",
                 "dtd_identifier": "tinytext",
-                "data_type_descriptor": "tinytext character set utf8 collation utf8_general_ci"
+                "data_type_descriptor": "tinytext character set latin1 collation latin1_swedish_ci"
             },
             {
                 "parameter_name": "p_param23",
                 "data_type": "text",
                 "numeric_precision": null,
                 "numeric_scale": null,
-                "character_set_name": "utf8",
-                "collation_name": "utf8_general_ci",
+                "character_set_name": "latin1",
+                "collation_name": "latin1_swedish_ci",
                 "dtd_identifier": "text",
-                "data_type_descriptor": "text character set utf8 collation utf8_general_ci"
+                "data_type_descriptor": "text character set latin1 collation latin1_swedish_ci"
             },
             {
                 "parameter_name": "p_param24",
                 "data_type": "mediumtext",
                 "numeric_precision": null,
                 "numeric_scale": null,
-                "character_set_name": "utf8",
-                "collation_name": "utf8_general_ci",
+                "character_set_name": "latin1",
+                "collation_name": "latin1_swedish_ci",
                 "dtd_identifier": "mediumtext",
-                "data_type_descriptor": "mediumtext character set utf8 collation utf8_general_ci"
+                "data_type_descriptor": "mediumtext character set latin1 collation latin1_swedish_ci"
             },
             {
                 "parameter_name": "p_param25",
                 "data_type": "longtext",
                 "numeric_precision": null,
                 "numeric_scale": null,
-                "character_set_name": "utf8",
-                "collation_name": "utf8_general_ci",
+                "character_set_name": "latin1",
+                "collation_name": "latin1_swedish_ci",
                 "dtd_identifier": "longtext",
-                "data_type_descriptor": "longtext character set utf8 collation utf8_general_ci"
+                "data_type_descriptor": "longtext character set latin1 collation latin1_swedish_ci"
             },
             {
                 "parameter_name": "p_param26",
                 "data_type": "enum",
                 "numeric_precision": null,
                 "numeric_scale": null,
-                "character_set_name": "utf8",
-                "collation_name": "utf8_general_ci",
+                "character_set_name": "latin1",
+                "collation_name": "latin1_swedish_ci",
                 "dtd_identifier": "enum('a','b')",
-                "data_type_descriptor": "enum('a','b') character set utf8 collation utf8_general_ci"
+                "data_type_descriptor": "enum('a','b') character set latin1 collation latin1_swedish_ci"
             },
             {
                 "parameter_name": "p_param27",
                 "data_type": "set",
                 "numeric_precision": null,
                 "numeric_scale": null,
-                "character_set_name": "utf8",
-                "collation_name": "utf8_general_ci",
+                "character_set_name": "latin1",
+                "collation_name": "latin1_swedish_ci",
                 "dtd_identifier": "set('a','b')",
-                "data_type_descriptor": "set('a','b') character set utf8 collation utf8_general_ci"
+                "data_type_descriptor": "set('a','b') character set latin1 collation latin1_swedish_ci"
             }
         ],
         "columns": null,
         "fields": null,
         "column_types": null,
-        "timestamp": 1462970396,
+        "timestamp": 1461567455,
         "replace": {
             "@tst_foo1.tst_c00%type@": "int(11)",
             "@tst_foo1.tst_c01%type@": "smallint(6)",
@@ -855,13 +885,13 @@
                 {
                     "parameter_name": "p_param14",
                     "php_type": "string",
-                    "data_type_descriptor": "char(10) character set utf8 collation utf8_general_ci",
+                    "data_type_descriptor": "char(10) character set latin1 collation latin1_swedish_ci",
                     "description": "Test parameter 14."
                 },
                 {
                     "parameter_name": "p_param15",
                     "php_type": "string",
-                    "data_type_descriptor": "varchar(10) character set utf8 collation utf8_general_ci",
+                    "data_type_descriptor": "varchar(10) character set latin1 collation latin1_swedish_ci",
                     "description": "Test parameter 15."
                 },
                 {
@@ -903,37 +933,37 @@
                 {
                     "parameter_name": "p_param22",
                     "php_type": "string",
-                    "data_type_descriptor": "tinytext character set utf8 collation utf8_general_ci",
+                    "data_type_descriptor": "tinytext character set latin1 collation latin1_swedish_ci",
                     "description": "Test parameter 22."
                 },
                 {
                     "parameter_name": "p_param23",
                     "php_type": "string",
-                    "data_type_descriptor": "text character set utf8 collation utf8_general_ci",
+                    "data_type_descriptor": "text character set latin1 collation latin1_swedish_ci",
                     "description": "Test parameter 23."
                 },
                 {
                     "parameter_name": "p_param24",
                     "php_type": "string",
-                    "data_type_descriptor": "mediumtext character set utf8 collation utf8_general_ci",
+                    "data_type_descriptor": "mediumtext character set latin1 collation latin1_swedish_ci",
                     "description": "Test parameter 24."
                 },
                 {
                     "parameter_name": "p_param25",
                     "php_type": "string",
-                    "data_type_descriptor": "longtext character set utf8 collation utf8_general_ci",
+                    "data_type_descriptor": "longtext character set latin1 collation latin1_swedish_ci",
                     "description": "Test parameter 25."
                 },
                 {
                     "parameter_name": "p_param26",
                     "php_type": "string",
-                    "data_type_descriptor": "enum('a','b') character set utf8 collation utf8_general_ci",
+                    "data_type_descriptor": "enum('a','b') character set latin1 collation latin1_swedish_ci",
                     "description": "Test parameter 26."
                 },
                 {
                     "parameter_name": "p_param27",
                     "php_type": "string",
-                    "data_type_descriptor": "set('a','b') character set utf8 collation utf8_general_ci",
+                    "data_type_descriptor": "set('a','b') character set latin1 collation latin1_swedish_ci",
                     "description": "Test parameter 27."
                 }
             ]
@@ -944,7 +974,9 @@
         "routine_name": "tst_test_bulk_insert01",
         "designation": "bulk_insert",
         "table_name": "TST_TEMPO",
-        "parameters": [],
+        "parameters": [
+
+        ],
         "columns": [
             "field1",
             "field2",
@@ -1011,12 +1043,16 @@
             "set",
             "bit"
         ],
-        "timestamp": 1462970396,
-        "replace": [],
+        "timestamp": 1441874694,
+        "replace": [
+
+        ],
         "phpdoc": {
             "sort_description": "Test for designation bulk_insert.",
             "long_description": "",
-            "parameters": []
+            "parameters": [
+
+            ]
         },
         "spec_params": null
     },
@@ -1024,7 +1060,9 @@
         "routine_name": "tst_test_bulk_insert02",
         "designation": "bulk_insert",
         "table_name": "TST_TEMPO",
-        "parameters": [],
+        "parameters": [
+
+        ],
         "columns": [
             "field1",
             "_",
@@ -1046,12 +1084,16 @@
             "int",
             "int"
         ],
-        "timestamp": 1462970396,
-        "replace": [],
+        "timestamp": 1441874694,
+        "replace": [
+
+        ],
         "phpdoc": {
             "sort_description": "Test for designation bulk_insert.",
             "long_description": "",
-            "parameters": []
+            "parameters": [
+
+            ]
         },
         "spec_params": null
     },
@@ -1084,8 +1126,10 @@
         "columns": null,
         "fields": null,
         "column_types": null,
-        "timestamp": 1462970396,
-        "replace": [],
+        "timestamp": 1454515188,
+        "replace": [
+
+        ],
         "phpdoc": {
             "sort_description": "Test for stored function wrapper.",
             "long_description": "",
@@ -1110,16 +1154,22 @@
         "routine_name": "tst_test_hidden",
         "designation": "hidden",
         "table_name": null,
-        "parameters": [],
+        "parameters": [
+
+        ],
         "columns": null,
         "fields": null,
         "column_types": null,
-        "timestamp": 1462970396,
-        "replace": [],
+        "timestamp": 1428319749,
+        "replace": [
+
+        ],
         "phpdoc": {
             "sort_description": "Test for designation type hidden.",
             "long_description": "",
-            "parameters": []
+            "parameters": [
+
+            ]
         },
         "spec_params": null
     },
@@ -1127,16 +1177,22 @@
         "routine_name": "tst_test_illegal_query",
         "designation": "rows",
         "table_name": null,
-        "parameters": [],
+        "parameters": [
+
+        ],
         "columns": null,
         "fields": null,
         "column_types": null,
-        "timestamp": 1462970396,
-        "replace": [],
+        "timestamp": 1460101240,
+        "replace": [
+
+        ],
         "phpdoc": {
             "sort_description": "Test for illegal query.",
             "long_description": "",
-            "parameters": []
+            "parameters": [
+
+            ]
         },
         "spec_params": null
     },
@@ -1150,10 +1206,10 @@
                 "data_type": "list_of_int",
                 "numeric_precision": null,
                 "numeric_scale": null,
-                "character_set_name": "utf8",
-                "collation_name": "utf8_general_ci",
+                "character_set_name": "latin1",
+                "collation_name": "latin1_swedish_ci",
                 "dtd_identifier": "varchar(255)",
-                "data_type_descriptor": "varchar(255) character set utf8 collation utf8_general_ci",
+                "data_type_descriptor": "varchar(255) character set latin1 collation latin1_swedish_ci",
                 "name": "p_ids",
                 "delimiter": ",",
                 "enclosure": "\"",
@@ -1165,8 +1221,10 @@
         ],
         "fields": null,
         "column_types": null,
-        "timestamp": 1462970396,
-        "replace": [],
+        "timestamp": 1441874694,
+        "replace": [
+
+        ],
         "phpdoc": {
             "sort_description": "",
             "long_description": "",
@@ -1174,7 +1232,7 @@
                 {
                     "parameter_name": "p_ids",
                     "php_type": "string|int[]",
-                    "data_type_descriptor": "varchar(255) character set utf8 collation utf8_general_ci",
+                    "data_type_descriptor": "varchar(255) character set latin1 collation latin1_swedish_ci",
                     "description": "The id's in CSV format."
                 }
             ]
@@ -1193,16 +1251,22 @@
         "routine_name": "tst_test_log",
         "designation": "log",
         "table_name": null,
-        "parameters": [],
+        "parameters": [
+
+        ],
         "columns": null,
         "fields": null,
         "column_types": null,
-        "timestamp": 1462970396,
-        "replace": [],
+        "timestamp": 1448207542,
+        "replace": [
+
+        ],
         "phpdoc": {
             "sort_description": "Test for designation type log.",
             "long_description": "",
-            "parameters": []
+            "parameters": [
+
+            ]
         },
         "spec_params": null
     },
@@ -1225,8 +1289,10 @@
         "columns": null,
         "fields": null,
         "column_types": null,
-        "timestamp": 1462970396,
-        "replace": [],
+        "timestamp": 1461488623,
+        "replace": [
+
+        ],
         "phpdoc": {
             "sort_description": "Test for sending data larger than max_allowed_packet.",
             "long_description": "",
@@ -1260,8 +1326,10 @@
         "columns": null,
         "fields": null,
         "column_types": null,
-        "timestamp": 1462970396,
-        "replace": [],
+        "timestamp": 1461532464,
+        "replace": [
+
+        ],
         "phpdoc": {
             "sort_description": "Test for designation type none.",
             "long_description": "",
@@ -1305,8 +1373,10 @@
         "columns": null,
         "fields": null,
         "column_types": null,
-        "timestamp": 1462970396,
-        "replace": [],
+        "timestamp": 1428319749,
+        "replace": [
+
+        ],
         "phpdoc": {
             "sort_description": "Test for designation type none with BLOB.",
             "long_description": "",
@@ -1356,8 +1426,10 @@
         "columns": null,
         "fields": null,
         "column_types": null,
-        "timestamp": 1462970396,
-        "replace": [],
+        "timestamp": 1450606000,
+        "replace": [
+
+        ],
         "phpdoc": {
             "sort_description": "Test for conversion of MySQL types to PHP types.",
             "long_description": "",
@@ -1397,8 +1469,10 @@
         "columns": null,
         "fields": null,
         "column_types": null,
-        "timestamp": 1462970396,
-        "replace": [],
+        "timestamp": 1461566768,
+        "replace": [
+
+        ],
         "phpdoc": {
             "sort_description": "Test for designation type row0.",
             "long_description": "",
@@ -1442,8 +1516,10 @@
         "columns": null,
         "fields": null,
         "column_types": null,
-        "timestamp": 1462970396,
-        "replace": [],
+        "timestamp": 1428319749,
+        "replace": [
+
+        ],
         "phpdoc": {
             "sort_description": "Test for designation type row0 with BLOB.",
             "long_description": "",
@@ -1483,8 +1559,10 @@
         "columns": null,
         "fields": null,
         "column_types": null,
-        "timestamp": 1462970396,
-        "replace": [],
+        "timestamp": 1442348717,
+        "replace": [
+
+        ],
         "phpdoc": {
             "sort_description": "Test for designation type row1.",
             "long_description": "",
@@ -1528,8 +1606,10 @@
         "columns": null,
         "fields": null,
         "column_types": null,
-        "timestamp": 1462970396,
-        "replace": [],
+        "timestamp": 1428319749,
+        "replace": [
+
+        ],
         "phpdoc": {
             "sort_description": "Test for designation type row1 with BLOB.",
             "long_description": "",
@@ -1569,8 +1649,10 @@
         "columns": null,
         "fields": null,
         "column_types": null,
-        "timestamp": 1462970396,
-        "replace": [],
+        "timestamp": 1428319749,
+        "replace": [
+
+        ],
         "phpdoc": {
             "sort_description": "Test for designation type row1.",
             "long_description": "",
@@ -1614,8 +1696,10 @@
         "columns": null,
         "fields": null,
         "column_types": null,
-        "timestamp": 1462970396,
-        "replace": [],
+        "timestamp": 1461567174,
+        "replace": [
+
+        ],
         "phpdoc": {
             "sort_description": "Test for designation type rows.",
             "long_description": "",
@@ -1658,8 +1742,10 @@
         ],
         "fields": null,
         "column_types": null,
-        "timestamp": 1462970396,
-        "replace": [],
+        "timestamp": 1441874694,
+        "replace": [
+
+        ],
         "phpdoc": {
             "sort_description": "Test for designation type rows_with_index.",
             "long_description": "",
@@ -1706,8 +1792,10 @@
         ],
         "fields": null,
         "column_types": null,
-        "timestamp": 1462970396,
-        "replace": [],
+        "timestamp": 1441874694,
+        "replace": [
+
+        ],
         "phpdoc": {
             "sort_description": "Test for designation type rows_with_index with BLOB..",
             "long_description": "",
@@ -1751,8 +1839,10 @@
         ],
         "fields": null,
         "column_types": null,
-        "timestamp": 1462970396,
-        "replace": [],
+        "timestamp": 1441874694,
+        "replace": [
+
+        ],
         "phpdoc": {
             "sort_description": "Test for designation type rows_with_key.",
             "long_description": "",
@@ -1800,8 +1890,10 @@
         ],
         "fields": null,
         "column_types": null,
-        "timestamp": 1462970396,
-        "replace": [],
+        "timestamp": 1441874694,
+        "replace": [
+
+        ],
         "phpdoc": {
             "sort_description": "Test for designation type rows_with_key with BLOB.",
             "long_description": "",
@@ -1841,8 +1933,10 @@
         "columns": null,
         "fields": null,
         "column_types": null,
-        "timestamp": 1462970396,
-        "replace": [],
+        "timestamp": 1428319749,
+        "replace": [
+
+        ],
         "phpdoc": {
             "sort_description": "Test for designation type singleton0.",
             "long_description": "",
@@ -1886,8 +1980,10 @@
         "columns": null,
         "fields": null,
         "column_types": null,
-        "timestamp": 1462970396,
-        "replace": [],
+        "timestamp": 1428319749,
+        "replace": [
+
+        ],
         "phpdoc": {
             "sort_description": "Test for designation type singleton0 with BLOB..",
             "long_description": "",
@@ -1927,8 +2023,10 @@
         "columns": null,
         "fields": null,
         "column_types": null,
-        "timestamp": 1462970396,
-        "replace": [],
+        "timestamp": 1461536723,
+        "replace": [
+
+        ],
         "phpdoc": {
             "sort_description": "Test for designation type singleton1.",
             "long_description": "",
@@ -1972,8 +2070,10 @@
         "columns": null,
         "fields": null,
         "column_types": null,
-        "timestamp": 1462970396,
-        "replace": [],
+        "timestamp": 1428319749,
+        "replace": [
+
+        ],
         "phpdoc": {
             "sort_description": "Test for designation type singleton1 with BLOB.",
             "long_description": "",
@@ -1998,16 +2098,22 @@
         "routine_name": "tst_test_table",
         "designation": "table",
         "table_name": null,
-        "parameters": [],
+        "parameters": [
+
+        ],
         "columns": null,
         "fields": null,
         "column_types": null,
-        "timestamp": 1462970396,
-        "replace": [],
+        "timestamp": 1428319749,
+        "replace": [
+
+        ],
         "phpdoc": {
             "sort_description": "Test for designation type table.",
             "long_description": "",
-            "parameters": []
+            "parameters": [
+
+            ]
         },
         "spec_params": null
     }

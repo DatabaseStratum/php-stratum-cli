@@ -22,13 +22,6 @@ abstract class Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Variable for generated code with indention.
-   *
-   * @var PhpCodeStore
-   */
-  protected $codeStore;
-
-  /**
    * The exceptions that the wrapper method can throw.
    *
    * @var array
@@ -58,13 +51,14 @@ abstract class Wrapper
   /**
    * Object constructor.
    *
-   * @param NameMangler $nameMangler The mangler for wrapper and parameter names.
-   * @param bool        $lobAsString If set BLOBs and CLOBs are treated as string. Otherwise, BLOBs and CLOBs will be
+   * @param PhpCodeStore $codeStore   The code store for the generated code.
+   * @param NameMangler  $nameMangler The mangler for wrapper and parameter names.
+   * @param bool         $lobAsString If set BLOBs and CLOBs are treated as string. Otherwise, BLOBs and CLOBs will be
    *                                 send as long data.
    */
-  public function __construct($nameMangler, $lobAsString)
+  public function __construct($codeStore, $nameMangler, $lobAsString)
   {
-    $this->codeStore       = new PhpCodeStore();
+    $this->codeStore       = $codeStore;
     $this->nameMangler     = $nameMangler;
     $this->lobAsStringFlag = $lobAsString;
     $this->exceptions[]    = 'RuntimeException';
@@ -76,66 +70,67 @@ abstract class Wrapper
    * A factory for creating the appropriate object for generating a wrapper method for a stored routine.
    *
    * @param array       $routine      The metadata of the stored routine.
+   * @param PhpCodeStore $codeStore   The code store for the generated code.
    * @param NameMangler $nameMangler  The mangler for wrapper and parameter names.
    * @param bool        $lobAsString  If set BLOBs and CLOBs are treated as string. Otherwise, BLOBs and CLOBs will be
    *                                  send as long data.
    *
    * @return Wrapper
    */
-  public static function createRoutineWrapper($routine, $nameMangler, $lobAsString)
+  public static function createRoutineWrapper($routine, $codeStore, $nameMangler, $lobAsString)
   {
     switch ($routine['designation'])
     {
       case 'bulk':
-        $wrapper = new BulkWrapper($nameMangler, $lobAsString);
+        $wrapper = new BulkWrapper($codeStore, $nameMangler, $lobAsString);
         break;
 
       case 'bulk_insert':
-        $wrapper = new BulkInsertWrapper($nameMangler, $lobAsString);
+        $wrapper = new BulkInsertWrapper($codeStore, $nameMangler, $lobAsString);
         break;
 
       case 'log':
-        $wrapper = new LogWrapper($nameMangler, $lobAsString);
+        $wrapper = new LogWrapper($codeStore, $nameMangler, $lobAsString);
         break;
 
       case 'none':
-        $wrapper = new NoneWrapper($nameMangler, $lobAsString);
+        $wrapper = new NoneWrapper($codeStore, $nameMangler, $lobAsString);
         break;
 
       case 'row0':
-        $wrapper = new Row0Wrapper($nameMangler, $lobAsString);
+        $wrapper = new Row0Wrapper($codeStore, $nameMangler, $lobAsString);
         break;
 
       case 'row1':
-        $wrapper = new Row1Wrapper($nameMangler, $lobAsString);
+        $wrapper = new Row1Wrapper($codeStore, $nameMangler, $lobAsString);
         break;
 
       case 'rows':
-        $wrapper = new RowsWrapper($nameMangler, $lobAsString);
+        $wrapper = new RowsWrapper($codeStore, $nameMangler, $lobAsString);
         break;
 
       case 'rows_with_key':
-        $wrapper = new RowsWithKeyWrapper($nameMangler, $lobAsString);
+        $wrapper = new RowsWithKeyWrapper($codeStore, $nameMangler, $lobAsString);
         break;
 
       case 'rows_with_index':
-        $wrapper = new RowsWithIndexWrapper($nameMangler, $lobAsString);
+        $wrapper = new RowsWithIndexWrapper($codeStore, $nameMangler, $lobAsString);
         break;
 
       case 'singleton0':
-        $wrapper = new Singleton0Wrapper($nameMangler, $lobAsString);
+        $wrapper = new Singleton0Wrapper($codeStore, $nameMangler, $lobAsString);
         break;
 
       case 'singleton1':
-        $wrapper = new Singleton1Wrapper($nameMangler, $lobAsString);
+        $wrapper = new Singleton1Wrapper($codeStore, $nameMangler, $lobAsString);
         break;
 
       case 'function':
-        $wrapper = new FunctionsWrapper($nameMangler, $lobAsString);
+        $wrapper = new FunctionsWrapper($codeStore, $nameMangler, $lobAsString);
         break;
 
       case 'table':
-        $wrapper = new TableWrapper($nameMangler, $lobAsString);
+        $wrapper = new TableWrapper($codeStore, $nameMangler, $lobAsString);
         break;
 
       default:
@@ -227,18 +222,16 @@ abstract class Wrapper
    * Generates a complete wrapper method.
    *
    * @param array $routine Metadata of the stored routine.
-   *
-   * @return string PHP code with a routine wrapper.
    */
   public function writeRoutineFunction($routine)
   {
     if (!$this->lobAsStringFlag && $this->isBlobParameter($routine['parameters']))
     {
-      return $this->writeRoutineFunctionWithLob($routine);
+      $this->writeRoutineFunctionWithLob($routine);
     }
     else
     {
-      return $this->writeRoutineFunctionWithoutLob($routine);
+      $this->writeRoutineFunctionWithoutLob($routine);
     }
   }
 
@@ -328,8 +321,6 @@ abstract class Wrapper
     $this->writeRoutineFunctionLobReturnData();
     $this->codeStore->append('}');
     $this->codeStore->append();
-
-    return $this->codeStore->getCode(1);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -352,9 +343,7 @@ abstract class Wrapper
 
     $this->writeResultHandler($routine);
     $this->codeStore->append('}');
-    $this->codeStore->append();
-
-    return $this->codeStore->getCode(1);
+    $this->codeStore->append('');
   }
 
   //--------------------------------------------------------------------------------------------------------------------

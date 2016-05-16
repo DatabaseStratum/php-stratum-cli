@@ -37,13 +37,20 @@ class PhpCodeStore
    */
   private $lines = [];
 
+  /**
+   * String for separating methods nd other parts of the generated code.
+   *
+   * @var string
+   */
+  private $separator;
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Object constructor.
    */
   public function __construct()
   {
-    // Nothing to do.
+    $this->separator = '//'.str_repeat('-', self::C_PAGE_WIDTH - 2);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -87,17 +94,51 @@ class PhpCodeStore
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns the generated code as a single string.
-   *
-   * @param int $theIndentLevel Start indent level.
+   * Returns the code as a string with proper indentation.
    *
    * @return string
    */
-  public function getCode($theIndentLevel)
+  public function getCode()
   {
-    $this->allLinesIndentation($theIndentLevel);
+    $lines             = [];
+    $this->indentLevel = 0;
 
-    return implode(PHP_EOL, $this->lines).PHP_EOL;
+    foreach ($this->lines as $line)
+    {
+      switch ($line)
+      {
+        case '{':
+          $lines[] = $this->addIndentation($line);
+          $this->indentLevel += 1;
+          break;
+
+        case '}':
+          $this->indentLevel = max(0, $this->indentLevel - 1);
+          $lines[]           = $this->addIndentation($line);
+          break;
+
+        case $this->separator:
+          $lines[] = substr($this->addIndentation($line), 0, self::C_PAGE_WIDTH);
+          break;
+
+        default:
+          $lines[] = $this->addIndentation($line);
+          break;
+      }
+    }
+
+    return implode(PHP_EOL, $lines).PHP_EOL;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns the code as an array of strings (without indentation).
+   *
+   * @return \string[]
+   */
+  public function getLines()
+  {
+    return $this->lines;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -106,13 +147,13 @@ class PhpCodeStore
    *
    * @param string $line The line of code.
    *
-   * @return null | string The indented line of code.
+   * @return string The indented line of code.
    */
   private function addIndentation($line)
   {
-    if (is_null($line) || empty($line))
+    if ($line===null || $line==='')
     {
-      return $line;
+      return '';
     }
 
     return str_repeat(' ', self::$indentation * $this->indentLevel).$line;
@@ -124,65 +165,13 @@ class PhpCodeStore
    *
    * @param string $line The line of code to be appended.
    * @param bool   $trim If true the line of code will be trimmed before appending.
-   * @param string $type Type of line {separator | string}.
+   *
    */
-  private function appendLine($line, $trim, $type = 'string')
+  private function appendLine($line, $trim)
   {
     if ($trim) $line = trim($line);
-    $this->lines[] = ['type' => $type, 'chars' => $line];
-  }
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Add indention to lines.
-   *
-   * @param int $theIndentLevel Start indent level.
-   */
-  private function allLinesIndentation($theIndentLevel)
-  {
-    $indentationLines  = [];
-    $this->indentLevel = $theIndentLevel;
-    foreach ($this->lines as $line)
-    {
-      switch ($line['type'])
-      {
-        case 'string':
-          $words = explode(' ', $line['chars']);
-          if (count($words)>0)
-          {
-            switch ($words[0])
-            {
-              case '{':
-                $line = $this->addIndentation($line['chars']);
-                $this->indentLevel += 1;
-                break;
-
-              case '}':
-                $this->indentLevel = max(0, $this->indentLevel - 1);
-                $line              = $this->addIndentation($line['chars']);
-                break;
-
-              default:
-                $line = $this->addIndentation($line['chars']);
-                break;
-            }
-          }
-          break;
-        case 'separator':
-          if ($this->indentLevel>0)
-          {
-            $line = $this->addIndentation(substr($line['chars'], 0, -(2 * $this->indentLevel)));
-          }
-          else
-          {
-            $line = $this->addIndentation($line['chars']);
-          }
-          break;
-      }
-      $indentationLines[] = $line;
-    }
-
-    $this->lines = $indentationLines;
+    $this->lines[] = $line;;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -206,20 +195,7 @@ class PhpCodeStore
    */
   public function appendSeparator()
   {
-    $separator = '';
-    for ($i = 0; $i<2 * $this->indentLevel; $i++)
-    {
-      $separator .= ' ';
-    }
-
-    $separator .= '//';
-
-    for ($i = 0; $i<(self::C_PAGE_WIDTH - 2 * $this->indentLevel - 2); $i++)
-    {
-      $separator .= '-';
-    }
-
-    $this->appendLine($separator, false, 'separator');
+    $this->appendLine($this->separator, false);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

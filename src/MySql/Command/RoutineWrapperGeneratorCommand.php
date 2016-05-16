@@ -143,7 +143,6 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
         // If routine type is hidden don't create routine wrapper.
         if ($routine['designation']!='hidden')
         {
-          $this->codeStore->append();
           $this->writeRoutineFunction($routine, $mangler);
         }
       }
@@ -153,20 +152,21 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
       echo "No files with stored routines found.\n";
     }
 
-    $methods         = $this->codeStore->getCode(1);
+    $wrappers        = $this->codeStore->getLines();
+    print_r($wrappers);
     $this->codeStore = new PhpCodeStore();
 
     // Write the header of the wrapper class.
     $this->writeClassHeader();
 
     // Write methods of the wrapper calls.
-    $this->codeStore->append($methods);
+    $this->codeStore->append($wrappers, false);
 
     // Write the trailer of the wrapper class.
     $this->writeClassTrailer();
 
     // Write the wrapper class to the filesystem.
-    $this->writeTwoPhases($this->myWrapperFilename, $this->codeStore->getCode(0));
+    $this->writeTwoPhases($this->myWrapperFilename, $this->codeStore->getCode());
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -256,7 +256,6 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
     if (!empty($this->imports))
     {
       $this->imports = array_unique($this->imports, SORT_REGULAR);
-      $this->codeStore->appendSeparator();
       foreach ($this->imports as $import)
       {
         $this->codeStore->append(sprintf('use %s;', $import));
@@ -266,6 +265,9 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
 
     // Write class name.
     $this->codeStore->appendSeparator();
+    $this->codeStore->append('/**');
+    $this->codeStore->append(' * The data layer.', false);
+    $this->codeStore->append(' */', false);
     $this->codeStore->append(sprintf('class %s extends %s', $class_name, $this->myParentClassName));
     $this->codeStore->append('{');
   }
@@ -276,7 +278,6 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
    */
   private function writeClassTrailer()
   {
-    $this->codeStore->append();
     $this->codeStore->appendSeparator();
     $this->codeStore->append('}');
     $this->codeStore->append();
@@ -292,8 +293,8 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
    */
   private function writeRoutineFunction($routine, $nameMangler)
   {
-    $wrapper = Wrapper::createRoutineWrapper($routine, $nameMangler, $this->myLobAsStringFlag);
-    $this->codeStore->append($wrapper->writeRoutineFunction($routine));
+    $wrapper = Wrapper::createRoutineWrapper($routine, $this->codeStore, $nameMangler, $this->myLobAsStringFlag);
+    $wrapper->writeRoutineFunction($routine);
 
     $this->imports = array_merge($this->imports, $wrapper->getImports());
   }

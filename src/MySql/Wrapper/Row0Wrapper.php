@@ -20,9 +20,9 @@ class Row0Wrapper extends Wrapper
   /**
    * {@inheritdoc}
    */
-  public function __construct($nameMangler, $lobAsString)
+  public function __construct($codeStore, $nameMangler, $lobAsString)
   {
-    parent::__construct($nameMangler, $lobAsString);
+    parent::__construct($codeStore, $nameMangler, $lobAsString);
 
     $this->exceptions[] = 'ResultException';
     $this->imports[]    = '\SetBased\Stratum\Exception\ResultException';
