@@ -88,7 +88,7 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
    */
   protected function configure()
   {
-    $this->codeStore = new PhpCodeStore(1);
+    $this->codeStore = new PhpCodeStore();
 
     $this->setName('wrapper')
          ->setDescription('Generates constants based on database IDs');
@@ -154,7 +154,7 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
     }
 
     $methods         = $this->codeStore->getCode(1);
-    $this->codeStore = new PhpCodeStore(0);
+    $this->codeStore = new PhpCodeStore();
 
     // Write the header of the wrapper class.
     $this->writeClassHeader();

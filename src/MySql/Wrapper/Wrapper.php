@@ -64,7 +64,7 @@ abstract class Wrapper
    */
   public function __construct($nameMangler, $lobAsString)
   {
-    $this->codeStore       = new PhpCodeStore(1);
+    $this->codeStore       = new PhpCodeStore();
     $this->nameMangler     = $nameMangler;
     $this->lobAsStringFlag = $lobAsString;
     $this->exceptions[]    = 'RuntimeException';
