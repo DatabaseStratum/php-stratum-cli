@@ -153,7 +153,6 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
     }
 
     $wrappers        = $this->codeStore->getLines();
-    print_r($wrappers);
     $this->codeStore = new PhpCodeStore();
 
     // Write the header of the wrapper class.
