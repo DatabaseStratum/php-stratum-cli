@@ -54,7 +54,7 @@ class BulkInsertWrapper extends Wrapper
     }
 
     $routine_args = $this->getRoutineArgs($routine);
-    $this->writeLine('self::query(\'CALL '.$routine['routine_name'].'('.$routine_args.')\');');
+    $this->codeStore->append('self::query(\'CALL '.$routine['routine_name'].'('.$routine_args.')\');');
 
     $columns = '';
     $fields  = '';
@@ -70,20 +70,20 @@ class BulkInsertWrapper extends Wrapper
       }
     }
 
-    $this->writeLine('if (is_array($rows) && !empty($rows))');
-    $this->writeLine('{');
-    $this->writeLine('$sql = "INSERT INTO `'.$routine['table_name'].'`('.$columns.')";');
-    $this->writeLine('$first = true;');
-    $this->writeLine('foreach($rows as $row)');
-    $this->writeLine('{');
+    $this->codeStore->append('if (is_array($rows) && !empty($rows))');
+    $this->codeStore->append('{');
+    $this->codeStore->append('$sql = "INSERT INTO `'.$routine['table_name'].'`('.$columns.')";');
+    $this->codeStore->append('$first = true;');
+    $this->codeStore->append('foreach($rows as $row)');
+    $this->codeStore->append('{');
 
-    $this->writeLine('if ($first) $sql .=\' values('.$fields.')\';');
-    $this->writeLine('else        $sql .=\',      ('.$fields.')\';');
+    $this->codeStore->append('if ($first) $sql .=\' values('.$fields.')\';');
+    $this->codeStore->append('else        $sql .=\',      ('.$fields.')\';');
 
-    $this->writeLine('$first = false;');
-    $this->writeLine('}');
-    $this->writeLine('self::query($sql);');
-    $this->writeLine('}');
+    $this->codeStore->append('$first = false;');
+    $this->codeStore->append('}');
+    $this->codeStore->append('self::query($sql);');
+    $this->codeStore->append('}');
   }
 
 

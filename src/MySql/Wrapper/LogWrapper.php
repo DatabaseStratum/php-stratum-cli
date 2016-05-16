@@ -34,7 +34,7 @@ class LogWrapper extends Wrapper
   protected function writeResultHandler($routine)
   {
     $routine_args = $this->getRoutineArgs($routine);
-    $this->writeLine('return self::executeLog(\'CALL '.$routine['routine_name'].'('.$routine_args.')\');');
+    $this->codeStore->append('return self::executeLog(\'CALL '.$routine['routine_name'].'('.$routine_args.')\');');
   }
 
   //--------------------------------------------------------------------------------------------------------------------

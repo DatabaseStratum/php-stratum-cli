@@ -34,7 +34,7 @@ class RowsWrapper extends Wrapper
   protected function writeResultHandler($routine)
   {
     $routine_args = $this->getRoutineArgs($routine);
-    $this->writeLine('return self::executeRows(\'CALL '.$routine['routine_name'].'('.$routine_args.')\');');
+    $this->codeStore->append('return self::executeRows(\'CALL '.$routine['routine_name'].'('.$routine_args.')\');');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -43,20 +43,20 @@ class RowsWrapper extends Wrapper
    */
   protected function writeRoutineFunctionLobFetchData($routine)
   {
-    $this->writeLine('$row = [];');
-    $this->writeLine('self::bindAssoc($stmt, $row);');
-    $this->writeLine();
-    $this->writeLine('$tmp = [];');
-    $this->writeLine('while (($b = $stmt->fetch()))');
-    $this->writeLine('{');
-    $this->writeLine('$new = [];');
-    $this->writeLine('foreach($row as $key => $value)');
-    $this->writeLine('{');
-    $this->writeLine('$new[$key] = $value;');
-    $this->writeLine('}');
-    $this->writeLine(' $tmp[] = $new;');
-    $this->writeLine('}');
-    $this->writeLine();
+    $this->codeStore->append('$row = [];');
+    $this->codeStore->append('self::bindAssoc($stmt, $row);');
+    $this->codeStore->append();
+    $this->codeStore->append('$tmp = [];');
+    $this->codeStore->append('while (($b = $stmt->fetch()))');
+    $this->codeStore->append('{');
+    $this->codeStore->append('$new = [];');
+    $this->codeStore->append('foreach($row as $key => $value)');
+    $this->codeStore->append('{');
+    $this->codeStore->append('$new[$key] = $value;');
+    $this->codeStore->append('}');
+    $this->codeStore->append(' $tmp[] = $new;');
+    $this->codeStore->append('}');
+    $this->codeStore->append();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -65,9 +65,9 @@ class RowsWrapper extends Wrapper
    */
   protected function writeRoutineFunctionLobReturnData()
   {
-    $this->writeLine('if ($b===false) self::mySqlError(\'mysqli_stmt::fetch\');');
-    $this->writeLine();
-    $this->writeLine('return $tmp;');
+    $this->codeStore->append('if ($b===false) self::mySqlError(\'mysqli_stmt::fetch\');');
+    $this->codeStore->append();
+    $this->codeStore->append('return $tmp;');
   }
 
   //--------------------------------------------------------------------------------------------------------------------

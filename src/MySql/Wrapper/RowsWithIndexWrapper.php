@@ -42,13 +42,13 @@ class RowsWithIndexWrapper extends Wrapper
       $index .= '[$row[\''.$column.'\']]';
     }
 
-    $this->writeLine('$result = self::query(\'CALL '.$routine['routine_name'].'('.$routine_args.')\');');
-    $this->writeLine('$ret = [];');
-    $this->writeLine('while($row = $result->fetch_array(MYSQLI_ASSOC)) $ret'.$index.'[] = $row;');
-    $this->writeLine('$result->free();');
-    $this->writeLine('if (self::$mysqli->more_results()) self::$mysqli->next_result();');
-    $this->writeLine();
-    $this->writeLine('return $ret;');
+    $this->codeStore->append('$result = self::query(\'CALL '.$routine['routine_name'].'('.$routine_args.')\');');
+    $this->codeStore->append('$ret = [];');
+    $this->codeStore->append('while($row = $result->fetch_array(MYSQLI_ASSOC)) $ret'.$index.'[] = $row;');
+    $this->codeStore->append('$result->free();');
+    $this->codeStore->append('if (self::$mysqli->more_results()) self::$mysqli->next_result();');
+    $this->codeStore->append();
+    $this->codeStore->append('return $ret;');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -63,20 +63,20 @@ class RowsWithIndexWrapper extends Wrapper
       $index .= '[$new[\''.$column.'\']]';
     }
 
-    $this->writeLine('$row = [];');
-    $this->writeLine('self::bindAssoc($stmt, $row);');
-    $this->writeLine();
-    $this->writeLine('$ret = [];');
-    $this->writeLine('while (($b = $stmt->fetch()))');
-    $this->writeLine('{');
-    $this->writeLine('$new = [];');
-    $this->writeLine('foreach($row as $key => $value)');
-    $this->writeLine('{');
-    $this->writeLine('$new[$key] = $value;');
-    $this->writeLine('}');
-    $this->writeLine('$ret'.$index.'[] = $new;');
-    $this->writeLine('}');
-    $this->writeLine();
+    $this->codeStore->append('$row = [];');
+    $this->codeStore->append('self::bindAssoc($stmt, $row);');
+    $this->codeStore->append();
+    $this->codeStore->append('$ret = [];');
+    $this->codeStore->append('while (($b = $stmt->fetch()))');
+    $this->codeStore->append('{');
+    $this->codeStore->append('$new = [];');
+    $this->codeStore->append('foreach($row as $key => $value)');
+    $this->codeStore->append('{');
+    $this->codeStore->append('$new[$key] = $value;');
+    $this->codeStore->append('}');
+    $this->codeStore->append('$ret'.$index.'[] = $new;');
+    $this->codeStore->append('}');
+    $this->codeStore->append();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -85,9 +85,9 @@ class RowsWithIndexWrapper extends Wrapper
    */
   protected function writeRoutineFunctionLobReturnData()
   {
-    $this->writeLine('if ($b===false) self::mySqlError(\'mysqli_stmt::fetch\');');
-    $this->writeLine();
-    $this->writeLine('return $ret;');
+    $this->codeStore->append('if ($b===false) self::mySqlError(\'mysqli_stmt::fetch\');');
+    $this->codeStore->append();
+    $this->codeStore->append('return $ret;');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
