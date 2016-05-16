@@ -106,7 +106,7 @@ class PhpCodeStore
    *
    * @param string $line The line of code.
    *
-   * @return string The indented line of code.
+   * @return null | string The indented line of code.
    */
   private function addIndentation($line)
   {
