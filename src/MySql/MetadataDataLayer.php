@@ -384,11 +384,11 @@ order by routine_name';
   /**
    * Loads a stored routine.
    *
-   * @param string $routine_source The source of the routine.
+   * @param string $routineSource The source of the routine.
    */
-  public static function loadRoutine($routine_source)
+  public static function loadRoutine($routineSource)
   {
-    self::executeNone($routine_source);
+    self::executeNone($routineSource);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

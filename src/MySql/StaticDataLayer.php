@@ -935,7 +935,7 @@ class StaticDataLayer
 
     foreach ($columns as $column)
     {
-      $separator .= str_repeat('-', $column['length'] + 2)."+";
+      $separator .= str_repeat('-', $column['length'] + 2).'+';
       $spaces = ($column['length'] + 2) - strlen($column['header']);
 
       $l_spaces = $spaces / 2;
