@@ -134,7 +134,7 @@ class PhpCodeStore
   /**
    * Returns the code as an array of strings (without indentation).
    *
-   * @return \string[]
+   * @return string[]
    */
   public function getLines()
   {
@@ -171,7 +171,7 @@ class PhpCodeStore
   {
     if ($trim) $line = trim($line);
 
-    $this->lines[] = $line;;
+    $this->lines[] = $line;
   }
 
   //--------------------------------------------------------------------------------------------------------------------

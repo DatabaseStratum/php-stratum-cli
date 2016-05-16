@@ -22,6 +22,13 @@ abstract class Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * The code store for the generated PHP code.
+   *
+   * @var PhpCodeStore
+   */
+  protected $codeStore;
+
+  /**
    * The exceptions that the wrapper method can throw.
    *
    * @var array
@@ -240,8 +247,6 @@ abstract class Wrapper
    * Generates a complete wrapper method for a stored routine with a LOB parameter.
    *
    * @param array $routine The metadata of the stored routine.
-   *
-   * @return string PHP code with a routine wrapper.
    */
   public function writeRoutineFunctionWithLob($routine)
   {
@@ -327,9 +332,7 @@ abstract class Wrapper
   /**
    * Returns a wrapper method for a stored routine without LOB parameters.
    *
-   * @param             $routine     array The metadata of the stored routine.
-   *
-   * @return string PHP code with a routine wrapper.
+   * @param array $routine The metadata of the stored routine.
    */
   public function writeRoutineFunctionWithoutLob($routine)
   {
