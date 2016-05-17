@@ -78,7 +78,7 @@ class DataTypeHelper
         break;
 
       default:
-        throw new FallenException('column type', $dataTypeInfo['data_type']);
+        throw new FallenException('data type', $dataTypeInfo['data_type']);
     }
 
     return $ret;
@@ -93,7 +93,7 @@ class DataTypeHelper
    * @return string
    * @throws FallenException
    */
-  public static function columnTypeToPhpType($dataTypeInfo) //todo move to MySql/Helper/DataTypeHelper
+  public static function columnTypeToPhpType($dataTypeInfo)
   {
     switch ($dataTypeInfo['data_type'])
     {
@@ -142,7 +142,7 @@ class DataTypeHelper
         break;
 
       default:
-        throw new FallenException('column type', $dataTypeInfo['data_type']);
+        throw new FallenException('data type', $dataTypeInfo['data_type']);
     }
 
     return $php_type;
@@ -170,30 +170,30 @@ class DataTypeHelper
       case 'decimal':
       case 'float':
       case 'double':
-        $ret = '\'.self::quoteNum('.$fieldExpression.').\'';
+        $ret = "'.self::quoteNum(".$fieldExpression.").'";
         break;
 
       case 'varbinary':
       case 'binary':
       case 'char':
       case 'varchar':
-        $ret = '\'.self::quoteString('.$fieldExpression.').\'';
+        $ret = "'.self::quoteString(".$fieldExpression.").'";
         break;
 
       case 'time':
       case 'timestamp':
       case 'date':
       case 'datetime':
-        $ret = '\'.self::quoteString('.$fieldExpression.').\'';
+        $ret = "'.self::quoteString(".$fieldExpression.").'";
         break;
 
       case 'enum':
       case 'set':
-        $ret = '\'.self::quoteString('.$fieldExpression.').\'';
+        $ret = "'.self::quoteString(".$fieldExpression.").'";
         break;
 
       case 'bit':
-        $ret = '\'.self::quoteBit('.$fieldExpression.').\'';
+        $ret = "'.self::quoteBit(".$fieldExpression.").'";
         break;
 
       case 'tinytext':
@@ -207,7 +207,7 @@ class DataTypeHelper
         throw new RuntimeException('LOBs are not possible in temporary tables');
 
       default:
-        throw new FallenException('column type', $dataType);
+        throw new FallenException('data type', $dataType);
     }
 
     return $ret;
