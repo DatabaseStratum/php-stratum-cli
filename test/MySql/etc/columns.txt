@@ -656,7 +656,6 @@ information_schema.INNODB_TABLESPACES_ENCRYPTION.MIN_KEY_VERSION               1
 information_schema.INNODB_TABLESPACES_ENCRYPTION.CURRENT_KEY_VERSION           10
 information_schema.INNODB_TABLESPACES_ENCRYPTION.KEY_ROTATION_PAGE_NUMBER      20
 information_schema.INNODB_TABLESPACES_ENCRYPTION.KEY_ROTATION_MAX_PAGE_NUMBER  20
-information_schema.INNODB_TABLESPACES_ENCRYPTION.CURRENT_KEY_ID                10
 
 information_schema.XTRADB_INTERNAL_HASH_TABLES.INTERNAL_HASH_TABLE_NAME 100
 information_schema.XTRADB_INTERNAL_HASH_TABLES.TOTAL_MEMORY              20
@@ -900,6 +899,16 @@ information_schema.INNODB_TABLESPACES_SCRUBBING.CURRENT_SCRUB_ACTIVE_THREADS   1
 information_schema.INNODB_TABLESPACES_SCRUBBING.CURRENT_SCRUB_PAGE_NUMBER      20
 information_schema.INNODB_TABLESPACES_SCRUBBING.CURRENT_SCRUB_MAX_PAGE_NUMBER  20
 
+sample01.BAR_USER.usr_id            10
+sample01.BAR_USER.ust_id             3
+sample01.BAR_USER.usr_name          40
+sample01.BAR_USER.usr_password_hash 60
+sample01.BAR_USER.usr_email         80
+
+sample01.BAR_USER_STATUS.ust_id           3
+sample01.BAR_USER_STATUS.ust_description 40
+sample01.BAR_USER_STATUS.ust_label       20
+
 test.TST_FOO1.tst_c00         10
 test.TST_FOO1.tst_c01          5
 test.TST_FOO1.tst_c02          3
@@ -943,4 +952,30 @@ test.TST_TABLE.tst_c03 10
 test.TST_TABLE.tst_c04 16
 test.TST_TABLE.t       10
 test.TST_TABLE.s       10
+
+test_data.TST_FOO1.tst_c00         10
+test_data.TST_FOO1.tst_c01          5
+test_data.TST_FOO1.tst_c02          3
+test_data.TST_FOO1.tst_c03          7
+test_data.TST_FOO1.tst_c04         19
+test_data.TST_FOO1.tst_c05         10
+test_data.TST_FOO1.tst_c06         12
+test_data.TST_FOO1.tst_c07         22
+test_data.TST_FOO1.tst_c09         10
+test_data.TST_FOO1.tst_c10         16
+test_data.TST_FOO1.tst_c11         16
+test_data.TST_FOO1.tst_c12          8
+test_data.TST_FOO1.tst_c13          4
+test_data.TST_FOO1.tst_c14         10
+test_data.TST_FOO1.tst_c15         10
+test_data.TST_FOO1.tst_c16         10
+test_data.TST_FOO1.tst_c17         10
+test_data.TST_FOO1.tst_c18        255
+test_data.TST_FOO1.tst_c19      65535
+test_data.TST_FOO1.tst_c20   16777215
+test_data.TST_FOO1.tst_c21 4294967295
+test_data.TST_FOO1.tst_c22        255
+test_data.TST_FOO1.tst_c23      65535
+test_data.TST_FOO1.tst_c24   16777215
+test_data.TST_FOO1.tst_c25 4294967295
 
