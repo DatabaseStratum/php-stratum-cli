@@ -13,7 +13,7 @@ namespace SetBased\Stratum\MySql\Command;
 use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\Command\BaseCommand;
 use SetBased\Stratum\Helper\PhpCodeStore;
-use SetBased\Stratum\MySql\Wrapper\Wrapper;
+use SetBased\Stratum\MySql\Helper\ColumnInfo;
 use SetBased\Stratum\NameMangler\NameMangler;
 use SetBased\Stratum\Style\StratumStyle;
 use Symfony\Component\Console\Input\InputInterface;
@@ -292,7 +292,7 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
    */
   private function writeRoutineFunction($routine, $nameMangler)
   {
-    $wrapper = Wrapper::createRoutineWrapper($routine, $this->codeStore, $nameMangler, $this->myLobAsStringFlag);
+    $wrapper = ColumnInfo::createRoutineWrapper($routine, $this->codeStore, $nameMangler, $this->myLobAsStringFlag);
     $wrapper->writeRoutineFunction($routine);
 
     $this->imports = array_merge($this->imports, $wrapper->getImports());

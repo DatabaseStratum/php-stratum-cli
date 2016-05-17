@@ -10,9 +10,8 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\MySql\Wrapper;
 
-use SetBased\Exception\FallenException;
 use SetBased\Exception\LogicException;
-use SetBased\Exception\RuntimeException;
+use SetBased\Stratum\MySql\Helper\ColumnInfo;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
@@ -66,7 +65,7 @@ class BulkInsertWrapper extends Wrapper
         $columns .= '`'.$routine['fields'][$i].'`';
 
         if ($fields) $fields .= ',';
-        $fields .= $this->writeEscapesValue($routine['column_types'][$i], '$row[\''.$field.'\']');
+        $fields .= ColumnInfo::writeEscapesValue($routine['column_types'][$i], '$row[\''.$field.'\']');
       }
     }
 
@@ -103,76 +102,6 @@ class BulkInsertWrapper extends Wrapper
   protected function writeRoutineFunctionLobReturnData()
   {
     // Nothing to do.
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Generates code for escaping data.
-   *
-   * @param string $valueType       The column type.
-   * @param string $fieldExpression The expression of the field in the PHP array, e.g. $row['first_name'].
-   *
-   * @return string The generated PHP code.
-   */
-  private function writeEscapesValue($valueType, $fieldExpression)
-  {
-    switch ($valueType)
-    {
-      case 'tinyint':
-      case 'smallint':
-      case 'mediumint':
-      case 'int':
-      case 'bigint':
-
-      case 'year':
-
-      case 'decimal':
-      case 'float':
-      case 'double':
-        $ret = '\'.self::quoteNum('.$fieldExpression.').\'';
-        break;
-
-      case 'varbinary':
-      case 'binary':
-
-      case 'char':
-      case 'varchar':
-        $ret = '\'.self::quoteString('.$fieldExpression.').\'';
-        break;
-
-      case 'time':
-      case 'timestamp':
-
-      case 'date':
-      case 'datetime':
-        $ret = '\'.self::quoteString('.$fieldExpression.').\'';
-        break;
-
-      case 'enum':
-      case 'set':
-        $ret = '\'.self::quoteString('.$fieldExpression.').\'';
-        break;
-
-      case 'bit':
-        $ret = '\'.self::quoteBit('.$fieldExpression.').\'';
-        break;
-
-      case 'tinytext':
-      case 'text':
-      case 'mediumtext':
-      case 'longtext':
-
-      case 'tinyblob':
-      case 'blob':
-      case 'mediumblob':
-      case 'longblob':
-        throw new RuntimeException('LOBs are not possible in temporary tables');
-
-      default:
-        throw new FallenException('column type', $valueType);
-    }
-
-    return $ret;
   }
 
   //--------------------------------------------------------------------------------------------------------------------

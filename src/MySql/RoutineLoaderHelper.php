@@ -10,9 +10,9 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\MySql;
 
-use SetBased\Exception\FallenException;
 use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\MySql\Exception\DataLayerException;
+use SetBased\Stratum\MySql\Helper\ColumnInfo;
 use SetBased\Stratum\MySql\MetadataDataLayer as DataLayer;
 use SetBased\Stratum\Style\StratumStyle;
 use Symfony\Component\Console\Formatter\OutputFormatter;
@@ -332,78 +332,6 @@ class RoutineLoaderHelper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Converts MySQL data type to the PHP data type.
-   *
-   * @param string[] $parameterInfo
-   *
-   * @return string
-   * @throws \Exception
-   */
-  private function columnTypeToPhpType($parameterInfo)
-  {
-    switch ($parameterInfo['data_type'])
-    {
-      case 'tinyint':
-      case 'smallint':
-      case 'mediumint':
-      case 'int':
-      case 'bigint':
-
-      case 'year':
-
-      case 'bit':
-        $php_type = 'int';
-        break;
-
-      case 'decimal':
-        $php_type = ($parameterInfo['numeric_scale']=='0') ? 'int' : 'float';
-        break;
-
-      case 'float':
-      case 'double':
-        $php_type = 'float';
-        break;
-
-      case 'varbinary':
-      case 'binary':
-
-      case 'char':
-      case 'varchar':
-
-      case 'time':
-      case 'timestamp':
-
-      case 'date':
-      case 'datetime':
-
-      case 'enum':
-      case 'set':
-
-      case 'tinytext':
-      case 'text':
-      case 'mediumtext':
-      case 'longtext':
-
-      case 'tinyblob':
-      case 'blob':
-      case 'mediumblob':
-      case 'longblob':
-        $php_type = 'string';
-        break;
-
-      case 'list_of_int':
-        $php_type = 'string|int[]';
-        break;
-
-      default:
-        throw new FallenException('column type', $parameterInfo['data_type']);
-    }
-
-    return $php_type;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
    * Drops the stored routine if it exists.
    */
   private function dropRoutine()
@@ -572,7 +500,7 @@ class RoutineLoaderHelper
     foreach ($this->parameters as $parameter_info)
     {
       $parameters[] = ['parameter_name'       => $parameter_info['parameter_name'],
-                       'php_type'             => $this->columnTypeToPhpType($parameter_info),
+                       'php_type'             => ColumnInfo::columnTypeToPhpType($parameter_info),
                        'data_type_descriptor' => $parameter_info['data_type_descriptor'],
                        'description'          => $this->getParameterDocDescription($parameter_info['parameter_name'])];
     }
