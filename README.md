@@ -1,6 +1,6 @@
 # PhpStratum
 
-A stored procedure and function loader, wrapper generator for MySQL in PHP.
+A stored procedure loader and wrapper class generator for MySQL in PHP.
 
 <table>
 <thead>
