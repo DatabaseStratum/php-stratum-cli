@@ -12,6 +12,7 @@ namespace SetBased\Stratum\MySql\Wrapper;
 
 use SetBased\Exception\FallenException;
 use SetBased\Stratum\Helper\PhpCodeStore;
+use SetBased\Stratum\MySql\Helper\DataTypeHelper;
 use SetBased\Stratum\NameMangler\NameMangler;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -85,79 +86,13 @@ abstract class Wrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns true if one of the parameters is a BLOB or CLOB.
-   *
-   * @param array|null $parameters The parameters info (name, type, description).
-   *
-   * @return bool
-   */
-  public function isBlobParameter($parameters)
-  {
-    $has_blob = false;
-
-    if ($parameters)
-    {
-      foreach ($parameters as $parameter_info)
-      {
-        switch ($parameter_info['data_type'])
-        {
-          case 'tinytext':
-          case 'text':
-          case 'mediumtext':
-          case 'longtext':
-
-          case 'tinyblob':
-          case 'blob':
-          case 'mediumblob':
-          case 'longblob':
-
-            $has_blob = true;
-            break;
-
-          case 'tinyint':
-          case 'smallint':
-          case 'mediumint':
-          case 'int':
-          case 'bigint':
-          case 'year':
-          case 'decimal':
-          case 'float':
-          case 'double':
-          case 'time':
-          case 'timestamp':
-          case 'binary':
-          case 'enum':
-          case 'bit':
-          case 'set':
-          case 'char':
-          case 'varchar':
-          case 'date':
-          case 'datetime':
-          case 'varbinary':
-
-          case 'list_of_int':
-
-            // Nothing to do.
-            break;
-
-          default:
-            throw new FallenException('parameter type', $parameter_info['data_type']);
-        }
-      }
-    }
-
-    return $has_blob;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
    * Generates a complete wrapper method.
    *
    * @param array $routine Metadata of the stored routine.
    */
   public function writeRoutineFunction($routine)
   {
-    if (!$this->lobAsStringFlag && $this->isBlobParameter($routine['parameters']))
+    if (!$this->lobAsStringFlag && DataTypeHelper::isBlobParameter($routine['parameters']))
     {
       $this->writeRoutineFunctionWithLob($routine);
     }
