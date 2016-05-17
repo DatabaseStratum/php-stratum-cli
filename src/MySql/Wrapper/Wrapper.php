@@ -12,6 +12,7 @@ namespace SetBased\Stratum\MySql\Wrapper;
 
 use SetBased\Exception\FallenException;
 use SetBased\Stratum\Helper\PhpCodeStore;
+use SetBased\Stratum\MySql\Helper\DataTypeHelper;
 use SetBased\Stratum\NameMangler\NameMangler;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -99,50 +100,7 @@ abstract class Wrapper
     {
       foreach ($parameters as $parameter_info)
       {
-        switch ($parameter_info['data_type'])
-        {
-          case 'tinytext':
-          case 'text':
-          case 'mediumtext':
-          case 'longtext':
-
-          case 'tinyblob':
-          case 'blob':
-          case 'mediumblob':
-          case 'longblob':
-
-            $has_blob = true;
-            break;
-
-          case 'tinyint':
-          case 'smallint':
-          case 'mediumint':
-          case 'int':
-          case 'bigint':
-          case 'year':
-          case 'decimal':
-          case 'float':
-          case 'double':
-          case 'time':
-          case 'timestamp':
-          case 'binary':
-          case 'enum':
-          case 'bit':
-          case 'set':
-          case 'char':
-          case 'varchar':
-          case 'date':
-          case 'datetime':
-          case 'varbinary':
-
-          case 'list_of_int':
-
-            // Nothing to do.
-            break;
-
-          default:
-            throw new FallenException('parameter type', $parameter_info['data_type']);
-        }
+        DataTypeHelper::isBlobParameter($parameter_info['data_type'], $has_blob);
       }
     }
 

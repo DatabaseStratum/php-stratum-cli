@@ -13,6 +13,63 @@ class DataTypeHelper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * Returns true if one of the parameters is a BLOB or CLOB.
+   *
+   * @param string $theDataType Data type for check.
+   * @param bool   $hasBlob
+   *
+   * @return bool
+   */
+  public static function isBlobParameter($theDataType, &$hasBlob)
+  {
+    switch ($theDataType)
+    {
+      case 'tinytext':
+      case 'text':
+      case 'mediumtext':
+      case 'longtext':
+
+      case 'tinyblob':
+      case 'blob':
+      case 'mediumblob':
+      case 'longblob':
+
+        $hasBlob = true;
+        break;
+
+      case 'tinyint':
+      case 'smallint':
+      case 'mediumint':
+      case 'int':
+      case 'bigint':
+      case 'year':
+      case 'decimal':
+      case 'float':
+      case 'double':
+      case 'time':
+      case 'timestamp':
+      case 'binary':
+      case 'enum':
+      case 'bit':
+      case 'set':
+      case 'char':
+      case 'varchar':
+      case 'date':
+      case 'datetime':
+      case 'varbinary':
+
+      case 'list_of_int':
+
+        // Nothing to do.
+        break;
+
+      default:
+        throw new FallenException('parameter type', $theDataType);
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Returns the widths of a field based on a MySQL data type.
    *
    * @param array $dataTypeInfo Metadata of the column on which the field is based.
