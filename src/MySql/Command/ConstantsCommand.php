@@ -10,8 +10,8 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\MySql\Command;
 
-use SetBased\Exception\FallenException;
 use SetBased\Exception\RuntimeException;
+use SetBased\Stratum\MySql\Helper\DataTypeHelper;
 use SetBased\Stratum\MySql\MetadataDataLayer as DataLayer;
 use SetBased\Stratum\Style\StratumStyle;
 use Symfony\Component\Console\Input\InputInterface;
@@ -102,80 +102,6 @@ class ConstantsCommand extends MySqlCommand
     }
 
     return 0;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns the widths of a field based on a column.
-   *
-   * @param array $column The column of which the field is based.
-   *
-   * @return int|null
-   */
-  private function deriveFieldLength($column)
-  {
-    $ret = null;
-    switch ($column['data_type'])
-    {
-      case 'tinyint':
-      case 'smallint':
-      case 'mediumint':
-      case 'int':
-      case 'bigint':
-
-      case 'decimal':
-      case 'float':
-      case 'double':
-        $ret = $column['numeric_precision'];
-        break;
-
-      case 'char':
-      case 'varchar':
-      case 'binary':
-      case 'varbinary':
-
-      case 'tinytext':
-      case 'text':
-      case 'mediumtext':
-      case 'longtext':
-      case 'tinyblob':
-      case 'blob':
-      case 'mediumblob':
-      case 'longblob':
-      case 'bit':
-        $ret = $column['character_maximum_length'];
-        break;
-
-      case 'timestamp':
-        $ret = 16;
-        break;
-
-      case 'year':
-        $ret = 4;
-        break;
-
-      case 'time':
-        $ret = 8;
-        break;
-
-      case 'date':
-        $ret = 10;
-        break;
-
-      case 'datetime':
-        $ret = 16;
-        break;
-
-      case 'enum':
-      case 'set':
-        // Nothing to do. We don't assign a width to column with type enum and set.
-        break;
-
-      default:
-        throw new FallenException('column type', $column['data_type']);
-    }
-
-    return $ret;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -395,7 +321,7 @@ class ConstantsCommand extends MySqlCommand
     $rows = DataLayer::getAllTableColumns();
     foreach ($rows as $row)
     {
-      $row['length']                                          = $this->deriveFieldLength($row);
+      $row['length']                                          = DataTypeHelper::deriveFieldLength($row);
       $this->columns[$row['table_name']][$row['column_name']] = $row;
     }
   }

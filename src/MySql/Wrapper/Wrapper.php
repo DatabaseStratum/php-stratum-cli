@@ -61,7 +61,7 @@ abstract class Wrapper
    * @param PhpCodeStore $codeStore   The code store for the generated code.
    * @param NameMangler  $nameMangler The mangler for wrapper and parameter names.
    * @param bool         $lobAsString If set BLOBs and CLOBs are treated as string. Otherwise, BLOBs and CLOBs will be
-   *                                 send as long data.
+   *                                  send as long data.
    */
   public function __construct($codeStore, $nameMangler, $lobAsString)
   {
@@ -70,81 +70,6 @@ abstract class Wrapper
     $this->lobAsStringFlag = $lobAsString;
     $this->exceptions[]    = 'RuntimeException';
     $this->imports[]       = '\SetBased\Exception\RuntimeException';
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * A factory for creating the appropriate object for generating a wrapper method for a stored routine.
-   *
-   * @param array       $routine      The metadata of the stored routine.
-   * @param PhpCodeStore $codeStore   The code store for the generated code.
-   * @param NameMangler $nameMangler  The mangler for wrapper and parameter names.
-   * @param bool        $lobAsString  If set BLOBs and CLOBs are treated as string. Otherwise, BLOBs and CLOBs will be
-   *                                  send as long data.
-   *
-   * @return Wrapper
-   */
-  public static function createRoutineWrapper($routine, $codeStore, $nameMangler, $lobAsString)
-  {
-    switch ($routine['designation'])
-    {
-      case 'bulk':
-        $wrapper = new BulkWrapper($codeStore, $nameMangler, $lobAsString);
-        break;
-
-      case 'bulk_insert':
-        $wrapper = new BulkInsertWrapper($codeStore, $nameMangler, $lobAsString);
-        break;
-
-      case 'log':
-        $wrapper = new LogWrapper($codeStore, $nameMangler, $lobAsString);
-        break;
-
-      case 'none':
-        $wrapper = new NoneWrapper($codeStore, $nameMangler, $lobAsString);
-        break;
-
-      case 'row0':
-        $wrapper = new Row0Wrapper($codeStore, $nameMangler, $lobAsString);
-        break;
-
-      case 'row1':
-        $wrapper = new Row1Wrapper($codeStore, $nameMangler, $lobAsString);
-        break;
-
-      case 'rows':
-        $wrapper = new RowsWrapper($codeStore, $nameMangler, $lobAsString);
-        break;
-
-      case 'rows_with_key':
-        $wrapper = new RowsWithKeyWrapper($codeStore, $nameMangler, $lobAsString);
-        break;
-
-      case 'rows_with_index':
-        $wrapper = new RowsWithIndexWrapper($codeStore, $nameMangler, $lobAsString);
-        break;
-
-      case 'singleton0':
-        $wrapper = new Singleton0Wrapper($codeStore, $nameMangler, $lobAsString);
-        break;
-
-      case 'singleton1':
-        $wrapper = new Singleton1Wrapper($codeStore, $nameMangler, $lobAsString);
-        break;
-
-      case 'function':
-        $wrapper = new FunctionsWrapper($codeStore, $nameMangler, $lobAsString);
-        break;
-
-      case 'table':
-        $wrapper = new TableWrapper($codeStore, $nameMangler, $lobAsString);
-        break;
-
-      default:
-        throw new FallenException('routine type', $routine['designation']);
-    }
-
-    return $wrapper;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -537,6 +462,81 @@ abstract class Wrapper
     }
 
     return $ret;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * A factory for creating the appropriate object for generating a wrapper method for a stored routine.
+   *
+   * @param array        $routine     The metadata of the stored routine.
+   * @param PhpCodeStore $codeStore   The code store for the generated code.
+   * @param NameMangler  $nameMangler The mangler for wrapper and parameter names.
+   * @param bool         $lobAsString If set BLOBs and CLOBs are treated as string. Otherwise, BLOBs and CLOBs will be
+   *                                  send as long data.
+   *
+   * @return Wrapper
+   */
+  public static function createRoutineWrapper($routine, $codeStore, $nameMangler, $lobAsString)
+  {
+    switch ($routine['designation'])
+    {
+      case 'bulk':
+        $wrapper = new BulkWrapper($codeStore, $nameMangler, $lobAsString);
+        break;
+
+      case 'bulk_insert':
+        $wrapper = new BulkInsertWrapper($codeStore, $nameMangler, $lobAsString);
+        break;
+
+      case 'log':
+        $wrapper = new LogWrapper($codeStore, $nameMangler, $lobAsString);
+        break;
+
+      case 'none':
+        $wrapper = new NoneWrapper($codeStore, $nameMangler, $lobAsString);
+        break;
+
+      case 'row0':
+        $wrapper = new Row0Wrapper($codeStore, $nameMangler, $lobAsString);
+        break;
+
+      case 'row1':
+        $wrapper = new Row1Wrapper($codeStore, $nameMangler, $lobAsString);
+        break;
+
+      case 'rows':
+        $wrapper = new RowsWrapper($codeStore, $nameMangler, $lobAsString);
+        break;
+
+      case 'rows_with_key':
+        $wrapper = new RowsWithKeyWrapper($codeStore, $nameMangler, $lobAsString);
+        break;
+
+      case 'rows_with_index':
+        $wrapper = new RowsWithIndexWrapper($codeStore, $nameMangler, $lobAsString);
+        break;
+
+      case 'singleton0':
+        $wrapper = new Singleton0Wrapper($codeStore, $nameMangler, $lobAsString);
+        break;
+
+      case 'singleton1':
+        $wrapper = new Singleton1Wrapper($codeStore, $nameMangler, $lobAsString);
+        break;
+
+      case 'function':
+        $wrapper = new FunctionsWrapper($codeStore, $nameMangler, $lobAsString);
+        break;
+
+      case 'table':
+        $wrapper = new TableWrapper($codeStore, $nameMangler, $lobAsString);
+        break;
+
+      default:
+        throw new FallenException('routine type', $routine['designation']);
+    }
+
+    return $wrapper;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
