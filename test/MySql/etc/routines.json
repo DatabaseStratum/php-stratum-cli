@@ -75,7 +75,7 @@
         "columns": null,
         "fields": null,
         "column_types": null,
-        "timestamp": 1463487960,
+        "timestamp": 1463488943,
         "replace": [],
         "phpdoc": {
             "sort_description": "Test for magic constant.",

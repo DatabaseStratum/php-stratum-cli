@@ -86,13 +86,36 @@ abstract class Wrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * Returns true if one of the parameters is a BLOB or CLOB.
+   *
+   * @param array|null $parameters The parameters info (name, type, description).
+   *
+   * @return bool
+   */
+  public function isBlobParameter($parameters)
+  {
+    $has_blob = false;
+
+    if ($parameters)
+    {
+      foreach ($parameters as $parameter_info)
+      {
+        DataTypeHelper::isBlobParameter($parameter_info['data_type'], $has_blob);
+      }
+    }
+
+    return $has_blob;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Generates a complete wrapper method.
    *
    * @param array $routine Metadata of the stored routine.
    */
   public function writeRoutineFunction($routine)
   {
-    if (!$this->lobAsStringFlag && DataTypeHelper::isBlobParameter($routine['parameters']))
+    if (!$this->lobAsStringFlag && $this->isBlobParameter($routine['parameters']))
     {
       $this->writeRoutineFunctionWithLob($routine);
     }

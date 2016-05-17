@@ -15,66 +15,57 @@ class DataTypeHelper
   /**
    * Returns true if one of the parameters is a BLOB or CLOB.
    *
-   * @param array|null $parameters The parameters info (name, type, description).
+   * @param string $theDataType Data type for check.
+   * @param bool   $hasBlob
    *
    * @return bool
    */
-  public static function isBlobParameter($parameters)
+  public static function isBlobParameter($theDataType, &$hasBlob)
   {
-    $has_blob = false;
-
-    if ($parameters)
+    switch ($theDataType)
     {
-      foreach ($parameters as $parameter_info)
-      {
-        switch ($parameter_info['data_type'])
-        {
-          case 'tinytext':
-          case 'text':
-          case 'mediumtext':
-          case 'longtext':
+      case 'tinytext':
+      case 'text':
+      case 'mediumtext':
+      case 'longtext':
 
-          case 'tinyblob':
-          case 'blob':
-          case 'mediumblob':
-          case 'longblob':
+      case 'tinyblob':
+      case 'blob':
+      case 'mediumblob':
+      case 'longblob':
 
-            $has_blob = true;
-            break;
+        $hasBlob = true;
+        break;
 
-          case 'tinyint':
-          case 'smallint':
-          case 'mediumint':
-          case 'int':
-          case 'bigint':
-          case 'year':
-          case 'decimal':
-          case 'float':
-          case 'double':
-          case 'time':
-          case 'timestamp':
-          case 'binary':
-          case 'enum':
-          case 'bit':
-          case 'set':
-          case 'char':
-          case 'varchar':
-          case 'date':
-          case 'datetime':
-          case 'varbinary':
+      case 'tinyint':
+      case 'smallint':
+      case 'mediumint':
+      case 'int':
+      case 'bigint':
+      case 'year':
+      case 'decimal':
+      case 'float':
+      case 'double':
+      case 'time':
+      case 'timestamp':
+      case 'binary':
+      case 'enum':
+      case 'bit':
+      case 'set':
+      case 'char':
+      case 'varchar':
+      case 'date':
+      case 'datetime':
+      case 'varbinary':
 
-          case 'list_of_int':
+      case 'list_of_int':
 
-            // Nothing to do.
-            break;
+        // Nothing to do.
+        break;
 
-          default:
-            throw new FallenException('parameter type', $parameter_info['data_type']);
-        }
-      }
+      default:
+        throw new FallenException('parameter type', $theDataType);
     }
-
-    return $has_blob;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
