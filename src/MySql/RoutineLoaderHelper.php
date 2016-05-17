@@ -12,7 +12,7 @@ namespace SetBased\Stratum\MySql;
 
 use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\MySql\Exception\DataLayerException;
-use SetBased\Stratum\MySql\Helper\ColumnInfo;
+use SetBased\Stratum\MySql\Helper\DataTypeHelper;
 use SetBased\Stratum\MySql\MetadataDataLayer as DataLayer;
 use SetBased\Stratum\Style\StratumStyle;
 use Symfony\Component\Console\Formatter\OutputFormatter;
@@ -500,7 +500,7 @@ class RoutineLoaderHelper
     foreach ($this->parameters as $parameter_info)
     {
       $parameters[] = ['parameter_name'       => $parameter_info['parameter_name'],
-                       'php_type'             => ColumnInfo::columnTypeToPhpType($parameter_info),
+                       'php_type'             => DataTypeHelper::columnTypeToPhpType($parameter_info),
                        'data_type_descriptor' => $parameter_info['data_type_descriptor'],
                        'description'          => $this->getParameterDocDescription($parameter_info['parameter_name'])];
     }

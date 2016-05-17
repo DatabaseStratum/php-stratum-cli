@@ -11,7 +11,7 @@
 namespace SetBased\Stratum\MySql\Command;
 
 use SetBased\Exception\RuntimeException;
-use SetBased\Stratum\MySql\Helper\ColumnInfo;
+use SetBased\Stratum\MySql\Helper\DataTypeHelper;
 use SetBased\Stratum\MySql\MetadataDataLayer as DataLayer;
 use SetBased\Stratum\Style\StratumStyle;
 use Symfony\Component\Console\Input\InputInterface;
@@ -321,7 +321,7 @@ class ConstantsCommand extends MySqlCommand
     $rows = DataLayer::getAllTableColumns();
     foreach ($rows as $row)
     {
-      $row['length']                                          = ColumnInfo::deriveFieldLength($row);
+      $row['length']                                          = DataTypeHelper::deriveFieldLength($row);
       $this->columns[$row['table_name']][$row['column_name']] = $row;
     }
   }

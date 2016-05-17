@@ -7,9 +7,9 @@ use SetBased\Exception\RuntimeException;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Helper class for columns.
+ * Helper class for deriving information based on a MySQL data type.
  */
-class ColumnInfo
+class DataTypeHelper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -93,7 +93,7 @@ class ColumnInfo
    * @return string
    * @throws FallenException
    */
-  public static function columnTypeToPhpType($dataTypeInfo) //todo move to MySql/Helper/ColumnInfo
+  public static function columnTypeToPhpType($dataTypeInfo) //todo move to MySql/Helper/DataTypeHelper
   {
     switch ($dataTypeInfo['data_type'])
     {

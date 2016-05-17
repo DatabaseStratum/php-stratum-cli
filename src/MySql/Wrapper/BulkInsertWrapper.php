@@ -11,7 +11,7 @@
 namespace SetBased\Stratum\MySql\Wrapper;
 
 use SetBased\Exception\LogicException;
-use SetBased\Stratum\MySql\Helper\ColumnInfo;
+use SetBased\Stratum\MySql\Helper\DataTypeHelper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
@@ -65,7 +65,7 @@ class BulkInsertWrapper extends Wrapper
         $columns .= '`'.$routine['fields'][$i].'`';
 
         if ($fields) $fields .= ',';
-        $fields .= ColumnInfo::writeEscapesValue($routine['column_types'][$i], '$row[\''.$field.'\']');
+        $fields .= DataTypeHelper::writeEscapesValue($routine['column_types'][$i], '$row[\''.$field.'\']');
       }
     }
 
