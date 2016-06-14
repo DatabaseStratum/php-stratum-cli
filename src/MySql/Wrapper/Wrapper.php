@@ -69,7 +69,7 @@ abstract class Wrapper
     $this->nameMangler     = $nameMangler;
     $this->lobAsStringFlag = $lobAsString;
     $this->exceptions[]    = 'RuntimeException';
-    $this->imports[]       = '\SetBased\Exception\RuntimeException';
+    $this->imports[]       = 'SetBased\Exception\RuntimeException';
   }
 
   //--------------------------------------------------------------------------------------------------------------------

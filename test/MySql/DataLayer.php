@@ -2,9 +2,9 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\Test\MySql;
 
-use \SetBased\Exception\RuntimeException;
-use \SetBased\Stratum\Exception\ResultException;
-use \SetBased\Stratum\MySql\StaticDataLayer;
+use SetBased\Exception\RuntimeException;
+use SetBased\Stratum\Exception\ResultException;
+use SetBased\Stratum\MySql\StaticDataLayer;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
