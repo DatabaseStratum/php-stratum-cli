@@ -16,7 +16,7 @@ class DataLayer extends StaticDataLayer
   /**
    * Test for magic constant.
    *
-   * @return string
+   * @return string|null
    * @throws ResultException
    * @throws RuntimeException
    */
@@ -29,7 +29,7 @@ class DataLayer extends StaticDataLayer
   /**
    * Test for magic constant.
    *
-   * @return string
+   * @return string|null
    * @throws ResultException
    * @throws RuntimeException
    */
@@ -42,7 +42,7 @@ class DataLayer extends StaticDataLayer
   /**
    * Test for magic constant.
    *
-   * @return string
+   * @return string|null
    * @throws ResultException
    * @throws RuntimeException
    */
@@ -55,7 +55,7 @@ class DataLayer extends StaticDataLayer
   /**
    * Test for magic constant.
    *
-   * @return string
+   * @return string|null
    * @throws ResultException
    * @throws RuntimeException
    */
@@ -68,7 +68,7 @@ class DataLayer extends StaticDataLayer
   /**
    * Test for magic constant.
    *
-   * @return string
+   * @return string|null
    * @throws ResultException
    * @throws RuntimeException
    */
@@ -418,7 +418,7 @@ class DataLayer extends StaticDataLayer
    * @param string $pTmpBlob The BLOB larger than max_allowed_packet.
    *                         longblob
    *
-   * @return string
+   * @return string|null
    * @throws ResultException
    * @throws RuntimeException
    */
@@ -578,7 +578,7 @@ class DataLayer extends StaticDataLayer
    * @param int $pCount The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test.
    *                    int(11)
    *
-   * @return array
+   * @return array|null
    * @throws ResultException
    * @throws RuntimeException
    */
@@ -596,7 +596,7 @@ class DataLayer extends StaticDataLayer
    * @param string $pBlob  The BLOB.
    *                       blob
    *
-   * @return array
+   * @return array|null
    * @throws ResultException
    * @throws RuntimeException
    */
@@ -1026,7 +1026,7 @@ class DataLayer extends StaticDataLayer
    * @param int $pCount The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test.
    *                    int(11)
    *
-   * @return string
+   * @return string|null
    * @throws ResultException
    * @throws RuntimeException
    */
@@ -1044,7 +1044,7 @@ class DataLayer extends StaticDataLayer
    * @param string $pBlob  The BLOB.
    *                       blob
    *
-   * @return string
+   * @return string|null
    * @throws ResultException
    * @throws RuntimeException
    */
@@ -1115,7 +1115,7 @@ class DataLayer extends StaticDataLayer
    * @param int $pCount The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
    *                    int(11)
    *
-   * @return string
+   * @return string|null
    * @throws ResultException
    * @throws RuntimeException
    */
@@ -1133,7 +1133,7 @@ class DataLayer extends StaticDataLayer
    * @param string $pBlob  The BLOB.
    *                       blob
    *
-   * @return string
+   * @return string|null
    * @throws ResultException
    * @throws RuntimeException
    */

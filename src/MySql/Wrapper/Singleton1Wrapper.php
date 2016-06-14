@@ -36,7 +36,7 @@ class Singleton1Wrapper extends Wrapper
    */
   protected function getDocBlockReturnType()
   {
-    return 'string';
+    return 'string|null';
   }
 
   //--------------------------------------------------------------------------------------------------------------------

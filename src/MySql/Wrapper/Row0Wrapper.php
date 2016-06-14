@@ -34,7 +34,7 @@ class Row0Wrapper extends Wrapper
    */
   protected function getDocBlockReturnType()
   {
-    return 'array';
+    return 'array|null';
   }
 
   //--------------------------------------------------------------------------------------------------------------------
