@@ -484,6 +484,18 @@ class DataLayer extends StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   *
+   * @return array
+   * @throws ResultException
+   * @throws RuntimeException
+   */
+  public static function testNoDocBlock()
+  {
+    return self::executeRow1('CALL tst_test_no_doc_block()');
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Test for designation type none.
    *
    * @param int $pCount The number of iterations.
