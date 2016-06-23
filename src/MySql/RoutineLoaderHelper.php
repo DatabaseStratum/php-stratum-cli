@@ -458,12 +458,14 @@ class RoutineLoaderHelper
   private function getDocBlockPartsSource()
   {
     // Get the DocBlock for the source.
-    $tmp = '';
+    $tmp = PHP_EOL;
     foreach ($this->routineSourceCodeLines as $line)
     {
       $n = preg_match('/create\\s+(procedure|function)\\s+([a-zA-Z0-9_]+)/i', $line);
       if ($n) break;
-      else $tmp .= $line."\n";
+
+      $tmp .= $line;
+      $tmp .= PHP_EOL;
     }
 
     $phpdoc = new DocBlockReflection($tmp);

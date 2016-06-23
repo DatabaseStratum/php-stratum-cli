@@ -25,7 +25,7 @@ class Row0Wrapper extends Wrapper
     parent::__construct($codeStore, $nameMangler, $lobAsString);
 
     $this->exceptions[] = 'ResultException';
-    $this->imports[]    = '\SetBased\Stratum\Exception\ResultException';
+    $this->imports[]    = 'SetBased\Stratum\Exception\ResultException';
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ class Row0Wrapper extends Wrapper
    */
   protected function getDocBlockReturnType()
   {
-    return 'array';
+    return 'array|null';
   }
 
   //--------------------------------------------------------------------------------------------------------------------

@@ -27,7 +27,7 @@ class Singleton0Wrapper extends Wrapper
     parent::__construct($codeStore, $nameMangler, $lobAsString);
 
     $this->exceptions[] = 'ResultException';
-    $this->imports[]    = '\SetBased\Stratum\Exception\ResultException';
+    $this->imports[]    = 'SetBased\Stratum\Exception\ResultException';
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ class Singleton0Wrapper extends Wrapper
    */
   protected function getDocBlockReturnType()
   {
-    return 'string';
+    return 'string|null';
   }
 
   //--------------------------------------------------------------------------------------------------------------------

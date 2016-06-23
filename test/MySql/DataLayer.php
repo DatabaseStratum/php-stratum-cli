@@ -2,9 +2,9 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\Test\MySql;
 
-use \SetBased\Exception\RuntimeException;
-use \SetBased\Stratum\Exception\ResultException;
-use \SetBased\Stratum\MySql\StaticDataLayer;
+use SetBased\Exception\RuntimeException;
+use SetBased\Stratum\Exception\ResultException;
+use SetBased\Stratum\MySql\StaticDataLayer;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
@@ -16,7 +16,7 @@ class DataLayer extends StaticDataLayer
   /**
    * Test for magic constant.
    *
-   * @return string
+   * @return string|null
    * @throws ResultException
    * @throws RuntimeException
    */
@@ -29,7 +29,7 @@ class DataLayer extends StaticDataLayer
   /**
    * Test for magic constant.
    *
-   * @return string
+   * @return string|null
    * @throws ResultException
    * @throws RuntimeException
    */
@@ -42,7 +42,7 @@ class DataLayer extends StaticDataLayer
   /**
    * Test for magic constant.
    *
-   * @return string
+   * @return string|null
    * @throws ResultException
    * @throws RuntimeException
    */
@@ -55,7 +55,7 @@ class DataLayer extends StaticDataLayer
   /**
    * Test for magic constant.
    *
-   * @return string
+   * @return string|null
    * @throws ResultException
    * @throws RuntimeException
    */
@@ -68,7 +68,7 @@ class DataLayer extends StaticDataLayer
   /**
    * Test for magic constant.
    *
-   * @return string
+   * @return string|null
    * @throws ResultException
    * @throws RuntimeException
    */
@@ -418,7 +418,7 @@ class DataLayer extends StaticDataLayer
    * @param string $pTmpBlob The BLOB larger than max_allowed_packet.
    *                         longblob
    *
-   * @return string
+   * @return string|null
    * @throws ResultException
    * @throws RuntimeException
    */
@@ -480,6 +480,18 @@ class DataLayer extends StaticDataLayer
     if (count($tmp)!=1) throw new ResultException('1', count($tmp), $query);
 
     return $tmp[0][0];
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   *
+   * @return array
+   * @throws ResultException
+   * @throws RuntimeException
+   */
+  public static function testNoDocBlock()
+  {
+    return self::executeRow1('CALL tst_test_no_doc_block()');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -578,7 +590,7 @@ class DataLayer extends StaticDataLayer
    * @param int $pCount The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test.
    *                    int(11)
    *
-   * @return array
+   * @return array|null
    * @throws ResultException
    * @throws RuntimeException
    */
@@ -596,7 +608,7 @@ class DataLayer extends StaticDataLayer
    * @param string $pBlob  The BLOB.
    *                       blob
    *
-   * @return array
+   * @return array|null
    * @throws ResultException
    * @throws RuntimeException
    */
@@ -1026,7 +1038,7 @@ class DataLayer extends StaticDataLayer
    * @param int $pCount The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test.
    *                    int(11)
    *
-   * @return string
+   * @return string|null
    * @throws ResultException
    * @throws RuntimeException
    */
@@ -1044,7 +1056,7 @@ class DataLayer extends StaticDataLayer
    * @param string $pBlob  The BLOB.
    *                       blob
    *
-   * @return string
+   * @return string|null
    * @throws ResultException
    * @throws RuntimeException
    */
@@ -1115,7 +1127,7 @@ class DataLayer extends StaticDataLayer
    * @param int $pCount The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
    *                    int(11)
    *
-   * @return string
+   * @return string|null
    * @throws ResultException
    * @throws RuntimeException
    */
@@ -1133,7 +1145,7 @@ class DataLayer extends StaticDataLayer
    * @param string $pBlob  The BLOB.
    *                       blob
    *
-   * @return string
+   * @return string|null
    * @throws ResultException
    * @throws RuntimeException
    */
