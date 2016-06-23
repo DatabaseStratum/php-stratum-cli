@@ -1,0 +1,16 @@
+/**
+ * @todo describe routine
+ *
+ * @param p_cmp_id @todo describe parameter
+ */
+create procedure aut_company_select( in p_cmp_id @aut_company.cmp_id%type@ )
+)
+modifies sql data
+-- type: row1
+begin
+  select cmp_id
+  ,      cmp_abbr
+  ,      cmp_label
+  where cmp_id = p_cmp_id
+  ;
+end
