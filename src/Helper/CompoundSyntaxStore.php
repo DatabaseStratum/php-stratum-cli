@@ -77,8 +77,6 @@ class CompoundSyntaxStore
    */
   public function lengthLastLine()
   {
-    var_dump($this->lines[count($this->lines) - 1]);
-
     return strlen($this->lines[count($this->lines) - 1]);
   }
 
@@ -90,7 +88,6 @@ class CompoundSyntaxStore
    */
   public function appendToLastLine($part)
   {
-    var_dump($this->lines[count($this->lines) - 1]);
     $this->lines[count($this->lines) - 1] .= $part;
   }
 

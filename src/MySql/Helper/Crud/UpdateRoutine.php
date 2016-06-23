@@ -18,8 +18,6 @@ class UpdateRoutine extends BaseRoutine
    * @param array[]  $columns Columns from table.
    * @param array[]  $params  Params for where block.
    * @param string[] $lines   Stored procedure code lines.
-   *
-   * @return \string[]
    */
   protected function bodyPart($params, $columns, &$lines)
   {

@@ -13,7 +13,7 @@ namespace SetBased\Stratum\MySql;
 use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\MySql\Exception\DataLayerException;
 use SetBased\Stratum\MySql\Helper\DataTypeHelper;
-use SetBased\Stratum\MySql\MetadataDataLayer as DataLayer;
+use SetBased\Stratum\MySql\MetadataDataLayer as MetaDataLayer;
 use SetBased\Stratum\Style\StratumStyle;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Zend\Code\Reflection\DocBlock\Tag\ParamTag;
@@ -338,7 +338,7 @@ class RoutineLoaderHelper
   {
     if (isset($this->rdbmsOldRoutineMetadata))
     {
-      DataLayer::dropRoutine($this->rdbmsOldRoutineMetadata['routine_type'], $this->routineName);
+      MetaDataLayer::dropRoutine($this->rdbmsOldRoutineMetadata['routine_type'], $this->routineName);
     }
   }
 
@@ -349,21 +349,21 @@ class RoutineLoaderHelper
   private function getBulkInsertTableColumnsInfo()
   {
     // Check if table is a temporary table or a non-temporary table.
-    $table_is_non_temporary = DataLayer::checkTableExists($this->tableName);
+    $table_is_non_temporary = MetaDataLayer::checkTableExists($this->tableName);
 
     // Create temporary table if table is non-temporary table.
     if (!$table_is_non_temporary)
     {
-      DataLayer::callProcedure($this->routineName);
+      MetaDataLayer::callProcedure($this->routineName);
     }
 
     // Get information about the columns of the table.
-    $columns = DataLayer::describeTable($this->tableName);
+    $columns = MetaDataLayer::describeTable($this->tableName);
 
     // Drop temporary table if table is non-temporary.
     if (!$table_is_non_temporary)
     {
-      DataLayer::dropTemporaryTable($this->tableName);
+      MetaDataLayer::dropTemporaryTable($this->tableName);
     }
 
     // Check number of columns in the table match the number of fields given in the designation type.
@@ -714,7 +714,7 @@ class RoutineLoaderHelper
    */
   private function getRoutineParametersInfo()
   {
-    $routine_parameters = DataLayer::getRoutineParameters($this->routineName);
+    $routine_parameters = MetaDataLayer::getRoutineParameters($this->routineName);
     foreach ($routine_parameters as $key => $routine_parameter)
     {
       if ($routine_parameter['parameter_name'])
@@ -764,13 +764,13 @@ class RoutineLoaderHelper
     $this->dropRoutine();
 
     // Set the SQL-mode under which the stored routine will run.
-    DataLayer::setSqlMode($this->sqlMode);
+    MetaDataLayer::setSqlMode($this->sqlMode);
 
     // Set the default character set and collate under which the store routine will run.
-    DataLayer::setCharacterSet($this->characterSet, $this->collate);
+    MetaDataLayer::setCharacterSet($this->characterSet, $this->collate);
 
     // Finally, execute the SQL code for loading the stored routine.
-    DataLayer::loadRoutine($routine_source);
+    MetaDataLayer::loadRoutine($routine_source);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -805,9 +805,9 @@ class RoutineLoaderHelper
   {
     $real_path = realpath($this->sourceFilename);
 
-    $this->replace['__FILE__']    = "'".DataLayer::realEscapeString($real_path)."'";
+    $this->replace['__FILE__']    = "'".MetaDataLayer::realEscapeString($real_path)."'";
     $this->replace['__ROUTINE__'] = "'".$this->routineName."'";
-    $this->replace['__DIR__']     = "'".DataLayer::realEscapeString(dirname($real_path))."'";
+    $this->replace['__DIR__']     = "'".MetaDataLayer::realEscapeString(dirname($real_path))."'";
   }
 
   //--------------------------------------------------------------------------------------------------------------------

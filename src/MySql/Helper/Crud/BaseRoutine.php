@@ -19,6 +19,13 @@ class BaseRoutine
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * The data schema.
+   *
+   * @var string
+   */
+  protected $dataSchema;
+
+  /**
    * Helper for questions.
    */
   protected $helper;
@@ -50,6 +57,13 @@ class BaseRoutine
    * @var array[]
    */
   protected $paramaters;
+
+  /**
+   * The stored procedure name
+   *
+   * @var string
+   */
+  protected $spName;
 
   /**
    * The stored procedure type
@@ -278,7 +292,7 @@ class BaseRoutine
   /**
    * Generate comments for stored procedure.
    *
-   * @param array[] $columns Columns from table.
+   * @param array[]|null $columns Columns from table.
    */
   protected function generateDocBlock($columns)
   {
@@ -301,7 +315,7 @@ class BaseRoutine
   /**
    * Generate main part with name and params.
    *
-   * @param array[] $columns Columns from table.
+   * @param array[]|null $columns Columns from table.
    */
   protected function generateMainPart($columns)
   {
@@ -373,8 +387,6 @@ class BaseRoutine
    *
    * @param bool     $flag  Set or no type.
    * @param string[] $lines Stored procedure code lines.
-   *
-   * @return bool
    */
   protected function modifiesPart($flag, &$lines)
   {
@@ -412,8 +424,8 @@ class BaseRoutine
   /**
    * Generate body of stored procedure.
    *
-   * @param array[] $columns Columns from table.
-   * @param array[] $params  Params for where block.
+   * @param array[]      $columns Columns from table.
+   * @param array[]|null $params  Params for where block.
    */
   private function generateBodyPart($params, $columns)
   {
