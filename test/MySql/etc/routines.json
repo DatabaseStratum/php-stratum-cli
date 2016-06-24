@@ -75,7 +75,7 @@
         "columns": null,
         "fields": null,
         "column_types": null,
-        "timestamp": 1463488945,
+        "timestamp": 1466768004,
         "replace": [],
         "phpdoc": {
             "sort_description": "Test for magic constant.",
@@ -1238,6 +1238,23 @@
                     "description": "The BLOB larger than max_allowed_packet."
                 }
             ]
+        },
+        "spec_params": null
+    },
+    "tst_test_no_doc_block": {
+        "routine_name": "tst_test_no_doc_block",
+        "designation": "row1",
+        "table_name": null,
+        "parameters": [],
+        "columns": null,
+        "fields": null,
+        "column_types": null,
+        "timestamp": 1466685547,
+        "replace": [],
+        "phpdoc": {
+            "sort_description": "",
+            "long_description": "",
+            "parameters": []
         },
         "spec_params": null
     },
