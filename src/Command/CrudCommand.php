@@ -10,6 +10,8 @@ use SetBased\Stratum\MySql\Helper\Crud\SelectRoutine;
 use SetBased\Stratum\MySql\Helper\Crud\UpdateRoutine;
 use SetBased\Stratum\MySql\StaticDataLayer;
 use SetBased\Stratum\Style\StratumStyle;
+use Symfony\Component\Console\Helper\QuestionHelper;
+use Symfony\Component\Console\Helper\SymfonyQuestionHelper;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -26,29 +28,14 @@ class CrudCommand extends BaseCommand
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * InputInterface.
+   * The output decorator
    *
-   * @var InputInterface
+   * @var StratumStyle
    */
-  private $input;
+  protected $io;
 
   //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * OutputInterface.
-   *
-   * @var OutputInterface
-   */
-  private $output;
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Stored procedure code.
-   *
-   * @var CompoundSyntaxStore
-   */
-  private $storedProcedureCode;
-
-  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Database name.
    *
@@ -57,18 +44,40 @@ class CrudCommand extends BaseCommand
   private $dataSchema;
 
   //--------------------------------------------------------------------------------------------------------------------
+
   /**
    * Helper for questions.
+   *
+   * @var SymfonyQuestionHelper
    */
   private $helper;
 
   //--------------------------------------------------------------------------------------------------------------------
+
   /**
-   * The output decorator
+   * InputInterface.
    *
-   * @var StratumStyle
+   * @var InputInterface
    */
-  protected $io;
+  private $input;
+
+  //--------------------------------------------------------------------------------------------------------------------
+
+  /**
+   * OutputInterface.
+   *
+   * @var OutputInterface
+   */
+  private $output;
+
+  //--------------------------------------------------------------------------------------------------------------------
+
+  /**
+   * Stored procedure code.
+   *
+   * @var CompoundSyntaxStore
+   */
+  private $storedProcedureCode;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -107,7 +116,7 @@ class CrudCommand extends BaseCommand
 
     $tableList = DataLayer::getTablesNames($this->dataSchema);
 
-    $this->helper = $this->getHelper('question');
+    $this->helper = new QuestionHelper();
 
     $this->printAllTables($tableList);
 
@@ -115,43 +124,6 @@ class CrudCommand extends BaseCommand
 
     DataLayer::disconnect();
 
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Generate code for stored procedure.
-   *
-   * @param string $tableName The table name.
-   * @param string $spType    Stored procedure type {insert|update|delete|select}.
-   * @param string $spName    Stored procedure name.
-   *
-   * @return string
-   */
-  private function generateSP($tableName, $spType, $spName)
-  {
-    $this->storedProcedureCode = new CompoundSyntaxStore();
-
-    switch ($spType)
-    {
-      case 'UPDATE':
-        $routine = new UpdateRoutine($this->input, $this->output, $this->helper, $spType, $spName, $tableName, $this->dataSchema);
-        $this->storedProcedureCode->append($routine->getCode(), false);
-        break;
-      case 'DELETE':
-        $routine = new DeleteRoutine($this->input, $this->output, $this->helper, $spType, $spName, $tableName, $this->dataSchema);
-        $this->storedProcedureCode->append($routine->getCode(), false);
-        break;
-      case 'SELECT':
-        $routine = new SelectRoutine($this->input, $this->output, $this->helper, $spType, $spName, $tableName, $this->dataSchema);
-        $this->storedProcedureCode->append($routine->getCode(), false);
-        break;
-      case 'INSERT':
-        $routine = new InsertRoutine($this->input, $this->output, $this->helper, $spType, $spName, $tableName, $this->dataSchema);
-        $this->storedProcedureCode->append($routine->getCode(), false);
-        break;
-    }
-
-    return $this->storedProcedureCode->getCode();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -195,26 +167,39 @@ class CrudCommand extends BaseCommand
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Main function for asking.
+   * Generate code for stored procedure.
    *
-   * @param array[] $tableList All existing tables from data schema.
+   * @param string $tableName The table name.
+   * @param string $spType    Stored procedure type {insert|update|delete|select}.
+   * @param string $spName    Stored procedure name.
+   *
+   * @return string
    */
-  private function startAsking($tableList)
+  private function generateSP($tableName, $spType, $spName)
   {
-    $question  = new Question('Please enter <note>TABLE NAME</note>: ');
-    $tableName = $this->helper->ask($this->input, $this->output, $question);
+    $this->storedProcedureCode = new CompoundSyntaxStore();
 
-    $key = StaticDataLayer::searchInRowSet('table_name', $tableName, $tableList);
-    if (!isset($key))
+    switch ($spType)
     {
-      $this->io->logNote('Table \'%s\' not exist.', $tableName);
-      exit(0);
+      case 'UPDATE':
+        $routine = new UpdateRoutine($this->input, $this->output, $this->helper, $spType, $spName, $tableName, $this->dataSchema);
+        $this->storedProcedureCode->append($routine->getCode(), false);
+        break;
+      case 'DELETE':
+        $routine = new DeleteRoutine($this->input, $this->output, $this->helper, $spType, $spName, $tableName, $this->dataSchema);
+        $this->storedProcedureCode->append($routine->getCode(), false);
+        break;
+      case 'SELECT':
+        $routine = new SelectRoutine($this->input, $this->output, $this->helper, $spType, $spName, $tableName, $this->dataSchema);
+        $this->storedProcedureCode->append($routine->getCode(), false);
+        break;
+      case 'INSERT':
+        $routine = new InsertRoutine($this->input, $this->output, $this->helper, $spType, $spName, $tableName, $this->dataSchema);
+        $this->storedProcedureCode->append($routine->getCode(), false);
+        break;
     }
 
-    $this->askForCreateSP('INSERT', $tableName);
-    $this->askForCreateSP('UPDATE', $tableName);
-    $this->askForCreateSP('DELETE', $tableName);
-    $this->askForCreateSP('SELECT', $tableName);
+    return $this->storedProcedureCode->getCode();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -257,6 +242,31 @@ class CrudCommand extends BaseCommand
     $settings = parse_ini_file($configFilename, true);
 
     return $settings;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Main function for asking.
+   *
+   * @param array[] $tableList All existing tables from data schema.
+   */
+  private function startAsking($tableList)
+  {
+    $question  = new Question('Please enter <note>TABLE NAME</note>: ');
+    $tableName = $this->helper->ask($this->input, $this->output, $question);
+
+    $key = StaticDataLayer::searchInRowSet('table_name', $tableName, $tableList);
+    if (!isset($key))
+    {
+      $this->io->logNote('Table \'%s\' not exist.', $tableName);
+    }
+    else
+    {
+      $this->askForCreateSP('INSERT', $tableName);
+      $this->askForCreateSP('UPDATE', $tableName);
+      $this->askForCreateSP('DELETE', $tableName);
+      $this->askForCreateSP('SELECT', $tableName);
+    }
   }
 
   //--------------------------------------------------------------------------------------------------------------------

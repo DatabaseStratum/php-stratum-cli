@@ -120,7 +120,7 @@ class BaseRoutine
     $this->storedProcedureCode = new CompoundSyntaxStore();
 
     $tableColumns = DataLayer::getTableColumns($this->dataSchema, $this->tableName);
-    $params       = null;
+    $params       = [];
     if ($spType!=='INSERT')
     {
       $params = $this->checkUniqueKeys($tableColumns, $this->spType);
@@ -292,7 +292,7 @@ class BaseRoutine
   /**
    * Generate comments for stored procedure.
    *
-   * @param array[]|null $columns Columns from table.
+   * @param array[] $columns Columns from table.
    */
   protected function generateDocBlock($columns)
   {
@@ -315,7 +315,7 @@ class BaseRoutine
   /**
    * Generate main part with name and params.
    *
-   * @param array[]|null $columns Columns from table.
+   * @param array[] $columns Columns from table.
    */
   protected function generateMainPart($columns)
   {
@@ -323,7 +323,7 @@ class BaseRoutine
     $lines[]        = sprintf('create procedure %s (', $this->spName);
     $lengthLastLine = 0;
 
-    $padding = $this->getMaxColumnLength($columns); // XXX
+    $padding = $this->getMaxColumnLength($columns);
     reset($columns);
     $first = key($columns);
     foreach ($columns as $key => $column)
@@ -424,8 +424,8 @@ class BaseRoutine
   /**
    * Generate body of stored procedure.
    *
-   * @param array[]      $columns Columns from table.
-   * @param array[]|null $params  Params for where block.
+   * @param array[] $columns Columns from table.
+   * @param array[] $params  Params for where block.
    */
   private function generateBodyPart($params, $columns)
   {
@@ -440,10 +440,7 @@ class BaseRoutine
     $this->storedProcedureCode->append($lines, false);
   }
 
-//--------------------------------------------------------------------------------------------------------------------
-// xxx methods for routine name, parameter list, DocBlock
-
-//--------------------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------
 }
 
 //----------------------------------------------------------------------------------------------------------------------
