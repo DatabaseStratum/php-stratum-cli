@@ -27,6 +27,9 @@ class StaticDataLayer
    * The default character set to be used when sending data from and to the MySQL instance.
    *
    * @var string
+   *
+   * @since 1.0.0
+   * @api
    */
   public static $charSet = 'utf8';
 
@@ -34,6 +37,9 @@ class StaticDataLayer
    * If set queries must be logged.
    *
    * @var bool
+   *
+   * @since 1.0.0
+   * @api
    */
   public static $logQueries = false;
 
@@ -41,6 +47,9 @@ class StaticDataLayer
    * The SQL mode of the MySQL instance.
    *
    * @var string
+   *
+   * @since 1.0.0
+   * @api
    */
   public static $sqlMode = 'STRICT_ALL_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_AUTO_VALUE_ON_ZERO,NO_ENGINE_SUBSTITUTION,NO_ZERO_DATE,NO_ZERO_IN_DATE,ONLY_FULL_GROUP_BY';
 
@@ -54,6 +63,9 @@ class StaticDataLayer
    * </ul>
    *
    * @var string
+   *
+   * @since 1.0.0
+   * @api
    */
   public static $transactionIsolationLevel = 'READ-COMMITTED';
 
@@ -99,6 +111,7 @@ class StaticDataLayer
    * Wrapper around [mysqli::autocommit](http://php.net/manual/mysqli.autocommit.php), however on failure an exception
    * is thrown.
    *
+   * @since 1.0.0
    * @api
    */
   public static function begin()
@@ -138,6 +151,7 @@ class StaticDataLayer
    * Wrapper around [mysqli::commit](http://php.net/manual/mysqli.commit.php), however on failure an exception is
    * thrown.
    *
+   * @since 1.0.0
    * @api
    */
   public static function commit()
@@ -159,6 +173,7 @@ class StaticDataLayer
    * @param string $database The default database.
    * @param int    $port     The port number.
    *
+   * @since 1.0.0
    * @api
    */
   public static function connect($host, $user, $password, $database, $port = 3306)
@@ -200,6 +215,7 @@ class StaticDataLayer
   /**
    * Closes the connection to the MySQL instance, if connected.
    *
+   * @since 1.0.0
    * @api
    */
   public static function disconnect()
@@ -217,6 +233,9 @@ class StaticDataLayer
    *
    * @param BulkHandler $bulkHandler The bulk handler.
    * @param string      $query       The SQL statement.
+   *
+   * @since 1.0.0
+   * @api
    */
   public static function executeBulk($bulkHandler, $query)
   {
@@ -244,6 +263,7 @@ class StaticDataLayer
    *
    * @return int The total number of rows selected/logged.
    *
+   * @since 1.0.0
    * @api
    */
   public static function executeLog($queries)
@@ -292,6 +312,7 @@ class StaticDataLayer
    *
    * @return int The number of affected rows (if any).
    *
+   * @since 1.0.0
    * @api
    */
   public static function executeNone($query)
@@ -315,6 +336,7 @@ class StaticDataLayer
    * @return array|null The selected row.
    * @throws ResultException
    *
+   * @since 1.0.0
    * @api
    */
   public static function executeRow0($query)
@@ -344,6 +366,7 @@ class StaticDataLayer
    * @return array The selected row.
    * @throws ResultException
    *
+   * @since 1.0.0
    * @api
    */
   public static function executeRow1($query)
@@ -371,6 +394,7 @@ class StaticDataLayer
    *
    * @return \array[] The selected rows.
    *
+   * @since 1.0.0
    * @api
    */
   public static function executeRows($query)
@@ -405,6 +429,7 @@ class StaticDataLayer
    * @return int|string|null The selected value.
    * @throws ResultException
    *
+   * @since 1.0.0
    * @api
    */
   public static function executeSingleton0($query)
@@ -434,6 +459,7 @@ class StaticDataLayer
    * @return int|string The selected value.
    * @throws ResultException
    *
+   * @since 1.0.0
    * @api
    */
   public static function executeSingleton1($query)
@@ -462,6 +488,7 @@ class StaticDataLayer
    *
    * @return int The total number of rows in the tables.
    *
+   * @since 1.0.0
    * @api
    */
   public static function executeTable($query)
@@ -553,6 +580,7 @@ class StaticDataLayer
    *
    * @return \array[]
    *
+   * @since 1.0.0
    * @api
    */
   public static function getQueryLog()
@@ -572,6 +600,7 @@ class StaticDataLayer
    *
    * @return mixed
    *
+   * @since 1.0.0
    * @api
    */
   public static function getRowInRowSet($columnName, $value, $rowSet)
@@ -799,6 +828,7 @@ class StaticDataLayer
    * Wrapper around [mysqli::rollback](http://php.net/manual/en/mysqli.rollback.php), however on failure an exception
    * is thrown.
    *
+   * @since 1.0.0
    * @api
    */
   public static function rollback()
@@ -818,6 +848,7 @@ class StaticDataLayer
    *
    * @return int|null|string
    *
+   * @since 1.0.0
    * @api
    */
   public static function searchInRowSet($columnName, $value, $rowSet)
@@ -842,6 +873,7 @@ class StaticDataLayer
    *
    * Wrapper around the SQL statement [show warnings](https://dev.mysql.com/doc/refman/5.6/en/show-warnings.html).
    *
+   * @since 1.0.0
    * @api
    */
   public static function showWarnings()

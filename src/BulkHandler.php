@@ -24,6 +24,7 @@ interface BulkHandler
    *
    * @return void
    *
+   * @since 1.0.0
    * @api
    */
   public function row($row);
@@ -34,6 +35,7 @@ interface BulkHandler
    *
    * @return void
    *
+   * @since 1.0.0
    * @api
    */
   public function start();
@@ -44,6 +46,7 @@ interface BulkHandler
    *
    * @return void
    *
+   * @since 1.0.0
    * @api
    */
   public function stop();
