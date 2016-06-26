@@ -304,7 +304,6 @@ class DataTypeHelper
       case 'text':
       case 'mediumtext':
       case 'longtext':
-
       case 'tinyblob':
       case 'blob':
       case 'mediumblob':
@@ -332,7 +331,6 @@ class DataTypeHelper
       case 'date':
       case 'datetime':
       case 'varbinary':
-
       case 'list_of_int':
         $isBlob = false;
         break;

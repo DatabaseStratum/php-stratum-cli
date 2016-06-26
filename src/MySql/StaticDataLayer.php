@@ -1004,7 +1004,6 @@ class StaticDataLayer
       case 5: // double
       case 8: // bigint
       case 9: // mediumint
-
         echo ' ', $spaces.$value, ' ';
         break;
 
@@ -1017,12 +1016,10 @@ class StaticDataLayer
       case 252: // is currently mapped to all text and blob types (MySQL 5.0.51a)
       case 253: // varchar
       case 254: // char
-
         echo ' ', $value.$spaces, ' ';
         break;
 
       case 246: // decimal
-
         echo ' ', $value.$spaces, ' ';
         break;
 
