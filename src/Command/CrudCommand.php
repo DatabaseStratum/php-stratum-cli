@@ -2,7 +2,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\Command;
 
-use SetBased\Stratum\Helper\CompoundSyntaxStore;
+use SetBased\Stratum\Helper\CompoundSyntaxCodeStore;
 use SetBased\Stratum\MySql\DataLayer;
 use SetBased\Stratum\MySql\Helper\Crud\DeleteRoutine;
 use SetBased\Stratum\MySql\Helper\Crud\InsertRoutine;
@@ -75,7 +75,7 @@ class CrudCommand extends BaseCommand
   /**
    * Stored procedure code.
    *
-   * @var CompoundSyntaxStore
+   * @var CompoundSyntaxCodeStore
    */
   private $storedProcedureCode;
 
@@ -177,7 +177,7 @@ class CrudCommand extends BaseCommand
    */
   private function generateSP($tableName, $spType, $spName)
   {
-    $this->storedProcedureCode = new CompoundSyntaxStore();
+    $this->storedProcedureCode = new CompoundSyntaxCodeStore();
 
     switch ($spType)
     {
