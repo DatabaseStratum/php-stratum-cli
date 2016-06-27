@@ -26,6 +26,7 @@
   "require": {
     "php": ">=5.4.0",
     "setbased/exception": "1.*",
+    "setbased/helper-code-store-php": "1.*",
     "setbased/php-affirm": "*",
     "symfony/console": "^2.8 || ^3.0",
     "zendframework/zend-code": ">=2.0"

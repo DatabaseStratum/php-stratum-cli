@@ -11,7 +11,8 @@
 namespace SetBased\Stratum\MySql\Wrapper;
 
 use SetBased\Exception\FallenException;
-use SetBased\Stratum\Helper\PhpCodeStore;
+use SetBased\Helper\CodeStore\PhpCodeStore;
+use SetBased\Stratum\MySql\Helper\DataTypeHelper;
 use SetBased\Stratum\NameMangler\NameMangler;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -43,16 +44,16 @@ abstract class Wrapper
   protected $imports = [];
 
   /**
-   * @var bool If true BLOBs and CLOBs must be treated as strings.
-   */
-  private $lobAsStringFlag;
-
-  /**
    * The name mangler for wrapper and parameter names.
    *
    * @var NameMangler
    */
   protected $nameMangler;
+
+  /**
+   * @var bool If true BLOBs and CLOBs must be treated as strings.
+   */
+  private $lobAsStringFlag;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -70,398 +71,6 @@ abstract class Wrapper
     $this->lobAsStringFlag = $lobAsString;
     $this->exceptions[]    = 'RuntimeException';
     $this->imports[]       = 'SetBased\Exception\RuntimeException';
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns an array with fully qualified names that must be imported in the stored routine wrapper class.
-   *
-   * @return array
-   */
-  public function getImports()
-  {
-    return $this->imports;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns true if one of the parameters is a BLOB or CLOB.
-   *
-   * @param array|null $parameters The parameters info (name, type, description).
-   *
-   * @return bool
-   */
-  public function isBlobParameter($parameters)
-  {
-    $has_blob = false;
-
-    if ($parameters)
-    {
-      foreach ($parameters as $parameter_info)
-      {
-        switch ($parameter_info['data_type'])
-        {
-          case 'tinytext':
-          case 'text':
-          case 'mediumtext':
-          case 'longtext':
-
-          case 'tinyblob':
-          case 'blob':
-          case 'mediumblob':
-          case 'longblob':
-
-            $has_blob = true;
-            break;
-
-          case 'tinyint':
-          case 'smallint':
-          case 'mediumint':
-          case 'int':
-          case 'bigint':
-          case 'year':
-          case 'decimal':
-          case 'float':
-          case 'double':
-          case 'time':
-          case 'timestamp':
-          case 'binary':
-          case 'enum':
-          case 'bit':
-          case 'set':
-          case 'char':
-          case 'varchar':
-          case 'date':
-          case 'datetime':
-          case 'varbinary':
-
-          case 'list_of_int':
-
-            // Nothing to do.
-            break;
-
-          default:
-            throw new FallenException('parameter type', $parameter_info['data_type']);
-        }
-      }
-    }
-
-    return $has_blob;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Generates a complete wrapper method.
-   *
-   * @param array $routine Metadata of the stored routine.
-   */
-  public function writeRoutineFunction($routine)
-  {
-    if (!$this->lobAsStringFlag && $this->isBlobParameter($routine['parameters']))
-    {
-      $this->writeRoutineFunctionWithLob($routine);
-    }
-    else
-    {
-      $this->writeRoutineFunctionWithoutLob($routine);
-    }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Generates a complete wrapper method for a stored routine with a LOB parameter.
-   *
-   * @param array $routine The metadata of the stored routine.
-   */
-  public function writeRoutineFunctionWithLob($routine)
-  {
-    $wrapper_args = $this->getWrapperArgs($routine);
-    $routine_args = $this->getRoutineArgs($routine);
-    $method_name  = $this->nameMangler->getMethodName($routine['routine_name']);
-
-    $bindings = '';
-    $nulls    = '';
-    foreach ($routine['parameters'] as $parameter_info)
-    {
-      $binding = $this->getBindVariableType($parameter_info['data_type']);
-      if ($binding=='b')
-      {
-        $bindings .= 'b';
-        if ($nulls) $nulls .= ',';
-        $nulls .= '$null';
-      }
-    }
-
-    $this->codeStore->appendSeparator();
-    $this->generatePhpDoc($routine);
-    $this->codeStore->append('public static function '.$method_name.'('.$wrapper_args.')');
-    $this->codeStore->append('{');
-    $this->codeStore->append('$query = \'CALL '.$routine['routine_name'].'('.$routine_args.')\';');
-    $this->codeStore->append('$stmt  = self::$mysqli->prepare($query);');
-    $this->codeStore->append('if (!$stmt) self::mySqlError(\'mysqli::prepare\');');
-    $this->codeStore->append();
-    $this->codeStore->append('$null = null;');
-    $this->codeStore->append('$b = $stmt->bind_param(\''.$bindings.'\', '.$nulls.');');
-    $this->codeStore->append('if (!$b) self::mySqlError(\'mysqli_stmt::bind_param\');');
-    $this->codeStore->append();
-    $this->codeStore->append('self::getMaxAllowedPacket();');
-    $this->codeStore->append();
-
-    $blob_argument_index = 0;
-    foreach ($routine['parameters'] as $parameter_info)
-    {
-      if ($this->getBindVariableType($parameter_info['data_type'])=='b')
-      {
-        $mangledName = $this->nameMangler->getParameterName($parameter_info['parameter_name']);
-
-        $this->codeStore->append('$n = strlen($'.$mangledName.');');
-        $this->codeStore->append('$p = 0;');
-        $this->codeStore->append('while ($p<$n)');
-        $this->codeStore->append('{');
-        $this->codeStore->append('$b = $stmt->send_long_data('.$blob_argument_index.', substr($'.$mangledName.', $p, self::$chunkSize));');
-        $this->codeStore->append('if (!$b) self::mySqlError(\'mysqli_stmt::send_long_data\');');
-        $this->codeStore->append('$p += self::$chunkSize;');
-        $this->codeStore->append('}');
-        $this->codeStore->append();
-
-        $blob_argument_index++;
-      }
-    }
-
-    $this->codeStore->append('if (self::$logQueries)');
-    $this->codeStore->append('{');
-    $this->codeStore->append('$time0 = microtime(true);');
-    $this->codeStore->append();
-    $this->codeStore->append('$b = $stmt->execute();');
-    $this->codeStore->append('if (!$b) self::mySqlError(\'mysqli_stmt::execute\');');
-    $this->codeStore->append();
-    $this->codeStore->append('self::$queryLog[] = [\'query\' => $query,');
-    $this->codeStore->append('                     \'time\'  => microtime(true) - $time0];');
-    $this->codeStore->append('}');
-    $this->codeStore->append('else');
-    $this->codeStore->append('{');
-    $this->codeStore->append('$b = $stmt->execute();');
-    $this->codeStore->append('if (!$b) self::mySqlError(\'mysqli_stmt::execute\');');
-    $this->codeStore->append('}');
-    $this->codeStore->append();
-    $this->writeRoutineFunctionLobFetchData($routine);
-    $this->codeStore->append('$stmt->close();');
-    $this->codeStore->append('if (self::$mysqli->more_results()) self::$mysqli->next_result();');
-    $this->codeStore->append();
-    $this->writeRoutineFunctionLobReturnData();
-    $this->codeStore->append('}');
-    $this->codeStore->append();
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns a wrapper method for a stored routine without LOB parameters.
-   *
-   * @param array $routine The metadata of the stored routine.
-   */
-  public function writeRoutineFunctionWithoutLob($routine)
-  {
-    $wrapper_args = $this->getWrapperArgs($routine);
-    $method_name  = $this->nameMangler->getMethodName($routine['routine_name']);
-
-    $this->codeStore->appendSeparator();
-    $this->generatePhpDoc($routine);
-    $this->codeStore->append('public static function '.$method_name.'('.$wrapper_args.')');
-    $this->codeStore->append('{');
-
-    $this->writeResultHandler($routine);
-    $this->codeStore->append('}');
-    $this->codeStore->append('');
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns the type of the corresponding bind variable.
-   *
-   * @see http://php.net/manual/en/mysqli-stmt.bind-param.php
-   *
-   * @param string $type The parameter type of a parameter of a stored routine.
-   *
-   * @return string
-   */
-  protected function getBindVariableType($type)
-  {
-    $ret = '';
-    switch ($type)
-    {
-      case 'tinyint':
-      case 'smallint':
-      case 'mediumint':
-      case 'int':
-      case 'bigint':
-      case 'year':
-        $ret = 'i';
-        break;
-
-      case 'decimal':
-      case 'float':
-      case 'double':
-        $ret = 'd';
-        break;
-
-      case 'time':
-      case 'timestamp':
-      case 'binary':
-      case 'enum':
-      case 'bit':
-      case 'set':
-      case 'char':
-      case 'varchar':
-      case 'date':
-      case 'datetime':
-      case 'varbinary':
-        $ret = 's';
-        break;
-
-      case 'tinytext':
-      case 'text':
-      case 'mediumtext':
-      case 'longtext':
-      case 'tinyblob':
-      case 'blob':
-      case 'mediumblob':
-      case 'longblob':
-        $ret .= ($this->lobAsStringFlag) ? 's' : 'b';
-        break;
-
-      case 'list_of_int':
-        $ret = 's';
-        break;
-
-      default:
-        throw new FallenException('parameter type', $type);
-    }
-
-    return $ret;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns the exception that can be thrown by this method.
-   *
-   * @return array
-   */
-  protected function getDocBlockExceptions()
-  {
-    sort($this->exceptions);
-
-    return $this->exceptions;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns the return type the be used in the DocBlock.
-   *
-   * @return string
-   */
-  abstract protected function getDocBlockReturnType();
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns code for the arguments for calling the stored routine in a wrapper method.
-   *
-   * @param array $routine The metadata of the stored routine.
-   *
-   * @return string
-   */
-  protected function getRoutineArgs($routine)
-  {
-    $ret = '';
-
-    foreach ($routine['parameters'] as $parameter_info)
-    {
-      if ($ret) $ret .= ',';
-      $ret .= $this->writeEscapedArgs($parameter_info);
-    }
-
-    return $ret;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns code for the parameters of the wrapper method for the stored routine.
-   *
-   * @param array $routine The metadata of the stored routine.
-   *
-   * @return string
-   */
-  protected function getWrapperArgs($routine)
-  {
-    if ($routine['designation']=='bulk')
-    {
-      $ret = '$theBulkHandler';
-    }
-    else
-    {
-      $ret = '';
-    }
-
-    foreach ($routine['parameters'] as $i => $parameter_info)
-    {
-      if ($ret) $ret .= ', ';
-      switch ($parameter_info['data_type'])
-      {
-        case 'tinyint':
-        case 'smallint':
-        case 'mediumint':
-        case 'int':
-        case 'bigint':
-        case 'year':
-        case 'decimal':
-        case 'float':
-        case 'double':
-          $ret .= $this->nameMangler->getParameterName('$'.$parameter_info['parameter_name']);
-          break;
-
-        case 'varbinary':
-        case 'binary':
-        case 'char':
-        case 'varchar':
-          $ret .= $this->nameMangler->getParameterName('$'.$parameter_info['parameter_name']);
-          break;
-
-        case 'time':
-        case 'timestamp':
-        case 'date':
-        case 'datetime':
-          $ret .= $this->nameMangler->getParameterName('$'.$parameter_info['parameter_name']);
-          break;
-
-        case 'enum':
-        case 'bit':
-        case 'set':
-          $ret .= $this->nameMangler->getParameterName('$'.$parameter_info['parameter_name']);
-          break;
-
-        case 'tinytext':
-        case 'text':
-        case 'mediumtext':
-        case 'longtext':
-          $ret .= $this->nameMangler->getParameterName('$'.$parameter_info['parameter_name']);
-          break;
-
-        case 'tinyblob':
-        case 'blob':
-        case 'mediumblob':
-        case 'longblob':
-          $ret .= $this->nameMangler->getParameterName('$'.$parameter_info['parameter_name']);
-          break;
-
-        case 'list_of_int':
-          $ret .= $this->nameMangler->getParameterName('$'.$parameter_info['parameter_name']);
-          break;
-
-        default:
-          throw new FallenException('parameter type', $parameter_info['data_type']);
-      }
-    }
-
-    return $ret;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -537,6 +146,239 @@ abstract class Wrapper
     }
 
     return $wrapper;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns an array with fully qualified names that must be imported in the stored routine wrapper class.
+   *
+   * @return array
+   */
+  public function getImports()
+  {
+    return $this->imports;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns true if one of the parameters is a BLOB or CLOB.
+   *
+   * @param array|null $parameters The parameters info (name, type, description).
+   *
+   * @return bool
+   */
+  public function isBlobParameter($parameters)
+  {
+    $has_blob = false;
+
+    if ($parameters)
+    {
+      foreach ($parameters as $parameter_info)
+      {
+        $has_blob |= DataTypeHelper::isBlobParameter($parameter_info['data_type']);
+      }
+    }
+
+    return $has_blob;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Generates a complete wrapper method.
+   *
+   * @param array $routine Metadata of the stored routine.
+   */
+  public function writeRoutineFunction($routine)
+  {
+    if (!$this->lobAsStringFlag && $this->isBlobParameter($routine['parameters']))
+    {
+      $this->writeRoutineFunctionWithLob($routine);
+    }
+    else
+    {
+      $this->writeRoutineFunctionWithoutLob($routine);
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Generates a complete wrapper method for a stored routine with a LOB parameter.
+   *
+   * @param array $routine The metadata of the stored routine.
+   */
+  public function writeRoutineFunctionWithLob($routine)
+  {
+    $wrapper_args = $this->getWrapperArgs($routine);
+    $routine_args = $this->getRoutineArgs($routine);
+    $method_name  = $this->nameMangler->getMethodName($routine['routine_name']);
+
+    $bindings = '';
+    $nulls    = '';
+    foreach ($routine['parameters'] as $parameter_info)
+    {
+      $binding = DataTypeHelper::getBindVariableType($parameter_info['data_type'], $this->lobAsStringFlag);
+      if ($binding=='b')
+      {
+        $bindings .= 'b';
+        if ($nulls) $nulls .= ',';
+        $nulls .= '$null';
+      }
+    }
+
+    $this->codeStore->appendSeparator();
+    $this->generatePhpDoc($routine);
+    $this->codeStore->append('public static function '.$method_name.'('.$wrapper_args.')');
+    $this->codeStore->append('{');
+    $this->codeStore->append('$query = \'CALL '.$routine['routine_name'].'('.$routine_args.')\';');
+    $this->codeStore->append('$stmt  = self::$mysqli->prepare($query);');
+    $this->codeStore->append('if (!$stmt) self::mySqlError(\'mysqli::prepare\');');
+    $this->codeStore->append('');
+    $this->codeStore->append('$null = null;');
+    $this->codeStore->append('$b = $stmt->bind_param(\''.$bindings.'\', '.$nulls.');');
+    $this->codeStore->append('if (!$b) self::mySqlError(\'mysqli_stmt::bind_param\');');
+    $this->codeStore->append('');
+    $this->codeStore->append('self::getMaxAllowedPacket();');
+    $this->codeStore->append('');
+
+    $blob_argument_index = 0;
+    foreach ($routine['parameters'] as $parameter_info)
+    {
+      if (DataTypeHelper::getBindVariableType($parameter_info['data_type'], $this->lobAsStringFlag)=='b')
+      {
+        $mangledName = $this->nameMangler->getParameterName($parameter_info['parameter_name']);
+
+        $this->codeStore->append('$n = strlen($'.$mangledName.');');
+        $this->codeStore->append('$p = 0;');
+        $this->codeStore->append('while ($p<$n)');
+        $this->codeStore->append('{');
+        $this->codeStore->append('$b = $stmt->send_long_data('.$blob_argument_index.', substr($'.$mangledName.', $p, self::$chunkSize));');
+        $this->codeStore->append('if (!$b) self::mySqlError(\'mysqli_stmt::send_long_data\');');
+        $this->codeStore->append('$p += self::$chunkSize;');
+        $this->codeStore->append('}');
+        $this->codeStore->append('');
+
+        $blob_argument_index++;
+      }
+    }
+
+    $this->codeStore->append('if (self::$logQueries)');
+    $this->codeStore->append('{');
+    $this->codeStore->append('$time0 = microtime(true);');
+    $this->codeStore->append('');
+    $this->codeStore->append('$b = $stmt->execute();');
+    $this->codeStore->append('if (!$b) self::mySqlError(\'mysqli_stmt::execute\');');
+    $this->codeStore->append('');
+    $this->codeStore->append('self::$queryLog[] = [\'query\' => $query,');
+    $this->codeStore->append('                     \'time\'  => microtime(true) - $time0];');
+    $this->codeStore->append('}');
+    $this->codeStore->append('else');
+    $this->codeStore->append('{');
+    $this->codeStore->append('$b = $stmt->execute();');
+    $this->codeStore->append('if (!$b) self::mySqlError(\'mysqli_stmt::execute\');');
+    $this->codeStore->append('}');
+    $this->codeStore->append('');
+    $this->writeRoutineFunctionLobFetchData($routine);
+    $this->codeStore->append('$stmt->close();');
+    $this->codeStore->append('if (self::$mysqli->more_results()) self::$mysqli->next_result();');
+    $this->codeStore->append('');
+    $this->writeRoutineFunctionLobReturnData();
+    $this->codeStore->append('}');
+    $this->codeStore->append('');
+  }
+
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns a wrapper method for a stored routine without LOB parameters.
+   *
+   * @param array $routine The metadata of the stored routine.
+   */
+  public function writeRoutineFunctionWithoutLob($routine)
+  {
+    $wrapper_args = $this->getWrapperArgs($routine);
+    $method_name  = $this->nameMangler->getMethodName($routine['routine_name']);
+
+    $this->codeStore->appendSeparator();
+    $this->generatePhpDoc($routine);
+    $this->codeStore->append('public static function '.$method_name.'('.$wrapper_args.')');
+    $this->codeStore->append('{');
+
+    $this->writeResultHandler($routine);
+    $this->codeStore->append('}');
+    $this->codeStore->append('');
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns the exception that can be thrown by this method.
+   *
+   * @return array
+   */
+  protected function getDocBlockExceptions()
+  {
+    sort($this->exceptions);
+
+    return $this->exceptions;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns the return type the be used in the DocBlock.
+   *
+   * @return string
+   */
+  abstract protected function getDocBlockReturnType();
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns code for the arguments for calling the stored routine in a wrapper method.
+   *
+   * @param array $routine The metadata of the stored routine.
+   *
+   * @return string
+   */
+  protected function getRoutineArgs($routine)
+  {
+    $ret = '';
+
+    foreach ($routine['parameters'] as $parameter_info)
+    {
+      $mangledName = $this->nameMangler->getParameterName($parameter_info['parameter_name']);
+
+      if ($ret) $ret .= ',';
+      $ret .= DataTypeHelper::escapePhpExpression($parameter_info, '$'.$mangledName, $this->lobAsStringFlag);
+    }
+
+    return $ret;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns code for the parameters of the wrapper method for the stored routine.
+   *
+   * @param array $routine The metadata of the stored routine.
+   *
+   * @return string
+   */
+  protected function getWrapperArgs($routine)
+  {
+    if ($routine['designation']=='bulk')
+    {
+      $ret = '$theBulkHandler';
+    }
+    else
+    {
+      $ret = '';
+    }
+
+    foreach ($routine['parameters'] as $i => $parameter_info)
+    {
+      if ($ret) $ret .= ', ';
+      $ret .= '$';
+      $ret .= $this->nameMangler->getParameterName($parameter_info['parameter_name']);
+    }
+
+    return $ret;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -659,80 +501,6 @@ abstract class Wrapper
     }
 
     $this->codeStore->append(' */', false);
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Return code for escaping the arguments of a stored routine.
-   *
-   * @param string[] $parameters Information about the parameters of the stored routine.
-   *
-   * @return string
-   */
-  private function writeEscapedArgs($parameters)
-  {
-    $mangledName = $this->nameMangler->getParameterName($parameters['parameter_name']);
-
-    switch ($parameters['data_type'])
-    {
-      case 'tinyint':
-      case 'smallint':
-      case 'mediumint':
-      case 'int':
-      case 'bigint':
-      case 'year':
-      case 'decimal':
-      case 'float':
-      case 'double':
-        $ret = '\'.self::quoteNum($'.$mangledName.').\'';
-        break;
-
-      case 'varbinary':
-      case 'binary':
-      case 'char':
-      case 'varchar':
-        $ret = '\'.self::quoteString($'.$mangledName.').\'';
-        break;
-
-      case 'time':
-      case 'timestamp':
-      case 'date':
-      case 'datetime':
-        $ret = '\'.self::quoteString($'.$mangledName.').\'';
-        break;
-
-      case 'enum':
-      case 'set':
-        $ret = '\'.self::quoteString($'.$mangledName.').\'';
-        break;
-
-      case 'bit':
-        $ret = '\'.self::quoteBit($'.$mangledName.').\'';
-        break;
-
-      case 'tinytext':
-      case 'text':
-      case 'mediumtext':
-      case 'longtext':
-      case 'tinyblob':
-      case 'blob':
-      case 'mediumblob':
-      case 'longblob':
-        $ret = ($this->lobAsStringFlag) ? $ret = '\'.self::quoteString($'.$mangledName.').\'' : '?';
-        break;
-
-      case 'list_of_int':
-        $ret = '\'.self::quoteListOfInt($'.$mangledName.", '".
-          addslashes($parameters['delimiter'])."', '".
-          addslashes($parameters['enclosure'])."', '".
-          addslashes($parameters['escape'])."').'";
-        break;
-
-      default:
-        throw new FallenException('parameter type', $parameters['data_type']);
-    }
-
-    return $ret;
   }
 
   //--------------------------------------------------------------------------------------------------------------------

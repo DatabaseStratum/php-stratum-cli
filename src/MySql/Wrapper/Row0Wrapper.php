@@ -55,7 +55,7 @@ class Row0Wrapper extends Wrapper
   {
     $this->codeStore->append('$row = [];');
     $this->codeStore->append('self::bindAssoc($stmt, $row);');
-    $this->codeStore->append();
+    $this->codeStore->append('');
     $this->codeStore->append('$tmp = [];');
     $this->codeStore->append('while (($b = $stmt->fetch()))');
     $this->codeStore->append('{');
@@ -66,7 +66,7 @@ class Row0Wrapper extends Wrapper
     $this->codeStore->append('}');
     $this->codeStore->append('$tmp[] = $new;');
     $this->codeStore->append('}');
-    $this->codeStore->append();
+    $this->codeStore->append('');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -77,7 +77,7 @@ class Row0Wrapper extends Wrapper
   {
     $this->codeStore->append('if ($b===false) self::mySqlError(\'mysqli_stmt::fetch\');');
     $this->codeStore->append('if (count($tmp)>1) throw new ResultException(\'0 or 1\', count($tmp), $query);');
-    $this->codeStore->append();
+    $this->codeStore->append('');
     $this->codeStore->append('return ($tmp) ? $tmp[0] : null;');
   }
 

@@ -65,7 +65,9 @@ class BulkInsertWrapper extends Wrapper
         $columns .= '`'.$routine['fields'][$i].'`';
 
         if ($fields) $fields .= ',';
-        $fields .= DataTypeHelper::writeEscapesValue($routine['column_types'][$i], '$row[\''.$field.'\']');
+        $fields .= DataTypeHelper::escapePhpExpression(['data_type' => $routine['column_types'][$i]],
+                                                       '$row[\''.$field.'\']',
+                                                       true);
       }
     }
 

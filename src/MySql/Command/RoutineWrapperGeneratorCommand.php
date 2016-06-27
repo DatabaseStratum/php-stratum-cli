@@ -11,8 +11,8 @@
 namespace SetBased\Stratum\MySql\Command;
 
 use SetBased\Exception\RuntimeException;
+use SetBased\Helper\CodeStore\PhpCodeStore;
 use SetBased\Stratum\Command\BaseCommand;
-use SetBased\Stratum\Helper\PhpCodeStore;
 use SetBased\Stratum\MySql\Wrapper\Wrapper;
 use SetBased\Stratum\NameMangler\NameMangler;
 use SetBased\Stratum\Style\StratumStyle;
@@ -152,7 +152,7 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
       echo "No files with stored routines found.\n";
     }
 
-    $wrappers        = $this->codeStore->getLines();
+    $wrappers        = $this->codeStore->getRawCode();
     $this->codeStore = new PhpCodeStore();
 
     // Write the header of the wrapper class.
@@ -239,7 +239,7 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
     {
       $this->codeStore->appendSeparator();
       $this->codeStore->append(sprintf('namespace %s;', $namespace));
-      $this->codeStore->append();
+      $this->codeStore->append('');
     }
 
     // If the child class and parent class have different names import the parent class. Otherwise use the fully
@@ -259,7 +259,7 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
       {
         $this->codeStore->append(sprintf('use %s;', $import));
       }
-      $this->codeStore->append();
+      $this->codeStore->append('');
     }
 
     // Write class name.
@@ -279,7 +279,7 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
   {
     $this->codeStore->appendSeparator();
     $this->codeStore->append('}');
-    $this->codeStore->append();
+    $this->codeStore->append('');
     $this->codeStore->appendSeparator();
   }
 
