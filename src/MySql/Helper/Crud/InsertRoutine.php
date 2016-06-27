@@ -23,7 +23,7 @@ class InsertRoutine extends BaseRoutine
     $lengthLastLine = 0;
     reset($columns);
     $first   = key($columns);
-    $lines[] = sprintf('insert into %s ( ', $this->tableName);
+    $lines[] = sprintf('insert into %s( ', $this->tableName);
     foreach ($columns as $key => $column)
     {
       if ($key===$first)
@@ -44,7 +44,7 @@ class InsertRoutine extends BaseRoutine
       }
     }
 
-    $lines[] = 'values ( ';
+    $lines[] = 'values( ';
     foreach ($columns as $key => $column)
     {
       if ($key===$first)

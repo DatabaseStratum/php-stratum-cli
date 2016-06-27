@@ -320,7 +320,7 @@ class BaseRoutine
   protected function generateMainPart($columns)
   {
     $lines          = [];
-    $lines[]        = sprintf('create procedure %s (', $this->spName);
+    $lines[]        = sprintf('create procedure %s(', $this->spName);
     $lengthLastLine = 0;
 
     $padding = $this->getMaxColumnLength($columns);
