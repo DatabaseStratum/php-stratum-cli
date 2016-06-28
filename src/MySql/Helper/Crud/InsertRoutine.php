@@ -67,6 +67,7 @@ class InsertRoutine extends BaseRoutine
     $lines[] = ';';
     if ($this->checkAutoIncrement($columns))
     {
+      $lines[] = '';
       $lines[] = 'select last_insert_id();';
     }
   }

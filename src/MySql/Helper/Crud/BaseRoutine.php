@@ -7,6 +7,7 @@ use SetBased\Stratum\MySql\DataLayer;
 use SetBased\Stratum\MySql\StaticDataLayer;
 use SetBased\Stratum\Style\StratumStyle;
 use Symfony\Component\Console\Helper\Helper;
+use Symfony\Component\Console\Helper\SymfonyQuestionHelper;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -27,8 +28,10 @@ class BaseRoutine
 
   /**
    * Helper for questions.
+   *
+   * @var SymfonyQuestionHelper
    */
-  protected $helper;
+  private $helper;
 
   /**
    * InputInterface.
@@ -124,6 +127,11 @@ class BaseRoutine
     if ($spType!=='INSERT')
     {
       $params = $this->checkUniqueKeys($tableColumns, $this->spType);
+    }
+
+    if (!isset($params))
+    {
+      $params = $tableColumns;
     }
 
     switch ($spType)

@@ -34,16 +34,12 @@ class CrudCommand extends BaseCommand
    */
   protected $io;
 
-  //--------------------------------------------------------------------------------------------------------------------
-
   /**
    * Database name.
    *
    * @var string
    */
   private $dataSchema;
-
-  //--------------------------------------------------------------------------------------------------------------------
 
   /**
    * Helper for questions.
@@ -52,16 +48,12 @@ class CrudCommand extends BaseCommand
    */
   private $helper;
 
-  //--------------------------------------------------------------------------------------------------------------------
-
   /**
    * InputInterface.
    *
    * @var InputInterface
    */
   private $input;
-
-  //--------------------------------------------------------------------------------------------------------------------
 
   /**
    * OutputInterface.
@@ -70,7 +62,12 @@ class CrudCommand extends BaseCommand
    */
   private $output;
 
-  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Source directory.
+   *
+   * @var string
+   */
+  private $sourceDirectory;
 
   /**
    * Stored procedure code.
@@ -87,7 +84,7 @@ class CrudCommand extends BaseCommand
   {
     $this->setName('crud')
          ->setDescription('This is an interactive command for generating stored procedures for CRUD operations.')
-         ->addArgument('config file', InputArgument::OPTIONAL, 'The audit configuration file', 'test/MySql/etc/stratum.cfg')
+         ->addArgument('config file', InputArgument::OPTIONAL, 'The audit configuration file')
          ->addOption('tables', 't', InputOption::VALUE_NONE, 'Show all tables');
 
   }
@@ -106,10 +103,11 @@ class CrudCommand extends BaseCommand
     $configFileName = $input->getArgument('config file');
     $settings       = $this->readConfigFile($configFileName);
 
-    $host             = $this->getSetting($settings, true, 'database', 'host');
-    $user             = $this->getSetting($settings, true, 'database', 'user');
-    $password         = $this->getSetting($settings, true, 'database', 'password');
-    $this->dataSchema = $this->getSetting($settings, true, 'database', 'database');
+    $this->sourceDirectory = $this->getSetting($settings, true, 'loader', 'source_directory');
+    $host                  = $this->getSetting($settings, true, 'database', 'host');
+    $user                  = $this->getSetting($settings, true, 'database', 'user');
+    $password              = $this->getSetting($settings, true, 'database', 'password');
+    $this->dataSchema      = $this->getSetting($settings, true, 'database', 'database');
 
     DataLayer::connect($host, $user, $password, $this->dataSchema);
     DataLayer::setIo($this->io);
@@ -139,13 +137,13 @@ class CrudCommand extends BaseCommand
     $question = new ConfirmationQuestion($question, true);
     if ($this->helper->ask($this->input, $this->output, $question))
     {
-      $fileName = sprintf('%s_%s', $tableName, $spType);
+      $fileName = strtolower(sprintf('%s_%s', $tableName, $spType));
 
       $question = new Question(sprintf('Please enter filename (%s): ', $fileName), $fileName);
       $spName   = $this->helper->ask($this->input, $this->output, $question);
       $spName   = strtolower($spName);
 
-      $fileName = sprintf('crud/%s.psql', $spName);
+      $fileName = sprintf('%s/%s.psql', $this->sourceDirectory, $spName);
       if (file_exists($fileName))
       {
         $this->io->writeln(sprintf('File <fso>%s</fso> already exists', $fileName));
