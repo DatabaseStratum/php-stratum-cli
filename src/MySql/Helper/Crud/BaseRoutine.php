@@ -27,13 +27,6 @@ class BaseRoutine
   protected $dataSchema;
 
   /**
-   * Helper for questions.
-   *
-   * @var SymfonyQuestionHelper
-   */
-  private $helper;
-
-  /**
    * InputInterface.
    *
    * @var InputInterface
@@ -95,6 +88,13 @@ class BaseRoutine
    * @var string
    */
   protected $tableName;
+
+  /**
+   * Helper for questions.
+   *
+   * @var SymfonyQuestionHelper
+   */
+  private $helper;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -184,7 +184,7 @@ class BaseRoutine
   {
     foreach ($columns as $column)
     {
-      if (isset($column['extra']))
+      if ($column['extra']=='auto_increment')
       {
         return true;
       }
