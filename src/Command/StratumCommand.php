@@ -20,7 +20,7 @@ class StratumCommand extends Command
    *
    * @var StratumStyle
    */
-  private $io;
+  protected $io;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -30,7 +30,7 @@ class StratumCommand extends Command
   {
     $this->setName('stratum')
          ->setDescription('Loads stored routines and generates a wrapper class')
-         ->addArgument('config file', InputArgument::OPTIONAL, 'The audit configuration file')
+         ->addArgument('config file', InputArgument::OPTIONAL, 'The audit configuration file', 'test/MySql/etc/stratum.cfg')
          ->addArgument('sources', InputArgument::OPTIONAL | InputArgument::IS_ARRAY, 'Sources with stored routines');
   }
 
