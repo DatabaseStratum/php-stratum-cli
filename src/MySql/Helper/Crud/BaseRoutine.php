@@ -2,7 +2,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\MySql\Helper\Crud;
 
-use SetBased\Stratum\Helper\CompoundSyntaxCodeStore;
+use SetBased\Helper\CodeStore\MySqlCompoundSyntaxCodeStore;
 use SetBased\Stratum\MySql\DataLayer;
 use SetBased\Stratum\MySql\StaticDataLayer;
 use SetBased\Stratum\Style\StratumStyle;
@@ -71,7 +71,7 @@ class BaseRoutine
   /**
    * Stored procedure code.
    *
-   * @var CompoundSyntaxCodeStore
+   * @var MySqlCompoundSyntaxCodeStore
    */
   protected $storedProcedureCode;
 
@@ -120,7 +120,7 @@ class BaseRoutine
     $this->spType     = $spType;
     $this->tableName  = $tableName;
 
-    $this->storedProcedureCode = new CompoundSyntaxCodeStore();
+    $this->storedProcedureCode = new MySqlCompoundSyntaxCodeStore();
 
     $tableColumns = DataLayer::getTableColumns($this->dataSchema, $this->tableName);
     $params       = [];
