@@ -137,13 +137,22 @@ class CrudCommand extends BaseCommand
     $question = new ConfirmationQuestion($question, true);
     if ($this->helper->ask($this->input, $this->output, $question))
     {
-      $fileName = strtolower(sprintf('%s_%s', $tableName, $spType));
+      $defaultSpName = strtolower(sprintf('%s_%s', $tableName, $spType));
+      $fileName      = sprintf('%s/%s.psql', $this->sourceDirectory, $defaultSpName);
 
       $question = new Question(sprintf('Please enter filename (%s): ', $fileName), $fileName);
       $spName   = $this->helper->ask($this->input, $this->output, $question);
-      $spName   = strtolower($spName);
 
-      $fileName = sprintf('%s/%s.psql', $this->sourceDirectory, $spName);
+      if ($spName!==$fileName)
+      {
+        $spName   = strtolower($spName);
+        $fileName = sprintf('%s/%s.psql', $this->sourceDirectory, $spName);
+      }
+      else
+      {
+        $spName = $defaultSpName;
+      }
+
       if (file_exists($fileName))
       {
         $this->io->writeln(sprintf('File <fso>%s</fso> already exists', $fileName));
