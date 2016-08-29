@@ -290,20 +290,22 @@ union all
   /**
    * Selects metadata of tables with a label column.
    *
+   * @param string $columnExpression Regular expression for matching columns names.
+   *
    * @return \array[]
    */
-  public static function getLabelTables()
+  public static function getLabelTables($columnExpression)
   {
-    $query = "
+    $query = sprintf('
 select t1.table_name  table_name
 ,      t1.column_name id
 ,      t2.column_name label
 from       information_schema.columns t1
 inner join information_schema.columns t2 on t1.table_name = t2.table_name
 where t1.table_schema = database()
-and   t1.extra        = 'auto_increment'
+and   t1.extra        = \'auto_increment\'
 and   t2.table_schema = database()
-and   t2.column_name like '%%\\_label'";
+and   t2.column_name like %s', self::$dl->quoteString($columnExpression));
 
     return self::executeRows($query);
   }
