@@ -2745,6 +2745,19 @@ performance_schema.users.USER                16
 performance_schema.users.CURRENT_CONNECTIONS 19
 performance_schema.users.TOTAL_CONNECTIONS   19
 
+rank_audit.ABC_BLOB.audit_timestamp  16
+rank_audit.ABC_BLOB.audit_uuid       20
+rank_audit.ABC_BLOB.audit_rownum     10
+rank_audit.ABC_BLOB.audit_ses_id     10
+rank_audit.ABC_BLOB.audit_usr_id     10
+rank_audit.ABC_BLOB.blb_id           10
+rank_audit.ABC_BLOB.cmp_id            5
+rank_audit.ABC_BLOB.bdt_id           10
+rank_audit.ABC_BLOB.blb_inserted     16
+rank_audit.ABC_BLOB.blb_crc32        10
+rank_audit.ABC_BLOB.blb_file_name   255
+rank_audit.ABC_BLOB.blb_mime_type    48
+
 rank_audit.AUT_COMPANY.audit_timestamp 16
 rank_audit.AUT_COMPANY.audit_uuid      20
 rank_audit.AUT_COMPANY.audit_rownum    10

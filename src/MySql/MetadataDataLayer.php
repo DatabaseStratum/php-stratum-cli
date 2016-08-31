@@ -305,7 +305,7 @@ inner join information_schema.columns t2 on t1.table_name = t2.table_name
 where t1.table_schema = database()
 and   t1.extra        = \'auto_increment\'
 and   t2.table_schema = database()
-and   t2.column_name like %s', self::$dl->quoteString($columnExpression));
+and   t2.column_name REGEXP %s', self::$dl->quoteString(trim(preg_replace('/\s+/', '', $columnExpression))));
 
     return self::executeRows($query);
   }
