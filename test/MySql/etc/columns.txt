@@ -2764,7 +2764,7 @@ rank_audit.AUT_COMPANY.audit_rownum    10
 rank_audit.AUT_COMPANY.audit_ses_id    10
 rank_audit.AUT_COMPANY.audit_usr_id    10
 rank_audit.AUT_COMPANY.cmp_id           5
-rank_audit.AUT_COMPANY.cmp_abbr        15
+rank_audit.AUT_COMPANY.cmp_abbr        16
 rank_audit.AUT_COMPANY.cmp_label       20
 rank_audit.AUT_COMPANY.q1              10
 rank_audit.AUT_COMPANY.q2              10
