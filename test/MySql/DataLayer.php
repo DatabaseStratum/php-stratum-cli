@@ -374,6 +374,18 @@ class DataLayer extends StaticDataLayer
    * @return \array[]
    * @throws RuntimeException
    */
+  public static function testLabel()
+  {
+    return self::executeRows('select tst_label from TST_LABEL');
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Test for illegal query.
+   *
+   * @return \array[]
+   * @throws RuntimeException
+   */
   public static function testIllegalQuery()
   {
     return self::executeRows('CALL tst_test_illegal_query()');

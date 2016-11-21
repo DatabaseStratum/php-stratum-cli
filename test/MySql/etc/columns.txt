@@ -900,6 +900,2820 @@ information_schema.INNODB_TABLESPACES_SCRUBBING.CURRENT_SCRUB_ACTIVE_THREADS   1
 information_schema.INNODB_TABLESPACES_SCRUBBING.CURRENT_SCRUB_PAGE_NUMBER      20
 information_schema.INNODB_TABLESPACES_SCRUBBING.CURRENT_SCRUB_MAX_PAGE_NUMBER  20
 
+mysql.column_stats.db_name        64
+mysql.column_stats.table_name     64
+mysql.column_stats.column_name    64
+mysql.column_stats.min_value     255
+mysql.column_stats.max_value     255
+mysql.column_stats.nulls_ratio    12
+mysql.column_stats.avg_length     12
+mysql.column_stats.avg_frequency  12
+mysql.column_stats.hist_size       3
+mysql.column_stats.histogram     255
+
+mysql.columns_priv.Host        60
+mysql.columns_priv.Db          64
+mysql.columns_priv.User        80
+mysql.columns_priv.Table_name  64
+mysql.columns_priv.Column_name 64
+mysql.columns_priv.Timestamp   16
+
+mysql.db.Host                  60
+mysql.db.Db                    64
+mysql.db.User                  80
+
+mysql.event.db                           64
+mysql.event.name                         64
+mysql.event.body                 4294967295
+mysql.event.definer                     141
+mysql.event.execute_at                   16
+mysql.event.interval_value               10
+mysql.event.created                      16
+mysql.event.modified                     16
+mysql.event.last_executed                16
+mysql.event.starts                       16
+mysql.event.ends                         16
+mysql.event.comment                      64
+mysql.event.originator                   10
+mysql.event.time_zone                    64
+mysql.event.character_set_client         32
+mysql.event.collation_connection         32
+mysql.event.db_collation                 32
+mysql.event.body_utf8            4294967295
+
+mysql.func.name  64
+mysql.func.ret    3
+mysql.func.dl   128
+
+mysql.general_log.event_time         16
+mysql.general_log.user_host    16777215
+mysql.general_log.thread_id          20
+mysql.general_log.server_id          10
+mysql.general_log.command_type       64
+mysql.general_log.argument     16777215
+
+mysql.gtid_slave_pos.domain_id 10
+mysql.gtid_slave_pos.sub_id    20
+mysql.gtid_slave_pos.server_id 10
+mysql.gtid_slave_pos.seq_no    20
+
+mysql.help_category.help_category_id       5
+mysql.help_category.name                  64
+mysql.help_category.parent_category_id     5
+mysql.help_category.url                65535
+
+mysql.help_keyword.help_keyword_id 10
+mysql.help_keyword.name            64
+
+mysql.help_relation.help_topic_id   10
+mysql.help_relation.help_keyword_id 10
+
+mysql.help_topic.help_topic_id       10
+mysql.help_topic.name                64
+mysql.help_topic.help_category_id     5
+mysql.help_topic.description      65535
+mysql.help_topic.example          65535
+mysql.help_topic.url              65535
+
+mysql.host.Host                  60
+mysql.host.Db                    64
+
+mysql.index_stats.db_name       64
+mysql.index_stats.table_name    64
+mysql.index_stats.index_name    64
+mysql.index_stats.prefix_arity  10
+mysql.index_stats.avg_frequency 12
+
+mysql.innodb_index_stats.database_name      64
+mysql.innodb_index_stats.table_name         64
+mysql.innodb_index_stats.index_name         64
+mysql.innodb_index_stats.last_update        16
+mysql.innodb_index_stats.stat_name          64
+mysql.innodb_index_stats.stat_value         20
+mysql.innodb_index_stats.sample_size        20
+mysql.innodb_index_stats.stat_description 1024
+
+mysql.innodb_table_stats.database_name            64
+mysql.innodb_table_stats.table_name               64
+mysql.innodb_table_stats.last_update              16
+mysql.innodb_table_stats.n_rows                   20
+mysql.innodb_table_stats.clustered_index_size     20
+mysql.innodb_table_stats.sum_of_other_index_sizes 20
+
+mysql.plugin.name  64
+mysql.plugin.dl   128
+
+mysql.proc.db                           64
+mysql.proc.name                         64
+mysql.proc.specific_name                64
+mysql.proc.param_list                65535
+mysql.proc.returns              4294967295
+mysql.proc.body                 4294967295
+mysql.proc.definer                     141
+mysql.proc.created                      16
+mysql.proc.modified                     16
+mysql.proc.comment                   65535
+mysql.proc.character_set_client         32
+mysql.proc.collation_connection         32
+mysql.proc.db_collation                 32
+mysql.proc.body_utf8            4294967295
+
+mysql.procs_priv.Host          60
+mysql.procs_priv.Db            64
+mysql.procs_priv.User          80
+mysql.procs_priv.Routine_name  64
+mysql.procs_priv.Grantor      141
+mysql.procs_priv.Timestamp     16
+
+mysql.proxies_priv.Host          60
+mysql.proxies_priv.User          80
+mysql.proxies_priv.Proxied_host  60
+mysql.proxies_priv.Proxied_user  80
+mysql.proxies_priv.With_grant     3
+mysql.proxies_priv.Grantor      141
+mysql.proxies_priv.Timestamp     16
+
+mysql.roles_mapping.Host         60
+mysql.roles_mapping.User         80
+mysql.roles_mapping.Role         80
+
+mysql.servers.Server_name 64
+mysql.servers.Host        64
+mysql.servers.Db          64
+mysql.servers.Username    80
+mysql.servers.Password    64
+mysql.servers.Port        10
+mysql.servers.Socket      64
+mysql.servers.Wrapper     64
+mysql.servers.Owner       64
+
+mysql.slow_log.start_time           16
+mysql.slow_log.user_host      16777215
+mysql.slow_log.query_time            8
+mysql.slow_log.lock_time             8
+mysql.slow_log.rows_sent            10
+mysql.slow_log.rows_examined        10
+mysql.slow_log.db                  512
+mysql.slow_log.last_insert_id       10
+mysql.slow_log.insert_id            10
+mysql.slow_log.server_id            10
+mysql.slow_log.sql_text       16777215
+mysql.slow_log.thread_id            20
+mysql.slow_log.rows_affected        10
+
+mysql.table_stats.db_name     64
+mysql.table_stats.table_name  64
+mysql.table_stats.cardinality 20
+
+mysql.tables_priv.Host         60
+mysql.tables_priv.Db           64
+mysql.tables_priv.User         80
+mysql.tables_priv.Table_name   64
+mysql.tables_priv.Grantor     141
+mysql.tables_priv.Timestamp    16
+
+mysql.time_zone.Time_zone_id     10
+
+mysql.time_zone_leap_second.Transition_time 19
+mysql.time_zone_leap_second.Correction      10
+
+mysql.time_zone_name.Name         64
+mysql.time_zone_name.Time_zone_id 10
+
+mysql.time_zone_transition.Time_zone_id       10
+mysql.time_zone_transition.Transition_time    19
+mysql.time_zone_transition.Transition_type_id 10
+
+mysql.time_zone_transition_type.Time_zone_id       10
+mysql.time_zone_transition_type.Transition_type_id 10
+mysql.time_zone_transition_type.Offset             10
+mysql.time_zone_transition_type.Is_DST              3
+mysql.time_zone_transition_type.Abbreviation        8
+
+mysql.user.Host                      60
+mysql.user.User                      80
+mysql.user.Password                  41
+mysql.user.ssl_cipher             65535
+mysql.user.x509_issuer            65535
+mysql.user.x509_subject           65535
+mysql.user.max_questions             10
+mysql.user.max_updates               10
+mysql.user.max_connections           10
+mysql.user.max_user_connections      10
+mysql.user.plugin                    64
+mysql.user.authentication_string  65535
+mysql.user.default_role              80
+mysql.user.max_statement_time        12
+
+nahouw4_data.ABC_BLOB.blb_id         10
+nahouw4_data.ABC_BLOB.cmp_id          5
+nahouw4_data.ABC_BLOB.bdt_id         10
+nahouw4_data.ABC_BLOB.blb_date       16
+nahouw4_data.ABC_BLOB.blb_crc32      10
+nahouw4_data.ABC_BLOB.blb_file_name 255
+nahouw4_data.ABC_BLOB.blb_mime_type  48
+nahouw4_data.ABC_BLOB.blb_size       10
+
+nahouw4_data.ABC_BLOB_DATA.bdt_id                10
+nahouw4_data.ABC_BLOB_DATA.cmp_id                 5
+nahouw4_data.ABC_BLOB_DATA.bdt_inserted          16
+nahouw4_data.ABC_BLOB_DATA.bdt_crc32             10
+nahouw4_data.ABC_BLOB_DATA.bdt_size              10
+nahouw4_data.ABC_BLOB_DATA.bdt_mime_type         48
+nahouw4_data.ABC_BLOB_DATA.bdt_data      4294967295
+
+nahouw4_data.AUT_COMPANY.cmp_id     5
+nahouw4_data.AUT_COMPANY.cmp_abbr  15
+nahouw4_data.AUT_COMPANY.cmp_label 20
+
+nahouw4_data.AUT_CONFIG.cfg_id                  5
+nahouw4_data.AUT_CONFIG.cmp_id                  5
+nahouw4_data.AUT_CONFIG.ccl_id                  5
+nahouw4_data.AUT_CONFIG.cfg_mandatory           3
+nahouw4_data.AUT_CONFIG.cfg_show_to_company     3
+nahouw4_data.AUT_CONFIG.cfg_modify_by_company   3
+nahouw4_data.AUT_CONFIG.cfg_description       400
+nahouw4_data.AUT_CONFIG.cfg_label              50
+
+nahouw4_data.AUT_CONFIG_CLASS.ccl_id      5
+nahouw4_data.AUT_CONFIG_CLASS.ccl_type   10
+nahouw4_data.AUT_CONFIG_CLASS.ccl_class 128
+
+nahouw4_data.AUT_CONFIG_VALUE.cmp_id       5
+nahouw4_data.AUT_CONFIG_VALUE.cfg_id       5
+nahouw4_data.AUT_CONFIG_VALUE.cfg_value 4000
+
+nahouw4_data.AUT_CROSS_DOMAIN_REDIRECT.cdr_token1            64
+nahouw4_data.AUT_CROSS_DOMAIN_REDIRECT.cdr_token2            64
+nahouw4_data.AUT_CROSS_DOMAIN_REDIRECT.ses_id                10
+nahouw4_data.AUT_CROSS_DOMAIN_REDIRECT.cdr_timestamp_created 16
+
+nahouw4_data.AUT_FLAG.rfl_id        3
+nahouw4_data.AUT_FLAG.rfl_flag     10
+nahouw4_data.AUT_FLAG.rfl_name     80
+nahouw4_data.AUT_FLAG.rfl_function  3
+
+nahouw4_data.AUT_FUNCTIONALITY.fun_id 5
+nahouw4_data.AUT_FUNCTIONALITY.mdl_id 5
+nahouw4_data.AUT_FUNCTIONALITY.wrd_id 5
+
+nahouw4_data.AUT_LOGIN_RESPONSE.lgr_id     3
+nahouw4_data.AUT_LOGIN_RESPONSE.wrd_id     5
+nahouw4_data.AUT_LOGIN_RESPONSE.lgr_label 40
+
+nahouw4_data.AUT_MENU.mnu_id      5
+nahouw4_data.AUT_MENU.wrd_id      5
+nahouw4_data.AUT_MENU.pag_id      5
+nahouw4_data.AUT_MENU.mnu_level   3
+nahouw4_data.AUT_MENU.mnu_group   5
+nahouw4_data.AUT_MENU.mnu_weight  5
+nahouw4_data.AUT_MENU.mnu_link   64
+
+nahouw4_data.AUT_MODULE.mdl_id 5
+nahouw4_data.AUT_MODULE.wrd_id 5
+
+nahouw4_data.AUT_MODULE_COMPANY.cmp_id 5
+nahouw4_data.AUT_MODULE_COMPANY.mdl_id 5
+
+nahouw4_data.AUT_PAGE.pag_id       5
+nahouw4_data.AUT_PAGE.pag_id_org   5
+nahouw4_data.AUT_PAGE.ptb_id       3
+nahouw4_data.AUT_PAGE.mnu_id       5
+nahouw4_data.AUT_PAGE.wrd_id       5
+nahouw4_data.AUT_PAGE.pag_alias   32
+nahouw4_data.AUT_PAGE.pag_class  128
+nahouw4_data.AUT_PAGE.pag_label  128
+nahouw4_data.AUT_PAGE.pag_weight  10
+
+nahouw4_data.AUT_PAGE_COMPANY.pag_id      5
+nahouw4_data.AUT_PAGE_COMPANY.cmp_id      5
+nahouw4_data.AUT_PAGE_COMPANY.pag_class 128
+
+nahouw4_data.AUT_PAGE_TAB.ptb_id     3
+nahouw4_data.AUT_PAGE_TAB.wrd_id     5
+nahouw4_data.AUT_PAGE_TAB.ptb_label 30
+
+nahouw4_data.AUT_PAG_FUN.pag_id 5
+nahouw4_data.AUT_PAG_FUN.fun_id 5
+
+nahouw4_data.AUT_PROFILE.pro_id        5
+nahouw4_data.AUT_PROFILE.cmp_id        5
+nahouw4_data.AUT_PROFILE.pro_flags    10
+nahouw4_data.AUT_PROFILE.pro_rol_ids 100
+
+nahouw4_data.AUT_PRO_PAG.pag_id 5
+nahouw4_data.AUT_PRO_PAG.pro_id 5
+
+nahouw4_data.AUT_PRO_ROL.cmp_id 5
+nahouw4_data.AUT_PRO_ROL.pro_id 5
+nahouw4_data.AUT_PRO_ROL.rol_id 5
+
+nahouw4_data.AUT_ROLE.rol_id      5
+nahouw4_data.AUT_ROLE.cmp_id      5
+nahouw4_data.AUT_ROLE.rol_weight  5
+nahouw4_data.AUT_ROLE.rol_name   32
+
+nahouw4_data.AUT_ROL_FLG.rfl_id 3
+nahouw4_data.AUT_ROL_FLG.rol_id 5
+
+nahouw4_data.AUT_ROL_FUN.cmp_id 5
+nahouw4_data.AUT_ROL_FUN.fun_id 5
+nahouw4_data.AUT_ROL_FUN.rol_id 5
+
+nahouw4_data.AUT_SESSION.ses_id                 10
+nahouw4_data.AUT_SESSION.cmp_id                  5
+nahouw4_data.AUT_SESSION.usr_id                 10
+nahouw4_data.AUT_SESSION.ses_session_token      64
+nahouw4_data.AUT_SESSION.ses_csrf_token         64
+nahouw4_data.AUT_SESSION.ses_start              16
+nahouw4_data.AUT_SESSION.ses_last_request       16
+nahouw4_data.AUT_SESSION.ses_number_of_requests  5
+
+nahouw4_data.AUT_USER.usr_id            10
+nahouw4_data.AUT_USER.cmp_id             5
+nahouw4_data.AUT_USER.lan_id             3
+nahouw4_data.AUT_USER.pro_id             5
+nahouw4_data.AUT_USER.usr_name          64
+nahouw4_data.AUT_USER.usr_password_hash 60
+nahouw4_data.AUT_USER.usr_anonymous      3
+nahouw4_data.AUT_USER.usr_blocked        3
+nahouw4_data.AUT_USER.usr_last_login    16
+
+nahouw4_data.AUT_USR_ROL.cmp_id          5
+nahouw4_data.AUT_USR_ROL.usr_id         10
+nahouw4_data.AUT_USR_ROL.rol_id          5
+nahouw4_data.AUT_USR_ROL.aur_date_start 10
+nahouw4_data.AUT_USR_ROL.aur_date_stop  10
+
+nahouw4_data.BBL_LANGUAGE.lan_id                                3
+nahouw4_data.BBL_LANGUAGE.wrd_id                                5
+nahouw4_data.BBL_LANGUAGE.lan_code                              8
+nahouw4_data.BBL_LANGUAGE.lan_locale                           12
+nahouw4_data.BBL_LANGUAGE.lan_date_format_full                 12
+nahouw4_data.BBL_LANGUAGE.lan_date_format_abbr1                12
+nahouw4_data.BBL_LANGUAGE.lan_date_format_abbr2                12
+nahouw4_data.BBL_LANGUAGE.lan_date_format_compact              12
+nahouw4_data.BBL_LANGUAGE.lan_date_format_compact_weekday_abbr 16
+nahouw4_data.BBL_LANGUAGE.lan_date_time_format_full            32
+
+nahouw4_data.BBL_WORD.wrd_id         5
+nahouw4_data.BBL_WORD.wdg_id         3
+nahouw4_data.BBL_WORD.wrd_modified  16
+nahouw4_data.BBL_WORD.wrd_comment  255
+nahouw4_data.BBL_WORD.wrd_label     50
+
+nahouw4_data.BBL_WORD_GROUP.wdg_id     3
+nahouw4_data.BBL_WORD_GROUP.wdg_name  32
+nahouw4_data.BBL_WORD_GROUP.wdg_label 30
+
+nahouw4_data.BBL_WORD_TEXT.wrd_id        5
+nahouw4_data.BBL_WORD_TEXT.lan_id        3
+nahouw4_data.BBL_WORD_TEXT.wdt_text     80
+nahouw4_data.BBL_WORD_TEXT.wdt_modified 16
+
+nahouw4_data.BBL_WORD_TRANSLATE_HISTORY.wrd_id         5
+nahouw4_data.BBL_WORD_TRANSLATE_HISTORY.lan_id         3
+nahouw4_data.BBL_WORD_TRANSLATE_HISTORY.usr_id        10
+nahouw4_data.BBL_WORD_TRANSLATE_HISTORY.wth_datetime  16
+nahouw4_data.BBL_WORD_TRANSLATE_HISTORY.wth_text     255
+
+nahouw4_data.ELM_ATTRIBUTE.mat_id     3
+nahouw4_data.ELM_ATTRIBUTE.mat_label 30
+
+nahouw4_data.ELM_AUTHORIZED_DOMAIN.atd_domain_name 32
+
+nahouw4_data.EML_ATTRIBUTES.mat_id     3
+nahouw4_data.EML_ATTRIBUTES.mat_label 32
+
+nahouw4_data.EML_ATT_VALUES.eav_id                 10
+nahouw4_data.EML_ATT_VALUES.eml_id                 10
+nahouw4_data.EML_ATT_VALUES.mat_id                  3
+nahouw4_data.EML_ATT_VALUES.eav_to                255
+nahouw4_data.EML_ATT_VALUES.eav_to_name           255
+nahouw4_data.EML_ATT_VALUES.eav_custom_header     255
+nahouw4_data.EML_ATT_VALUES.eav_attachment_blob 65535
+nahouw4_data.EML_ATT_VALUES.eav_attachment_name   255
+
+nahouw4_data.EML_MESSAGE.eml_id              10
+nahouw4_data.EML_MESSAGE.eml_from           255
+nahouw4_data.EML_MESSAGE.eml_from_name      255
+nahouw4_data.EML_MESSAGE.eml_subject        255
+nahouw4_data.EML_MESSAGE.eml_body      16777215
+nahouw4_data.EML_MESSAGE.eml_inserted        16
+nahouw4_data.EML_MESSAGE.eml_send            16
+
+nahouw4_data.IMP_FECHTEN_AGE.imp_id 10
+nahouw4_data.IMP_FECHTEN_AGE.age_id 10
+
+nahouw4_data.IMP_FECHTEN_CALENDAR.imp_id                            10
+nahouw4_data.IMP_FECHTEN_CALENDAR.imp_name                         200
+nahouw4_data.IMP_FECHTEN_CALENDAR.imp_date_start                    10
+nahouw4_data.IMP_FECHTEN_CALENDAR.imp_date_end                      10
+nahouw4_data.IMP_FECHTEN_CALENDAR.imp_url_website                  200
+nahouw4_data.IMP_FECHTEN_CALENDAR.imp_url_invitation_national      200
+nahouw4_data.IMP_FECHTEN_CALENDAR.imp_url_invitation_international 200
+nahouw4_data.IMP_FECHTEN_CALENDAR.imp_location                     200
+nahouw4_data.IMP_FECHTEN_CALENDAR.imp_processed                     10
+
+nahouw4_data.IMP_FECHTEN_WEAPONS.imp_id 10
+nahouw4_data.IMP_FECHTEN_WEAPONS.gen_id 10
+nahouw4_data.IMP_FECHTEN_WEAPONS.wpn_id 10
+nahouw4_data.IMP_FECHTEN_WEAPONS.age_id 10
+
+nahouw4_data.LOG_EVENT.lev_id       10
+nahouw4_data.LOG_EVENT.cmp_id        5
+nahouw4_data.LOG_EVENT.let_id        3
+nahouw4_data.LOG_EVENT.lgr_id        3
+nahouw4_data.LOG_EVENT.ses_id       10
+nahouw4_data.LOG_EVENT.usr_id       10
+nahouw4_data.LOG_EVENT.lev_datetime 16
+nahouw4_data.LOG_EVENT.lev_ip       10
+nahouw4_data.LOG_EVENT.lev_arg1     64
+nahouw4_data.LOG_EVENT.lev_arg2     64
+
+nahouw4_data.LOG_EVENT_TYPE.let_id     3
+nahouw4_data.LOG_EVENT_TYPE.wrd_id     5
+nahouw4_data.LOG_EVENT_TYPE.let_label 50
+
+nahouw4_data.LOG_LOGIN.lli_id           10
+nahouw4_data.LOG_LOGIN.cmp_id            5
+nahouw4_data.LOG_LOGIN.lgr_id            3
+nahouw4_data.LOG_LOGIN.ses_id           10
+nahouw4_data.LOG_LOGIN.usr_id           10
+nahouw4_data.LOG_LOGIN.llg_datetime     16
+nahouw4_data.LOG_LOGIN.llg_user_name    64
+nahouw4_data.LOG_LOGIN.llg_company_abbr 15
+
+nahouw4_data.LOG_REQUEST.rql_id                 10
+nahouw4_data.LOG_REQUEST.cmp_id                  5
+nahouw4_data.LOG_REQUEST.pag_id                  5
+nahouw4_data.LOG_REQUEST.ses_id                 10
+nahouw4_data.LOG_REQUEST.usr_id                 10
+nahouw4_data.LOG_REQUEST.rql_datetime           16
+nahouw4_data.LOG_REQUEST.rql_request           255
+nahouw4_data.LOG_REQUEST.rql_method              8
+nahouw4_data.LOG_REQUEST.rql_referer           255
+nahouw4_data.LOG_REQUEST.rql_ip                 10
+nahouw4_data.LOG_REQUEST.rql_host_name          80
+nahouw4_data.LOG_REQUEST.rql_language           64
+nahouw4_data.LOG_REQUEST.rql_user_agent        255
+nahouw4_data.LOG_REQUEST.rql_number_of_queries  10
+nahouw4_data.LOG_REQUEST.rql_time               12
+nahouw4_data.LOG_REQUEST.rql_size               10
+
+nahouw4_data.LOG_REQUEST_COOKIE.rql_id             10
+nahouw4_data.LOG_REQUEST_COOKIE.rcl_variable      255
+nahouw4_data.LOG_REQUEST_COOKIE.rcl_value    16777215
+
+nahouw4_data.LOG_REQUEST_POST.rql_id             10
+nahouw4_data.LOG_REQUEST_POST.rlp_variable      255
+nahouw4_data.LOG_REQUEST_POST.rlp_value    16777215
+
+nahouw4_data.LOG_REQUEST_QUERY.rqq_id            10
+nahouw4_data.LOG_REQUEST_QUERY.rql_id            10
+nahouw4_data.LOG_REQUEST_QUERY.rqq_query   16777215
+nahouw4_data.LOG_REQUEST_QUERY.rqq_time          12
+nahouw4_data.LOG_REQUEST_QUERY.rqq_routine       64
+
+nahouw4_data.NAH_ADDRESS.ads_id            5
+nahouw4_data.NAH_ADDRESS.loc_id            5
+nahouw4_data.NAH_ADDRESS.ads_venue_name   64
+nahouw4_data.NAH_ADDRESS.ads_street       64
+nahouw4_data.NAH_ADDRESS.ads_postal_code  16
+nahouw4_data.NAH_ADDRESS.ads_gm_accuracy   3
+nahouw4_data.NAH_ADDRESS.ads_gm_latitude  10
+nahouw4_data.NAH_ADDRESS.ads_gm_longitude 10
+
+nahouw4_data.NAH_AGENT.agt_id                     10
+nahouw4_data.NAH_AGENT.usr_id                     10
+nahouw4_data.NAH_AGENT.agt_deleted                16
+nahouw4_data.NAH_AGENT.agt_name                   32
+nahouw4_data.NAH_AGENT.agt_days_before_start_date  3
+nahouw4_data.NAH_AGENT.agt_days_before_closure     3
+nahouw4_data.NAH_AGENT.agt_period                  3
+
+nahouw4_data.NAH_AGE_GROUP.age_id             3
+nahouw4_data.NAH_AGE_GROUP.wrd_id             5
+nahouw4_data.NAH_AGE_GROUP.age_no             3
+nahouw4_data.NAH_AGE_GROUP.age_min_age        3
+nahouw4_data.NAH_AGE_GROUP.age_max_age        3
+nahouw4_data.NAH_AGE_GROUP.age_min_limit_age  3
+nahouw4_data.NAH_AGE_GROUP.age_max_limit_age  3
+nahouw4_data.NAH_AGE_GROUP.age_info          32
+
+nahouw4_data.NAH_AGT_ACTION.aac_id     3
+nahouw4_data.NAH_AGT_ACTION.aac_label 48
+
+nahouw4_data.NAH_AGT_CIR.agt_id 10
+nahouw4_data.NAH_AGT_CIR.cir_id 10
+
+nahouw4_data.NAH_AGT_CNT.agt_id 10
+nahouw4_data.NAH_AGT_CNT.cnt_id  5
+
+nahouw4_data.NAH_AGT_HIST.agt_id     10
+nahouw4_data.NAH_AGT_HIST.trn_id     10
+nahouw4_data.NAH_AGT_HIST.aac_id      3
+nahouw4_data.NAH_AGT_HIST.mld_date   16
+
+nahouw4_data.NAH_AGT_LVL.agt_id 10
+nahouw4_data.NAH_AGT_LVL.lvl_id  3
+
+nahouw4_data.NAH_AGT_RUN.trn_id     10
+nahouw4_data.NAH_AGT_RUN.agt_id     10
+nahouw4_data.NAH_AGT_RUN.aac_id      3
+nahouw4_data.NAH_AGT_RUN.usr_id     10
+nahouw4_data.NAH_AGT_RUN.arn_active  3
+
+nahouw4_data.NAH_AGT_TRN_IGNORE.usr_id   10
+nahouw4_data.NAH_AGT_TRN_IGNORE.trn_id   10
+
+nahouw4_data.NAH_AGT_WEAPON.agt_id 10
+nahouw4_data.NAH_AGT_WEAPON.wpn_id  3
+nahouw4_data.NAH_AGT_WEAPON.gen_id  3
+nahouw4_data.NAH_AGT_WEAPON.age_id  3
+
+nahouw4_data.NAH_ASSOCIATION.ass_id                          5
+nahouw4_data.NAH_ASSOCIATION.cnt_id                          5
+nahouw4_data.NAH_ASSOCIATION.ass_name_abbr                  10
+nahouw4_data.NAH_ASSOCIATION.ass_name_full                  64
+nahouw4_data.NAH_ASSOCIATION.ass_entry_active                3
+nahouw4_data.NAH_ASSOCIATION.ass_dom_entry_email_name       48
+nahouw4_data.NAH_ASSOCIATION.ass_dom_entry_email_address    48
+nahouw4_data.NAH_ASSOCIATION.ass_for_entry_email_name       48
+nahouw4_data.NAH_ASSOCIATION.ass_for_entry_email_address    48
+nahouw4_data.NAH_ASSOCIATION.ass_for_entry_cc_email_name    48
+nahouw4_data.NAH_ASSOCIATION.ass_for_entry_cc_email_address 48
+nahouw4_data.NAH_ASSOCIATION.ass_ent_address_line1          32
+nahouw4_data.NAH_ASSOCIATION.ass_ent_address_line2          32
+nahouw4_data.NAH_ASSOCIATION.ass_ent_address_line3          32
+nahouw4_data.NAH_ASSOCIATION.ass_ent_address_line4          32
+nahouw4_data.NAH_ASSOCIATION.ass_ent_address_line5          32
+nahouw4_data.NAH_ASSOCIATION.ass_ent_cnt_id                  5
+nahouw4_data.NAH_ASSOCIATION.ass_ent_phone                  24
+nahouw4_data.NAH_ASSOCIATION.ass_ent_fax                    24
+nahouw4_data.NAH_ASSOCIATION.ass_pst_address_line1          32
+nahouw4_data.NAH_ASSOCIATION.ass_pst_address_line2          32
+nahouw4_data.NAH_ASSOCIATION.ass_pst_address_line3          32
+nahouw4_data.NAH_ASSOCIATION.ass_pst_address_line4          32
+nahouw4_data.NAH_ASSOCIATION.ass_pst_address_line5          32
+nahouw4_data.NAH_ASSOCIATION.ass_pst_cnt_id                  5
+
+nahouw4_data.NAH_ASS_ALLOWED_ENTRY_ROUTE.lvl_id       3
+nahouw4_data.NAH_ASS_ALLOWED_ENTRY_ROUTE.era_id       3
+nahouw4_data.NAH_ASS_ALLOWED_ENTRY_ROUTE.ner_id       3
+nahouw4_data.NAH_ASS_ALLOWED_ENTRY_ROUTE.aer_no       5
+nahouw4_data.NAH_ASS_ALLOWED_ENTRY_ROUTE.aer_default  3
+nahouw4_data.NAH_ASS_ALLOWED_ENTRY_ROUTE.aer_info1   32
+nahouw4_data.NAH_ASS_ALLOWED_ENTRY_ROUTE.aer_info2   32
+nahouw4_data.NAH_ASS_ALLOWED_ENTRY_ROUTE.aer_info3   64
+
+nahouw4_data.NAH_ASS_DEFAULT_ENTRY_PARAM.ass_id                  5
+nahouw4_data.NAH_ASS_DEFAULT_ENTRY_PARAM.lvl_id                  3
+nahouw4_data.NAH_ASS_DEFAULT_ENTRY_PARAM.era_id                  3
+nahouw4_data.NAH_ASS_DEFAULT_ENTRY_PARAM.ner_id                  3
+nahouw4_data.NAH_ASS_DEFAULT_ENTRY_PARAM.ade_before_startdate    3
+nahouw4_data.NAH_ASS_DEFAULT_ENTRY_PARAM.ade_before_trn_closure  3
+nahouw4_data.NAH_ASS_DEFAULT_ENTRY_PARAM.ade_info1              32
+nahouw4_data.NAH_ASS_DEFAULT_ENTRY_PARAM.ade_info2              32
+nahouw4_data.NAH_ASS_DEFAULT_ENTRY_PARAM.ade_info3              64
+
+nahouw4_data.NAH_ASS_ENTRY.ass_id              5
+nahouw4_data.NAH_ASS_ENTRY.trn_id             10
+nahouw4_data.NAH_ASS_ENTRY.ens_id              3
+nahouw4_data.NAH_ASS_ENTRY.nae_remarks  16777215
+nahouw4_data.NAH_ASS_ENTRY.nae_notes    16777215
+nahouw4_data.NAH_ASS_ENTRY.nae_mailed         16
+nahouw4_data.NAH_ASS_ENTRY.nae_inserted       16
+
+nahouw4_data.NAH_ASS_ENTRY_FENCER.ass_id        5
+nahouw4_data.NAH_ASS_ENTRY_FENCER.trn_id       10
+nahouw4_data.NAH_ASS_ENTRY_FENCER.clb_id       10
+nahouw4_data.NAH_ASS_ENTRY_FENCER.usr_id       10
+nahouw4_data.NAH_ASS_ENTRY_FENCER.wpn_id        3
+nahouw4_data.NAH_ASS_ENTRY_FENCER.gen_id        3
+nahouw4_data.NAH_ASS_ENTRY_FENCER.age_id        3
+nahouw4_data.NAH_ASS_ENTRY_FENCER.aef_inserted 16
+
+nahouw4_data.NAH_ASS_ENTRY_JURY.ass_id               5
+nahouw4_data.NAH_ASS_ENTRY_JURY.trn_id              10
+nahouw4_data.NAH_ASS_ENTRY_JURY.aej_overview_mailed 16
+
+nahouw4_data.NAH_ASS_ENTRY_METHOD.aem_id    3
+nahouw4_data.NAH_ASS_ENTRY_METHOD.wrd_id    5
+nahouw4_data.NAH_ASS_ENTRY_METHOD.aem_page 32
+nahouw4_data.NAH_ASS_ENTRY_METHOD.aem_no    3
+nahouw4_data.NAH_ASS_ENTRY_METHOD.aem_info 32
+
+nahouw4_data.NAH_ASS_ENTRY_USR_MESSAGE.aum_id             5
+nahouw4_data.NAH_ASS_ENTRY_USR_MESSAGE.aum_message 16777215
+
+nahouw4_data.NAH_ASS_ENTRY_USR_MESSAGE_COUPLE.ass_id 5
+nahouw4_data.NAH_ASS_ENTRY_USR_MESSAGE_COUPLE.wpn_id 3
+nahouw4_data.NAH_ASS_ENTRY_USR_MESSAGE_COUPLE.gen_id 3
+nahouw4_data.NAH_ASS_ENTRY_USR_MESSAGE_COUPLE.age_id 3
+nahouw4_data.NAH_ASS_ENTRY_USR_MESSAGE_COUPLE.lvl_id 3
+nahouw4_data.NAH_ASS_ENTRY_USR_MESSAGE_COUPLE.aum_id 5
+
+nahouw4_data.NAH_BLOB_PDF2TXT.blb_id_pdf 10
+nahouw4_data.NAH_BLOB_PDF2TXT.blb_id_txt 10
+
+nahouw4_data.NAH_CIRCUIT.cir_id   10
+nahouw4_data.NAH_CIRCUIT.cnt_id    5
+nahouw4_data.NAH_CIRCUIT.cir_name 80
+nahouw4_data.NAH_CIRCUIT.cir_url  80
+
+nahouw4_data.NAH_CIR_MAINTAINER.cir_id 10
+nahouw4_data.NAH_CIR_MAINTAINER.usr_id 10
+
+nahouw4_data.NAH_CIR_TRN.cir_id 10
+nahouw4_data.NAH_CIR_TRN.trn_id 10
+
+nahouw4_data.NAH_CLB_ENTRY.clb_id             10
+nahouw4_data.NAH_CLB_ENTRY.trn_id             10
+nahouw4_data.NAH_CLB_ENTRY.ces_id              3
+nahouw4_data.NAH_CLB_ENTRY.nce_remarks  16777215
+nahouw4_data.NAH_CLB_ENTRY.nce_notes    16777215
+nahouw4_data.NAH_CLB_ENTRY.nce_mailed         16
+nahouw4_data.NAH_CLB_ENTRY.nce_inserted       16
+
+nahouw4_data.NAH_CLB_ENTRY_FAX.clb_id              10
+nahouw4_data.NAH_CLB_ENTRY_FAX.trn_id              10
+nahouw4_data.NAH_CLB_ENTRY_FAX.lan_id               3
+nahouw4_data.NAH_CLB_ENTRY_FAX.cef_address_line1   32
+nahouw4_data.NAH_CLB_ENTRY_FAX.cef_address_line2   32
+nahouw4_data.NAH_CLB_ENTRY_FAX.cef_address_line3   32
+nahouw4_data.NAH_CLB_ENTRY_FAX.cef_address_line4   32
+nahouw4_data.NAH_CLB_ENTRY_FAX.cef_address_line5   32
+nahouw4_data.NAH_CLB_ENTRY_FAX.cnt_id               5
+nahouw4_data.NAH_CLB_ENTRY_FAX.cef_location        32
+nahouw4_data.NAH_CLB_ENTRY_FAX.cef_name            64
+nahouw4_data.NAH_CLB_ENTRY_FAX.cef_signature_space  3
+
+nahouw4_data.NAH_CLB_ENTRY_FENCER.clb_id       10
+nahouw4_data.NAH_CLB_ENTRY_FENCER.trn_id       10
+nahouw4_data.NAH_CLB_ENTRY_FENCER.usr_id       10
+nahouw4_data.NAH_CLB_ENTRY_FENCER.wpn_id        3
+nahouw4_data.NAH_CLB_ENTRY_FENCER.gen_id        3
+nahouw4_data.NAH_CLB_ENTRY_FENCER.age_id        3
+nahouw4_data.NAH_CLB_ENTRY_FENCER.cef_inserted 16
+
+nahouw4_data.NAH_CLB_ENTRY_METHOD.cem_id     3
+nahouw4_data.NAH_CLB_ENTRY_METHOD.wrd_id     5
+nahouw4_data.NAH_CLB_ENTRY_METHOD.cem_page  32
+nahouw4_data.NAH_CLB_ENTRY_METHOD.cem_no     3
+nahouw4_data.NAH_CLB_ENTRY_METHOD.cem_label 32
+
+nahouw4_data.NAH_CLB_ENTRY_REFEREE.cer_id     10
+nahouw4_data.NAH_CLB_ENTRY_REFEREE.clb_id     10
+nahouw4_data.NAH_CLB_ENTRY_REFEREE.trn_id     10
+nahouw4_data.NAH_CLB_ENTRY_REFEREE.cer_name   48
+nahouw4_data.NAH_CLB_ENTRY_REFEREE.cer_email  48
+nahouw4_data.NAH_CLB_ENTRY_REFEREE.cer_remark 48
+
+nahouw4_data.NAH_CLB_ENTRY_STATUS.ces_id     3
+nahouw4_data.NAH_CLB_ENTRY_STATUS.wrd_id     5
+nahouw4_data.NAH_CLB_ENTRY_STATUS.ces_label 24
+
+nahouw4_data.NAH_CLB_EX_MEMBER.clb_id       10
+nahouw4_data.NAH_CLB_EX_MEMBER.usr_id       10
+nahouw4_data.NAH_CLB_EX_MEMBER.cem_inserted 16
+
+nahouw4_data.NAH_CLUB.clb_id                         10
+nahouw4_data.NAH_CLUB.cnt_id                          5
+nahouw4_data.NAH_CLUB.ass_id                          5
+nahouw4_data.NAH_CLUB.clb_name                       70
+nahouw4_data.NAH_CLUB.clb_prefix                     16
+nahouw4_data.NAH_CLUB.clb_ent_days_before_closure     3
+nahouw4_data.NAH_CLUB.clb_ent_days_before_no_closure  3
+nahouw4_data.NAH_CLUB.clb_ent_address_line1          32
+nahouw4_data.NAH_CLUB.clb_ent_address_line2          32
+nahouw4_data.NAH_CLUB.clb_ent_address_line3          32
+nahouw4_data.NAH_CLUB.clb_ent_address_line4          32
+nahouw4_data.NAH_CLUB.clb_ent_address_line5          32
+nahouw4_data.NAH_CLUB.clb_ent_cnt_id                  5
+nahouw4_data.NAH_CLUB.clb_ent_phone                  24
+nahouw4_data.NAH_CLUB.clb_ent_fax                    24
+nahouw4_data.NAH_CLUB.clb_inserted                   16
+nahouw4_data.NAH_CLUB.clb_pst_address_line1          32
+nahouw4_data.NAH_CLUB.clb_pst_address_line2          32
+nahouw4_data.NAH_CLUB.clb_pst_address_line3          32
+nahouw4_data.NAH_CLUB.clb_pst_address_line4          32
+nahouw4_data.NAH_CLUB.clb_pst_address_line5          32
+nahouw4_data.NAH_CLUB.clb_pst_cnt_id                  5
+nahouw4_data.NAH_CLUB.clb_modified                   16
+nahouw4_data.NAH_CLUB.clb_deleted                    16
+
+nahouw4_data.NAH_COUNTRY.cnt_id        5
+nahouw4_data.NAH_COUNTRY.wrd_id        5
+nahouw4_data.NAH_COUNTRY.cnt_ioc_abbr  3
+nahouw4_data.NAH_COUNTRY.cnt_iso_abbr  2
+nahouw4_data.NAH_COUNTRY.cnt_iso_abbr3 3
+
+nahouw4_data.NAH_DICTIONARY.dct_id   10
+nahouw4_data.NAH_DICTIONARY.dct_word 25
+
+nahouw4_data.NAH_DISTANCE.ads_id_start   5
+nahouw4_data.NAH_DISTANCE.ads_id_finish  5
+nahouw4_data.NAH_DISTANCE.dis_code       5
+nahouw4_data.NAH_DISTANCE.dis_meters     7
+nahouw4_data.NAH_DISTANCE.dis_seconds    7
+nahouw4_data.NAH_DISTANCE.dis_inserted  16
+
+nahouw4_data.NAH_ENTRY_ACCESS_KEY.trn_id  10
+nahouw4_data.NAH_ENTRY_ACCESS_KEY.acc_key 32
+
+nahouw4_data.NAH_ENTRY_CAUSE.enc_id     3
+nahouw4_data.NAH_ENTRY_CAUSE.txt_id     5
+nahouw4_data.NAH_ENTRY_CAUSE.enc_bit    5
+nahouw4_data.NAH_ENTRY_CAUSE.enc_no     3
+nahouw4_data.NAH_ENTRY_CAUSE.enc_label 48
+nahouw4_data.NAH_ENTRY_CAUSE.enc_info  32
+
+nahouw4_data.NAH_ENTRY_REFEREE_AGGREGATION.era_id     3
+nahouw4_data.NAH_ENTRY_REFEREE_AGGREGATION.wrd_id     5
+nahouw4_data.NAH_ENTRY_REFEREE_AGGREGATION.era_no     3
+nahouw4_data.NAH_ENTRY_REFEREE_AGGREGATION.era_label 32
+
+nahouw4_data.NAH_ENTRY_ROUTE.ner_id        3
+nahouw4_data.NAH_ENTRY_ROUTE.wrd_id        5
+nahouw4_data.NAH_ENTRY_ROUTE.ner_no        3
+nahouw4_data.NAH_ENTRY_ROUTE.ner_via_asso  3
+nahouw4_data.NAH_ENTRY_ROUTE.ner_info     64
+nahouw4_data.NAH_ENTRY_ROUTE.ner_label    32
+
+nahouw4_data.NAH_ENTRY_ROUTE_POSITION.erp_id                    3
+nahouw4_data.NAH_ENTRY_ROUTE_POSITION.wrd_id                    5
+nahouw4_data.NAH_ENTRY_ROUTE_POSITION.erp_info                 32
+nahouw4_data.NAH_ENTRY_ROUTE_POSITION.erp_no                    3
+nahouw4_data.NAH_ENTRY_ROUTE_POSITION.erp_label                32
+
+nahouw4_data.NAH_ENTRY_STATUS.ens_id    3
+nahouw4_data.NAH_ENTRY_STATUS.wrd_id    5
+nahouw4_data.NAH_ENTRY_STATUS.ens_info 32
+
+nahouw4_data.NAH_EVENT.evt_id              10
+nahouw4_data.NAH_EVENT.cnt_id               5
+nahouw4_data.NAH_EVENT.loc_id               5
+nahouw4_data.NAH_EVENT.est_id               3
+nahouw4_data.NAH_EVENT.elv_id               3
+nahouw4_data.NAH_EVENT.evt_inserted        16
+nahouw4_data.NAH_EVENT.usr_id_ins          10
+nahouw4_data.NAH_EVENT.evt_modified        16
+nahouw4_data.NAH_EVENT.usr_id_mod          10
+nahouw4_data.NAH_EVENT.evt_start_date      10
+nahouw4_data.NAH_EVENT.evt_end_date        10
+nahouw4_data.NAH_EVENT.evt_name           120
+nahouw4_data.NAH_EVENT.evt_comment      65535
+nahouw4_data.NAH_EVENT.evt_organization    80
+
+nahouw4_data.NAH_EVT_BLB.evt_id       10
+nahouw4_data.NAH_EVT_BLB.blb_id       10
+nahouw4_data.NAH_EVT_BLB.neb_inserted 16
+nahouw4_data.NAH_EVT_BLB.neb_mailed   16
+nahouw4_data.NAH_EVT_BLB.neb_deleted  16
+
+nahouw4_data.NAH_EVT_BLB_SUBSCRIPTION.evt_id       10
+nahouw4_data.NAH_EVT_BLB_SUBSCRIPTION.usr_id       10
+nahouw4_data.NAH_EVT_BLB_SUBSCRIPTION.ebs_inserted 16
+
+nahouw4_data.NAH_EVT_LEVEL.elv_id             3
+nahouw4_data.NAH_EVT_LEVEL.wrd_id_name        5
+nahouw4_data.NAH_EVT_LEVEL.wrd_id_short_name  5
+nahouw4_data.NAH_EVT_LEVEL.elv_no             5
+nahouw4_data.NAH_EVT_LEVEL.elv_national       3
+nahouw4_data.NAH_EVT_LEVEL.elv_info          64
+
+nahouw4_data.NAH_EVT_LINK.evt_id   10
+nahouw4_data.NAH_EVT_LINK.elk_url 255
+
+nahouw4_data.NAH_EVT_PHOTO.evt_id       10
+nahouw4_data.NAH_EVT_PHOTO.pht_id       10
+nahouw4_data.NAH_EVT_PHOTO.ntp_inserted 16
+
+nahouw4_data.NAH_EVT_SIBLING.evt_id         10
+nahouw4_data.NAH_EVT_SIBLING.evt_id_sibling 10
+nahouw4_data.NAH_EVT_SIBLING.trn_id_sibling 10
+
+nahouw4_data.NAH_EVT_STATUS.est_id     3
+nahouw4_data.NAH_EVT_STATUS.wrd_id     5
+nahouw4_data.NAH_EVT_STATUS.est_no     3
+nahouw4_data.NAH_EVT_STATUS.est_class 12
+nahouw4_data.NAH_EVT_STATUS.est_color 16
+nahouw4_data.NAH_EVT_STATUS.est_label 32
+
+nahouw4_data.NAH_GENDER.gen_id       3
+nahouw4_data.NAH_GENDER.wrd_id       5
+nahouw4_data.NAH_GENDER.wrd_id_abbr  5
+nahouw4_data.NAH_GENDER.gen_no       3
+nahouw4_data.NAH_GENDER.gen_label   24
+
+nahouw4_data.NAH_GEO_IP.geo_ip16     5
+nahouw4_data.NAH_GEO_IP.geo_ip_from 10
+nahouw4_data.NAH_GEO_IP.geo_ip_to   10
+nahouw4_data.NAH_GEO_IP.cnt_id       5
+
+nahouw4_data.NAH_LEVEL.lvl_id             3
+nahouw4_data.NAH_LEVEL.wrd_id_name        5
+nahouw4_data.NAH_LEVEL.wrd_id_short_name  5
+nahouw4_data.NAH_LEVEL.lvl_no             3
+nahouw4_data.NAH_LEVEL.lvl_national       3
+nahouw4_data.NAH_LEVEL.lvl_fie            3
+nahouw4_data.NAH_LEVEL.lvl_label         64
+
+nahouw4_data.NAH_LOCATION.loc_id            5
+nahouw4_data.NAH_LOCATION.cnt_id            5
+nahouw4_data.NAH_LOCATION.loc_default_name 50
+nahouw4_data.NAH_LOCATION.loc_inserted     16
+
+nahouw4_data.NAH_LOCATION_NAME.loc_id        5
+nahouw4_data.NAH_LOCATION_NAME.lan_id        3
+nahouw4_data.NAH_LOCATION_NAME.lnm_name     50
+nahouw4_data.NAH_LOCATION_NAME.lnm_inserted 16
+
+nahouw4_data.NAH_PHOTO.pht_id                  10
+nahouw4_data.NAH_PHOTO.usr_id                  10
+nahouw4_data.NAH_PHOTO.blb_id_org              10
+nahouw4_data.NAH_PHOTO.blb_id_thumbnail        10
+nahouw4_data.NAH_PHOTO.blb_id_squarenail       10
+nahouw4_data.NAH_PHOTO.pht_hsize                5
+nahouw4_data.NAH_PHOTO.pht_vsize                5
+nahouw4_data.NAH_PHOTO.pht_date                16
+nahouw4_data.NAH_PHOTO.pht_inserted            16
+nahouw4_data.NAH_PHOTO.pht_modified            16
+nahouw4_data.NAH_PHOTO.pht_summary            255
+nahouw4_data.NAH_PHOTO.pht_description   16777215
+nahouw4_data.NAH_PHOTO.pht_basename           255
+
+nahouw4_data.NAH_PHOTO_REQUEST_LOG.pht_id   10
+nahouw4_data.NAH_PHOTO_REQUEST_LOG.nps_id    3
+nahouw4_data.NAH_PHOTO_REQUEST_LOG.usr_id   10
+nahouw4_data.NAH_PHOTO_REQUEST_LOG.rlc_no   10
+nahouw4_data.NAH_PHOTO_REQUEST_LOG.ses_no   10
+nahouw4_data.NAH_PHOTO_REQUEST_LOG.rql_id   10
+nahouw4_data.NAH_PHOTO_REQUEST_LOG.prl_date 16
+
+nahouw4_data.NAH_PHOTO_RESIZE.pht_id    10
+nahouw4_data.NAH_PHOTO_RESIZE.nps_id     3
+nahouw4_data.NAH_PHOTO_RESIZE.blb_id    10
+nahouw4_data.NAH_PHOTO_RESIZE.npr_hsize  5
+nahouw4_data.NAH_PHOTO_RESIZE.npr_vsize  5
+
+nahouw4_data.NAH_PHOTO_SIZE.nps_id    3
+nahouw4_data.NAH_PHOTO_SIZE.nps_hsize 5
+nahouw4_data.NAH_PHOTO_SIZE.nps_vsize 5
+
+nahouw4_data.NAH_PHT_DCT.pht_id 10
+nahouw4_data.NAH_PHT_DCT.dct_id 10
+
+nahouw4_data.NAH_SEASON.sea_id          3
+nahouw4_data.NAH_SEASON.sea_start_date 10
+nahouw4_data.NAH_SEASON.sea_end_date   10
+nahouw4_data.NAH_SEASON.sea_code        5
+nahouw4_data.NAH_SEASON.sea_text       16
+
+nahouw4_data.NAH_TEAM.rol_id          3
+nahouw4_data.NAH_TEAM.usr_id         10
+nahouw4_data.NAH_TEAM.txt_id          5
+nahouw4_data.NAH_TEAM.ntm_start_date 10
+nahouw4_data.NAH_TEAM.ntm_end_date   10
+
+nahouw4_data.NAH_TOURNAMENT.trn_id                                  10
+nahouw4_data.NAH_TOURNAMENT.lvl_id                                   3
+nahouw4_data.NAH_TOURNAMENT.tst_id                                   3
+nahouw4_data.NAH_TOURNAMENT.ads_id                                   5
+nahouw4_data.NAH_TOURNAMENT.sea_id                                   3
+nahouw4_data.NAH_TOURNAMENT.trn_inserted                            16
+nahouw4_data.NAH_TOURNAMENT.trn_ins_usr_id                          10
+nahouw4_data.NAH_TOURNAMENT.trn_modified                            16
+nahouw4_data.NAH_TOURNAMENT.trn_mod_usr_id                          10
+nahouw4_data.NAH_TOURNAMENT.trn_start_date                          10
+nahouw4_data.NAH_TOURNAMENT.trn_end_date                            10
+nahouw4_data.NAH_TOURNAMENT.trn_name                               120
+nahouw4_data.NAH_TOURNAMENT.trn_closure                             10
+nahouw4_data.NAH_TOURNAMENT.ner_id                                   3
+nahouw4_data.NAH_TOURNAMENT.trn_entry_name                          48
+nahouw4_data.NAH_TOURNAMENT.trn_entry_email                         48
+nahouw4_data.NAH_TOURNAMENT.era_id                                   3
+nahouw4_data.NAH_TOURNAMENT.trn_comment                       16777215
+nahouw4_data.NAH_TOURNAMENT.trn_organization                        80
+nahouw4_data.NAH_TOURNAMENT.trn_missing_data_reminder_mailed1       16
+nahouw4_data.NAH_TOURNAMENT.trn_missing_data_reminder_mailed2       16
+
+nahouw4_data.NAH_TRN_ADDENDUM.trn_id      10
+nahouw4_data.NAH_TRN_ADDENDUM.ass_id       5
+nahouw4_data.NAH_TRN_ADDENDUM.ner_id       3
+nahouw4_data.NAH_TRN_ADDENDUM.tra_closure 10
+
+nahouw4_data.NAH_TRN_BLB.trn_id       10
+nahouw4_data.NAH_TRN_BLB.blb_id       10
+nahouw4_data.NAH_TRN_BLB.ntb_inserted 16
+nahouw4_data.NAH_TRN_BLB.ntb_mailed   16
+nahouw4_data.NAH_TRN_BLB.ntb_deleted  16
+
+nahouw4_data.NAH_TRN_BLB_SUBSCRIPTION.trn_id       10
+nahouw4_data.NAH_TRN_BLB_SUBSCRIPTION.usr_id       10
+nahouw4_data.NAH_TRN_BLB_SUBSCRIPTION.tbs_inserted 16
+
+nahouw4_data.NAH_TRN_LINK.trn_id      10
+nahouw4_data.NAH_TRN_LINK.tlk_url    255
+nahouw4_data.NAH_TRN_LINK.tlk_text   255
+nahouw4_data.NAH_TRN_LINK.trn_ref_id  10
+
+nahouw4_data.NAH_TRN_PHOTO.trn_id       10
+nahouw4_data.NAH_TRN_PHOTO.pht_id       10
+nahouw4_data.NAH_TRN_PHOTO.ntp_inserted 16
+
+nahouw4_data.NAH_TRN_SIBLING.trn_id         10
+nahouw4_data.NAH_TRN_SIBLING.trn_id_sibling 10
+nahouw4_data.NAH_TRN_SIBLING.evt_id_sibling 10
+
+nahouw4_data.NAH_TRN_STATUS.tst_id     3
+nahouw4_data.NAH_TRN_STATUS.wrd_id     5
+nahouw4_data.NAH_TRN_STATUS.tst_no     3
+nahouw4_data.NAH_TRN_STATUS.tst_class 12
+nahouw4_data.NAH_TRN_STATUS.tst_color 16
+nahouw4_data.NAH_TRN_STATUS.tst_label 32
+
+nahouw4_data.NAH_TRN_WEAPON.trn_id 10
+nahouw4_data.NAH_TRN_WEAPON.wpn_id  3
+nahouw4_data.NAH_TRN_WEAPON.gen_id  3
+nahouw4_data.NAH_TRN_WEAPON.age_id  3
+
+nahouw4_data.NAH_USER.usr_id                10
+nahouw4_data.NAH_USER.gen_id                 3
+nahouw4_data.NAH_USER.cnt_id                 5
+nahouw4_data.NAH_USER.ass_id                 5
+nahouw4_data.NAH_USER.clb_id                10
+nahouw4_data.NAH_USER.lan_id                 3
+nahouw4_data.NAH_USER.ust_id                 3
+nahouw4_data.NAH_USER.pln_id                 3
+nahouw4_data.NAH_USER.ads_id                 5
+nahouw4_data.NAH_USER.usr_inserted          16
+nahouw4_data.NAH_USER.usr_modified          16
+nahouw4_data.NAH_USER.usr_name              16
+nahouw4_data.NAH_USER.usr_passwd      16777215
+nahouw4_data.NAH_USER.usr_first_name        32
+nahouw4_data.NAH_USER.usr_middle_name       16
+nahouw4_data.NAH_USER.usr_last_name         32
+nahouw4_data.NAH_USER.usr_birthday          10
+nahouw4_data.NAH_USER.usr_knas_no            6
+nahouw4_data.NAH_USER.usr_fie_no            17
+nahouw4_data.NAH_USER.usr_email             64
+nahouw4_data.NAH_USER.usr_last_login        16
+
+nahouw4_data.NAH_USR_ENTRY.nue_id        10
+nahouw4_data.NAH_USR_ENTRY.clb_id        10
+nahouw4_data.NAH_USR_ENTRY.usr_id        10
+nahouw4_data.NAH_USR_ENTRY.trn_id        10
+nahouw4_data.NAH_USR_ENTRY.wpn_id         3
+nahouw4_data.NAH_USR_ENTRY.gen_id         3
+nahouw4_data.NAH_USR_ENTRY.age_id         3
+nahouw4_data.NAH_USR_ENTRY.erp_id         3
+nahouw4_data.NAH_USR_ENTRY.nue_inserted  16
+nahouw4_data.NAH_USR_ENTRY.nue_updated   16
+nahouw4_data.NAH_USR_ENTRY.nue_modified  16
+
+nahouw4_data.NAH_USR_ENTRY_ASS_MESSAGE.usr_id   10
+nahouw4_data.NAH_USR_ENTRY_ASS_MESSAGE.aum_id    5
+nahouw4_data.NAH_USR_ENTRY_ASS_MESSAGE.eam_date 16
+
+nahouw4_data.NAH_USR_ENTRY_LOG.nue_id    10
+nahouw4_data.NAH_USR_ENTRY_LOG.usr_id    10
+nahouw4_data.NAH_USR_ENTRY_LOG.erp_id     3
+nahouw4_data.NAH_USR_ENTRY_LOG.uel_date  16
+nahouw4_data.NAH_USR_ENTRY_LOG.uel_to   255
+nahouw4_data.NAH_USR_ENTRY_LOG.uel_cc   255
+
+nahouw4_data.NAH_USR_WPN.usr_id 10
+nahouw4_data.NAH_USR_WPN.wpn_id  3
+
+nahouw4_data.NAH_WEAPON.wpn_id       3
+nahouw4_data.NAH_WEAPON.wrd_id       5
+nahouw4_data.NAH_WEAPON.wrd_id_abbr  5
+nahouw4_data.NAH_WEAPON.wpn_no       3
+nahouw4_data.NAH_WEAPON.wpn_name    16
+nahouw4_data.NAH_WEAPON.wpn_bit      3
+nahouw4_data.NAH_WEAPON.wpn_label   24
+
+nahouw4_data.NAH_WEAPON_NAME.wpn_id         3
+nahouw4_data.NAH_WEAPON_NAME.gen_id         3
+nahouw4_data.NAH_WEAPON_NAME.age_id         3
+nahouw4_data.NAH_WEAPON_NAME.wrd_id         5
+nahouw4_data.NAH_WEAPON_NAME.nwn_no         3
+
+nahouw4_data.NAH_WEB_SERVICE.wsr_id              10
+nahouw4_data.NAH_WEB_SERVICE.wst_id               3
+nahouw4_data.NAH_WEB_SERVICE.wsr_key             16
+nahouw4_data.NAH_WEB_SERVICE.wsr_name            40
+nahouw4_data.NAH_WEB_SERVICE.agt_id              10
+nahouw4_data.NAH_WEB_SERVICE.rls_id               5
+nahouw4_data.NAH_WEB_SERVICE.fft_id              10
+nahouw4_data.NAH_WEB_SERVICE.usr_id_photographer 10
+nahouw4_data.NAH_WEB_SERVICE.cir_id              10
+nahouw4_data.NAH_WEB_SERVICE.trn_id              10
+nahouw4_data.NAH_WEB_SERVICE.cnt_id               5
+
+nahouw4_data.NAH_WEB_SERVICE_TYPE.wst_id     3
+nahouw4_data.NAH_WEB_SERVICE_TYPE.wst_class 32
+nahouw4_data.NAH_WEB_SERVICE_TYPE.wst_file  80
+nahouw4_data.NAH_WEB_SERVICE_TYPE.wst_label 32
+
+performance_schema.accounts.USER                16
+performance_schema.accounts.HOST                60
+performance_schema.accounts.CURRENT_CONNECTIONS 19
+performance_schema.accounts.TOTAL_CONNECTIONS   19
+
+performance_schema.cond_instances.NAME                  128
+performance_schema.cond_instances.OBJECT_INSTANCE_BEGIN  20
+
+performance_schema.events_stages_current.THREAD_ID           20
+performance_schema.events_stages_current.EVENT_ID            20
+performance_schema.events_stages_current.END_EVENT_ID        20
+performance_schema.events_stages_current.EVENT_NAME         128
+performance_schema.events_stages_current.SOURCE              64
+performance_schema.events_stages_current.TIMER_START         20
+performance_schema.events_stages_current.TIMER_END           20
+performance_schema.events_stages_current.TIMER_WAIT          20
+performance_schema.events_stages_current.NESTING_EVENT_ID    20
+
+performance_schema.events_stages_history.THREAD_ID           20
+performance_schema.events_stages_history.EVENT_ID            20
+performance_schema.events_stages_history.END_EVENT_ID        20
+performance_schema.events_stages_history.EVENT_NAME         128
+performance_schema.events_stages_history.SOURCE              64
+performance_schema.events_stages_history.TIMER_START         20
+performance_schema.events_stages_history.TIMER_END           20
+performance_schema.events_stages_history.TIMER_WAIT          20
+performance_schema.events_stages_history.NESTING_EVENT_ID    20
+
+performance_schema.events_stages_history_long.THREAD_ID           20
+performance_schema.events_stages_history_long.EVENT_ID            20
+performance_schema.events_stages_history_long.END_EVENT_ID        20
+performance_schema.events_stages_history_long.EVENT_NAME         128
+performance_schema.events_stages_history_long.SOURCE              64
+performance_schema.events_stages_history_long.TIMER_START         20
+performance_schema.events_stages_history_long.TIMER_END           20
+performance_schema.events_stages_history_long.TIMER_WAIT          20
+performance_schema.events_stages_history_long.NESTING_EVENT_ID    20
+
+performance_schema.events_stages_summary_by_account_by_event_name.USER            16
+performance_schema.events_stages_summary_by_account_by_event_name.HOST            60
+performance_schema.events_stages_summary_by_account_by_event_name.EVENT_NAME     128
+performance_schema.events_stages_summary_by_account_by_event_name.COUNT_STAR      20
+performance_schema.events_stages_summary_by_account_by_event_name.SUM_TIMER_WAIT  20
+performance_schema.events_stages_summary_by_account_by_event_name.MIN_TIMER_WAIT  20
+performance_schema.events_stages_summary_by_account_by_event_name.AVG_TIMER_WAIT  20
+performance_schema.events_stages_summary_by_account_by_event_name.MAX_TIMER_WAIT  20
+
+performance_schema.events_stages_summary_by_host_by_event_name.HOST            60
+performance_schema.events_stages_summary_by_host_by_event_name.EVENT_NAME     128
+performance_schema.events_stages_summary_by_host_by_event_name.COUNT_STAR      20
+performance_schema.events_stages_summary_by_host_by_event_name.SUM_TIMER_WAIT  20
+performance_schema.events_stages_summary_by_host_by_event_name.MIN_TIMER_WAIT  20
+performance_schema.events_stages_summary_by_host_by_event_name.AVG_TIMER_WAIT  20
+performance_schema.events_stages_summary_by_host_by_event_name.MAX_TIMER_WAIT  20
+
+performance_schema.events_stages_summary_by_thread_by_event_name.THREAD_ID       20
+performance_schema.events_stages_summary_by_thread_by_event_name.EVENT_NAME     128
+performance_schema.events_stages_summary_by_thread_by_event_name.COUNT_STAR      20
+performance_schema.events_stages_summary_by_thread_by_event_name.SUM_TIMER_WAIT  20
+performance_schema.events_stages_summary_by_thread_by_event_name.MIN_TIMER_WAIT  20
+performance_schema.events_stages_summary_by_thread_by_event_name.AVG_TIMER_WAIT  20
+performance_schema.events_stages_summary_by_thread_by_event_name.MAX_TIMER_WAIT  20
+
+performance_schema.events_stages_summary_by_user_by_event_name.USER            16
+performance_schema.events_stages_summary_by_user_by_event_name.EVENT_NAME     128
+performance_schema.events_stages_summary_by_user_by_event_name.COUNT_STAR      20
+performance_schema.events_stages_summary_by_user_by_event_name.SUM_TIMER_WAIT  20
+performance_schema.events_stages_summary_by_user_by_event_name.MIN_TIMER_WAIT  20
+performance_schema.events_stages_summary_by_user_by_event_name.AVG_TIMER_WAIT  20
+performance_schema.events_stages_summary_by_user_by_event_name.MAX_TIMER_WAIT  20
+
+performance_schema.events_stages_summary_global_by_event_name.EVENT_NAME     128
+performance_schema.events_stages_summary_global_by_event_name.COUNT_STAR      20
+performance_schema.events_stages_summary_global_by_event_name.SUM_TIMER_WAIT  20
+performance_schema.events_stages_summary_global_by_event_name.MIN_TIMER_WAIT  20
+performance_schema.events_stages_summary_global_by_event_name.AVG_TIMER_WAIT  20
+performance_schema.events_stages_summary_global_by_event_name.MAX_TIMER_WAIT  20
+
+performance_schema.events_statements_current.THREAD_ID                       20
+performance_schema.events_statements_current.EVENT_ID                        20
+performance_schema.events_statements_current.END_EVENT_ID                    20
+performance_schema.events_statements_current.EVENT_NAME                     128
+performance_schema.events_statements_current.SOURCE                          64
+performance_schema.events_statements_current.TIMER_START                     20
+performance_schema.events_statements_current.TIMER_END                       20
+performance_schema.events_statements_current.TIMER_WAIT                      20
+performance_schema.events_statements_current.LOCK_TIME                       20
+performance_schema.events_statements_current.SQL_TEXT                4294967295
+performance_schema.events_statements_current.DIGEST                          32
+performance_schema.events_statements_current.DIGEST_TEXT             4294967295
+performance_schema.events_statements_current.CURRENT_SCHEMA                  64
+performance_schema.events_statements_current.OBJECT_TYPE                     64
+performance_schema.events_statements_current.OBJECT_SCHEMA                   64
+performance_schema.events_statements_current.OBJECT_NAME                     64
+performance_schema.events_statements_current.OBJECT_INSTANCE_BEGIN           20
+performance_schema.events_statements_current.MYSQL_ERRNO                     10
+performance_schema.events_statements_current.RETURNED_SQLSTATE                5
+performance_schema.events_statements_current.MESSAGE_TEXT                   128
+performance_schema.events_statements_current.ERRORS                          20
+performance_schema.events_statements_current.WARNINGS                        20
+performance_schema.events_statements_current.ROWS_AFFECTED                   20
+performance_schema.events_statements_current.ROWS_SENT                       20
+performance_schema.events_statements_current.ROWS_EXAMINED                   20
+performance_schema.events_statements_current.CREATED_TMP_DISK_TABLES         20
+performance_schema.events_statements_current.CREATED_TMP_TABLES              20
+performance_schema.events_statements_current.SELECT_FULL_JOIN                20
+performance_schema.events_statements_current.SELECT_FULL_RANGE_JOIN          20
+performance_schema.events_statements_current.SELECT_RANGE                    20
+performance_schema.events_statements_current.SELECT_RANGE_CHECK              20
+performance_schema.events_statements_current.SELECT_SCAN                     20
+performance_schema.events_statements_current.SORT_MERGE_PASSES               20
+performance_schema.events_statements_current.SORT_RANGE                      20
+performance_schema.events_statements_current.SORT_ROWS                       20
+performance_schema.events_statements_current.SORT_SCAN                       20
+performance_schema.events_statements_current.NO_INDEX_USED                   20
+performance_schema.events_statements_current.NO_GOOD_INDEX_USED              20
+performance_schema.events_statements_current.NESTING_EVENT_ID                20
+
+performance_schema.events_statements_history.THREAD_ID                       20
+performance_schema.events_statements_history.EVENT_ID                        20
+performance_schema.events_statements_history.END_EVENT_ID                    20
+performance_schema.events_statements_history.EVENT_NAME                     128
+performance_schema.events_statements_history.SOURCE                          64
+performance_schema.events_statements_history.TIMER_START                     20
+performance_schema.events_statements_history.TIMER_END                       20
+performance_schema.events_statements_history.TIMER_WAIT                      20
+performance_schema.events_statements_history.LOCK_TIME                       20
+performance_schema.events_statements_history.SQL_TEXT                4294967295
+performance_schema.events_statements_history.DIGEST                          32
+performance_schema.events_statements_history.DIGEST_TEXT             4294967295
+performance_schema.events_statements_history.CURRENT_SCHEMA                  64
+performance_schema.events_statements_history.OBJECT_TYPE                     64
+performance_schema.events_statements_history.OBJECT_SCHEMA                   64
+performance_schema.events_statements_history.OBJECT_NAME                     64
+performance_schema.events_statements_history.OBJECT_INSTANCE_BEGIN           20
+performance_schema.events_statements_history.MYSQL_ERRNO                     10
+performance_schema.events_statements_history.RETURNED_SQLSTATE                5
+performance_schema.events_statements_history.MESSAGE_TEXT                   128
+performance_schema.events_statements_history.ERRORS                          20
+performance_schema.events_statements_history.WARNINGS                        20
+performance_schema.events_statements_history.ROWS_AFFECTED                   20
+performance_schema.events_statements_history.ROWS_SENT                       20
+performance_schema.events_statements_history.ROWS_EXAMINED                   20
+performance_schema.events_statements_history.CREATED_TMP_DISK_TABLES         20
+performance_schema.events_statements_history.CREATED_TMP_TABLES              20
+performance_schema.events_statements_history.SELECT_FULL_JOIN                20
+performance_schema.events_statements_history.SELECT_FULL_RANGE_JOIN          20
+performance_schema.events_statements_history.SELECT_RANGE                    20
+performance_schema.events_statements_history.SELECT_RANGE_CHECK              20
+performance_schema.events_statements_history.SELECT_SCAN                     20
+performance_schema.events_statements_history.SORT_MERGE_PASSES               20
+performance_schema.events_statements_history.SORT_RANGE                      20
+performance_schema.events_statements_history.SORT_ROWS                       20
+performance_schema.events_statements_history.SORT_SCAN                       20
+performance_schema.events_statements_history.NO_INDEX_USED                   20
+performance_schema.events_statements_history.NO_GOOD_INDEX_USED              20
+performance_schema.events_statements_history.NESTING_EVENT_ID                20
+
+performance_schema.events_statements_history_long.THREAD_ID                       20
+performance_schema.events_statements_history_long.EVENT_ID                        20
+performance_schema.events_statements_history_long.END_EVENT_ID                    20
+performance_schema.events_statements_history_long.EVENT_NAME                     128
+performance_schema.events_statements_history_long.SOURCE                          64
+performance_schema.events_statements_history_long.TIMER_START                     20
+performance_schema.events_statements_history_long.TIMER_END                       20
+performance_schema.events_statements_history_long.TIMER_WAIT                      20
+performance_schema.events_statements_history_long.LOCK_TIME                       20
+performance_schema.events_statements_history_long.SQL_TEXT                4294967295
+performance_schema.events_statements_history_long.DIGEST                          32
+performance_schema.events_statements_history_long.DIGEST_TEXT             4294967295
+performance_schema.events_statements_history_long.CURRENT_SCHEMA                  64
+performance_schema.events_statements_history_long.OBJECT_TYPE                     64
+performance_schema.events_statements_history_long.OBJECT_SCHEMA                   64
+performance_schema.events_statements_history_long.OBJECT_NAME                     64
+performance_schema.events_statements_history_long.OBJECT_INSTANCE_BEGIN           20
+performance_schema.events_statements_history_long.MYSQL_ERRNO                     10
+performance_schema.events_statements_history_long.RETURNED_SQLSTATE                5
+performance_schema.events_statements_history_long.MESSAGE_TEXT                   128
+performance_schema.events_statements_history_long.ERRORS                          20
+performance_schema.events_statements_history_long.WARNINGS                        20
+performance_schema.events_statements_history_long.ROWS_AFFECTED                   20
+performance_schema.events_statements_history_long.ROWS_SENT                       20
+performance_schema.events_statements_history_long.ROWS_EXAMINED                   20
+performance_schema.events_statements_history_long.CREATED_TMP_DISK_TABLES         20
+performance_schema.events_statements_history_long.CREATED_TMP_TABLES              20
+performance_schema.events_statements_history_long.SELECT_FULL_JOIN                20
+performance_schema.events_statements_history_long.SELECT_FULL_RANGE_JOIN          20
+performance_schema.events_statements_history_long.SELECT_RANGE                    20
+performance_schema.events_statements_history_long.SELECT_RANGE_CHECK              20
+performance_schema.events_statements_history_long.SELECT_SCAN                     20
+performance_schema.events_statements_history_long.SORT_MERGE_PASSES               20
+performance_schema.events_statements_history_long.SORT_RANGE                      20
+performance_schema.events_statements_history_long.SORT_ROWS                       20
+performance_schema.events_statements_history_long.SORT_SCAN                       20
+performance_schema.events_statements_history_long.NO_INDEX_USED                   20
+performance_schema.events_statements_history_long.NO_GOOD_INDEX_USED              20
+performance_schema.events_statements_history_long.NESTING_EVENT_ID                20
+
+performance_schema.events_statements_summary_by_account_by_event_name.USER                         16
+performance_schema.events_statements_summary_by_account_by_event_name.HOST                         60
+performance_schema.events_statements_summary_by_account_by_event_name.EVENT_NAME                  128
+performance_schema.events_statements_summary_by_account_by_event_name.COUNT_STAR                   20
+performance_schema.events_statements_summary_by_account_by_event_name.SUM_TIMER_WAIT               20
+performance_schema.events_statements_summary_by_account_by_event_name.MIN_TIMER_WAIT               20
+performance_schema.events_statements_summary_by_account_by_event_name.AVG_TIMER_WAIT               20
+performance_schema.events_statements_summary_by_account_by_event_name.MAX_TIMER_WAIT               20
+performance_schema.events_statements_summary_by_account_by_event_name.SUM_LOCK_TIME                20
+performance_schema.events_statements_summary_by_account_by_event_name.SUM_ERRORS                   20
+performance_schema.events_statements_summary_by_account_by_event_name.SUM_WARNINGS                 20
+performance_schema.events_statements_summary_by_account_by_event_name.SUM_ROWS_AFFECTED            20
+performance_schema.events_statements_summary_by_account_by_event_name.SUM_ROWS_SENT                20
+performance_schema.events_statements_summary_by_account_by_event_name.SUM_ROWS_EXAMINED            20
+performance_schema.events_statements_summary_by_account_by_event_name.SUM_CREATED_TMP_DISK_TABLES  20
+performance_schema.events_statements_summary_by_account_by_event_name.SUM_CREATED_TMP_TABLES       20
+performance_schema.events_statements_summary_by_account_by_event_name.SUM_SELECT_FULL_JOIN         20
+performance_schema.events_statements_summary_by_account_by_event_name.SUM_SELECT_FULL_RANGE_JOIN   20
+performance_schema.events_statements_summary_by_account_by_event_name.SUM_SELECT_RANGE             20
+performance_schema.events_statements_summary_by_account_by_event_name.SUM_SELECT_RANGE_CHECK       20
+performance_schema.events_statements_summary_by_account_by_event_name.SUM_SELECT_SCAN              20
+performance_schema.events_statements_summary_by_account_by_event_name.SUM_SORT_MERGE_PASSES        20
+performance_schema.events_statements_summary_by_account_by_event_name.SUM_SORT_RANGE               20
+performance_schema.events_statements_summary_by_account_by_event_name.SUM_SORT_ROWS                20
+performance_schema.events_statements_summary_by_account_by_event_name.SUM_SORT_SCAN                20
+performance_schema.events_statements_summary_by_account_by_event_name.SUM_NO_INDEX_USED            20
+performance_schema.events_statements_summary_by_account_by_event_name.SUM_NO_GOOD_INDEX_USED       20
+
+performance_schema.events_statements_summary_by_digest.SCHEMA_NAME                         64
+performance_schema.events_statements_summary_by_digest.DIGEST                              32
+performance_schema.events_statements_summary_by_digest.DIGEST_TEXT                 4294967295
+performance_schema.events_statements_summary_by_digest.COUNT_STAR                          20
+performance_schema.events_statements_summary_by_digest.SUM_TIMER_WAIT                      20
+performance_schema.events_statements_summary_by_digest.MIN_TIMER_WAIT                      20
+performance_schema.events_statements_summary_by_digest.AVG_TIMER_WAIT                      20
+performance_schema.events_statements_summary_by_digest.MAX_TIMER_WAIT                      20
+performance_schema.events_statements_summary_by_digest.SUM_LOCK_TIME                       20
+performance_schema.events_statements_summary_by_digest.SUM_ERRORS                          20
+performance_schema.events_statements_summary_by_digest.SUM_WARNINGS                        20
+performance_schema.events_statements_summary_by_digest.SUM_ROWS_AFFECTED                   20
+performance_schema.events_statements_summary_by_digest.SUM_ROWS_SENT                       20
+performance_schema.events_statements_summary_by_digest.SUM_ROWS_EXAMINED                   20
+performance_schema.events_statements_summary_by_digest.SUM_CREATED_TMP_DISK_TABLES         20
+performance_schema.events_statements_summary_by_digest.SUM_CREATED_TMP_TABLES              20
+performance_schema.events_statements_summary_by_digest.SUM_SELECT_FULL_JOIN                20
+performance_schema.events_statements_summary_by_digest.SUM_SELECT_FULL_RANGE_JOIN          20
+performance_schema.events_statements_summary_by_digest.SUM_SELECT_RANGE                    20
+performance_schema.events_statements_summary_by_digest.SUM_SELECT_RANGE_CHECK              20
+performance_schema.events_statements_summary_by_digest.SUM_SELECT_SCAN                     20
+performance_schema.events_statements_summary_by_digest.SUM_SORT_MERGE_PASSES               20
+performance_schema.events_statements_summary_by_digest.SUM_SORT_RANGE                      20
+performance_schema.events_statements_summary_by_digest.SUM_SORT_ROWS                       20
+performance_schema.events_statements_summary_by_digest.SUM_SORT_SCAN                       20
+performance_schema.events_statements_summary_by_digest.SUM_NO_INDEX_USED                   20
+performance_schema.events_statements_summary_by_digest.SUM_NO_GOOD_INDEX_USED              20
+performance_schema.events_statements_summary_by_digest.FIRST_SEEN                          16
+performance_schema.events_statements_summary_by_digest.LAST_SEEN                           16
+
+performance_schema.events_statements_summary_by_host_by_event_name.HOST                         60
+performance_schema.events_statements_summary_by_host_by_event_name.EVENT_NAME                  128
+performance_schema.events_statements_summary_by_host_by_event_name.COUNT_STAR                   20
+performance_schema.events_statements_summary_by_host_by_event_name.SUM_TIMER_WAIT               20
+performance_schema.events_statements_summary_by_host_by_event_name.MIN_TIMER_WAIT               20
+performance_schema.events_statements_summary_by_host_by_event_name.AVG_TIMER_WAIT               20
+performance_schema.events_statements_summary_by_host_by_event_name.MAX_TIMER_WAIT               20
+performance_schema.events_statements_summary_by_host_by_event_name.SUM_LOCK_TIME                20
+performance_schema.events_statements_summary_by_host_by_event_name.SUM_ERRORS                   20
+performance_schema.events_statements_summary_by_host_by_event_name.SUM_WARNINGS                 20
+performance_schema.events_statements_summary_by_host_by_event_name.SUM_ROWS_AFFECTED            20
+performance_schema.events_statements_summary_by_host_by_event_name.SUM_ROWS_SENT                20
+performance_schema.events_statements_summary_by_host_by_event_name.SUM_ROWS_EXAMINED            20
+performance_schema.events_statements_summary_by_host_by_event_name.SUM_CREATED_TMP_DISK_TABLES  20
+performance_schema.events_statements_summary_by_host_by_event_name.SUM_CREATED_TMP_TABLES       20
+performance_schema.events_statements_summary_by_host_by_event_name.SUM_SELECT_FULL_JOIN         20
+performance_schema.events_statements_summary_by_host_by_event_name.SUM_SELECT_FULL_RANGE_JOIN   20
+performance_schema.events_statements_summary_by_host_by_event_name.SUM_SELECT_RANGE             20
+performance_schema.events_statements_summary_by_host_by_event_name.SUM_SELECT_RANGE_CHECK       20
+performance_schema.events_statements_summary_by_host_by_event_name.SUM_SELECT_SCAN              20
+performance_schema.events_statements_summary_by_host_by_event_name.SUM_SORT_MERGE_PASSES        20
+performance_schema.events_statements_summary_by_host_by_event_name.SUM_SORT_RANGE               20
+performance_schema.events_statements_summary_by_host_by_event_name.SUM_SORT_ROWS                20
+performance_schema.events_statements_summary_by_host_by_event_name.SUM_SORT_SCAN                20
+performance_schema.events_statements_summary_by_host_by_event_name.SUM_NO_INDEX_USED            20
+performance_schema.events_statements_summary_by_host_by_event_name.SUM_NO_GOOD_INDEX_USED       20
+
+performance_schema.events_statements_summary_by_thread_by_event_name.THREAD_ID                    20
+performance_schema.events_statements_summary_by_thread_by_event_name.EVENT_NAME                  128
+performance_schema.events_statements_summary_by_thread_by_event_name.COUNT_STAR                   20
+performance_schema.events_statements_summary_by_thread_by_event_name.SUM_TIMER_WAIT               20
+performance_schema.events_statements_summary_by_thread_by_event_name.MIN_TIMER_WAIT               20
+performance_schema.events_statements_summary_by_thread_by_event_name.AVG_TIMER_WAIT               20
+performance_schema.events_statements_summary_by_thread_by_event_name.MAX_TIMER_WAIT               20
+performance_schema.events_statements_summary_by_thread_by_event_name.SUM_LOCK_TIME                20
+performance_schema.events_statements_summary_by_thread_by_event_name.SUM_ERRORS                   20
+performance_schema.events_statements_summary_by_thread_by_event_name.SUM_WARNINGS                 20
+performance_schema.events_statements_summary_by_thread_by_event_name.SUM_ROWS_AFFECTED            20
+performance_schema.events_statements_summary_by_thread_by_event_name.SUM_ROWS_SENT                20
+performance_schema.events_statements_summary_by_thread_by_event_name.SUM_ROWS_EXAMINED            20
+performance_schema.events_statements_summary_by_thread_by_event_name.SUM_CREATED_TMP_DISK_TABLES  20
+performance_schema.events_statements_summary_by_thread_by_event_name.SUM_CREATED_TMP_TABLES       20
+performance_schema.events_statements_summary_by_thread_by_event_name.SUM_SELECT_FULL_JOIN         20
+performance_schema.events_statements_summary_by_thread_by_event_name.SUM_SELECT_FULL_RANGE_JOIN   20
+performance_schema.events_statements_summary_by_thread_by_event_name.SUM_SELECT_RANGE             20
+performance_schema.events_statements_summary_by_thread_by_event_name.SUM_SELECT_RANGE_CHECK       20
+performance_schema.events_statements_summary_by_thread_by_event_name.SUM_SELECT_SCAN              20
+performance_schema.events_statements_summary_by_thread_by_event_name.SUM_SORT_MERGE_PASSES        20
+performance_schema.events_statements_summary_by_thread_by_event_name.SUM_SORT_RANGE               20
+performance_schema.events_statements_summary_by_thread_by_event_name.SUM_SORT_ROWS                20
+performance_schema.events_statements_summary_by_thread_by_event_name.SUM_SORT_SCAN                20
+performance_schema.events_statements_summary_by_thread_by_event_name.SUM_NO_INDEX_USED            20
+performance_schema.events_statements_summary_by_thread_by_event_name.SUM_NO_GOOD_INDEX_USED       20
+
+performance_schema.events_statements_summary_by_user_by_event_name.USER                         16
+performance_schema.events_statements_summary_by_user_by_event_name.EVENT_NAME                  128
+performance_schema.events_statements_summary_by_user_by_event_name.COUNT_STAR                   20
+performance_schema.events_statements_summary_by_user_by_event_name.SUM_TIMER_WAIT               20
+performance_schema.events_statements_summary_by_user_by_event_name.MIN_TIMER_WAIT               20
+performance_schema.events_statements_summary_by_user_by_event_name.AVG_TIMER_WAIT               20
+performance_schema.events_statements_summary_by_user_by_event_name.MAX_TIMER_WAIT               20
+performance_schema.events_statements_summary_by_user_by_event_name.SUM_LOCK_TIME                20
+performance_schema.events_statements_summary_by_user_by_event_name.SUM_ERRORS                   20
+performance_schema.events_statements_summary_by_user_by_event_name.SUM_WARNINGS                 20
+performance_schema.events_statements_summary_by_user_by_event_name.SUM_ROWS_AFFECTED            20
+performance_schema.events_statements_summary_by_user_by_event_name.SUM_ROWS_SENT                20
+performance_schema.events_statements_summary_by_user_by_event_name.SUM_ROWS_EXAMINED            20
+performance_schema.events_statements_summary_by_user_by_event_name.SUM_CREATED_TMP_DISK_TABLES  20
+performance_schema.events_statements_summary_by_user_by_event_name.SUM_CREATED_TMP_TABLES       20
+performance_schema.events_statements_summary_by_user_by_event_name.SUM_SELECT_FULL_JOIN         20
+performance_schema.events_statements_summary_by_user_by_event_name.SUM_SELECT_FULL_RANGE_JOIN   20
+performance_schema.events_statements_summary_by_user_by_event_name.SUM_SELECT_RANGE             20
+performance_schema.events_statements_summary_by_user_by_event_name.SUM_SELECT_RANGE_CHECK       20
+performance_schema.events_statements_summary_by_user_by_event_name.SUM_SELECT_SCAN              20
+performance_schema.events_statements_summary_by_user_by_event_name.SUM_SORT_MERGE_PASSES        20
+performance_schema.events_statements_summary_by_user_by_event_name.SUM_SORT_RANGE               20
+performance_schema.events_statements_summary_by_user_by_event_name.SUM_SORT_ROWS                20
+performance_schema.events_statements_summary_by_user_by_event_name.SUM_SORT_SCAN                20
+performance_schema.events_statements_summary_by_user_by_event_name.SUM_NO_INDEX_USED            20
+performance_schema.events_statements_summary_by_user_by_event_name.SUM_NO_GOOD_INDEX_USED       20
+
+performance_schema.events_statements_summary_global_by_event_name.EVENT_NAME                  128
+performance_schema.events_statements_summary_global_by_event_name.COUNT_STAR                   20
+performance_schema.events_statements_summary_global_by_event_name.SUM_TIMER_WAIT               20
+performance_schema.events_statements_summary_global_by_event_name.MIN_TIMER_WAIT               20
+performance_schema.events_statements_summary_global_by_event_name.AVG_TIMER_WAIT               20
+performance_schema.events_statements_summary_global_by_event_name.MAX_TIMER_WAIT               20
+performance_schema.events_statements_summary_global_by_event_name.SUM_LOCK_TIME                20
+performance_schema.events_statements_summary_global_by_event_name.SUM_ERRORS                   20
+performance_schema.events_statements_summary_global_by_event_name.SUM_WARNINGS                 20
+performance_schema.events_statements_summary_global_by_event_name.SUM_ROWS_AFFECTED            20
+performance_schema.events_statements_summary_global_by_event_name.SUM_ROWS_SENT                20
+performance_schema.events_statements_summary_global_by_event_name.SUM_ROWS_EXAMINED            20
+performance_schema.events_statements_summary_global_by_event_name.SUM_CREATED_TMP_DISK_TABLES  20
+performance_schema.events_statements_summary_global_by_event_name.SUM_CREATED_TMP_TABLES       20
+performance_schema.events_statements_summary_global_by_event_name.SUM_SELECT_FULL_JOIN         20
+performance_schema.events_statements_summary_global_by_event_name.SUM_SELECT_FULL_RANGE_JOIN   20
+performance_schema.events_statements_summary_global_by_event_name.SUM_SELECT_RANGE             20
+performance_schema.events_statements_summary_global_by_event_name.SUM_SELECT_RANGE_CHECK       20
+performance_schema.events_statements_summary_global_by_event_name.SUM_SELECT_SCAN              20
+performance_schema.events_statements_summary_global_by_event_name.SUM_SORT_MERGE_PASSES        20
+performance_schema.events_statements_summary_global_by_event_name.SUM_SORT_RANGE               20
+performance_schema.events_statements_summary_global_by_event_name.SUM_SORT_ROWS                20
+performance_schema.events_statements_summary_global_by_event_name.SUM_SORT_SCAN                20
+performance_schema.events_statements_summary_global_by_event_name.SUM_NO_INDEX_USED            20
+performance_schema.events_statements_summary_global_by_event_name.SUM_NO_GOOD_INDEX_USED       20
+
+performance_schema.events_waits_current.THREAD_ID              20
+performance_schema.events_waits_current.EVENT_ID               20
+performance_schema.events_waits_current.END_EVENT_ID           20
+performance_schema.events_waits_current.EVENT_NAME            128
+performance_schema.events_waits_current.SOURCE                 64
+performance_schema.events_waits_current.TIMER_START            20
+performance_schema.events_waits_current.TIMER_END              20
+performance_schema.events_waits_current.TIMER_WAIT             20
+performance_schema.events_waits_current.SPINS                  10
+performance_schema.events_waits_current.OBJECT_SCHEMA          64
+performance_schema.events_waits_current.OBJECT_NAME           512
+performance_schema.events_waits_current.INDEX_NAME             64
+performance_schema.events_waits_current.OBJECT_TYPE            64
+performance_schema.events_waits_current.OBJECT_INSTANCE_BEGIN  20
+performance_schema.events_waits_current.NESTING_EVENT_ID       20
+performance_schema.events_waits_current.OPERATION              32
+performance_schema.events_waits_current.NUMBER_OF_BYTES        19
+performance_schema.events_waits_current.FLAGS                  10
+
+performance_schema.events_waits_history.THREAD_ID              20
+performance_schema.events_waits_history.EVENT_ID               20
+performance_schema.events_waits_history.END_EVENT_ID           20
+performance_schema.events_waits_history.EVENT_NAME            128
+performance_schema.events_waits_history.SOURCE                 64
+performance_schema.events_waits_history.TIMER_START            20
+performance_schema.events_waits_history.TIMER_END              20
+performance_schema.events_waits_history.TIMER_WAIT             20
+performance_schema.events_waits_history.SPINS                  10
+performance_schema.events_waits_history.OBJECT_SCHEMA          64
+performance_schema.events_waits_history.OBJECT_NAME           512
+performance_schema.events_waits_history.INDEX_NAME             64
+performance_schema.events_waits_history.OBJECT_TYPE            64
+performance_schema.events_waits_history.OBJECT_INSTANCE_BEGIN  20
+performance_schema.events_waits_history.NESTING_EVENT_ID       20
+performance_schema.events_waits_history.OPERATION              32
+performance_schema.events_waits_history.NUMBER_OF_BYTES        19
+performance_schema.events_waits_history.FLAGS                  10
+
+performance_schema.events_waits_history_long.THREAD_ID              20
+performance_schema.events_waits_history_long.EVENT_ID               20
+performance_schema.events_waits_history_long.END_EVENT_ID           20
+performance_schema.events_waits_history_long.EVENT_NAME            128
+performance_schema.events_waits_history_long.SOURCE                 64
+performance_schema.events_waits_history_long.TIMER_START            20
+performance_schema.events_waits_history_long.TIMER_END              20
+performance_schema.events_waits_history_long.TIMER_WAIT             20
+performance_schema.events_waits_history_long.SPINS                  10
+performance_schema.events_waits_history_long.OBJECT_SCHEMA          64
+performance_schema.events_waits_history_long.OBJECT_NAME           512
+performance_schema.events_waits_history_long.INDEX_NAME             64
+performance_schema.events_waits_history_long.OBJECT_TYPE            64
+performance_schema.events_waits_history_long.OBJECT_INSTANCE_BEGIN  20
+performance_schema.events_waits_history_long.NESTING_EVENT_ID       20
+performance_schema.events_waits_history_long.OPERATION              32
+performance_schema.events_waits_history_long.NUMBER_OF_BYTES        19
+performance_schema.events_waits_history_long.FLAGS                  10
+
+performance_schema.events_waits_summary_by_account_by_event_name.USER            16
+performance_schema.events_waits_summary_by_account_by_event_name.HOST            60
+performance_schema.events_waits_summary_by_account_by_event_name.EVENT_NAME     128
+performance_schema.events_waits_summary_by_account_by_event_name.COUNT_STAR      20
+performance_schema.events_waits_summary_by_account_by_event_name.SUM_TIMER_WAIT  20
+performance_schema.events_waits_summary_by_account_by_event_name.MIN_TIMER_WAIT  20
+performance_schema.events_waits_summary_by_account_by_event_name.AVG_TIMER_WAIT  20
+performance_schema.events_waits_summary_by_account_by_event_name.MAX_TIMER_WAIT  20
+
+performance_schema.events_waits_summary_by_host_by_event_name.HOST            60
+performance_schema.events_waits_summary_by_host_by_event_name.EVENT_NAME     128
+performance_schema.events_waits_summary_by_host_by_event_name.COUNT_STAR      20
+performance_schema.events_waits_summary_by_host_by_event_name.SUM_TIMER_WAIT  20
+performance_schema.events_waits_summary_by_host_by_event_name.MIN_TIMER_WAIT  20
+performance_schema.events_waits_summary_by_host_by_event_name.AVG_TIMER_WAIT  20
+performance_schema.events_waits_summary_by_host_by_event_name.MAX_TIMER_WAIT  20
+
+performance_schema.events_waits_summary_by_instance.EVENT_NAME            128
+performance_schema.events_waits_summary_by_instance.OBJECT_INSTANCE_BEGIN  20
+performance_schema.events_waits_summary_by_instance.COUNT_STAR             20
+performance_schema.events_waits_summary_by_instance.SUM_TIMER_WAIT         20
+performance_schema.events_waits_summary_by_instance.MIN_TIMER_WAIT         20
+performance_schema.events_waits_summary_by_instance.AVG_TIMER_WAIT         20
+performance_schema.events_waits_summary_by_instance.MAX_TIMER_WAIT         20
+
+performance_schema.events_waits_summary_by_thread_by_event_name.THREAD_ID       20
+performance_schema.events_waits_summary_by_thread_by_event_name.EVENT_NAME     128
+performance_schema.events_waits_summary_by_thread_by_event_name.COUNT_STAR      20
+performance_schema.events_waits_summary_by_thread_by_event_name.SUM_TIMER_WAIT  20
+performance_schema.events_waits_summary_by_thread_by_event_name.MIN_TIMER_WAIT  20
+performance_schema.events_waits_summary_by_thread_by_event_name.AVG_TIMER_WAIT  20
+performance_schema.events_waits_summary_by_thread_by_event_name.MAX_TIMER_WAIT  20
+
+performance_schema.events_waits_summary_by_user_by_event_name.USER            16
+performance_schema.events_waits_summary_by_user_by_event_name.EVENT_NAME     128
+performance_schema.events_waits_summary_by_user_by_event_name.COUNT_STAR      20
+performance_schema.events_waits_summary_by_user_by_event_name.SUM_TIMER_WAIT  20
+performance_schema.events_waits_summary_by_user_by_event_name.MIN_TIMER_WAIT  20
+performance_schema.events_waits_summary_by_user_by_event_name.AVG_TIMER_WAIT  20
+performance_schema.events_waits_summary_by_user_by_event_name.MAX_TIMER_WAIT  20
+
+performance_schema.events_waits_summary_global_by_event_name.EVENT_NAME     128
+performance_schema.events_waits_summary_global_by_event_name.COUNT_STAR      20
+performance_schema.events_waits_summary_global_by_event_name.SUM_TIMER_WAIT  20
+performance_schema.events_waits_summary_global_by_event_name.MIN_TIMER_WAIT  20
+performance_schema.events_waits_summary_global_by_event_name.AVG_TIMER_WAIT  20
+performance_schema.events_waits_summary_global_by_event_name.MAX_TIMER_WAIT  20
+
+performance_schema.file_instances.FILE_NAME  512
+performance_schema.file_instances.EVENT_NAME 128
+performance_schema.file_instances.OPEN_COUNT  10
+
+performance_schema.file_summary_by_event_name.EVENT_NAME                128
+performance_schema.file_summary_by_event_name.COUNT_STAR                 20
+performance_schema.file_summary_by_event_name.SUM_TIMER_WAIT             20
+performance_schema.file_summary_by_event_name.MIN_TIMER_WAIT             20
+performance_schema.file_summary_by_event_name.AVG_TIMER_WAIT             20
+performance_schema.file_summary_by_event_name.MAX_TIMER_WAIT             20
+performance_schema.file_summary_by_event_name.COUNT_READ                 20
+performance_schema.file_summary_by_event_name.SUM_TIMER_READ             20
+performance_schema.file_summary_by_event_name.MIN_TIMER_READ             20
+performance_schema.file_summary_by_event_name.AVG_TIMER_READ             20
+performance_schema.file_summary_by_event_name.MAX_TIMER_READ             20
+performance_schema.file_summary_by_event_name.SUM_NUMBER_OF_BYTES_READ   19
+performance_schema.file_summary_by_event_name.COUNT_WRITE                20
+performance_schema.file_summary_by_event_name.SUM_TIMER_WRITE            20
+performance_schema.file_summary_by_event_name.MIN_TIMER_WRITE            20
+performance_schema.file_summary_by_event_name.AVG_TIMER_WRITE            20
+performance_schema.file_summary_by_event_name.MAX_TIMER_WRITE            20
+performance_schema.file_summary_by_event_name.SUM_NUMBER_OF_BYTES_WRITE  19
+performance_schema.file_summary_by_event_name.COUNT_MISC                 20
+performance_schema.file_summary_by_event_name.SUM_TIMER_MISC             20
+performance_schema.file_summary_by_event_name.MIN_TIMER_MISC             20
+performance_schema.file_summary_by_event_name.AVG_TIMER_MISC             20
+performance_schema.file_summary_by_event_name.MAX_TIMER_MISC             20
+
+performance_schema.file_summary_by_instance.FILE_NAME                 512
+performance_schema.file_summary_by_instance.EVENT_NAME                128
+performance_schema.file_summary_by_instance.OBJECT_INSTANCE_BEGIN      20
+performance_schema.file_summary_by_instance.COUNT_STAR                 20
+performance_schema.file_summary_by_instance.SUM_TIMER_WAIT             20
+performance_schema.file_summary_by_instance.MIN_TIMER_WAIT             20
+performance_schema.file_summary_by_instance.AVG_TIMER_WAIT             20
+performance_schema.file_summary_by_instance.MAX_TIMER_WAIT             20
+performance_schema.file_summary_by_instance.COUNT_READ                 20
+performance_schema.file_summary_by_instance.SUM_TIMER_READ             20
+performance_schema.file_summary_by_instance.MIN_TIMER_READ             20
+performance_schema.file_summary_by_instance.AVG_TIMER_READ             20
+performance_schema.file_summary_by_instance.MAX_TIMER_READ             20
+performance_schema.file_summary_by_instance.SUM_NUMBER_OF_BYTES_READ   19
+performance_schema.file_summary_by_instance.COUNT_WRITE                20
+performance_schema.file_summary_by_instance.SUM_TIMER_WRITE            20
+performance_schema.file_summary_by_instance.MIN_TIMER_WRITE            20
+performance_schema.file_summary_by_instance.AVG_TIMER_WRITE            20
+performance_schema.file_summary_by_instance.MAX_TIMER_WRITE            20
+performance_schema.file_summary_by_instance.SUM_NUMBER_OF_BYTES_WRITE  19
+performance_schema.file_summary_by_instance.COUNT_MISC                 20
+performance_schema.file_summary_by_instance.SUM_TIMER_MISC             20
+performance_schema.file_summary_by_instance.MIN_TIMER_MISC             20
+performance_schema.file_summary_by_instance.AVG_TIMER_MISC             20
+performance_schema.file_summary_by_instance.MAX_TIMER_MISC             20
+
+performance_schema.host_cache.IP                                          64
+performance_schema.host_cache.HOST                                       255
+performance_schema.host_cache.SUM_CONNECT_ERRORS                          19
+performance_schema.host_cache.COUNT_HOST_BLOCKED_ERRORS                   19
+performance_schema.host_cache.COUNT_NAMEINFO_TRANSIENT_ERRORS             19
+performance_schema.host_cache.COUNT_NAMEINFO_PERMANENT_ERRORS             19
+performance_schema.host_cache.COUNT_FORMAT_ERRORS                         19
+performance_schema.host_cache.COUNT_ADDRINFO_TRANSIENT_ERRORS             19
+performance_schema.host_cache.COUNT_ADDRINFO_PERMANENT_ERRORS             19
+performance_schema.host_cache.COUNT_FCRDNS_ERRORS                         19
+performance_schema.host_cache.COUNT_HOST_ACL_ERRORS                       19
+performance_schema.host_cache.COUNT_NO_AUTH_PLUGIN_ERRORS                 19
+performance_schema.host_cache.COUNT_AUTH_PLUGIN_ERRORS                    19
+performance_schema.host_cache.COUNT_HANDSHAKE_ERRORS                      19
+performance_schema.host_cache.COUNT_PROXY_USER_ERRORS                     19
+performance_schema.host_cache.COUNT_PROXY_USER_ACL_ERRORS                 19
+performance_schema.host_cache.COUNT_AUTHENTICATION_ERRORS                 19
+performance_schema.host_cache.COUNT_SSL_ERRORS                            19
+performance_schema.host_cache.COUNT_MAX_USER_CONNECTIONS_ERRORS           19
+performance_schema.host_cache.COUNT_MAX_USER_CONNECTIONS_PER_HOUR_ERRORS  19
+performance_schema.host_cache.COUNT_DEFAULT_DATABASE_ERRORS               19
+performance_schema.host_cache.COUNT_INIT_CONNECT_ERRORS                   19
+performance_schema.host_cache.COUNT_LOCAL_ERRORS                          19
+performance_schema.host_cache.COUNT_UNKNOWN_ERRORS                        19
+performance_schema.host_cache.FIRST_SEEN                                  16
+performance_schema.host_cache.LAST_SEEN                                   16
+performance_schema.host_cache.FIRST_ERROR_SEEN                            16
+performance_schema.host_cache.LAST_ERROR_SEEN                             16
+
+performance_schema.hosts.HOST                60
+performance_schema.hosts.CURRENT_CONNECTIONS 19
+performance_schema.hosts.TOTAL_CONNECTIONS   19
+
+performance_schema.mutex_instances.NAME                  128
+performance_schema.mutex_instances.OBJECT_INSTANCE_BEGIN  20
+performance_schema.mutex_instances.LOCKED_BY_THREAD_ID    20
+
+performance_schema.objects_summary_global_by_type.OBJECT_TYPE    64
+performance_schema.objects_summary_global_by_type.OBJECT_SCHEMA  64
+performance_schema.objects_summary_global_by_type.OBJECT_NAME    64
+performance_schema.objects_summary_global_by_type.COUNT_STAR     20
+performance_schema.objects_summary_global_by_type.SUM_TIMER_WAIT 20
+performance_schema.objects_summary_global_by_type.MIN_TIMER_WAIT 20
+performance_schema.objects_summary_global_by_type.AVG_TIMER_WAIT 20
+performance_schema.objects_summary_global_by_type.MAX_TIMER_WAIT 20
+
+performance_schema.performance_timers.TIMER_FREQUENCY  19
+performance_schema.performance_timers.TIMER_RESOLUTION 19
+performance_schema.performance_timers.TIMER_OVERHEAD   19
+
+performance_schema.rwlock_instances.NAME                      128
+performance_schema.rwlock_instances.OBJECT_INSTANCE_BEGIN      20
+performance_schema.rwlock_instances.WRITE_LOCKED_BY_THREAD_ID  20
+performance_schema.rwlock_instances.READ_LOCKED_BY_COUNT       10
+
+performance_schema.session_account_connect_attrs.PROCESSLIST_ID     10
+performance_schema.session_account_connect_attrs.ATTR_NAME          32
+performance_schema.session_account_connect_attrs.ATTR_VALUE       1024
+performance_schema.session_account_connect_attrs.ORDINAL_POSITION   10
+
+performance_schema.session_connect_attrs.PROCESSLIST_ID     10
+performance_schema.session_connect_attrs.ATTR_NAME          32
+performance_schema.session_connect_attrs.ATTR_VALUE       1024
+performance_schema.session_connect_attrs.ORDINAL_POSITION   10
+
+performance_schema.setup_actors.HOST 60
+performance_schema.setup_actors.USER 16
+performance_schema.setup_actors.ROLE 16
+
+performance_schema.setup_consumers.NAME    64
+
+performance_schema.setup_instruments.NAME    128
+
+performance_schema.setup_objects.OBJECT_SCHEMA 64
+performance_schema.setup_objects.OBJECT_NAME   64
+
+performance_schema.setup_timers.NAME       64
+
+performance_schema.socket_instances.EVENT_NAME            128
+performance_schema.socket_instances.OBJECT_INSTANCE_BEGIN  20
+performance_schema.socket_instances.THREAD_ID              20
+performance_schema.socket_instances.SOCKET_ID              10
+performance_schema.socket_instances.IP                     64
+performance_schema.socket_instances.PORT                   10
+
+performance_schema.socket_summary_by_event_name.EVENT_NAME                128
+performance_schema.socket_summary_by_event_name.COUNT_STAR                 20
+performance_schema.socket_summary_by_event_name.SUM_TIMER_WAIT             20
+performance_schema.socket_summary_by_event_name.MIN_TIMER_WAIT             20
+performance_schema.socket_summary_by_event_name.AVG_TIMER_WAIT             20
+performance_schema.socket_summary_by_event_name.MAX_TIMER_WAIT             20
+performance_schema.socket_summary_by_event_name.COUNT_READ                 20
+performance_schema.socket_summary_by_event_name.SUM_TIMER_READ             20
+performance_schema.socket_summary_by_event_name.MIN_TIMER_READ             20
+performance_schema.socket_summary_by_event_name.AVG_TIMER_READ             20
+performance_schema.socket_summary_by_event_name.MAX_TIMER_READ             20
+performance_schema.socket_summary_by_event_name.SUM_NUMBER_OF_BYTES_READ   20
+performance_schema.socket_summary_by_event_name.COUNT_WRITE                20
+performance_schema.socket_summary_by_event_name.SUM_TIMER_WRITE            20
+performance_schema.socket_summary_by_event_name.MIN_TIMER_WRITE            20
+performance_schema.socket_summary_by_event_name.AVG_TIMER_WRITE            20
+performance_schema.socket_summary_by_event_name.MAX_TIMER_WRITE            20
+performance_schema.socket_summary_by_event_name.SUM_NUMBER_OF_BYTES_WRITE  20
+performance_schema.socket_summary_by_event_name.COUNT_MISC                 20
+performance_schema.socket_summary_by_event_name.SUM_TIMER_MISC             20
+performance_schema.socket_summary_by_event_name.MIN_TIMER_MISC             20
+performance_schema.socket_summary_by_event_name.AVG_TIMER_MISC             20
+performance_schema.socket_summary_by_event_name.MAX_TIMER_MISC             20
+
+performance_schema.socket_summary_by_instance.EVENT_NAME                128
+performance_schema.socket_summary_by_instance.OBJECT_INSTANCE_BEGIN      20
+performance_schema.socket_summary_by_instance.COUNT_STAR                 20
+performance_schema.socket_summary_by_instance.SUM_TIMER_WAIT             20
+performance_schema.socket_summary_by_instance.MIN_TIMER_WAIT             20
+performance_schema.socket_summary_by_instance.AVG_TIMER_WAIT             20
+performance_schema.socket_summary_by_instance.MAX_TIMER_WAIT             20
+performance_schema.socket_summary_by_instance.COUNT_READ                 20
+performance_schema.socket_summary_by_instance.SUM_TIMER_READ             20
+performance_schema.socket_summary_by_instance.MIN_TIMER_READ             20
+performance_schema.socket_summary_by_instance.AVG_TIMER_READ             20
+performance_schema.socket_summary_by_instance.MAX_TIMER_READ             20
+performance_schema.socket_summary_by_instance.SUM_NUMBER_OF_BYTES_READ   20
+performance_schema.socket_summary_by_instance.COUNT_WRITE                20
+performance_schema.socket_summary_by_instance.SUM_TIMER_WRITE            20
+performance_schema.socket_summary_by_instance.MIN_TIMER_WRITE            20
+performance_schema.socket_summary_by_instance.AVG_TIMER_WRITE            20
+performance_schema.socket_summary_by_instance.MAX_TIMER_WRITE            20
+performance_schema.socket_summary_by_instance.SUM_NUMBER_OF_BYTES_WRITE  20
+performance_schema.socket_summary_by_instance.COUNT_MISC                 20
+performance_schema.socket_summary_by_instance.SUM_TIMER_MISC             20
+performance_schema.socket_summary_by_instance.MIN_TIMER_MISC             20
+performance_schema.socket_summary_by_instance.AVG_TIMER_MISC             20
+performance_schema.socket_summary_by_instance.MAX_TIMER_MISC             20
+
+performance_schema.table_io_waits_summary_by_index_usage.OBJECT_TYPE      64
+performance_schema.table_io_waits_summary_by_index_usage.OBJECT_SCHEMA    64
+performance_schema.table_io_waits_summary_by_index_usage.OBJECT_NAME      64
+performance_schema.table_io_waits_summary_by_index_usage.INDEX_NAME       64
+performance_schema.table_io_waits_summary_by_index_usage.COUNT_STAR       20
+performance_schema.table_io_waits_summary_by_index_usage.SUM_TIMER_WAIT   20
+performance_schema.table_io_waits_summary_by_index_usage.MIN_TIMER_WAIT   20
+performance_schema.table_io_waits_summary_by_index_usage.AVG_TIMER_WAIT   20
+performance_schema.table_io_waits_summary_by_index_usage.MAX_TIMER_WAIT   20
+performance_schema.table_io_waits_summary_by_index_usage.COUNT_READ       20
+performance_schema.table_io_waits_summary_by_index_usage.SUM_TIMER_READ   20
+performance_schema.table_io_waits_summary_by_index_usage.MIN_TIMER_READ   20
+performance_schema.table_io_waits_summary_by_index_usage.AVG_TIMER_READ   20
+performance_schema.table_io_waits_summary_by_index_usage.MAX_TIMER_READ   20
+performance_schema.table_io_waits_summary_by_index_usage.COUNT_WRITE      20
+performance_schema.table_io_waits_summary_by_index_usage.SUM_TIMER_WRITE  20
+performance_schema.table_io_waits_summary_by_index_usage.MIN_TIMER_WRITE  20
+performance_schema.table_io_waits_summary_by_index_usage.AVG_TIMER_WRITE  20
+performance_schema.table_io_waits_summary_by_index_usage.MAX_TIMER_WRITE  20
+performance_schema.table_io_waits_summary_by_index_usage.COUNT_FETCH      20
+performance_schema.table_io_waits_summary_by_index_usage.SUM_TIMER_FETCH  20
+performance_schema.table_io_waits_summary_by_index_usage.MIN_TIMER_FETCH  20
+performance_schema.table_io_waits_summary_by_index_usage.AVG_TIMER_FETCH  20
+performance_schema.table_io_waits_summary_by_index_usage.MAX_TIMER_FETCH  20
+performance_schema.table_io_waits_summary_by_index_usage.COUNT_INSERT     20
+performance_schema.table_io_waits_summary_by_index_usage.SUM_TIMER_INSERT 20
+performance_schema.table_io_waits_summary_by_index_usage.MIN_TIMER_INSERT 20
+performance_schema.table_io_waits_summary_by_index_usage.AVG_TIMER_INSERT 20
+performance_schema.table_io_waits_summary_by_index_usage.MAX_TIMER_INSERT 20
+performance_schema.table_io_waits_summary_by_index_usage.COUNT_UPDATE     20
+performance_schema.table_io_waits_summary_by_index_usage.SUM_TIMER_UPDATE 20
+performance_schema.table_io_waits_summary_by_index_usage.MIN_TIMER_UPDATE 20
+performance_schema.table_io_waits_summary_by_index_usage.AVG_TIMER_UPDATE 20
+performance_schema.table_io_waits_summary_by_index_usage.MAX_TIMER_UPDATE 20
+performance_schema.table_io_waits_summary_by_index_usage.COUNT_DELETE     20
+performance_schema.table_io_waits_summary_by_index_usage.SUM_TIMER_DELETE 20
+performance_schema.table_io_waits_summary_by_index_usage.MIN_TIMER_DELETE 20
+performance_schema.table_io_waits_summary_by_index_usage.AVG_TIMER_DELETE 20
+performance_schema.table_io_waits_summary_by_index_usage.MAX_TIMER_DELETE 20
+
+performance_schema.table_io_waits_summary_by_table.OBJECT_TYPE      64
+performance_schema.table_io_waits_summary_by_table.OBJECT_SCHEMA    64
+performance_schema.table_io_waits_summary_by_table.OBJECT_NAME      64
+performance_schema.table_io_waits_summary_by_table.COUNT_STAR       20
+performance_schema.table_io_waits_summary_by_table.SUM_TIMER_WAIT   20
+performance_schema.table_io_waits_summary_by_table.MIN_TIMER_WAIT   20
+performance_schema.table_io_waits_summary_by_table.AVG_TIMER_WAIT   20
+performance_schema.table_io_waits_summary_by_table.MAX_TIMER_WAIT   20
+performance_schema.table_io_waits_summary_by_table.COUNT_READ       20
+performance_schema.table_io_waits_summary_by_table.SUM_TIMER_READ   20
+performance_schema.table_io_waits_summary_by_table.MIN_TIMER_READ   20
+performance_schema.table_io_waits_summary_by_table.AVG_TIMER_READ   20
+performance_schema.table_io_waits_summary_by_table.MAX_TIMER_READ   20
+performance_schema.table_io_waits_summary_by_table.COUNT_WRITE      20
+performance_schema.table_io_waits_summary_by_table.SUM_TIMER_WRITE  20
+performance_schema.table_io_waits_summary_by_table.MIN_TIMER_WRITE  20
+performance_schema.table_io_waits_summary_by_table.AVG_TIMER_WRITE  20
+performance_schema.table_io_waits_summary_by_table.MAX_TIMER_WRITE  20
+performance_schema.table_io_waits_summary_by_table.COUNT_FETCH      20
+performance_schema.table_io_waits_summary_by_table.SUM_TIMER_FETCH  20
+performance_schema.table_io_waits_summary_by_table.MIN_TIMER_FETCH  20
+performance_schema.table_io_waits_summary_by_table.AVG_TIMER_FETCH  20
+performance_schema.table_io_waits_summary_by_table.MAX_TIMER_FETCH  20
+performance_schema.table_io_waits_summary_by_table.COUNT_INSERT     20
+performance_schema.table_io_waits_summary_by_table.SUM_TIMER_INSERT 20
+performance_schema.table_io_waits_summary_by_table.MIN_TIMER_INSERT 20
+performance_schema.table_io_waits_summary_by_table.AVG_TIMER_INSERT 20
+performance_schema.table_io_waits_summary_by_table.MAX_TIMER_INSERT 20
+performance_schema.table_io_waits_summary_by_table.COUNT_UPDATE     20
+performance_schema.table_io_waits_summary_by_table.SUM_TIMER_UPDATE 20
+performance_schema.table_io_waits_summary_by_table.MIN_TIMER_UPDATE 20
+performance_schema.table_io_waits_summary_by_table.AVG_TIMER_UPDATE 20
+performance_schema.table_io_waits_summary_by_table.MAX_TIMER_UPDATE 20
+performance_schema.table_io_waits_summary_by_table.COUNT_DELETE     20
+performance_schema.table_io_waits_summary_by_table.SUM_TIMER_DELETE 20
+performance_schema.table_io_waits_summary_by_table.MIN_TIMER_DELETE 20
+performance_schema.table_io_waits_summary_by_table.AVG_TIMER_DELETE 20
+performance_schema.table_io_waits_summary_by_table.MAX_TIMER_DELETE 20
+
+performance_schema.table_lock_waits_summary_by_table.OBJECT_TYPE                       64
+performance_schema.table_lock_waits_summary_by_table.OBJECT_SCHEMA                     64
+performance_schema.table_lock_waits_summary_by_table.OBJECT_NAME                       64
+performance_schema.table_lock_waits_summary_by_table.COUNT_STAR                        20
+performance_schema.table_lock_waits_summary_by_table.SUM_TIMER_WAIT                    20
+performance_schema.table_lock_waits_summary_by_table.MIN_TIMER_WAIT                    20
+performance_schema.table_lock_waits_summary_by_table.AVG_TIMER_WAIT                    20
+performance_schema.table_lock_waits_summary_by_table.MAX_TIMER_WAIT                    20
+performance_schema.table_lock_waits_summary_by_table.COUNT_READ                        20
+performance_schema.table_lock_waits_summary_by_table.SUM_TIMER_READ                    20
+performance_schema.table_lock_waits_summary_by_table.MIN_TIMER_READ                    20
+performance_schema.table_lock_waits_summary_by_table.AVG_TIMER_READ                    20
+performance_schema.table_lock_waits_summary_by_table.MAX_TIMER_READ                    20
+performance_schema.table_lock_waits_summary_by_table.COUNT_WRITE                       20
+performance_schema.table_lock_waits_summary_by_table.SUM_TIMER_WRITE                   20
+performance_schema.table_lock_waits_summary_by_table.MIN_TIMER_WRITE                   20
+performance_schema.table_lock_waits_summary_by_table.AVG_TIMER_WRITE                   20
+performance_schema.table_lock_waits_summary_by_table.MAX_TIMER_WRITE                   20
+performance_schema.table_lock_waits_summary_by_table.COUNT_READ_NORMAL                 20
+performance_schema.table_lock_waits_summary_by_table.SUM_TIMER_READ_NORMAL             20
+performance_schema.table_lock_waits_summary_by_table.MIN_TIMER_READ_NORMAL             20
+performance_schema.table_lock_waits_summary_by_table.AVG_TIMER_READ_NORMAL             20
+performance_schema.table_lock_waits_summary_by_table.MAX_TIMER_READ_NORMAL             20
+performance_schema.table_lock_waits_summary_by_table.COUNT_READ_WITH_SHARED_LOCKS      20
+performance_schema.table_lock_waits_summary_by_table.SUM_TIMER_READ_WITH_SHARED_LOCKS  20
+performance_schema.table_lock_waits_summary_by_table.MIN_TIMER_READ_WITH_SHARED_LOCKS  20
+performance_schema.table_lock_waits_summary_by_table.AVG_TIMER_READ_WITH_SHARED_LOCKS  20
+performance_schema.table_lock_waits_summary_by_table.MAX_TIMER_READ_WITH_SHARED_LOCKS  20
+performance_schema.table_lock_waits_summary_by_table.COUNT_READ_HIGH_PRIORITY          20
+performance_schema.table_lock_waits_summary_by_table.SUM_TIMER_READ_HIGH_PRIORITY      20
+performance_schema.table_lock_waits_summary_by_table.MIN_TIMER_READ_HIGH_PRIORITY      20
+performance_schema.table_lock_waits_summary_by_table.AVG_TIMER_READ_HIGH_PRIORITY      20
+performance_schema.table_lock_waits_summary_by_table.MAX_TIMER_READ_HIGH_PRIORITY      20
+performance_schema.table_lock_waits_summary_by_table.COUNT_READ_NO_INSERT              20
+performance_schema.table_lock_waits_summary_by_table.SUM_TIMER_READ_NO_INSERT          20
+performance_schema.table_lock_waits_summary_by_table.MIN_TIMER_READ_NO_INSERT          20
+performance_schema.table_lock_waits_summary_by_table.AVG_TIMER_READ_NO_INSERT          20
+performance_schema.table_lock_waits_summary_by_table.MAX_TIMER_READ_NO_INSERT          20
+performance_schema.table_lock_waits_summary_by_table.COUNT_READ_EXTERNAL               20
+performance_schema.table_lock_waits_summary_by_table.SUM_TIMER_READ_EXTERNAL           20
+performance_schema.table_lock_waits_summary_by_table.MIN_TIMER_READ_EXTERNAL           20
+performance_schema.table_lock_waits_summary_by_table.AVG_TIMER_READ_EXTERNAL           20
+performance_schema.table_lock_waits_summary_by_table.MAX_TIMER_READ_EXTERNAL           20
+performance_schema.table_lock_waits_summary_by_table.COUNT_WRITE_ALLOW_WRITE           20
+performance_schema.table_lock_waits_summary_by_table.SUM_TIMER_WRITE_ALLOW_WRITE       20
+performance_schema.table_lock_waits_summary_by_table.MIN_TIMER_WRITE_ALLOW_WRITE       20
+performance_schema.table_lock_waits_summary_by_table.AVG_TIMER_WRITE_ALLOW_WRITE       20
+performance_schema.table_lock_waits_summary_by_table.MAX_TIMER_WRITE_ALLOW_WRITE       20
+performance_schema.table_lock_waits_summary_by_table.COUNT_WRITE_CONCURRENT_INSERT     20
+performance_schema.table_lock_waits_summary_by_table.SUM_TIMER_WRITE_CONCURRENT_INSERT 20
+performance_schema.table_lock_waits_summary_by_table.MIN_TIMER_WRITE_CONCURRENT_INSERT 20
+performance_schema.table_lock_waits_summary_by_table.AVG_TIMER_WRITE_CONCURRENT_INSERT 20
+performance_schema.table_lock_waits_summary_by_table.MAX_TIMER_WRITE_CONCURRENT_INSERT 20
+performance_schema.table_lock_waits_summary_by_table.COUNT_WRITE_DELAYED               20
+performance_schema.table_lock_waits_summary_by_table.SUM_TIMER_WRITE_DELAYED           20
+performance_schema.table_lock_waits_summary_by_table.MIN_TIMER_WRITE_DELAYED           20
+performance_schema.table_lock_waits_summary_by_table.AVG_TIMER_WRITE_DELAYED           20
+performance_schema.table_lock_waits_summary_by_table.MAX_TIMER_WRITE_DELAYED           20
+performance_schema.table_lock_waits_summary_by_table.COUNT_WRITE_LOW_PRIORITY          20
+performance_schema.table_lock_waits_summary_by_table.SUM_TIMER_WRITE_LOW_PRIORITY      20
+performance_schema.table_lock_waits_summary_by_table.MIN_TIMER_WRITE_LOW_PRIORITY      20
+performance_schema.table_lock_waits_summary_by_table.AVG_TIMER_WRITE_LOW_PRIORITY      20
+performance_schema.table_lock_waits_summary_by_table.MAX_TIMER_WRITE_LOW_PRIORITY      20
+performance_schema.table_lock_waits_summary_by_table.COUNT_WRITE_NORMAL                20
+performance_schema.table_lock_waits_summary_by_table.SUM_TIMER_WRITE_NORMAL            20
+performance_schema.table_lock_waits_summary_by_table.MIN_TIMER_WRITE_NORMAL            20
+performance_schema.table_lock_waits_summary_by_table.AVG_TIMER_WRITE_NORMAL            20
+performance_schema.table_lock_waits_summary_by_table.MAX_TIMER_WRITE_NORMAL            20
+performance_schema.table_lock_waits_summary_by_table.COUNT_WRITE_EXTERNAL              20
+performance_schema.table_lock_waits_summary_by_table.SUM_TIMER_WRITE_EXTERNAL          20
+performance_schema.table_lock_waits_summary_by_table.MIN_TIMER_WRITE_EXTERNAL          20
+performance_schema.table_lock_waits_summary_by_table.AVG_TIMER_WRITE_EXTERNAL          20
+performance_schema.table_lock_waits_summary_by_table.MAX_TIMER_WRITE_EXTERNAL          20
+
+performance_schema.threads.THREAD_ID                   20
+performance_schema.threads.NAME                       128
+performance_schema.threads.TYPE                        10
+performance_schema.threads.PROCESSLIST_ID              20
+performance_schema.threads.PROCESSLIST_USER            16
+performance_schema.threads.PROCESSLIST_HOST            60
+performance_schema.threads.PROCESSLIST_DB              64
+performance_schema.threads.PROCESSLIST_COMMAND         16
+performance_schema.threads.PROCESSLIST_TIME            19
+performance_schema.threads.PROCESSLIST_STATE           64
+performance_schema.threads.PROCESSLIST_INFO    4294967295
+performance_schema.threads.PARENT_THREAD_ID            20
+performance_schema.threads.ROLE                        64
+
+performance_schema.users.USER                16
+performance_schema.users.CURRENT_CONNECTIONS 19
+performance_schema.users.TOTAL_CONNECTIONS   19
+
+rank_audit.ABC_BLOB.audit_timestamp  16
+rank_audit.ABC_BLOB.audit_uuid       20
+rank_audit.ABC_BLOB.audit_rownum     10
+rank_audit.ABC_BLOB.audit_ses_id     10
+rank_audit.ABC_BLOB.audit_usr_id     10
+rank_audit.ABC_BLOB.blb_id           10
+rank_audit.ABC_BLOB.cmp_id            5
+rank_audit.ABC_BLOB.bdt_id           10
+rank_audit.ABC_BLOB.blb_inserted     16
+rank_audit.ABC_BLOB.blb_crc32        10
+rank_audit.ABC_BLOB.blb_file_name   255
+rank_audit.ABC_BLOB.blb_mime_type    48
+
+rank_audit.AUT_COMPANY.audit_timestamp 16
+rank_audit.AUT_COMPANY.audit_uuid      20
+rank_audit.AUT_COMPANY.audit_rownum    10
+rank_audit.AUT_COMPANY.audit_ses_id    10
+rank_audit.AUT_COMPANY.audit_usr_id    10
+rank_audit.AUT_COMPANY.cmp_id           5
+rank_audit.AUT_COMPANY.cmp_abbr        16
+rank_audit.AUT_COMPANY.cmp_label       20
+rank_audit.AUT_COMPANY.q1              10
+rank_audit.AUT_COMPANY.q2              10
+
+rank_data.ABC_BLOB.blb_id         10
+rank_data.ABC_BLOB.cmp_id          5
+rank_data.ABC_BLOB.bdt_id         10
+rank_data.ABC_BLOB.blb_inserted   16
+rank_data.ABC_BLOB.blb_crc32      10
+rank_data.ABC_BLOB.blb_file_name 255
+rank_data.ABC_BLOB.blb_mime_type  48
+
+rank_data.ABC_BLOB_DATA.bdt_id                10
+rank_data.ABC_BLOB_DATA.cmp_id                 5
+rank_data.ABC_BLOB_DATA.bdt_inserted          16
+rank_data.ABC_BLOB_DATA.bdt_crc32             10
+rank_data.ABC_BLOB_DATA.bdt_size              10
+rank_data.ABC_BLOB_DATA.bdt_mime_type         48
+rank_data.ABC_BLOB_DATA.bdt_data      4294967295
+
+rank_data.AUT_COMPANY.cmp_id     5
+rank_data.AUT_COMPANY.cmp_abbr  15
+rank_data.AUT_COMPANY.cmp_label 20
+rank_data.AUT_COMPANY.q1        10
+rank_data.AUT_COMPANY.q2        10
+
+rank_data.AUT_CONFIG.cfg_id                  5
+rank_data.AUT_CONFIG.cmp_id                  5
+rank_data.AUT_CONFIG.ccl_id                  5
+rank_data.AUT_CONFIG.cfg_mandatory           3
+rank_data.AUT_CONFIG.cfg_show_to_company     3
+rank_data.AUT_CONFIG.cfg_modify_by_company   3
+rank_data.AUT_CONFIG.cfg_description       400
+rank_data.AUT_CONFIG.cfg_label              50
+
+rank_data.AUT_CONFIG_CLASS.ccl_id      5
+rank_data.AUT_CONFIG_CLASS.ccl_type   10
+rank_data.AUT_CONFIG_CLASS.ccl_class 128
+
+rank_data.AUT_CONFIG_VALUE.cmp_id       5
+rank_data.AUT_CONFIG_VALUE.cfg_id       5
+rank_data.AUT_CONFIG_VALUE.cfg_value 4000
+
+rank_data.AUT_CROSS_DOMAIN_REDIRECT.cdr_token1            64
+rank_data.AUT_CROSS_DOMAIN_REDIRECT.cdr_token2            64
+rank_data.AUT_CROSS_DOMAIN_REDIRECT.ses_id                10
+rank_data.AUT_CROSS_DOMAIN_REDIRECT.cdr_timestamp_created 16
+
+rank_data.AUT_FUNCTIONALITY.fun_id 5
+rank_data.AUT_FUNCTIONALITY.mdl_id 5
+rank_data.AUT_FUNCTIONALITY.wrd_id 5
+
+rank_data.AUT_LOGIN_RESPONSE.lgr_id     3
+rank_data.AUT_LOGIN_RESPONSE.wrd_id     5
+rank_data.AUT_LOGIN_RESPONSE.lgr_label 40
+
+rank_data.AUT_MENU.mnu_id      5
+rank_data.AUT_MENU.wrd_id      5
+rank_data.AUT_MENU.pag_id      5
+rank_data.AUT_MENU.mnu_level   3
+rank_data.AUT_MENU.mnu_group   5
+rank_data.AUT_MENU.mnu_weight  5
+rank_data.AUT_MENU.mnu_link   64
+
+rank_data.AUT_MODULE.mdl_id 5
+rank_data.AUT_MODULE.wrd_id 5
+
+rank_data.AUT_MODULE_COMPANY.cmp_id 5
+rank_data.AUT_MODULE_COMPANY.mdl_id 5
+
+rank_data.AUT_PAGE.pag_id       5
+rank_data.AUT_PAGE.pag_id_org   5
+rank_data.AUT_PAGE.ptb_id       3
+rank_data.AUT_PAGE.mnu_id       5
+rank_data.AUT_PAGE.wrd_id       5
+rank_data.AUT_PAGE.pag_alias   32
+rank_data.AUT_PAGE.pag_class  128
+rank_data.AUT_PAGE.pag_new    255
+rank_data.AUT_PAGE.pag_label  200
+rank_data.AUT_PAGE.pag_weight  10
+
+rank_data.AUT_PAGE_COMPANY.pag_id      5
+rank_data.AUT_PAGE_COMPANY.cmp_id      5
+rank_data.AUT_PAGE_COMPANY.pag_class 128
+
+rank_data.AUT_PAGE_TAB.ptb_id     3
+rank_data.AUT_PAGE_TAB.wrd_id     5
+rank_data.AUT_PAGE_TAB.ptb_label 30
+
+rank_data.AUT_PAG_FUN.pag_id 5
+rank_data.AUT_PAG_FUN.fun_id 5
+
+rank_data.AUT_ROLE.rol_id      5
+rank_data.AUT_ROLE.cmp_id      5
+rank_data.AUT_ROLE.rol_weight  5
+rank_data.AUT_ROLE.rol_name   32
+
+rank_data.AUT_ROL_FUN.rol_id 5
+rank_data.AUT_ROL_FUN.fun_id 5
+rank_data.AUT_ROL_FUN.cmp_id 5
+
+rank_data.AUT_SESSION.ses_id                 10
+rank_data.AUT_SESSION.cmp_id                  5
+rank_data.AUT_SESSION.usr_id                 10
+rank_data.AUT_SESSION.ses_session_token      64
+rank_data.AUT_SESSION.ses_csrf_token         64
+rank_data.AUT_SESSION.ses_start              16
+rank_data.AUT_SESSION.ses_last_request       16
+rank_data.AUT_SESSION.ses_number_of_requests  5
+
+rank_data.AUT_USER.usr_id            10
+rank_data.AUT_USER.cmp_id             5
+rank_data.AUT_USER.lan_id             3
+rank_data.AUT_USER.usr_name          64
+rank_data.AUT_USER.usr_password_hash 60
+rank_data.AUT_USER.usr_anonymous      3
+rank_data.AUT_USER.usr_blocked        3
+rank_data.AUT_USER.usr_last_login    16
+
+rank_data.AUT_USR_ROL.cmp_id          5
+rank_data.AUT_USR_ROL.usr_id         10
+rank_data.AUT_USR_ROL.rol_id          5
+rank_data.AUT_USR_ROL.aur_date_start 10
+rank_data.AUT_USR_ROL.aur_date_stop  10
+
+rank_data.BBL_LANGUAGE.lan_id                                3
+rank_data.BBL_LANGUAGE.wrd_id                                5
+rank_data.BBL_LANGUAGE.lan_code                              8
+rank_data.BBL_LANGUAGE.lan_locale                           12
+rank_data.BBL_LANGUAGE.lan_date_format_full                 12
+rank_data.BBL_LANGUAGE.lan_date_format_abbr1                12
+rank_data.BBL_LANGUAGE.lan_date_format_abbr2                12
+rank_data.BBL_LANGUAGE.lan_date_format_compact              12
+rank_data.BBL_LANGUAGE.lan_date_format_compact_weekday_abbr 16
+rank_data.BBL_LANGUAGE.lan_date_time_format_full            32
+
+rank_data.BBL_WORD.wrd_id         5
+rank_data.BBL_WORD.wdg_id         3
+rank_data.BBL_WORD.wrd_modified  16
+rank_data.BBL_WORD.wrd_comment  255
+rank_data.BBL_WORD.wrd_label     50
+
+rank_data.BBL_WORD_GROUP.wdg_id     3
+rank_data.BBL_WORD_GROUP.wdg_name  32
+rank_data.BBL_WORD_GROUP.wdg_label 30
+
+rank_data.BBL_WORD_TEXT.wrd_id        5
+rank_data.BBL_WORD_TEXT.lan_id        3
+rank_data.BBL_WORD_TEXT.wdt_text     80
+rank_data.BBL_WORD_TEXT.wdt_modified 16
+
+rank_data.BBL_WORD_TRANSLATE_HISTORY.wrd_id         5
+rank_data.BBL_WORD_TRANSLATE_HISTORY.lan_id         3
+rank_data.BBL_WORD_TRANSLATE_HISTORY.usr_id        10
+rank_data.BBL_WORD_TRANSLATE_HISTORY.wth_datetime  16
+rank_data.BBL_WORD_TRANSLATE_HISTORY.wth_text     255
+
+rank_data.DEV_UUID_KEY.uid_table_name 64
+rank_data.DEV_UUID_KEY.uid_key        19
+rank_data.DEV_UUID_KEY.uid_uuid       32
+
+rank_data.ELM_ATTRIBUTE.mat_id     3
+rank_data.ELM_ATTRIBUTE.mat_label 30
+
+rank_data.ELM_AUTHORIZED_DOMAIN.atd_domain_name 32
+
+rank_data.KNAS_PARTICIPANT_CONSTANT.pct_id    5
+rank_data.KNAS_PARTICIPANT_CONSTANT.cmp_id    5
+rank_data.KNAS_PARTICIPANT_CONSTANT.sg1_id    5
+rank_data.KNAS_PARTICIPANT_CONSTANT.sg2_id    5
+rank_data.KNAS_PARTICIPANT_CONSTANT.sg3_id    5
+rank_data.KNAS_PARTICIPANT_CONSTANT.sss_id    5
+rank_data.KNAS_PARTICIPANT_CONSTANT.pct_value 5
+
+rank_data.KNAS_POINTS.psc_id     5
+rank_data.KNAS_POINTS.pnt_place  5
+rank_data.KNAS_POINTS.pnt_points 5
+
+rank_data.KNAS_POINTS_SCHEME.sss_id 5
+rank_data.KNAS_POINTS_SCHEME.psc_id 5
+
+rank_data.KNAS_POINTS_SCHEME_POOL.psc_id       5
+rank_data.KNAS_POINTS_SCHEME_POOL.psc_name    40
+rank_data.KNAS_POINTS_SCHEME_POOL.psc_default  3
+rank_data.KNAS_POINTS_SCHEME_POOL.psc_label   40
+
+rank_data.KNAS_RANK_LIST_ENTRY.rke_id     10
+rank_data.KNAS_RANK_LIST_ENTRY.rl2_id      7
+rank_data.KNAS_RANK_LIST_ENTRY.rrl_id      7
+rank_data.KNAS_RANK_LIST_ENTRY.rke_points  5
+rank_data.KNAS_RANK_LIST_ENTRY.rke_rank    5
+
+rank_data.KNAS_RANK_LIST_NODE.rkn_id        10
+rank_data.KNAS_RANK_LIST_NODE.rl2_id         7
+rank_data.KNAS_RANK_LIST_NODE.rrl_id         7
+rank_data.KNAS_RANK_LIST_NODE.trn_id         7
+rank_data.KNAS_RANK_LIST_NODE.rkn_points     5
+rank_data.KNAS_RANK_LIST_NODE.rkn_rank       5
+rank_data.KNAS_RANK_LIST_NODE.rkn_essential  3
+
+rank_data.KNAS_RANK_LIST_RELEASE.rrl_id          7
+rank_data.KNAS_RANK_LIST_RELEASE.blb_id_compact 10
+rank_data.KNAS_RANK_LIST_RELEASE.blb_id_full    10
+rank_data.KNAS_RANK_LIST_RELEASE.rlp_id          5
+rank_data.KNAS_RANK_LIST_RELEASE.rls_id          5
+rank_data.KNAS_RANK_LIST_RELEASE.sss_id          5
+rank_data.KNAS_RANK_LIST_RELEASE.rrl_date       10
+rank_data.KNAS_RANK_LIST_RELEASE.rrl_published   3
+
+rank_data.KNAS_RANK_LIST_RELEASE_REVISION.krv_id          5
+rank_data.KNAS_RANK_LIST_RELEASE_REVISION.cmp_id          5
+rank_data.KNAS_RANK_LIST_RELEASE_REVISION.blb_id_compact 10
+rank_data.KNAS_RANK_LIST_RELEASE_REVISION.blb_id_full    10
+rank_data.KNAS_RANK_LIST_RELEASE_REVISION.blb_id_data    10
+rank_data.KNAS_RANK_LIST_RELEASE_REVISION.rrl_id          7
+rank_data.KNAS_RANK_LIST_RELEASE_REVISION.krv_date       10
+rank_data.KNAS_RANK_LIST_RELEASE_REVISION.krv_revision    5
+
+rank_data.KNAS_RANK_LIST_WORLD_TOP.rl2_id     7
+rank_data.KNAS_RANK_LIST_WORLD_TOP.rls_id     5
+rank_data.KNAS_RANK_LIST_WORLD_TOP.sss_id     5
+rank_data.KNAS_RANK_LIST_WORLD_TOP.rwt_rank   5
+rank_data.KNAS_RANK_LIST_WORLD_TOP.rwt_points 5
+
+rank_data.KNAS_RRL_TRN.trn_id 7
+rank_data.KNAS_RRL_TRN.rrl_id 7
+
+rank_data.KNAS_TOURNAMENT.trn_id           7
+rank_data.KNAS_TOURNAMENT.cnt_id           5
+rank_data.KNAS_TOURNAMENT.sg1_id           5
+rank_data.KNAS_TOURNAMENT.sg2_id           5
+rank_data.KNAS_TOURNAMENT.sg3_id           5
+rank_data.KNAS_TOURNAMENT.sg4_id           5
+rank_data.KNAS_TOURNAMENT.tp1_id           3
+rank_data.KNAS_TOURNAMENT.tp2_id           3
+rank_data.KNAS_TOURNAMENT.trn_id_previous  7
+rank_data.KNAS_TOURNAMENT.trn_name        40
+rank_data.KNAS_TOURNAMENT.trn_location    40
+rank_data.KNAS_TOURNAMENT.trn_date        10
+rank_data.KNAS_TOURNAMENT.trn_percentage   3
+
+rank_data.KNAS_TOURNAMENT_ATTACHMENT.kta_id      7
+rank_data.KNAS_TOURNAMENT_ATTACHMENT.trn_id      7
+rank_data.KNAS_TOURNAMENT_ATTACHMENT.blb_id     10
+rank_data.KNAS_TOURNAMENT_ATTACHMENT.kta_public  3
+
+rank_data.KNAS_TOURNAMENT_LINK.trl_id   7
+rank_data.KNAS_TOURNAMENT_LINK.trn_id   7
+rank_data.KNAS_TOURNAMENT_LINK.trl_url 80
+rank_data.KNAS_TOURNAMENT_LINK.trl_tag 10
+
+rank_data.KNAS_TOURNAMENT_RESULT.trs_id   7
+rank_data.KNAS_TOURNAMENT_RESULT.rl2_id   7
+rank_data.KNAS_TOURNAMENT_RESULT.trn_id   7
+rank_data.KNAS_TOURNAMENT_RESULT.trs_rank 5
+
+rank_data.KNAS_TOURNAMENT_SUPP.trn_id                   7
+rank_data.KNAS_TOURNAMENT_SUPP.psc_id                   5
+rank_data.KNAS_TOURNAMENT_SUPP.sss_id                   5
+rank_data.KNAS_TOURNAMENT_SUPP.trn_sum_x               22
+rank_data.KNAS_TOURNAMENT_SUPP.trn_m                   22
+rank_data.KNAS_TOURNAMENT_SUPP.trn_k                   22
+rank_data.KNAS_TOURNAMENT_SUPP.trn_n                   22
+rank_data.KNAS_TOURNAMENT_SUPP.trn_c                   22
+rank_data.KNAS_TOURNAMENT_SUPP.trn_p                   22
+rank_data.KNAS_TOURNAMENT_SUPP.trn_f1                  22
+rank_data.KNAS_TOURNAMENT_SUPP.trn_f2                  22
+rank_data.KNAS_TOURNAMENT_SUPP.trn_f3                  22
+rank_data.KNAS_TOURNAMENT_SUPP.trn_percentage_computed 22
+rank_data.KNAS_TOURNAMENT_SUPP.trn_factor1             22
+rank_data.KNAS_TOURNAMENT_SUPP.trn_percentage          22
+rank_data.KNAS_TOURNAMENT_SUPP.trn_cutoff               5
+
+rank_data.KNAS_TOURNAMENT_TYPE1.tp1_id      3
+rank_data.KNAS_TOURNAMENT_TYPE1.tp1_name   40
+rank_data.KNAS_TOURNAMENT_TYPE1.tp1_weight  3
+rank_data.KNAS_TOURNAMENT_TYPE1.tp1_label  40
+
+rank_data.KNAS_TOURNAMENT_TYPE2.tp2_id      3
+rank_data.KNAS_TOURNAMENT_TYPE2.tp2_name   40
+rank_data.KNAS_TOURNAMENT_TYPE2.tp2_weight  3
+rank_data.KNAS_TOURNAMENT_TYPE2.tp2_label  40
+
+rank_data.LOG_EVENT.lev_id       10
+rank_data.LOG_EVENT.cmp_id        5
+rank_data.LOG_EVENT.usr_id       10
+rank_data.LOG_EVENT.let_id        3
+rank_data.LOG_EVENT.lgr_id        3
+rank_data.LOG_EVENT.ses_id       10
+rank_data.LOG_EVENT.lev_datetime 16
+rank_data.LOG_EVENT.lev_ip       10
+rank_data.LOG_EVENT.lev_arg1     64
+rank_data.LOG_EVENT.lev_arg2     64
+
+rank_data.LOG_EVENT_TYPE.let_id     3
+rank_data.LOG_EVENT_TYPE.wrd_id     5
+rank_data.LOG_EVENT_TYPE.let_label 50
+
+rank_data.LOG_LOGIN.lli_id           10
+rank_data.LOG_LOGIN.ses_id           10
+rank_data.LOG_LOGIN.lgr_id            3
+rank_data.LOG_LOGIN.cmp_id            5
+rank_data.LOG_LOGIN.usr_id           10
+rank_data.LOG_LOGIN.llg_datetime     16
+rank_data.LOG_LOGIN.llg_user_name    64
+rank_data.LOG_LOGIN.llg_company_abbr 15
+
+rank_data.LOG_REQUEST.rql_id                 10
+rank_data.LOG_REQUEST.cmp_id                  5
+rank_data.LOG_REQUEST.pag_id                  5
+rank_data.LOG_REQUEST.ses_id                 10
+rank_data.LOG_REQUEST.usr_id                 10
+rank_data.LOG_REQUEST.rql_datetime           16
+rank_data.LOG_REQUEST.rql_request           255
+rank_data.LOG_REQUEST.rql_method              8
+rank_data.LOG_REQUEST.rql_referer           255
+rank_data.LOG_REQUEST.rql_ip                 10
+rank_data.LOG_REQUEST.rql_host_name          80
+rank_data.LOG_REQUEST.rql_language           64
+rank_data.LOG_REQUEST.rql_user_agent        255
+rank_data.LOG_REQUEST.rql_number_of_queries   5
+rank_data.LOG_REQUEST.rql_time               12
+rank_data.LOG_REQUEST.rql_size                7
+
+rank_data.LOG_REQUEST_COOKIE.rql_id             10
+rank_data.LOG_REQUEST_COOKIE.rcl_variable      255
+rank_data.LOG_REQUEST_COOKIE.rcl_value    16777215
+
+rank_data.LOG_REQUEST_POST.rql_id             10
+rank_data.LOG_REQUEST_POST.rlp_variable      255
+rank_data.LOG_REQUEST_POST.rlp_value    16777215
+
+rank_data.LOG_REQUEST_QUERY.rqq_id            10
+rank_data.LOG_REQUEST_QUERY.rql_id            10
+rank_data.LOG_REQUEST_QUERY.rqq_query   16777215
+rank_data.LOG_REQUEST_QUERY.rqq_time          12
+rank_data.LOG_REQUEST_QUERY.rqq_routine       64
+
+rank_data.LOG_SESSION.ses_id       10
+rank_data.LOG_SESSION.ses_datetime 16
+
+rank_data.RNK_AGE_GROUP_CROSSING.cmp_id             5
+rank_data.RNK_AGE_GROUP_CROSSING.sg1_id_participant 5
+rank_data.RNK_AGE_GROUP_CROSSING.sg1_id_rank_list   5
+rank_data.RNK_AGE_GROUP_CROSSING.sg1_id_tournament  5
+
+rank_data.RNK_COUNTRY.cnt_id        5
+rank_data.RNK_COUNTRY.wrd_id        5
+rank_data.RNK_COUNTRY.cnt_iso_abbr2 2
+rank_data.RNK_COUNTRY.cnt_iso_abbr3 3
+rank_data.RNK_COUNTRY.cnt_ioc_abbr  3
+
+rank_data.RNK_DOCUMENT.doc_id      7
+rank_data.RNK_DOCUMENT.cmp_id      5
+rank_data.RNK_DOCUMENT.blb_id     10
+rank_data.RNK_DOCUMENT.doc_number 10
+
+rank_data.RNK_MEMBERSHIP1.ms1_id              10
+rank_data.RNK_MEMBERSHIP1.cmp_id               5
+rank_data.RNK_MEMBERSHIP1.rl1_id_member        7
+rank_data.RNK_MEMBERSHIP1.rl1_id_organization  7
+rank_data.RNK_MEMBERSHIP1.ms1_date_start      10
+rank_data.RNK_MEMBERSHIP1.ms1_date_stop       10
+
+rank_data.RNK_MEMBERSHIP3.ms3_id              10
+rank_data.RNK_MEMBERSHIP3.cmp_id               5
+rank_data.RNK_MEMBERSHIP3.rl3_id_member        7
+rank_data.RNK_MEMBERSHIP3.rl3_id_organization  7
+rank_data.RNK_MEMBERSHIP3.ms3_date_start      10
+rank_data.RNK_MEMBERSHIP3.ms3_date_stop       10
+
+rank_data.RNK_RANK_LIST.rls_id       5
+rank_data.RNK_RANK_LIST.cmp_id       5
+rank_data.RNK_RANK_LIST.rlg_id       5
+rank_data.RNK_RANK_LIST.sg1_id       5
+rank_data.RNK_RANK_LIST.sg2_id       5
+rank_data.RNK_RANK_LIST.sg3_id       5
+rank_data.RNK_RANK_LIST.sg4_id       5
+rank_data.RNK_RANK_LIST.rls_name    40
+rank_data.RNK_RANK_LIST.rls_rolling  3
+rank_data.RNK_RANK_LIST.rls_enabled  3
+
+rank_data.RNK_RANK_LIST_GROUP.rlg_id      5
+rank_data.RNK_RANK_LIST_GROUP.cmp_id      5
+rank_data.RNK_RANK_LIST_GROUP.rlg_name   40
+rank_data.RNK_RANK_LIST_GROUP.rlg_weight  5
+rank_data.RNK_RANK_LIST_GROUP.rlg_label  40
+
+rank_data.RNK_RANK_LIST_PERIOD.rlp_id          5
+rank_data.RNK_RANK_LIST_PERIOD.cmp_id          5
+rank_data.RNK_RANK_LIST_PERIOD.rls_id          5
+rank_data.RNK_RANK_LIST_PERIOD.rlp_date_start 10
+rank_data.RNK_RANK_LIST_PERIOD.rlp_date_stop  10
+rank_data.RNK_RANK_LIST_PERIOD.rlp_name       40
+
+rank_data.RNK_RANK_LIST_SUB_GROUP1.sg1_id      5
+rank_data.RNK_RANK_LIST_SUB_GROUP1.cmp_id      5
+rank_data.RNK_RANK_LIST_SUB_GROUP1.sg1_name   40
+rank_data.RNK_RANK_LIST_SUB_GROUP1.sg1_weight  5
+rank_data.RNK_RANK_LIST_SUB_GROUP1.sg1_label  40
+
+rank_data.RNK_RANK_LIST_SUB_GROUP2.sg2_id      5
+rank_data.RNK_RANK_LIST_SUB_GROUP2.cmp_id      5
+rank_data.RNK_RANK_LIST_SUB_GROUP2.sg2_name   40
+rank_data.RNK_RANK_LIST_SUB_GROUP2.sg2_weight  5
+rank_data.RNK_RANK_LIST_SUB_GROUP2.sg2_label  40
+
+rank_data.RNK_RANK_LIST_SUB_GROUP3.sg3_id      5
+rank_data.RNK_RANK_LIST_SUB_GROUP3.cmp_id      5
+rank_data.RNK_RANK_LIST_SUB_GROUP3.sg3_name   40
+rank_data.RNK_RANK_LIST_SUB_GROUP3.sg3_weight  5
+rank_data.RNK_RANK_LIST_SUB_GROUP3.sg3_label  40
+
+rank_data.RNK_RANK_LIST_SUB_GROUP4.sg4_id      5
+rank_data.RNK_RANK_LIST_SUB_GROUP4.cmp_id      5
+rank_data.RNK_RANK_LIST_SUB_GROUP4.sg4_name   40
+rank_data.RNK_RANK_LIST_SUB_GROUP4.sg4_weight  5
+rank_data.RNK_RANK_LIST_SUB_GROUP4.sg4_label  40
+
+rank_data.RNK_RELATION1.rl1_id                       7
+rank_data.RNK_RELATION1.cmp_id                       5
+rank_data.RNK_RELATION1.cnt_id                       5
+rank_data.RNK_RELATION1.rl2_id                       7
+rank_data.RNK_RELATION1.rl1_type_code                5
+rank_data.RNK_RELATION1.rl1_name                    80
+rank_data.RNK_RELATION1.rl1_prefix                  15
+rank_data.RNK_RELATION1.rl1_first_name              40
+rank_data.RNK_RELATION1.rl1_gender                   1
+rank_data.RNK_RELATION1.rl1_birthday                10
+rank_data.RNK_RELATION1.rl1_registration_number_nat 12
+rank_data.RNK_RELATION1.rl1_registration_number_int 12
+rank_data.RNK_RELATION1.rl1_date_start              10
+rank_data.RNK_RELATION1.rl1_date_stop               10
+
+rank_data.RNK_RELATION2.rl2_id                       7
+rank_data.RNK_RELATION2.cmp_id                       5
+rank_data.RNK_RELATION2.cnt_id                       5
+rank_data.RNK_RELATION2.rl1_id                       7
+rank_data.RNK_RELATION2.rl2_type_code                5
+rank_data.RNK_RELATION2.rl2_name                    80
+rank_data.RNK_RELATION2.rl2_prefix                  15
+rank_data.RNK_RELATION2.rl2_first_name              40
+rank_data.RNK_RELATION2.rl2_gender                   1
+rank_data.RNK_RELATION2.rl2_birthday                10
+rank_data.RNK_RELATION2.rl2_registration_number_nat 12
+rank_data.RNK_RELATION2.rl2_registration_number_int 12
+
+rank_data.RNK_RELATION3.rl3_id                       7
+rank_data.RNK_RELATION3.cmp_id                       5
+rank_data.RNK_RELATION3.cnt_id                       5
+rank_data.RNK_RELATION3.rl3_type_code                5
+rank_data.RNK_RELATION3.rl3_name                    80
+rank_data.RNK_RELATION3.rl3_prefix                  15
+rank_data.RNK_RELATION3.rl3_first_name              40
+rank_data.RNK_RELATION3.rl3_gender                   1
+rank_data.RNK_RELATION3.rl3_birthday                10
+rank_data.RNK_RELATION3.rl3_registration_number_nat 12
+rank_data.RNK_RELATION3.rl3_registration_number_int 12
+
+rank_data.RNK_SUBSYSTEM.sss_id          5
+rank_data.RNK_SUBSYSTEM.cmp_id          5
+rank_data.RNK_SUBSYSTEM.sys_id          5
+rank_data.RNK_SUBSYSTEM.sss_name       40
+rank_data.RNK_SUBSYSTEM.sss_default     3
+rank_data.RNK_SUBSYSTEM.sss_weight      5
+rank_data.RNK_SUBSYSTEM.sss_date_start 10
+rank_data.RNK_SUBSYSTEM.sss_date_stop  10
+
+rank_data.RNK_SUBSYSTEM_COMPATIBILITY.cmp_id          5
+rank_data.RNK_SUBSYSTEM_COMPATIBILITY.sss_id_current  5
+rank_data.RNK_SUBSYSTEM_COMPATIBILITY.sss_id_previous 5
+
+rank_data.RNK_SYSTEM.sys_id       5
+rank_data.RNK_SYSTEM.cmp_id       5
+rank_data.RNK_SYSTEM.sys_name    40
+rank_data.RNK_SYSTEM.sys_class  128
+rank_data.RNK_SYSTEM.sys_weight   5
+
+rank_data.Test_table.my_id      10
+rank_data.Test_table.my_column  10
+rank_data.Test_table.my_column2 10
+
+rank_new.ABC_BLOB.blb_id         10
+rank_new.ABC_BLOB.cmp_id          5
+rank_new.ABC_BLOB.bdt_id         10
+rank_new.ABC_BLOB.blb_inserted   16
+rank_new.ABC_BLOB.blb_crc32      10
+rank_new.ABC_BLOB.blb_file_name 255
+rank_new.ABC_BLOB.blb_mime_type  48
+rank_new.ABC_BLOB.blb_size       10
+
+rank_new.ABC_BLOB_DATA.bdt_id                10
+rank_new.ABC_BLOB_DATA.cmp_id                 5
+rank_new.ABC_BLOB_DATA.bdt_inserted          16
+rank_new.ABC_BLOB_DATA.bdt_crc32             10
+rank_new.ABC_BLOB_DATA.bdt_size              10
+rank_new.ABC_BLOB_DATA.bdt_mime_type         48
+rank_new.ABC_BLOB_DATA.bdt_data      4294967295
+
+rank_new.AUT_COMPANY.cmp_id     5
+rank_new.AUT_COMPANY.cmp_abbr  15
+rank_new.AUT_COMPANY.cmp_label 20
+
+rank_new.AUT_CONFIG.cfg_id                  5
+rank_new.AUT_CONFIG.cmp_id                  5
+rank_new.AUT_CONFIG.ccl_id                  5
+rank_new.AUT_CONFIG.cfg_mandatory           3
+rank_new.AUT_CONFIG.cfg_show_to_company     3
+rank_new.AUT_CONFIG.cfg_modify_by_company   3
+rank_new.AUT_CONFIG.cfg_description       400
+rank_new.AUT_CONFIG.cfg_label              48
+
+rank_new.AUT_CONFIG_CLASS.ccl_id      5
+rank_new.AUT_CONFIG_CLASS.ccl_type   10
+rank_new.AUT_CONFIG_CLASS.ccl_class 128
+
+rank_new.AUT_CONFIG_VALUE.cmp_id       5
+rank_new.AUT_CONFIG_VALUE.cfg_id       5
+rank_new.AUT_CONFIG_VALUE.cfg_value 4000
+
+rank_new.AUT_CROSS_DOMAIN_REDIRECT.cdr_token1            64
+rank_new.AUT_CROSS_DOMAIN_REDIRECT.cdr_token2            64
+rank_new.AUT_CROSS_DOMAIN_REDIRECT.ses_id                10
+rank_new.AUT_CROSS_DOMAIN_REDIRECT.cdr_timestamp_created 16
+
+rank_new.AUT_FUNCTIONALITY.fun_id 5
+rank_new.AUT_FUNCTIONALITY.mdl_id 5
+rank_new.AUT_FUNCTIONALITY.wrd_id 5
+
+rank_new.AUT_LOGIN_RESPONSE.lgr_id     3
+rank_new.AUT_LOGIN_RESPONSE.wrd_id     5
+rank_new.AUT_LOGIN_RESPONSE.lgr_label 40
+
+rank_new.AUT_MENU.mnu_id      5
+rank_new.AUT_MENU.wrd_id      5
+rank_new.AUT_MENU.pag_id      5
+rank_new.AUT_MENU.mnu_level   3
+rank_new.AUT_MENU.mnu_group   5
+rank_new.AUT_MENU.mnu_weight  5
+rank_new.AUT_MENU.mnu_link   64
+
+rank_new.AUT_MODULE.mdl_id 5
+rank_new.AUT_MODULE.wrd_id 5
+
+rank_new.AUT_MODULE_COMPANY.cmp_id 5
+rank_new.AUT_MODULE_COMPANY.mdl_id 5
+
+rank_new.AUT_PAGE.pag_id       5
+rank_new.AUT_PAGE.pag_id_org   5
+rank_new.AUT_PAGE.ptb_id       3
+rank_new.AUT_PAGE.mnu_id       5
+rank_new.AUT_PAGE.wrd_id       5
+rank_new.AUT_PAGE.pag_class  128
+rank_new.AUT_PAGE.pag_label  128
+rank_new.AUT_PAGE.pag_weight  10
+
+rank_new.AUT_PAGE_COMPANY.pag_id      5
+rank_new.AUT_PAGE_COMPANY.cmp_id      5
+rank_new.AUT_PAGE_COMPANY.pag_class 128
+
+rank_new.AUT_PAGE_TAB.ptb_id     3
+rank_new.AUT_PAGE_TAB.wrd_id     5
+rank_new.AUT_PAGE_TAB.ptb_label 32
+
+rank_new.AUT_PAG_FUN.pag_id 5
+rank_new.AUT_PAG_FUN.fun_id 5
+
+rank_new.AUT_ROLE.rol_id      5
+rank_new.AUT_ROLE.cmp_id      5
+rank_new.AUT_ROLE.rol_weight  5
+rank_new.AUT_ROLE.rol_name   32
+
+rank_new.AUT_ROL_FUN.rol_id 5
+rank_new.AUT_ROL_FUN.fun_id 5
+rank_new.AUT_ROL_FUN.cmp_id 5
+
+rank_new.AUT_SESSION.ses_id                 10
+rank_new.AUT_SESSION.cmp_id                  5
+rank_new.AUT_SESSION.usr_id                 10
+rank_new.AUT_SESSION.ses_session_token      64
+rank_new.AUT_SESSION.ses_csrf_token         64
+rank_new.AUT_SESSION.ses_start              16
+rank_new.AUT_SESSION.ses_last_request       16
+rank_new.AUT_SESSION.ses_number_of_requests  5
+
+rank_new.AUT_USER.usr_id            10
+rank_new.AUT_USER.cmp_id             5
+rank_new.AUT_USER.lan_id             3
+rank_new.AUT_USER.usr_name          64
+rank_new.AUT_USER.usr_password_hash 60
+rank_new.AUT_USER.usr_anonymous      3
+rank_new.AUT_USER.usr_blocked        3
+
+rank_new.AUT_USR_ROL.cmp_id          5
+rank_new.AUT_USR_ROL.usr_id         10
+rank_new.AUT_USR_ROL.rol_id          5
+rank_new.AUT_USR_ROL.aur_date_start 10
+rank_new.AUT_USR_ROL.aur_date_stop  10
+
+rank_new.BBL_LANGUAGE.lan_id                                3
+rank_new.BBL_LANGUAGE.wrd_id                                5
+rank_new.BBL_LANGUAGE.lan_code                              8
+rank_new.BBL_LANGUAGE.lan_locale                           12
+rank_new.BBL_LANGUAGE.lan_date_format_full                 12
+rank_new.BBL_LANGUAGE.lan_date_format_abbr1                12
+rank_new.BBL_LANGUAGE.lan_date_format_abbr2                12
+rank_new.BBL_LANGUAGE.lan_date_format_compact              12
+rank_new.BBL_LANGUAGE.lan_date_format_compact_weekday_abbr 16
+rank_new.BBL_LANGUAGE.lan_date_time_format_full            32
+
+rank_new.BBL_WORD.wrd_id         5
+rank_new.BBL_WORD.wdg_id         3
+rank_new.BBL_WORD.wrd_modified  16
+rank_new.BBL_WORD.wrd_comment  255
+rank_new.BBL_WORD.wrd_label     48
+
+rank_new.BBL_WORD_GROUP.wdg_id     3
+rank_new.BBL_WORD_GROUP.wdg_name  32
+rank_new.BBL_WORD_GROUP.wdg_label 32
+
+rank_new.BBL_WORD_TEXT.wrd_id        5
+rank_new.BBL_WORD_TEXT.lan_id        3
+rank_new.BBL_WORD_TEXT.wdt_text     80
+rank_new.BBL_WORD_TEXT.wdt_modified 16
+
+rank_new.BBL_WORD_TRANSLATE_HISTORY.wrd_id         5
+rank_new.BBL_WORD_TRANSLATE_HISTORY.lan_id         3
+rank_new.BBL_WORD_TRANSLATE_HISTORY.usr_id        10
+rank_new.BBL_WORD_TRANSLATE_HISTORY.wth_datetime  16
+rank_new.BBL_WORD_TRANSLATE_HISTORY.wth_text     255
+
+rank_new.DEV_UUID_KEY.uid_table_name 64
+rank_new.DEV_UUID_KEY.uid_key        19
+rank_new.DEV_UUID_KEY.uid_uuid       32
+
+rank_new.ELM_ATTRIBUTE.mat_id     3
+rank_new.ELM_ATTRIBUTE.mat_label 32
+
+rank_new.ELM_AUTHORIZED_DOMAIN.atd_domain_name 32
+
+rank_new.KNAS_PARTICIPANT_CONSTANT.pct_id    5
+rank_new.KNAS_PARTICIPANT_CONSTANT.cmp_id    5
+rank_new.KNAS_PARTICIPANT_CONSTANT.sg1_id    5
+rank_new.KNAS_PARTICIPANT_CONSTANT.sg2_id    5
+rank_new.KNAS_PARTICIPANT_CONSTANT.sg3_id    5
+rank_new.KNAS_PARTICIPANT_CONSTANT.sss_id    5
+rank_new.KNAS_PARTICIPANT_CONSTANT.pct_value 5
+
+rank_new.KNAS_POINTS.psc_id     5
+rank_new.KNAS_POINTS.pnt_place  5
+rank_new.KNAS_POINTS.pnt_points 5
+
+rank_new.KNAS_POINTS_SCHEME.sss_id 5
+rank_new.KNAS_POINTS_SCHEME.psc_id 5
+
+rank_new.KNAS_POINTS_SCHEME_POOL.psc_id       5
+rank_new.KNAS_POINTS_SCHEME_POOL.psc_name    40
+rank_new.KNAS_POINTS_SCHEME_POOL.psc_default  3
+rank_new.KNAS_POINTS_SCHEME_POOL.psc_label   40
+
+rank_new.KNAS_RANK_LIST_ENTRY.rke_id     10
+rank_new.KNAS_RANK_LIST_ENTRY.rl2_id      7
+rank_new.KNAS_RANK_LIST_ENTRY.rrl_id      7
+rank_new.KNAS_RANK_LIST_ENTRY.rke_points  5
+rank_new.KNAS_RANK_LIST_ENTRY.rke_rank    5
+
+rank_new.KNAS_RANK_LIST_NODE.rkn_id        10
+rank_new.KNAS_RANK_LIST_NODE.rl2_id         7
+rank_new.KNAS_RANK_LIST_NODE.rrl_id         7
+rank_new.KNAS_RANK_LIST_NODE.trn_id         7
+rank_new.KNAS_RANK_LIST_NODE.rkn_points     5
+rank_new.KNAS_RANK_LIST_NODE.rkn_rank       5
+rank_new.KNAS_RANK_LIST_NODE.rkn_essential  3
+
+rank_new.KNAS_RANK_LIST_RELEASE.rrl_id          7
+rank_new.KNAS_RANK_LIST_RELEASE.blb_id_compact 10
+rank_new.KNAS_RANK_LIST_RELEASE.blb_id_full    10
+rank_new.KNAS_RANK_LIST_RELEASE.rls_id          5
+rank_new.KNAS_RANK_LIST_RELEASE.sss_id          5
+rank_new.KNAS_RANK_LIST_RELEASE.rrl_date       10
+rank_new.KNAS_RANK_LIST_RELEASE.rrl_published   3
+
+rank_new.KNAS_RANK_LIST_RELEASE_REVISION.krv_id          5
+rank_new.KNAS_RANK_LIST_RELEASE_REVISION.cmp_id          5
+rank_new.KNAS_RANK_LIST_RELEASE_REVISION.blb_id_compact 10
+rank_new.KNAS_RANK_LIST_RELEASE_REVISION.blb_id_full    10
+rank_new.KNAS_RANK_LIST_RELEASE_REVISION.blb_id_data    10
+rank_new.KNAS_RANK_LIST_RELEASE_REVISION.rrl_id          7
+rank_new.KNAS_RANK_LIST_RELEASE_REVISION.krv_date       10
+rank_new.KNAS_RANK_LIST_RELEASE_REVISION.krv_revision    5
+
+rank_new.KNAS_RANK_LIST_WORLD_TOP.rl2_id     7
+rank_new.KNAS_RANK_LIST_WORLD_TOP.rls_id     5
+rank_new.KNAS_RANK_LIST_WORLD_TOP.sss_id     5
+rank_new.KNAS_RANK_LIST_WORLD_TOP.rwt_rank   5
+rank_new.KNAS_RANK_LIST_WORLD_TOP.rwt_points 5
+
+rank_new.KNAS_RRL_TRN.trn_id 7
+rank_new.KNAS_RRL_TRN.rrl_id 7
+
+rank_new.KNAS_TOURNAMENT.trn_id           7
+rank_new.KNAS_TOURNAMENT.cnt_id           5
+rank_new.KNAS_TOURNAMENT.sg1_id           5
+rank_new.KNAS_TOURNAMENT.sg2_id           5
+rank_new.KNAS_TOURNAMENT.sg3_id           5
+rank_new.KNAS_TOURNAMENT.sg4_id           5
+rank_new.KNAS_TOURNAMENT.tp1_id           3
+rank_new.KNAS_TOURNAMENT.tp2_id           3
+rank_new.KNAS_TOURNAMENT.trn_id_previous  7
+rank_new.KNAS_TOURNAMENT.trn_name        40
+rank_new.KNAS_TOURNAMENT.trn_location    40
+rank_new.KNAS_TOURNAMENT.trn_date        10
+rank_new.KNAS_TOURNAMENT.trn_percentage   3
+
+rank_new.KNAS_TOURNAMENT_ATTACHMENT.kta_id      7
+rank_new.KNAS_TOURNAMENT_ATTACHMENT.trn_id      7
+rank_new.KNAS_TOURNAMENT_ATTACHMENT.blb_id     10
+rank_new.KNAS_TOURNAMENT_ATTACHMENT.kta_public  3
+
+rank_new.KNAS_TOURNAMENT_LINK.trl_id   7
+rank_new.KNAS_TOURNAMENT_LINK.trn_id   7
+rank_new.KNAS_TOURNAMENT_LINK.trl_url 80
+rank_new.KNAS_TOURNAMENT_LINK.trl_tag 10
+
+rank_new.KNAS_TOURNAMENT_RESULT.trs_id   7
+rank_new.KNAS_TOURNAMENT_RESULT.rl2_id   7
+rank_new.KNAS_TOURNAMENT_RESULT.trn_id   7
+rank_new.KNAS_TOURNAMENT_RESULT.trs_rank 5
+
+rank_new.KNAS_TOURNAMENT_SUPP.trn_id                   7
+rank_new.KNAS_TOURNAMENT_SUPP.psc_id                   5
+rank_new.KNAS_TOURNAMENT_SUPP.sss_id                   5
+rank_new.KNAS_TOURNAMENT_SUPP.trn_sum_x               22
+rank_new.KNAS_TOURNAMENT_SUPP.trn_m                   22
+rank_new.KNAS_TOURNAMENT_SUPP.trn_k                   22
+rank_new.KNAS_TOURNAMENT_SUPP.trn_n                   22
+rank_new.KNAS_TOURNAMENT_SUPP.trn_c                   22
+rank_new.KNAS_TOURNAMENT_SUPP.trn_p                   22
+rank_new.KNAS_TOURNAMENT_SUPP.trn_f1                  22
+rank_new.KNAS_TOURNAMENT_SUPP.trn_f2                  22
+rank_new.KNAS_TOURNAMENT_SUPP.trn_f3                  22
+rank_new.KNAS_TOURNAMENT_SUPP.trn_percentage_computed 22
+rank_new.KNAS_TOURNAMENT_SUPP.trn_percentage          22
+rank_new.KNAS_TOURNAMENT_SUPP.trn_cutoff               5
+
+rank_new.KNAS_TOURNAMENT_TYPE1.tp1_id      3
+rank_new.KNAS_TOURNAMENT_TYPE1.tp1_name   40
+rank_new.KNAS_TOURNAMENT_TYPE1.tp1_weight  3
+rank_new.KNAS_TOURNAMENT_TYPE1.tp1_label  40
+
+rank_new.KNAS_TOURNAMENT_TYPE2.tp2_id      3
+rank_new.KNAS_TOURNAMENT_TYPE2.tp2_name   40
+rank_new.KNAS_TOURNAMENT_TYPE2.tp2_weight  3
+rank_new.KNAS_TOURNAMENT_TYPE2.tp2_label  40
+
+rank_new.LOG_EVENT.lev_id       10
+rank_new.LOG_EVENT.cmp_id        5
+rank_new.LOG_EVENT.usr_id       10
+rank_new.LOG_EVENT.let_id        3
+rank_new.LOG_EVENT.ses_id       10
+rank_new.LOG_EVENT.lgr_id        3
+rank_new.LOG_EVENT.lev_datetime 16
+rank_new.LOG_EVENT.lev_ip       10
+rank_new.LOG_EVENT.lev_arg1     64
+rank_new.LOG_EVENT.lev_arg2     64
+
+rank_new.LOG_EVENT_TYPE.let_id     3
+rank_new.LOG_EVENT_TYPE.wrd_id     5
+rank_new.LOG_EVENT_TYPE.let_label 48
+
+rank_new.LOG_LOGIN.lli_id           10
+rank_new.LOG_LOGIN.ses_id           10
+rank_new.LOG_LOGIN.lgr_id            3
+rank_new.LOG_LOGIN.cmp_id            5
+rank_new.LOG_LOGIN.usr_id           10
+rank_new.LOG_LOGIN.llg_date_time    16
+rank_new.LOG_LOGIN.llg_user_name    64
+rank_new.LOG_LOGIN.llg_company_abbr 15
+
+rank_new.LOG_REQUEST.rql_id                 10
+rank_new.LOG_REQUEST.cmp_id                  5
+rank_new.LOG_REQUEST.pag_id                  5
+rank_new.LOG_REQUEST.ses_id                 10
+rank_new.LOG_REQUEST.usr_id                 10
+rank_new.LOG_REQUEST.rql_datetime           16
+rank_new.LOG_REQUEST.rql_request           255
+rank_new.LOG_REQUEST.rql_method              8
+rank_new.LOG_REQUEST.rql_referer           255
+rank_new.LOG_REQUEST.rql_ip                 10
+rank_new.LOG_REQUEST.rql_host_name          80
+rank_new.LOG_REQUEST.rql_language           64
+rank_new.LOG_REQUEST.rql_user_agent        255
+rank_new.LOG_REQUEST.rql_number_of_queries   5
+rank_new.LOG_REQUEST.rql_time               12
+rank_new.LOG_REQUEST.rql_size                7
+
+rank_new.LOG_REQUEST_COOKIE.rql_id             10
+rank_new.LOG_REQUEST_COOKIE.rcl_variable      255
+rank_new.LOG_REQUEST_COOKIE.rcl_value    16777215
+
+rank_new.LOG_REQUEST_POST.rql_id             10
+rank_new.LOG_REQUEST_POST.rlp_variable      255
+rank_new.LOG_REQUEST_POST.rlp_value    16777215
+
+rank_new.LOG_REQUEST_QUERY.rqq_id            10
+rank_new.LOG_REQUEST_QUERY.rql_id            10
+rank_new.LOG_REQUEST_QUERY.rqq_query   16777215
+rank_new.LOG_REQUEST_QUERY.rqq_time          12
+rank_new.LOG_REQUEST_QUERY.rqq_routine       64
+
+rank_new.LOG_SESSION.ses_id       10
+rank_new.LOG_SESSION.ses_datetime 16
+
+rank_new.RNK_AGE_GROUP_CROSSING.cmp_id             5
+rank_new.RNK_AGE_GROUP_CROSSING.sg1_id_participant 5
+rank_new.RNK_AGE_GROUP_CROSSING.sg1_id_rank_list   5
+rank_new.RNK_AGE_GROUP_CROSSING.sg1_id_tournament  5
+
+rank_new.RNK_COUNTRY.cnt_id        5
+rank_new.RNK_COUNTRY.wrd_id        5
+rank_new.RNK_COUNTRY.cnt_iso_abbr2 2
+rank_new.RNK_COUNTRY.cnt_iso_abbr3 3
+rank_new.RNK_COUNTRY.cnt_ioc_abbr  3
+
+rank_new.RNK_DOCUMENT.doc_id      7
+rank_new.RNK_DOCUMENT.cmp_id      5
+rank_new.RNK_DOCUMENT.blb_id     10
+rank_new.RNK_DOCUMENT.doc_number 10
+
+rank_new.RNK_MEMBERSHIP1.ms1_id              10
+rank_new.RNK_MEMBERSHIP1.cmp_id               5
+rank_new.RNK_MEMBERSHIP1.rl1_id_member        7
+rank_new.RNK_MEMBERSHIP1.rl1_id_organization  7
+rank_new.RNK_MEMBERSHIP1.ms1_date_start      10
+rank_new.RNK_MEMBERSHIP1.ms1_date_stop       10
+
+rank_new.RNK_MEMBERSHIP3.ms3_id              10
+rank_new.RNK_MEMBERSHIP3.cmp_id               5
+rank_new.RNK_MEMBERSHIP3.rl3_id_member        7
+rank_new.RNK_MEMBERSHIP3.rl3_id_organization  7
+rank_new.RNK_MEMBERSHIP3.ms3_date_start      10
+rank_new.RNK_MEMBERSHIP3.ms3_date_stop       10
+
+rank_new.RNK_RANK_LIST.rls_id       5
+rank_new.RNK_RANK_LIST.cmp_id       5
+rank_new.RNK_RANK_LIST.rlg_id       5
+rank_new.RNK_RANK_LIST.sg1_id       5
+rank_new.RNK_RANK_LIST.sg2_id       5
+rank_new.RNK_RANK_LIST.sg3_id       5
+rank_new.RNK_RANK_LIST.sg4_id       5
+rank_new.RNK_RANK_LIST.rls_name    40
+rank_new.RNK_RANK_LIST.rls_rolling  3
+
+rank_new.RNK_RANK_LIST_GROUP.rlg_id      5
+rank_new.RNK_RANK_LIST_GROUP.cmp_id      5
+rank_new.RNK_RANK_LIST_GROUP.rlg_name   40
+rank_new.RNK_RANK_LIST_GROUP.rlg_weight  5
+rank_new.RNK_RANK_LIST_GROUP.rlg_label  40
+
+rank_new.RNK_RANK_LIST_PERIOD.rlp_id          5
+rank_new.RNK_RANK_LIST_PERIOD.cmp_id          5
+rank_new.RNK_RANK_LIST_PERIOD.rls_id          5
+rank_new.RNK_RANK_LIST_PERIOD.rlp_date_start 10
+rank_new.RNK_RANK_LIST_PERIOD.rlp_date_stop  10
+rank_new.RNK_RANK_LIST_PERIOD.rlp_name       40
+
+rank_new.RNK_RANK_LIST_SUB_GROUP1.sg1_id      5
+rank_new.RNK_RANK_LIST_SUB_GROUP1.cmp_id      5
+rank_new.RNK_RANK_LIST_SUB_GROUP1.sg1_name   40
+rank_new.RNK_RANK_LIST_SUB_GROUP1.sg1_weight  5
+rank_new.RNK_RANK_LIST_SUB_GROUP1.sg1_label  40
+
+rank_new.RNK_RANK_LIST_SUB_GROUP2.sg2_id      5
+rank_new.RNK_RANK_LIST_SUB_GROUP2.cmp_id      5
+rank_new.RNK_RANK_LIST_SUB_GROUP2.sg2_name   40
+rank_new.RNK_RANK_LIST_SUB_GROUP2.sg2_weight  5
+rank_new.RNK_RANK_LIST_SUB_GROUP2.sg2_label  40
+
+rank_new.RNK_RANK_LIST_SUB_GROUP3.sg3_id      5
+rank_new.RNK_RANK_LIST_SUB_GROUP3.cmp_id      5
+rank_new.RNK_RANK_LIST_SUB_GROUP3.sg3_name   40
+rank_new.RNK_RANK_LIST_SUB_GROUP3.sg3_weight  5
+rank_new.RNK_RANK_LIST_SUB_GROUP3.sg3_label  40
+
+rank_new.RNK_RANK_LIST_SUB_GROUP4.sg4_id      5
+rank_new.RNK_RANK_LIST_SUB_GROUP4.cmp_id      5
+rank_new.RNK_RANK_LIST_SUB_GROUP4.sg4_name   40
+rank_new.RNK_RANK_LIST_SUB_GROUP4.sg4_weight  5
+rank_new.RNK_RANK_LIST_SUB_GROUP4.sg4_label  40
+
+rank_new.RNK_RELATION1.rl1_id                       7
+rank_new.RNK_RELATION1.cmp_id                       5
+rank_new.RNK_RELATION1.cnt_id                       5
+rank_new.RNK_RELATION1.rl2_id                       7
+rank_new.RNK_RELATION1.rl1_type_code                5
+rank_new.RNK_RELATION1.rl1_name                    80
+rank_new.RNK_RELATION1.rl1_prefix                  15
+rank_new.RNK_RELATION1.rl1_first_name              40
+rank_new.RNK_RELATION1.rl1_gender                   1
+rank_new.RNK_RELATION1.rl1_birthday                10
+rank_new.RNK_RELATION1.rl1_registration_number_nat 12
+rank_new.RNK_RELATION1.rl1_registration_number_int 12
+rank_new.RNK_RELATION1.rl1_date_start              10
+rank_new.RNK_RELATION1.rl1_date_stop               10
+
+rank_new.RNK_RELATION2.rl2_id                       7
+rank_new.RNK_RELATION2.cmp_id                       5
+rank_new.RNK_RELATION2.cnt_id                       5
+rank_new.RNK_RELATION2.rl1_id                       7
+rank_new.RNK_RELATION2.rl2_type_code                5
+rank_new.RNK_RELATION2.rl2_name                    80
+rank_new.RNK_RELATION2.rl2_prefix                  15
+rank_new.RNK_RELATION2.rl2_first_name              40
+rank_new.RNK_RELATION2.rl2_gender                   1
+rank_new.RNK_RELATION2.rl2_birthday                10
+rank_new.RNK_RELATION2.rl2_registration_number_nat 12
+rank_new.RNK_RELATION2.rl2_registration_number_int 12
+
+rank_new.RNK_RELATION3.rl3_id                       7
+rank_new.RNK_RELATION3.cmp_id                       5
+rank_new.RNK_RELATION3.cnt_id                       5
+rank_new.RNK_RELATION3.rl3_type_code                5
+rank_new.RNK_RELATION3.rl3_name                    80
+rank_new.RNK_RELATION3.rl3_prefix                  15
+rank_new.RNK_RELATION3.rl3_first_name              40
+rank_new.RNK_RELATION3.rl3_gender                   1
+rank_new.RNK_RELATION3.rl3_birthday                10
+rank_new.RNK_RELATION3.rl3_registration_number_nat 12
+rank_new.RNK_RELATION3.rl3_registration_number_int 12
+
+rank_new.RNK_SUBSYSTEM.sss_id          5
+rank_new.RNK_SUBSYSTEM.cmp_id          5
+rank_new.RNK_SUBSYSTEM.sys_id          5
+rank_new.RNK_SUBSYSTEM.sss_name       40
+rank_new.RNK_SUBSYSTEM.sss_default     3
+rank_new.RNK_SUBSYSTEM.sss_weight      5
+rank_new.RNK_SUBSYSTEM.sss_date_start 10
+rank_new.RNK_SUBSYSTEM.sss_date_stop  10
+
+rank_new.RNK_SUBSYSTEM_COMPATIBILITY.cmp_id          5
+rank_new.RNK_SUBSYSTEM_COMPATIBILITY.sss_id_current  5
+rank_new.RNK_SUBSYSTEM_COMPATIBILITY.sss_id_previous 5
+
+rank_new.RNK_SYSTEM.sys_id       5
+rank_new.RNK_SYSTEM.cmp_id       5
+rank_new.RNK_SYSTEM.sys_name    40
+rank_new.RNK_SYSTEM.sys_class  128
+rank_new.RNK_SYSTEM.sys_weight   5
+
 test.TST_FOO1.tst_c00         10
 test.TST_FOO1.tst_c01          5
 test.TST_FOO1.tst_c02          3
@@ -943,4 +3757,31 @@ test.TST_TABLE.tst_c03 10
 test.TST_TABLE.tst_c04 16
 test.TST_TABLE.t       10
 test.TST_TABLE.s       10
+
+test_audit.TABLE1.audit_timestamp 16
+test_audit.TABLE1.audit_uuid      20
+test_audit.TABLE1.audit_rownum    10
+test_audit.TABLE1.audit_ses_id    10
+test_audit.TABLE1.audit_usr_id    10
+test_audit.TABLE1.c               10
+
+test_audit.TABLE2.audit_timestamp 16
+test_audit.TABLE2.audit_uuid      20
+test_audit.TABLE2.audit_rownum    10
+test_audit.TABLE2.audit_ses_id    10
+test_audit.TABLE2.audit_usr_id    10
+test_audit.TABLE2.c               10
+
+test_audit.TABLE3.audit_timestamp 16
+test_audit.TABLE3.audit_uuid      20
+test_audit.TABLE3.audit_rownum    10
+test_audit.TABLE3.audit_ses_id    10
+test_audit.TABLE3.audit_usr_id    10
+test_audit.TABLE3.c               10
+
+test_data.TABLE1.c 10
+
+test_data.TABLE2.c 10
+
+test_data.TABLE3.c 10
 
