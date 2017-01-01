@@ -142,6 +142,8 @@ class RoutineLoaderCommand extends MySqlCommand
   {
     $this->io = new StratumStyle($input, $output);
 
+    $this->io->title('Loader');
+
     $configFileName = $input->getArgument('config file');
     $file_names     = $input->getArgument('sources');
     $settings       = $this->readConfigFile($configFileName);
@@ -422,8 +424,6 @@ class RoutineLoaderCommand extends MySqlCommand
    */
   private function loadAll()
   {
-    $this->io->title('Loader');
-
     $this->findSourceFiles();
     $this->detectNameConflicts();
     $this->getColumnTypes();
@@ -454,8 +454,6 @@ class RoutineLoaderCommand extends MySqlCommand
    */
   private function loadList($fileNames)
   {
-    $this->io->title('Loader');
-
     $this->findSourceFilesFromList($fileNames);
     $this->detectNameConflicts();
     $this->getColumnTypes();

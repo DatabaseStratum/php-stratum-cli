@@ -282,7 +282,7 @@ union all
     $query = sprintf('set sql_mode = %s', self::$dl->quoteString($sqlMode));
     self::executeNone($query);
 
-    $query = 'select @@sql_mode;';
+    $query = 'select @@sql_mode';
 
     return (string)self::executeSingleton1($query);
   }

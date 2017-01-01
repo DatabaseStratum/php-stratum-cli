@@ -21,7 +21,7 @@ class RowsWithIndexWrapper extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * @return string
+   * {@inheritdoc}
    */
   protected function getDocBlockReturnType()
   {

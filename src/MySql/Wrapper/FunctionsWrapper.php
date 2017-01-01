@@ -20,7 +20,7 @@ class FunctionsWrapper extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * @return string
+   * {@inheritdoc}
    */
   protected function getDocBlockReturnType()
   {

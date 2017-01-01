@@ -19,7 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Command for creating PHP constants based on column widths, and auto increment columns and labels.
+ * Command for creating PHP constants based on column widths, auto increment columns and labels.
  */
 class ConstantsCommand extends MySqlCommand
 {
@@ -524,7 +524,7 @@ class ConstantsCommand extends MySqlCommand
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Insert new and replace old (if any) constant declaration statements in a PHP source file.
+   * Inserts new and replace old (if any) constant declaration statements in a PHP source file.
    */
   private function writeConstantClass()
   {

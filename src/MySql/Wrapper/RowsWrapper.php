@@ -20,7 +20,7 @@ class RowsWrapper extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * @return string
+   * {@inheritdoc}
    */
   protected function getDocBlockReturnType()
   {

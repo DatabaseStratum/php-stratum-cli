@@ -6,7 +6,7 @@ use SetBased\Exception\RuntimeException;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Exception for situations where the result (set) a query does not meet the expectations. Either a mismatch between
+ * Exception for situations where the result (set) of a query does not meet the expectations. Either a mismatch between
  * the actual and expected numbers of rows selected or an unexpected NULL value was selected.
  */
 class ResultException extends RuntimeException
@@ -98,7 +98,7 @@ class ResultException extends RuntimeException
    *
    * @param int    $expectedRowCount The expected number of rows selected.
    * @param int    $actualRowCount   The actual number of rows selected.
-   * @param string $query            The SQL query
+   * @param string $query            The SQL query.
    *
    * @return string
    */
