@@ -35,28 +35,22 @@ class UpdateRoutine extends BaseRoutine
     }
 
     reset($set);
-    $first   = key($set);
-    $lines[] = 'set';
+    $first          = key($set);
+    $lines[]        = 'set';
+    $lengthLastLine = 0;
     foreach ($set as $key => $column)
     {
       if ($key===$first)
       {
-        $format = sprintf("%%%ds %%s = p_%%s", 3);
-        $line   = sprintf($format, '', $column['column_name'], $column['column_name']);
-        if ($column!=end($set))
-        {
-          $line .= ',';
-        }
+        $lengthLastLine = strlen($lines[count($lines) - 1]);
+        $format         = sprintf("%%%ds %%s = p_%%s", $lengthLastLine);
+        $line           = sprintf($format, '', $column['column_name'], $column['column_name']);
         $lines[count($lines) - 1] .= $line;
       }
       else
       {
-        $format = sprintf("%%%ds %%s = p_%%s", 6);
-        $line   = sprintf($format, '', $column['column_name'], $column['column_name']);
-        if ($column!=end($set))
-        {
-          $line .= ',';
-        }
+        $format  = sprintf("%%-%ds %%s = p_%%s", $lengthLastLine + 3);
+        $line    = sprintf($format, ',', $column['column_name'], $column['column_name']);
         $lines[] = $line;
       }
     }
