@@ -4,7 +4,7 @@ namespace SetBased\Stratum\MySql\Helper\Crud;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Select routine.
+ * Generates the code for a stored routine that deletes a row.
  */
 class DeleteRoutine extends BaseRoutine
 {
@@ -12,43 +12,40 @@ class DeleteRoutine extends BaseRoutine
   /**
    * Generate body part.
    *
-   * @param array[]  $columns Columns from table.
-   * @param array[]  $params  Params for where block.
-   * @param string[] $lines   Stored procedure code lines.
+   * @param array[] $columns Columns from table.
+   * @param array[] $params  Params for where block.
    */
-  protected function bodyPart($params, $columns, &$lines)
+  protected function generateBody($params, $columns)
   {
-    $lines[]       = sprintf('delete from %s', $this->tableName);
     $uniqueColumns = $this->checkUniqueKeys($columns);
-    $limit         = false;
-    if (!isset($uniqueColumns))
-    {
-      $limit = true;
-    }
+    $limit         = ($uniqueColumns==null);
 
-    reset($params);
-    $first   = key($params);
-    $lines[] = 'where';
-    foreach ($params as $key => $column)
+    $this->codeStore->append(sprintf('delete from %s', $this->tableName));
+    $this->codeStore->append('where');
+
+    $first = true;
+    foreach ($params as $column)
     {
-      if ($key===$first)
+      if ($first)
       {
         $format = sprintf("%%%ds %%s = p_%%s", 1);
-        $line   = sprintf($format, '', $column['column_name'], $column['column_name']);
-        $lines[count($lines) - 1] .= $line;
+        $this->codeStore->appendToLastLine(sprintf($format, '', $column['column_name'], $column['column_name']));
       }
       else
       {
-        $format  = sprintf("and%%%ds %%s = p_%%s", 3);
-        $line    = sprintf($format, '', $column['column_name'], $column['column_name']);
-        $lines[] = $line;
+        $format = sprintf("and%%%ds %%s = p_%%s", 3);
+        $this->codeStore->append(sprintf($format, '', $column['column_name'], $column['column_name']));
       }
+
+      $first = false;
     }
+
     if ($limit)
     {
-      $lines[] = 'limit 0,1';
+      $this->codeStore->append('limit 0,1');
     }
-    $lines[] = ';';
+
+    $this->codeStore->append(';');
   }
 
   //--------------------------------------------------------------------------------------------------------------------

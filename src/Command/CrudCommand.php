@@ -2,7 +2,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\Command;
 
-use SetBased\Helper\CodeStore\MySqlCompoundSyntaxCodeStore;
+use SetBased\Exception\FallenException;
 use SetBased\Stratum\MySql\DataLayer;
 use SetBased\Stratum\MySql\Helper\Crud\DeleteRoutine;
 use SetBased\Stratum\MySql\Helper\Crud\InsertRoutine;
@@ -69,13 +69,6 @@ class CrudCommand extends BaseCommand
    */
   private $sourceDirectory;
 
-  /**
-   * Stored procedure code.
-   *
-   * @var MySqlCompoundSyntaxCodeStore
-   */
-  private $storedProcedureCode;
-
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * {@inheritdoc}
@@ -86,7 +79,6 @@ class CrudCommand extends BaseCommand
          ->setDescription('This is an interactive command for generating stored procedures for CRUD operations.')
          ->addArgument('config file', InputArgument::OPTIONAL, 'The audit configuration file')
          ->addOption('tables', 't', InputOption::VALUE_NONE, 'Show all tables');
-
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -121,7 +113,6 @@ class CrudCommand extends BaseCommand
     $this->startAsking($tableList);
 
     DataLayer::disconnect();
-
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -174,39 +165,61 @@ class CrudCommand extends BaseCommand
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Generate code for stored procedure.
+   * Generate code for stored routine.
    *
    * @param string $tableName The table name.
-   * @param string $spType    Stored procedure type {insert|update|delete|select}.
-   * @param string $spName    Stored procedure name.
+   * @param string $spType    Stored routine type {insert|update|delete|select}.
+   * @param string $spName    Stored routine name.
    *
    * @return string
    */
   private function generateSP($tableName, $spType, $spName)
   {
-    $this->storedProcedureCode = new MySqlCompoundSyntaxCodeStore();
-
     switch ($spType)
     {
       case 'UPDATE':
-        $routine = new UpdateRoutine($this->input, $this->output, $this->helper, $spType, $spName, $tableName, $this->dataSchema);
-        $this->storedProcedureCode->append($routine->getCode(), false);
+        $routine = new UpdateRoutine($this->input,
+                                     $this->output,
+                                     $this->helper,
+                                     $spType,
+                                     $spName,
+                                     $tableName,
+                                     $this->dataSchema);
         break;
+
       case 'DELETE':
-        $routine = new DeleteRoutine($this->input, $this->output, $this->helper, $spType, $spName, $tableName, $this->dataSchema);
-        $this->storedProcedureCode->append($routine->getCode(), false);
+        $routine = new DeleteRoutine($this->input,
+                                     $this->output,
+                                     $this->helper,
+                                     $spType, $spName,
+                                     $tableName,
+                                     $this->dataSchema);
         break;
+
       case 'SELECT':
-        $routine = new SelectRoutine($this->input, $this->output, $this->helper, $spType, $spName, $tableName, $this->dataSchema);
-        $this->storedProcedureCode->append($routine->getCode(), false);
+        $routine = new SelectRoutine($this->input,
+                                     $this->output,
+                                     $this->helper,
+                                     $spType, $spName,
+                                     $tableName,
+                                     $this->dataSchema);
         break;
+
       case 'INSERT':
-        $routine = new InsertRoutine($this->input, $this->output, $this->helper, $spType, $spName, $tableName, $this->dataSchema);
-        $this->storedProcedureCode->append($routine->getCode(), false);
+        $routine = new InsertRoutine($this->input,
+                                     $this->output,
+                                     $this->helper,
+                                     $spType,
+                                     $spName,
+                                     $tableName,
+                                     $this->dataSchema);
         break;
+
+      default:
+        throw new FallenException("Unknown type '%s'", $spType);
     }
 
-    return $this->storedProcedureCode->getCode();
+    return $routine->getCode();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -265,7 +278,7 @@ class CrudCommand extends BaseCommand
     $key = StaticDataLayer::searchInRowSet('table_name', $tableName, $tableList);
     if (!isset($key))
     {
-      $this->io->logNote('Table \'%s\' not exist.', $tableName);
+      $this->io->logNote("Table '%s' not exist.", $tableName);
     }
     else
     {

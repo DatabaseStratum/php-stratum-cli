@@ -3,64 +3,60 @@
 namespace SetBased\Stratum\MySql\Helper\Crud;
 
 //----------------------------------------------------------------------------------------------------------------------
-
 /**
- * Select routine.
+ * Generates the code for a stored routine that selects a row.
  */
 class SelectRoutine extends BaseRoutine
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Generate body part.
-   *
-   * @param array[]  $columns Columns from table.
-   * @param array[]  $params  Params for where block.
-   * @param string[] $lines   Stored procedure code lines.
+   * {@inheritdoc}
    */
-  protected function bodyPart($params, $columns, &$lines)
+  protected function generateBody($params, $columns)
   {
-    $lengthLastLine = 0;
-    reset($columns);
-    $first   = key($columns);
-    $lines[] = 'select ';
+    $this->codeStore->append('select');
+    $offset = mb_strlen($this->codeStore->getLastLine());
+
+    $first = true;
     foreach ($columns as $key => $column)
     {
-      if ($key===$first)
+      if ($first)
       {
-        $line           = sprintf('%s', $column['column_name']);
-        $lengthLastLine = strlen($lines[count($lines) - 1]);
-        $lines[count($lines) - 1] .= $line;
+        $this->codeStore->appendToLastLine(sprintf(' %s', $column['column_name']));
       }
       else
       {
-        $format  = sprintf("%%-%ds %%s", $lengthLastLine - 1);
-        $line    = sprintf($format, ',', $column['column_name']);
-        $lines[] = $line;
+        $format = sprintf("%%-%ds %%s", $offset);
+        $this->codeStore->append(sprintf($format, ',', $column['column_name']));
       }
+
+      $first = false;
     }
-    $lines[] = sprintf('from %s', $this->tableName);
-    reset($params);
-    $first   = key($params);
-    $lines[] = 'where';
+
+    $this->codeStore->append(sprintf('from %s', $this->tableName));
+    $this->codeStore->append('where');
+
+    $first = true;
     foreach ($params as $key => $column)
     {
-      if ($key===$first)
+      if ($first)
       {
         $format = sprintf("%%%ds %%s = p_%%s", 1);
-        $line   = sprintf($format, '', $column['column_name'], $column['column_name']);
-        $lines[count($lines) - 1] .= $line;
+        $this->codeStore->appendToLastLine(sprintf($format, '', $column['column_name'], $column['column_name']));
       }
       else
       {
-        $format  = sprintf("and%%%ds %%s = p_%%s", 3);
-        $line    = sprintf($format, '', $column['column_name'], $column['column_name']);
-        $lines[] = $line;
+        $format = sprintf("and%%%ds %%s = p_%%s", 3);
+        $this->codeStore->append(sprintf($format, '', $column['column_name'], $column['column_name']));
       }
-    }
-    $lines[] = ';';
-  }
-  //--------------------------------------------------------------------------------------------------------------------
 
+      $first = false;
+    }
+
+    $this->codeStore->append(';');
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
 }
 
 //----------------------------------------------------------------------------------------------------------------------

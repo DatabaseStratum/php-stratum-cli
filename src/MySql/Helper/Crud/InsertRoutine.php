@@ -3,75 +3,74 @@
 namespace SetBased\Stratum\MySql\Helper\Crud;
 
 //----------------------------------------------------------------------------------------------------------------------
-
 /**
- * Select routine.
+ * Generates the code for a stored routine that inserts a row.
  */
 class InsertRoutine extends BaseRoutine
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Generate body part.
-   *
-   * @param array[]  $columns Columns from table.
-   * @param array[]  $params  Params for where block.
-   * @param string[] $lines   Stored procedure code lines.
+   * {@inheritdoc}
    */
-  protected function bodyPart($params, $columns, &$lines)
+  protected function generateBody($params, $columns)
   {
-    $padding        = $this->getMaxColumnLength($columns);
-    $lengthLastLine = 0;
-    reset($columns);
-    $first   = key($columns);
-    $lines[] = sprintf('insert into %s( ', $this->tableName);
-    foreach ($columns as $key => $column)
+    $padding = $this->getMaxColumnLength($columns);
+
+    $this->codeStore->append(sprintf('insert into %s(', $this->tableName));
+    $offset = mb_strlen($this->codeStore->getLastLine());
+
+    $first = true;
+    foreach ($columns as $column)
     {
-      if ($key===$first)
+      if ($first)
       {
-        $line           = sprintf('%s', $column['column_name']);
-        $lengthLastLine = strlen($lines[count($lines) - 1]);
-        $lines[count($lines) - 1] .= $line;
+        $this->codeStore->appendToLastLine(sprintf(' %s', $column['column_name']));
       }
       else
       {
-        $format = sprintf("%%-%ds%%s", $lengthLastLine, $padding);
-        $line   = sprintf($format, ',', $column['column_name']);
+        $format = sprintf('%%-%ds %%s', $offset, $padding);
+        $this->codeStore->append(sprintf($format, ',', $column['column_name']));
         if ($column===end($columns))
         {
-          $line .= ' ) ';
+          $this->codeStore->appendToLastLine(' )');
         }
-        $lines[] = $line;
       }
+
+      $first = false;
     }
 
-    $lines[] = 'values( ';
-    foreach ($columns as $key => $column)
+    $this->codeStore->append('values(');
+    $offset = mb_strlen($this->codeStore->getLastLine());
+
+    $first = true;
+    foreach ($columns as $column)
     {
-      if ($key===$first)
+      if ($first)
       {
-        $line           = sprintf('p_%s', $column['column_name']);
-        $lengthLastLine = strlen($lines[count($lines) - 1]);
-        $lines[count($lines) - 1] .= $line;
+        $this->codeStore->appendToLastLine(sprintf(' p_%s', $column['column_name']));
       }
       else
       {
-        $format = sprintf("%%-%ds p_%%-%ds", $lengthLastLine - 1, $padding);
-        $line   = sprintf($format, ',', $column['column_name']);
+        $format = sprintf('%%-%ds p_%%-%ds', $offset, $padding);
+        $this->codeStore->append(sprintf($format, ',', $column['column_name']));
         if ($column===end($columns))
         {
-          $line .= ' ) ';
+          $this->codeStore->appendToLastLine(' )');
         }
-        $lines[] = $line;
       }
+
+      $first = false;
     }
-    $lines[] = ';';
+    $this->codeStore->append(';');
+
     if ($this->checkAutoIncrement($columns))
     {
-      $lines[] = '';
-      $lines[] = 'select last_insert_id();';
+      $this->codeStore->append('');
+      $this->codeStore->append('select last_insert_id();');
     }
   }
-  //--------------------------------------------------------------------------------------------------------------------
 
+  //--------------------------------------------------------------------------------------------------------------------
 }
+
 //--------------------------------------------------------------------------------------------------------------------

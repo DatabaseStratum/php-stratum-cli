@@ -2,6 +2,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\MySql\Helper\Crud;
 
+use SetBased\Exception\FallenException;
 use SetBased\Helper\CodeStore\MySqlCompoundSyntaxCodeStore;
 use SetBased\Stratum\MySql\DataLayer;
 use SetBased\Stratum\MySql\StaticDataLayer;
@@ -13,12 +14,20 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 
+//----------------------------------------------------------------------------------------------------------------------
 /**
- * Base class for routine.
+ * Abstract parent class for classes for generating CRUD stored routines.
  */
-class BaseRoutine
+abstract class BaseRoutine
 {
   //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * The code of the generated stored routine.
+   *
+   * @var MySqlCompoundSyntaxCodeStore
+   */
+  protected $codeStore;
+
   /**
    * The data schema.
    *
@@ -52,7 +61,7 @@ class BaseRoutine
    *
    * @var array[]
    */
-  protected $paramaters;
+  protected $parameters;
 
   /**
    * The stored procedure name
@@ -67,13 +76,6 @@ class BaseRoutine
    * @var string
    */
   protected $spType;
-
-  /**
-   * Stored procedure code.
-   *
-   * @var MySqlCompoundSyntaxCodeStore
-   */
-  protected $storedProcedureCode;
 
   /**
    * Metadata about the columns of the table.
@@ -120,7 +122,7 @@ class BaseRoutine
     $this->spType     = $spType;
     $this->tableName  = $tableName;
 
-    $this->storedProcedureCode = new MySqlCompoundSyntaxCodeStore();
+    $this->codeStore = new MySqlCompoundSyntaxCodeStore();
 
     $tableColumns = DataLayer::getTableColumns($this->dataSchema, $this->tableName);
     $params       = [];
@@ -141,40 +143,34 @@ class BaseRoutine
         $this->generateDocBlock($tableColumns);
         $this->generateMainPart($tableColumns);
         break;
+
       default:
         $this->generateDocBlock($params);
         $this->generateMainPart($params);
     }
 
-    $this->generateBodyPart($params, $tableColumns);
+    $this->modifiesPart($this->checkAutoIncrement($tableColumns));
+    $this->codeStore->append('begin');
+
+    $this->generateBody($params, $tableColumns);
+
+    $this->codeStore->append('end');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Get code.
+   * Returns the generated code of the stored routine.
    *
    * @return string
    */
   public function getCode()
   {
-    return $this->storedProcedureCode->getCode();
+    return $this->codeStore->getCode();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Generate body part.
-   *
-   * @param array[]  $columns Columns from table.
-   * @param array[]  $params  Params for where block.
-   * @param string[] $lines   Stored procedure code lines.
-   */
-  protected function bodyPart($params, $columns, &$lines)
-  {
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Check if table have auto_increment column.
+   * Checks if the table has a auto_increment column.
    *
    * @param array[] $columns Columns from table.
    *
@@ -269,7 +265,9 @@ class BaseRoutine
           $table->setRows($tableArray);
           $table->render();
 
-          $question   = new Question(sprintf('What unique keys use in statement?(%s): ', $uniqueKeys[$first]['Key_name']), $uniqueKeys[$first]['Key_name']);
+          $question   = new Question(sprintf('What unique keys use in statement?(%s): ',
+                                             $uniqueKeys[$first]['Key_name']),
+                                     $uniqueKeys[$first]['Key_name']);
           $uniqueKeys = $this->helper->ask($this->input, $this->output, $question);
           $uniqueKeys = explode(',', $array[$uniqueKeys]);
           foreach ($uniqueKeys as $column)
@@ -298,83 +296,89 @@ class BaseRoutine
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Generate comments for stored procedure.
+   * Generates the body of the stored routine.
+   *
+   * @param array[] $columns Columns from table.
+   * @param array[] $params  Params for where block.
+   */
+  abstract protected function generateBody($params, $columns);
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Generates the doc block for the stored routine.
    *
    * @param array[] $columns Columns from table.
    */
   protected function generateDocBlock($columns)
   {
-    $lines   = [];
-    $lines[] = '/**';
-    $lines[] = ' * @todo describe routine';
-    $lines[] = ' * ';
+    $this->codeStore->append('/**');
+    $this->codeStore->append(' * @todo describe routine', false);
+    $this->codeStore->append(' * ', false);
+
     $padding = $this->getMaxColumnLength($columns);
-    $format  = sprintf(" * @param p_%%-%ds @todo describe parameter", $padding);
+    $format  = sprintf(' * @param p_%%-%ds @todo describe parameter', $padding);
     foreach ($columns as $column)
     {
-      $lines[] = sprintf($format, $column['column_name']);
+      $this->codeStore->append(sprintf($format, $column['column_name']), false);
     }
-    $lines[] = ' */';
 
-    $this->storedProcedureCode->append($lines, false);
+    $this->codeStore->append(' */', false);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Generate main part with name and params.
+   * Generates the function name and parameters of the stored routine.
    *
    * @param array[] $columns Columns from table.
    */
   protected function generateMainPart($columns)
   {
-    $lines          = [];
-    $lines[]        = sprintf('create procedure %s(', $this->spName);
-    $lengthLastLine = 0;
+    $this->codeStore->append(sprintf('create procedure %s(', $this->spName));
 
     $padding = $this->getMaxColumnLength($columns);
-    reset($columns);
-    $first = key($columns);
-    foreach ($columns as $key => $column)
+    $offset  = mb_strlen($this->codeStore->getLastLine());
+
+    $first = true;
+    foreach ($columns as $column)
     {
-      if ($key===$first)
+      if ($first)
       {
-        $format         = sprintf(" in p_%%-%ds @%%s.%%s%%s@", $padding);
-        $line           = strtolower(sprintf($format, $column['column_name'], $this->tableName, $column['column_name'], '%type'));
-        $lengthLastLine = strlen($lines[count($lines) - 1]);
-        if ($column!=end($columns))
-        {
-          $line .= ',';
-        }
-        else
-        {
-          $line .= ' )';
-        }
-        $lines[count($lines) - 1] .= $line;
+        $format = sprintf(' in p_%%-%ds @%%s.%%s%%s@', $padding);
+        $this->codeStore->appendToLastLine(strtolower(sprintf($format,
+                                                              $column['column_name'],
+                                                              $this->tableName,
+                                                              $column['column_name'],
+                                                              '%type')));
       }
       else
       {
-        $format = sprintf("%%%ds p_%%-%ds @%%s.%%s%%s@", $lengthLastLine + 3, $padding);
-        $line   = strtolower(sprintf($format, 'in', $column['column_name'], $this->tableName, $column['column_name'], '%type'));
-        if ($column!=end($columns))
-        {
-          $line .= ',';
-        }
-        else
-        {
-          $line .= ' )';
-        }
-        $lines[] = $line;
+        $format = sprintf('%%%ds p_%%-%ds @%%s.%%s%%s@', $offset + 3, $padding);
+        $this->codeStore->append(strtolower(sprintf($format,
+                                                    'in',
+                                                    $column['column_name'],
+                                                    $this->tableName,
+                                                    $column['column_name'],
+                                                    '%type')), false);
       }
-    }
 
-    $this->storedProcedureCode->append($lines, false);
+      if ($column!=end($columns))
+      {
+        $this->codeStore->appendToLastLine(',');
+      }
+      else
+      {
+        $this->codeStore->appendToLastLine(' )');
+      }
+
+      $first = false;
+    }
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Return max column length.
+   * Returns the length the longest column name of a table.
    *
-   * @param array[] $columns Columns from table.
+   * @param array[] $columns The metadata of the columns of the table.
    *
    * @return int
    */
@@ -383,7 +387,7 @@ class BaseRoutine
     $length = 0;
     foreach ($columns as $column)
     {
-      $length = max(strlen($column['column_name']), $length);
+      $length = max(mb_strlen($column['column_name']), $length);
     }
 
     return $length;
@@ -391,61 +395,46 @@ class BaseRoutine
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Add modifies sql data part.
+   * Generates the modifies/reads sql data and designation type comment of the stored routine.
    *
-   * @param bool     $flag  Set or no type.
-   * @param string[] $lines Stored procedure code lines.
+   * @param bool $flag Set or no type.
    */
-  protected function modifiesPart($flag, &$lines)
+  protected function modifiesPart($flag)
   {
     if ($this->spType!=='SELECT')
     {
-      $lines[] = 'modifies sql data';
+      $this->codeStore->append('modifies sql data');
     }
     else
     {
-      $lines[] = 'reads sql data';
+      $this->codeStore->append('reads sql data');
     }
+
     switch ($this->spType)
     {
       case 'UPDATE':
       case 'DELETE':
-        $lines[] = '-- type: none';
+        $this->codeStore->append('-- type: none');
         break;
+
       case 'SELECT':
-        $lines[] = '-- type: row1';
+        $this->codeStore->append('-- type: row1');
         break;
+
       case 'INSERT':
         if ($flag)
         {
-          $lines[] = '-- type: singleton1';
+          $this->codeStore->append('-- type: singleton1');
         }
         else
         {
-          $lines[] = '-- type: none';
+          $this->codeStore->append('-- type: none');
         }
         break;
+
+      default:
+        throw new FallenException("Unknown stored routine type '%s'", $this->spType);
     }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Generate body of stored procedure.
-   *
-   * @param array[] $columns Columns from table.
-   * @param array[] $params  Params for where block.
-   */
-  private function generateBodyPart($params, $columns)
-  {
-    $lines = [];
-    $this->modifiesPart($this->checkAutoIncrement($columns), $lines);
-    $lines[] = 'begin';
-
-    $this->bodyPart($params, $columns, $lines);
-
-    $lines[] = 'end';
-
-    $this->storedProcedureCode->append($lines, false);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

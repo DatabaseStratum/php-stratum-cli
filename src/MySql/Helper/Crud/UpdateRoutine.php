@@ -2,29 +2,24 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\MySql\Helper\Crud;
 
-//----------------------------------------------------------------------------------------------------------------------
 use SetBased\Stratum\MySql\DataLayer;
 use SetBased\Stratum\MySql\StaticDataLayer;
 
+//----------------------------------------------------------------------------------------------------------------------
 /**
- * Select routine.
+ * Generates the code for a stored routine that updates a row.
  */
 class UpdateRoutine extends BaseRoutine
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Generate body of stored procedure.
-   *
-   * @param array[]  $columns Columns from table.
-   * @param array[]  $params  Params for where block.
-   * @param string[] $lines   Stored procedure code lines.
+   * {@inheritdoc}
    */
-  protected function bodyPart($params, $columns, &$lines)
+  protected function generateBody($params, $columns)
   {
     $set         = [];
     $primaryKeys = DataLayer::getTablePrimaryKeys($this->dataSchema, $this->tableName);
 
-    $lines[] = sprintf('update %s', $this->tableName);
     foreach ($columns as $column)
     {
       $check = StaticDataLayer::searchInRowSet('Column_name', $column['column_name'], $primaryKeys);
@@ -34,49 +29,51 @@ class UpdateRoutine extends BaseRoutine
       }
     }
 
-    reset($set);
-    $first          = key($set);
-    $lines[]        = 'set';
-    $lengthLastLine = 0;
-    foreach ($set as $key => $column)
+    $this->codeStore->append(sprintf('update %s', $this->tableName));
+    $this->codeStore->append('set');
+    $offset = mb_strlen($this->codeStore->getLastLine());
+
+    $first = true;
+    foreach ($set as $column)
     {
-      if ($key===$first)
+      if ($first)
       {
-        $lengthLastLine = strlen($lines[count($lines) - 1]);
-        $format         = sprintf("%%%ds %%s = p_%%s", $lengthLastLine);
-        $line           = sprintf($format, '', $column['column_name'], $column['column_name']);
-        $lines[count($lines) - 1] .= $line;
+        $format = sprintf("%%%ds %%s = p_%%s", $offset);
+        $this->codeStore->appendToLastLine(sprintf($format, '', $column['column_name'], $column['column_name']));
       }
       else
       {
-        $format  = sprintf("%%-%ds %%s = p_%%s", $lengthLastLine + 3);
-        $line    = sprintf($format, ',', $column['column_name'], $column['column_name']);
-        $lines[] = $line;
+        $format = sprintf("%%-%ds %%s = p_%%s", $offset + 3);
+        $this->codeStore->append(sprintf($format, ',', $column['column_name'], $column['column_name']));
       }
+
+      $first = false;
     }
 
-    $lines[] = 'where';
-    reset($params);
-    $first = key($params);
-    foreach ($params as $key => $column)
+    $this->codeStore->append('where');
+
+    $first = true;
+    foreach ($params as $column)
     {
-      if ($key===$first)
+      if ($first)
       {
         $format = sprintf("%%%ds %%s = p_%%s", 1);
         $line   = sprintf($format, '', $column['column_name'], $column['column_name']);
-        $lines[count($lines) - 1] .= $line;
+        $this->codeStore->appendToLastLine($line);
       }
       else
       {
-        $format  = sprintf("and%%%ds %%s = p_%%s", 3);
-        $line    = sprintf($format, '', $column['column_name'], $column['column_name']);
-        $lines[] = $line;
+        $format = sprintf("and%%%ds %%s = p_%%s", 3);
+        $this->codeStore->append(sprintf($format, '', $column['column_name'], $column['column_name']));
       }
-    }
-    $lines[] = ';';
-  }
-  //--------------------------------------------------------------------------------------------------------------------
 
+      $first = false;
+    }
+
+    $this->codeStore->append(';');
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
 }
 
 //----------------------------------------------------------------------------------------------------------------------
