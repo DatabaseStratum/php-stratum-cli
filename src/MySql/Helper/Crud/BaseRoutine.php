@@ -300,6 +300,8 @@ abstract class BaseRoutine
    *
    * @param array[] $columns Columns from table.
    * @param array[] $params  Params for where block.
+   *
+   * @return void
    */
   abstract protected function generateBody($params, $columns);
 
