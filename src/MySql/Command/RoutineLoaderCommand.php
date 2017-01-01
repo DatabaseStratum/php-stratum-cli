@@ -18,6 +18,7 @@ use SetBased\Stratum\MySql\RoutineLoaderHelper;
 use SetBased\Stratum\NameMangler\NameMangler;
 use SetBased\Stratum\Style\StratumStyle;
 use Symfony\Component\Console\Formatter\OutputFormatter;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -131,7 +132,9 @@ class RoutineLoaderCommand extends MySqlCommand
   protected function configure()
   {
     $this->setName('loader')
-         ->setDescription('Generates the routine wrapper class');
+         ->setDescription('Generates the routine wrapper class')
+         ->addArgument('config file', InputArgument::REQUIRED, 'The stratum configuration file')
+         ->addArgument('sources', InputArgument::OPTIONAL | InputArgument::IS_ARRAY, 'Sources with stored routines');
   }
 
   //--------------------------------------------------------------------------------------------------------------------

@@ -15,7 +15,8 @@ class StratumApplicationTest extends \PHPUnit_Framework_TestCase
     $application->setAutoExit(false);
 
     $tester = new ApplicationTester($application);
-    $tester->run(['config file'=>'test/MySql/etc/stratum.cfg']);
+    $tester->run(['command'     => 'stratum',
+                  'config file' => 'test/MySql/etc/stratum.cfg']);
 
     $this->assertSame(0, $tester->getStatusCode(), $tester->getDisplay());
   }

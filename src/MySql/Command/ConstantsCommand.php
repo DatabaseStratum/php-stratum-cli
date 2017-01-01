@@ -14,6 +14,7 @@ use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\MySql\Helper\DataTypeHelper;
 use SetBased\Stratum\MySql\MetadataDataLayer as DataLayer;
 use SetBased\Stratum\Style\StratumStyle;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -72,7 +73,8 @@ class ConstantsCommand extends MySqlCommand
   protected function configure()
   {
     $this->setName('constants')
-         ->setDescription('Generates constants based on database IDs');
+         ->setDescription('Generates constants based on database IDs')
+         ->addArgument('config file', InputArgument::REQUIRED, 'The stratum configuration file');
   }
 
   //--------------------------------------------------------------------------------------------------------------------

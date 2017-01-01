@@ -77,7 +77,7 @@ class CrudCommand extends BaseCommand
   {
     $this->setName('crud')
          ->setDescription('This is an interactive command for generating stored procedures for CRUD operations.')
-         ->addArgument('config file', InputArgument::OPTIONAL, 'The audit configuration file')
+         ->addArgument('config file', InputArgument::REQUIRED, 'The audit configuration file')
          ->addOption('tables', 't', InputOption::VALUE_NONE, 'Show all tables');
   }
 

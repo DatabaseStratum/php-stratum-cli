@@ -2,13 +2,13 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\Application;
 
+use SetBased\Stratum\Command\CrudCommand;
 use SetBased\Stratum\Command\StratumCommand;
 use SetBased\Stratum\MySql\Command\ConstantsCommand;
 use SetBased\Stratum\MySql\Command\RoutineLoaderCommand;
 use SetBased\Stratum\MySql\Command\RoutineWrapperGeneratorCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
@@ -16,29 +16,6 @@ use Symfony\Component\Console\Input\InputInterface;
  */
 class Stratum extends Application
 {
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Overridden so that the application doesn't expect the command
-   * name to be the first argument.
-   */
-  public function getDefinition()
-  {
-    $inputDefinition = parent::getDefinition();
-    // clear out the normal first argument, which is the command name
-    $inputDefinition->setArguments();
-
-    return $inputDefinition;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * {@inheritdoc}
-   */
-  protected function getCommandName(InputInterface $input)
-  {
-    return 'stratum';
-  }
-
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Gets the default commands that should always be available.
@@ -51,9 +28,10 @@ class Stratum extends Application
     $defaultCommands = parent::getDefaultCommands();
 
     $defaultCommands[] = new ConstantsCommand();
+    $defaultCommands[] = new CrudCommand();
     $defaultCommands[] = new RoutineLoaderCommand();
-    $defaultCommands[] = new StratumCommand();
     $defaultCommands[] = new RoutineWrapperGeneratorCommand();
+    $defaultCommands[] = new StratumCommand();
 
     return $defaultCommands;
   }

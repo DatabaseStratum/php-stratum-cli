@@ -16,6 +16,7 @@ use SetBased\Stratum\Command\BaseCommand;
 use SetBased\Stratum\MySql\Wrapper\Wrapper;
 use SetBased\Stratum\NameMangler\NameMangler;
 use SetBased\Stratum\Style\StratumStyle;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -26,6 +27,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 class RoutineWrapperGeneratorCommand extends BaseCommand
 {
   //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Store php code with indention.
+   *
+   * @var PhpCodeStore
+   */
+  private $codeStore;
+
   /**
    * Array with fully qualified names that must be imported.
    *
@@ -75,13 +83,6 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
    */
   private $myWrapperFilename;
 
-  /**
-   * Store php code with indention.
-   *
-   * @var PhpCodeStore
-   */
-  private $codeStore;
-
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * {@inheritdoc}
@@ -91,7 +92,8 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
     $this->codeStore = new PhpCodeStore();
 
     $this->setName('wrapper')
-         ->setDescription('Generates constants based on database IDs');
+         ->setDescription('Generates a class with wrapper methods for calling stored routines')
+         ->addArgument('config file', InputArgument::REQUIRED, 'The stratum configuration file');
   }
 
   //--------------------------------------------------------------------------------------------------------------------

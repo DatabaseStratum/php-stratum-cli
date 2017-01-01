@@ -152,26 +152,6 @@ class DataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Selects all table names in a schema.
-   *
-   * @param string $schemaName The name of the schema.
-   *
-   * @return \array[]
-   */
-  public static function getTablesNames($schemaName)
-  {
-    $sql = sprintf("
-select TABLE_NAME as table_name
-from   information_schema.TABLES
-where  TABLE_SCHEMA = %s
-and    TABLE_TYPE   = 'BASE TABLE'
-order by TABLE_NAME", self::$dl->quoteString($schemaName));
-
-    return self::$dl->executeRows($sql);
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
    * Selects metadata of all columns of table.
    *
    * @param string $schemaName The name of the table schema.
@@ -234,6 +214,26 @@ SHOW INDEX FROM %s.%s
 WHERE Non_unique = 0',
                    $schemaName,
                    $tableName);
+
+    return self::$dl->executeRows($sql);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Selects all table names in a schema.
+   *
+   * @param string $schemaName The name of the schema.
+   *
+   * @return \array[]
+   */
+  public static function getTablesNames($schemaName)
+  {
+    $sql = sprintf("
+select TABLE_NAME as table_name
+from   information_schema.TABLES
+where  TABLE_SCHEMA = %s
+and    TABLE_TYPE   = 'BASE TABLE'
+order by TABLE_NAME", self::$dl->quoteString($schemaName));
 
     return self::$dl->executeRows($sql);
   }

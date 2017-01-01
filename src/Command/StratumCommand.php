@@ -29,8 +29,8 @@ class StratumCommand extends Command
   protected function configure()
   {
     $this->setName('stratum')
-         ->setDescription('Loads stored routines and generates a wrapper class')
-         ->addArgument('config file', InputArgument::OPTIONAL, 'The audit configuration file', 'test/MySql/etc/stratum.cfg')
+         ->setDescription('Runs the constants, loader, and wrapper commands')
+         ->addArgument('config file', InputArgument::REQUIRED, 'The stratum configuration file')
          ->addArgument('sources', InputArgument::OPTIONAL | InputArgument::IS_ARRAY, 'Sources with stored routines');
   }
 
