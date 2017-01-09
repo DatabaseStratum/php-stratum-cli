@@ -11,7 +11,7 @@ class Row0WithLobTest extends DataLayerTestCase
    */
   public function test1()
   {
-    $ret = DataLayer::testRow0aWithLob(0, 'blob');
+    $ret = DataLayer::tstTestRow0aWithLob(0, 'blob');
     $this->assertInternalType('null', $ret);
 
   }
@@ -22,7 +22,7 @@ class Row0WithLobTest extends DataLayerTestCase
    */
   public function test2()
   {
-    $ret = DataLayer::testRow0aWithLob(1, 'blob');
+    $ret = DataLayer::tstTestRow0aWithLob(1, 'blob');
     $this->assertInternalType('array', $ret);
   }
 
@@ -34,7 +34,7 @@ class Row0WithLobTest extends DataLayerTestCase
    */
   public function test3()
   {
-    DataLayer::testRow0aWithLob(2, 'blob');
+    DataLayer::tstTestRow0aWithLob(2, 'blob');
   }
 
   //--------------------------------------------------------------------------------------------------------------------

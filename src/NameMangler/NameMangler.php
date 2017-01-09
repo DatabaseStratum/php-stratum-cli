@@ -23,11 +23,11 @@ interface NameMangler
   /**
    * Returns the parameter name in the wrapper method.
    *
-   * @param string $routineParameterName The name of the parameter in the stored routine.
+   * @param string $parameterName The name of the parameter in the stored routine.
    *
    * @return string
    */
-  static function getParameterName($routineParameterName);
+  static function getParameterName($parameterName);
 
   //--------------------------------------------------------------------------------------------------------------------
 }

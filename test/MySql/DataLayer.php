@@ -20,7 +20,7 @@ class DataLayer extends StaticDataLayer
    * @throws ResultException
    * @throws RuntimeException
    */
-  public static function magicConstant01()
+  public static function tstMagicConstant01()
   {
     return self::executeSingleton1('CALL tst_magic_constant01()');
   }
@@ -33,7 +33,7 @@ class DataLayer extends StaticDataLayer
    * @throws ResultException
    * @throws RuntimeException
    */
-  public static function magicConstant02()
+  public static function tstMagicConstant02()
   {
     return self::executeSingleton1('CALL tst_magic_constant02()');
   }
@@ -46,7 +46,7 @@ class DataLayer extends StaticDataLayer
    * @throws ResultException
    * @throws RuntimeException
    */
-  public static function magicConstant03()
+  public static function tstMagicConstant03()
   {
     return self::executeSingleton1('CALL tst_magic_constant03()');
   }
@@ -59,7 +59,7 @@ class DataLayer extends StaticDataLayer
    * @throws ResultException
    * @throws RuntimeException
    */
-  public static function magicConstant04()
+  public static function tstMagicConstant04()
   {
     return self::executeSingleton1('CALL tst_magic_constant04()');
   }
@@ -72,7 +72,7 @@ class DataLayer extends StaticDataLayer
    * @throws ResultException
    * @throws RuntimeException
    */
-  public static function magicConstant05()
+  public static function tstMagicConstant05()
   {
     return self::executeSingleton1('CALL tst_magic_constant05()');
   }
@@ -110,22 +110,22 @@ class DataLayer extends StaticDataLayer
    * @param int    $pParam13 Test parameter 13.
    *                         year(4)
    * @param string $pParam14 Test parameter 14.
-   *                         char(10) character set utf8 collation utf8_general_ci
+   *                         char(10) character set latin1 collation latin1_swedish_ci
    * @param string $pParam15 Test parameter 15.
-   *                         varchar(10) character set utf8 collation utf8_general_ci
+   *                         varchar(10) character set latin1 collation latin1_swedish_ci
    * @param string $pParam16 Test parameter 16.
    *                         binary(10)
    * @param string $pParam17 Test parameter 17.
    *                         varbinary(10)
    * @param string $pParam26 Test parameter 26.
-   *                         enum('a','b') character set utf8 collation utf8_general_ci
+   *                         enum('a','b') character set latin1 collation latin1_swedish_ci
    * @param string $pParam27 Test parameter 27.
-   *                         set('a','b') character set utf8 collation utf8_general_ci
+   *                         set('a','b') character set latin1 collation latin1_swedish_ci
    *
    * @return int
    * @throws RuntimeException
    */
-  public static function test01($pParam00, $pParam01, $pParam02, $pParam03, $pParam04, $pParam05, $pParam06, $pParam07, $pParam08, $pParam09, $pParam10, $pParam11, $pParam12, $pParam13, $pParam14, $pParam15, $pParam16, $pParam17, $pParam26, $pParam27)
+  public static function tstTest01($pParam00, $pParam01, $pParam02, $pParam03, $pParam04, $pParam05, $pParam06, $pParam07, $pParam08, $pParam09, $pParam10, $pParam11, $pParam12, $pParam13, $pParam14, $pParam15, $pParam16, $pParam17, $pParam26, $pParam27)
   {
     return self::executeNone('CALL tst_test01('.self::quoteNum($pParam00).','.self::quoteNum($pParam01).','.self::quoteNum($pParam02).','.self::quoteNum($pParam03).','.self::quoteNum($pParam04).','.self::quoteNum($pParam05).','.self::quoteNum($pParam06).','.self::quoteNum($pParam07).','.self::quoteBit($pParam08).','.self::quoteString($pParam09).','.self::quoteString($pParam10).','.self::quoteString($pParam11).','.self::quoteString($pParam12).','.self::quoteNum($pParam13).','.self::quoteString($pParam14).','.self::quoteString($pParam15).','.self::quoteString($pParam16).','.self::quoteString($pParam17).','.self::quoteString($pParam26).','.self::quoteString($pParam27).')');
   }
@@ -163,9 +163,9 @@ class DataLayer extends StaticDataLayer
    * @param int    $pParam13 Test parameter 13.
    *                         year(4)
    * @param string $pParam14 Test parameter 14.
-   *                         char(10) character set utf8 collation utf8_general_ci
+   *                         char(10) character set latin1 collation latin1_swedish_ci
    * @param string $pParam15 Test parameter 15.
-   *                         varchar(10) character set utf8 collation utf8_general_ci
+   *                         varchar(10) character set latin1 collation latin1_swedish_ci
    * @param string $pParam16 Test parameter 16.
    *                         binary(10)
    * @param string $pParam17 Test parameter 17.
@@ -179,22 +179,22 @@ class DataLayer extends StaticDataLayer
    * @param string $pParam21 Test parameter 21.
    *                         longblob
    * @param string $pParam22 Test parameter 22.
-   *                         tinytext character set utf8 collation utf8_general_ci
+   *                         tinytext character set latin1 collation latin1_swedish_ci
    * @param string $pParam23 Test parameter 23.
-   *                         text character set utf8 collation utf8_general_ci
+   *                         text character set latin1 collation latin1_swedish_ci
    * @param string $pParam24 Test parameter 24.
-   *                         mediumtext character set utf8 collation utf8_general_ci
+   *                         mediumtext character set latin1 collation latin1_swedish_ci
    * @param string $pParam25 Test parameter 25.
-   *                         longtext character set utf8 collation utf8_general_ci
+   *                         longtext character set latin1 collation latin1_swedish_ci
    * @param string $pParam26 Test parameter 26.
-   *                         enum('a','b') character set utf8 collation utf8_general_ci
+   *                         enum('a','b') character set latin1 collation latin1_swedish_ci
    * @param string $pParam27 Test parameter 27.
-   *                         set('a','b') character set utf8 collation utf8_general_ci
+   *                         set('a','b') character set latin1 collation latin1_swedish_ci
    *
    * @return int
    * @throws RuntimeException
    */
-  public static function test02($pParam00, $pParam01, $pParam02, $pParam03, $pParam04, $pParam05, $pParam06, $pParam07, $pParam08, $pParam09, $pParam10, $pParam11, $pParam12, $pParam13, $pParam14, $pParam15, $pParam16, $pParam17, $pParam18, $pParam19, $pParam20, $pParam21, $pParam22, $pParam23, $pParam24, $pParam25, $pParam26, $pParam27)
+  public static function tstTest02($pParam00, $pParam01, $pParam02, $pParam03, $pParam04, $pParam05, $pParam06, $pParam07, $pParam08, $pParam09, $pParam10, $pParam11, $pParam12, $pParam13, $pParam14, $pParam15, $pParam16, $pParam17, $pParam18, $pParam19, $pParam20, $pParam21, $pParam22, $pParam23, $pParam24, $pParam25, $pParam26, $pParam27)
   {
     $query = 'CALL tst_test02('.self::quoteNum($pParam00).','.self::quoteNum($pParam01).','.self::quoteNum($pParam02).','.self::quoteNum($pParam03).','.self::quoteNum($pParam04).','.self::quoteNum($pParam05).','.self::quoteNum($pParam06).','.self::quoteNum($pParam07).','.self::quoteBit($pParam08).','.self::quoteString($pParam09).','.self::quoteString($pParam10).','.self::quoteString($pParam11).','.self::quoteString($pParam12).','.self::quoteNum($pParam13).','.self::quoteString($pParam14).','.self::quoteString($pParam15).','.self::quoteString($pParam16).','.self::quoteString($pParam17).',?,?,?,?,?,?,?,?,'.self::quoteString($pParam26).','.self::quoteString($pParam27).')';
     $stmt  = self::$mysqli->prepare($query);
@@ -309,7 +309,7 @@ class DataLayer extends StaticDataLayer
    * @param array $rows
    * @throws RuntimeException
    */
-  public static function testBulkInsert01($rows)
+  public static function tstTestBulkInsert01($rows)
   {
     self::query('CALL tst_test_bulk_insert01()');
     if (is_array($rows) && !empty($rows))
@@ -333,7 +333,7 @@ class DataLayer extends StaticDataLayer
    * @param array $rows
    * @throws RuntimeException
    */
-  public static function testBulkInsert02($rows)
+  public static function tstTestBulkInsert02($rows)
   {
     self::query('CALL tst_test_bulk_insert02()');
     if (is_array($rows) && !empty($rows))
@@ -362,7 +362,7 @@ class DataLayer extends StaticDataLayer
    * @return string
    * @throws RuntimeException
    */
-  public static function testFunction($pA, $pB)
+  public static function tstTestFunction($pA, $pB)
   {
     return self::executeSingleton0('SELECT tst_test_function('.self::quoteNum($pA).','.self::quoteNum($pB).')');
   }
@@ -374,7 +374,7 @@ class DataLayer extends StaticDataLayer
    * @return \array[]
    * @throws RuntimeException
    */
-  public static function testIllegalQuery()
+  public static function tstTestIllegalQuery()
   {
     return self::executeRows('CALL tst_test_illegal_query()');
   }
@@ -383,12 +383,12 @@ class DataLayer extends StaticDataLayer
   /**
    *
    * @param string|int[] $pIds The id's in CSV format.
-   *                           varchar(255) character set utf8 collation utf8_general_ci
+   *                           varchar(255) character set latin1 collation latin1_swedish_ci
    *
    * @return \array[]
    * @throws RuntimeException
    */
-  public static function testListOfInt($pIds)
+  public static function tstTestListOfInt($pIds)
   {
     $result = self::query('CALL tst_test_list_of_int('.self::quoteListOfInt($pIds, ',', '\"', '\\').')');
     $ret = [];
@@ -406,7 +406,7 @@ class DataLayer extends StaticDataLayer
    * @return int
    * @throws RuntimeException
    */
-  public static function testLog()
+  public static function tstTestLog()
   {
     return self::executeLog('CALL tst_test_log()');
   }
@@ -422,7 +422,7 @@ class DataLayer extends StaticDataLayer
    * @throws ResultException
    * @throws RuntimeException
    */
-  public static function testMaxAllowedPacket($pTmpBlob)
+  public static function tstTestMaxAllowedPacket($pTmpBlob)
   {
     $query = 'CALL tst_test_max_allowed_packet(?)';
     $stmt  = self::$mysqli->prepare($query);
@@ -489,7 +489,7 @@ class DataLayer extends StaticDataLayer
    * @throws ResultException
    * @throws RuntimeException
    */
-  public static function testNoDocBlock()
+  public static function tstTestNoDocBlock()
   {
     return self::executeRow1('CALL tst_test_no_doc_block()');
   }
@@ -504,7 +504,7 @@ class DataLayer extends StaticDataLayer
    * @return int
    * @throws RuntimeException
    */
-  public static function testNone($pCount)
+  public static function tstTestNone($pCount)
   {
     return self::executeNone('CALL tst_test_none('.self::quoteNum($pCount).')');
   }
@@ -521,7 +521,7 @@ class DataLayer extends StaticDataLayer
    * @return int
    * @throws RuntimeException
    */
-  public static function testNoneWithLob($pCount, $pBlob)
+  public static function tstTestNoneWithLob($pCount, $pBlob)
   {
     $query = 'CALL tst_test_none_with_lob('.self::quoteNum($pCount).',?)';
     $stmt  = self::$mysqli->prepare($query);
@@ -578,7 +578,7 @@ class DataLayer extends StaticDataLayer
    * @return int
    * @throws RuntimeException
    */
-  public static function testParameterType($pPhpType1, $pPhpType2)
+  public static function tstTestParameterType($pPhpType1, $pPhpType2)
   {
     return self::executeNone('CALL tst_test_parameter_type('.self::quoteNum($pPhpType1).','.self::quoteNum($pPhpType2).')');
   }
@@ -594,7 +594,7 @@ class DataLayer extends StaticDataLayer
    * @throws ResultException
    * @throws RuntimeException
    */
-  public static function testRow0a($pCount)
+  public static function tstTestRow0a($pCount)
   {
     return self::executeRow0('CALL tst_test_row0a('.self::quoteNum($pCount).')');
   }
@@ -612,7 +612,7 @@ class DataLayer extends StaticDataLayer
    * @throws ResultException
    * @throws RuntimeException
    */
-  public static function testRow0aWithLob($pCount, $pBlob)
+  public static function tstTestRow0aWithLob($pCount, $pBlob)
   {
     $query = 'CALL tst_test_row0a_with_lob('.self::quoteNum($pCount).',?)';
     $stmt  = self::$mysqli->prepare($query);
@@ -683,7 +683,7 @@ class DataLayer extends StaticDataLayer
    * @throws ResultException
    * @throws RuntimeException
    */
-  public static function testRow1a($pCount)
+  public static function tstTestRow1a($pCount)
   {
     return self::executeRow1('CALL tst_test_row1a('.self::quoteNum($pCount).')');
   }
@@ -701,7 +701,7 @@ class DataLayer extends StaticDataLayer
    * @throws ResultException
    * @throws RuntimeException
    */
-  public static function testRow1aWithLob($pCount, $pBlob)
+  public static function tstTestRow1aWithLob($pCount, $pBlob)
   {
     $query = 'CALL tst_test_row1a_with_lob('.self::quoteNum($pCount).',?)';
     $stmt  = self::$mysqli->prepare($query);
@@ -771,7 +771,7 @@ class DataLayer extends StaticDataLayer
    * @return \array[]
    * @throws RuntimeException
    */
-  public static function testRows1($pCount)
+  public static function tstTestRows1($pCount)
   {
     return self::executeRows('CALL tst_test_rows1('.self::quoteNum($pCount).')');
   }
@@ -788,7 +788,7 @@ class DataLayer extends StaticDataLayer
    * @return \array[]
    * @throws RuntimeException
    */
-  public static function testRows1WithLob($pCount, $pBlob)
+  public static function tstTestRows1WithLob($pCount, $pBlob)
   {
     $query = 'CALL tst_test_rows1_with_lob('.self::quoteNum($pCount).',?)';
     $stmt  = self::$mysqli->prepare($query);
@@ -857,7 +857,7 @@ class DataLayer extends StaticDataLayer
    * @return \array[]
    * @throws RuntimeException
    */
-  public static function testRowsWithIndex1($pCount)
+  public static function tstTestRowsWithIndex1($pCount)
   {
     $result = self::query('CALL tst_test_rows_with_index1('.self::quoteNum($pCount).')');
     $ret = [];
@@ -880,7 +880,7 @@ class DataLayer extends StaticDataLayer
    * @return \array[]
    * @throws RuntimeException
    */
-  public static function testRowsWithIndex1WithLob($pCount, $pBlob)
+  public static function tstTestRowsWithIndex1WithLob($pCount, $pBlob)
   {
     $query = 'CALL tst_test_rows_with_index1_with_lob('.self::quoteNum($pCount).',?)';
     $stmt  = self::$mysqli->prepare($query);
@@ -949,7 +949,7 @@ class DataLayer extends StaticDataLayer
    * @return \array[]
    * @throws RuntimeException
    */
-  public static function testRowsWithKey1($pCount)
+  public static function tstTestRowsWithKey1($pCount)
   {
     $result = self::query('CALL tst_test_rows_with_key1('.self::quoteNum($pCount).')');
     $ret = [];
@@ -972,7 +972,7 @@ class DataLayer extends StaticDataLayer
    * @return \array[]
    * @throws RuntimeException
    */
-  public static function testRowsWithKey1WithLob($pCount, $pBlob)
+  public static function tstTestRowsWithKey1WithLob($pCount, $pBlob)
   {
     $query = 'CALL tst_test_rows_with_key1_with_lob('.self::quoteNum($pCount).',?)';
     $stmt  = self::$mysqli->prepare($query);
@@ -1042,7 +1042,7 @@ class DataLayer extends StaticDataLayer
    * @throws ResultException
    * @throws RuntimeException
    */
-  public static function testSingleton0a($pCount)
+  public static function tstTestSingleton0a($pCount)
   {
     return self::executeSingleton0('CALL tst_test_singleton0a('.self::quoteNum($pCount).')');
   }
@@ -1060,7 +1060,7 @@ class DataLayer extends StaticDataLayer
    * @throws ResultException
    * @throws RuntimeException
    */
-  public static function testSingleton0aWithLob($pCount, $pBlob)
+  public static function tstTestSingleton0aWithLob($pCount, $pBlob)
   {
     $query = 'CALL tst_test_singleton0a_with_lob('.self::quoteNum($pCount).',?)';
     $stmt  = self::$mysqli->prepare($query);
@@ -1131,7 +1131,7 @@ class DataLayer extends StaticDataLayer
    * @throws ResultException
    * @throws RuntimeException
    */
-  public static function testSingleton1a($pCount)
+  public static function tstTestSingleton1a($pCount)
   {
     return self::executeSingleton1('CALL tst_test_singleton1a('.self::quoteNum($pCount).')');
   }
@@ -1149,7 +1149,7 @@ class DataLayer extends StaticDataLayer
    * @throws ResultException
    * @throws RuntimeException
    */
-  public static function testSingleton1aWithLob($pCount, $pBlob)
+  public static function tstTestSingleton1aWithLob($pCount, $pBlob)
   {
     $query = 'CALL tst_test_singleton1a_with_lob('.self::quoteNum($pCount).',?)';
     $stmt  = self::$mysqli->prepare($query);
@@ -1216,7 +1216,7 @@ class DataLayer extends StaticDataLayer
    * @return int
    * @throws RuntimeException
    */
-  public static function testTable()
+  public static function tstTestTable()
   {
     return self::executeTable('CALL tst_test_table()');
   }

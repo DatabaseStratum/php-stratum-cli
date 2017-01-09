@@ -2,40 +2,40 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\Test\MySql;
 
-use SetBased\Stratum\NameMangler\SetBasedNameMangler;
+use SetBased\Stratum\NameMangler\PsrNameMangler;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Test cases for class SetBasedNameMangler
+ * Test cases for class PsrNameMangler
  */
-class SetBasedNameManglerTest extends \PHPUnit_Framework_TestCase
+class PsrNameManglerTest extends \PHPUnit_Framework_TestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
   public function testMethod1()
   {
-    $camelCase = SetBasedNameMangler::getMethodName('abc_foo_bar');
-    $this->assertSame('fooBar', $camelCase);
+    $camelCase = PsrNameMangler::getMethodName('abc_foo_bar');
+    $this->assertSame('abcFooBar', $camelCase);
 
-    $camelCase = SetBasedNameMangler::getMethodName('abc_auth_get_page_info');
-    $this->assertSame('authGetPageInfo', $camelCase);
+    $camelCase = PsrNameMangler::getMethodName('abc_auth_get_page_info');
+    $this->assertSame('abcAuthGetPageInfo', $camelCase);
 
-    $camelCase = SetBasedNameMangler::getMethodName('abc_abc123');
-    $this->assertSame('abc123', $camelCase);
+    $camelCase = PsrNameMangler::getMethodName('abc_abc123');
+    $this->assertSame('abcAbc123', $camelCase);
 
-    $camelCase = SetBasedNameMangler::getMethodName('abc_abc_123');
-    $this->assertSame('abc123', $camelCase);
+    $camelCase = PsrNameMangler::getMethodName('abc_abc_123');
+    $this->assertSame('abcAbc123', $camelCase);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   public function testParameter1()
   {
-    $camelCase = SetBasedNameMangler::getParameterName('p_cmp_id');
+    $camelCase = PsrNameMangler::getParameterName('p_cmp_id');
     $this->assertSame('pCmpId', $camelCase);
 
-    $camelCase = SetBasedNameMangler::getParameterName('p_crc32');
+    $camelCase = PsrNameMangler::getParameterName('p_crc32');
     $this->assertSame('pCrc32', $camelCase);
 
-    $camelCase = SetBasedNameMangler::getParameterName('p_crc_32');
+    $camelCase = PsrNameMangler::getParameterName('p_crc_32');
     $this->assertSame('pCrc32', $camelCase);
   }
 

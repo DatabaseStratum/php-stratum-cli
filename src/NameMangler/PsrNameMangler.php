@@ -4,9 +4,10 @@ namespace SetBased\Stratum\NameMangler;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * A name mangler for stored routines that confirm to Set Based's coding standards.
+ * A name mangler for stored routines and parameters names creating method and parameter names that confirm to
+ * the PSR-1 Basic Coding Standard.
  */
-class SetBasedNameMangler implements NameMangler
+class PsrNameMangler implements NameMangler
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -18,25 +19,20 @@ class SetBasedNameMangler implements NameMangler
    */
   public static function getMethodName($routineName)
   {
-    return lcfirst(preg_replace_callback('/(_)([a-z0-9])/',
-      function ($matches)
-      {
-        return strtoupper($matches[2]);
-      },
-                                         stristr($routineName, '_')));
+    return lcfirst(str_replace(' ', '', ucwords(strtr($routineName, '_', ' '))));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Returns the parameter name into camelCase.
    *
-   * @param string $routineParameterName The name of the parameter in the stored routine.
+   * @param string $parameterName The name of the parameter in the stored routine.
    *
    * @return string
    */
-  public static function getParameterName($routineParameterName)
+  public static function getParameterName($parameterName)
   {
-    return lcfirst(str_replace(' ', '', ucwords(strtr($routineParameterName, '_', ' '))));
+    return lcfirst(str_replace(' ', '', ucwords(strtr($parameterName, '_', ' '))));
   }
 
   //--------------------------------------------------------------------------------------------------------------------

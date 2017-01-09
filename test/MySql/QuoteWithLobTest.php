@@ -12,7 +12,7 @@ class QuoteWithLobTest extends DataLayerTestCase
   {
     try
     {
-      DataLayer::test02(($column=='int') ? $value : null,
+      DataLayer::tstTest02(($column=='int') ? $value : null,
                         ($column=='smallint') ? $value : null,
                         ($column=='tinyint') ? $value : null,
                         ($column=='mediumint') ? $value : null,
@@ -51,7 +51,7 @@ class QuoteWithLobTest extends DataLayerTestCase
   //--------------------------------------------------------------------------------------------------------------------
   public function genericValid($column, $value)
   {
-    $n = DataLayer::test02(($column=='int') ? $value : null,
+    $n = DataLayer::tstTest02(($column=='int') ? $value : null,
                            ($column=='smallint') ? $value : null,
                            ($column=='tinyint') ? $value : null,
                            ($column=='mediumint') ? $value : null,

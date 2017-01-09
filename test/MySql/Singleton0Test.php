@@ -11,7 +11,7 @@ class Singleton0Test extends DataLayerTestCase
    */
   public function test1()
   {
-    $ret = DataLayer::testSingleton0a(0);
+    $ret = DataLayer::tstTestSingleton0a(0);
     $this->assertInternalType('null', $ret);
   }
 
@@ -21,7 +21,7 @@ class Singleton0Test extends DataLayerTestCase
    */
   public function test2()
   {
-    $ret = DataLayer::testSingleton0a(1);
+    $ret = DataLayer::tstTestSingleton0a(1);
     $this->assertInternalType('string', $ret);
   }
 
@@ -33,7 +33,7 @@ class Singleton0Test extends DataLayerTestCase
    */
   public function test3()
   {
-    DataLayer::testSingleton0a(2);
+    DataLayer::tstTestSingleton0a(2);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

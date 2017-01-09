@@ -23,7 +23,7 @@ class MaxAllowedPacketTest extends DataLayerTestCase
 
     $crc32_php = sprintf("%u", crc32($data));
 
-    $crc32_db = DataLayer::testMaxAllowedPacket($data);
+    $crc32_db = DataLayer::tstTestMaxAllowedPacket($data);
 
     $this->assertEquals($crc32_php, $crc32_db);
   }
