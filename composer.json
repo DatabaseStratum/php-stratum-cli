@@ -20,7 +20,7 @@
     }
   ],
   "require-dev": {
-    "phpunit/phpunit": "*",
+    "phpunit/phpunit": "4.* || 5.*",
     "setbased/phing-extensions": "2.*"
   },
   "require": {
