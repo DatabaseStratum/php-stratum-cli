@@ -14,6 +14,722 @@ class DataLayer extends StaticDataLayer
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   *
+   * @param int    $pTstC00 @todo describe parameter
+   *                        int(11)
+   * @param int    $pTstC01 @todo describe parameter
+   *                        smallint(6)
+   * @param int    $pTstC02 @todo describe parameter
+   *                        tinyint(4)
+   * @param int    $pTstC03 @todo describe parameter
+   *                        mediumint(9)
+   * @param int    $pTstC04 @todo describe parameter
+   *                        bigint(20)
+   * @param float  $pTstC05 @todo describe parameter
+   *                        decimal(10,2)
+   * @param float  $pTstC06 @todo describe parameter
+   *                        float
+   * @param float  $pTstC07 @todo describe parameter
+   *                        double
+   * @param int    $pTstC08 @todo describe parameter
+   *                        bit(8)
+   * @param string $pTstC09 @todo describe parameter
+   *                        date
+   * @param string $pTstC10 @todo describe parameter
+   *                        datetime
+   * @param string $pTstC11 @todo describe parameter
+   *                        timestamp
+   * @param string $pTstC12 @todo describe parameter
+   *                        time
+   * @param int    $pTstC13 @todo describe parameter
+   *                        year(4)
+   * @param string $pTstC14 @todo describe parameter
+   *                        char(10) character set utf8 collation utf8_general_ci
+   * @param string $pTstC15 @todo describe parameter
+   *                        varchar(10) character set utf8 collation utf8_general_ci
+   * @param string $pTstC16 @todo describe parameter
+   *                        binary(10)
+   * @param string $pTstC17 @todo describe parameter
+   *                        varbinary(10)
+   * @param string $pTstC18 @todo describe parameter
+   *                        tinyblob
+   * @param string $pTstC19 @todo describe parameter
+   *                        blob
+   * @param string $pTstC20 @todo describe parameter
+   *                        mediumblob
+   * @param string $pTstC21 @todo describe parameter
+   *                        longblob
+   * @param string $pTstC22 @todo describe parameter
+   *                        tinytext character set utf8 collation utf8_general_ci
+   * @param string $pTstC23 @todo describe parameter
+   *                        text character set utf8 collation utf8_general_ci
+   * @param string $pTstC24 @todo describe parameter
+   *                        mediumtext character set utf8 collation utf8_general_ci
+   * @param string $pTstC25 @todo describe parameter
+   *                        longtext character set utf8 collation utf8_general_ci
+   * @param string $pTstC26 @todo describe parameter
+   *                        enum('a','b') character set utf8 collation utf8_general_ci
+   * @param string $pTstC27 @todo describe parameter
+   *                        set('a','b') character set utf8 collation utf8_general_ci
+   *
+   * @return int
+   * @throws RuntimeException
+   */
+  public static function foo1Delete($pTstC00, $pTstC01, $pTstC02, $pTstC03, $pTstC04, $pTstC05, $pTstC06, $pTstC07, $pTstC08, $pTstC09, $pTstC10, $pTstC11, $pTstC12, $pTstC13, $pTstC14, $pTstC15, $pTstC16, $pTstC17, $pTstC18, $pTstC19, $pTstC20, $pTstC21, $pTstC22, $pTstC23, $pTstC24, $pTstC25, $pTstC26, $pTstC27)
+  {
+    $query = 'CALL tst_foo1_delete('.self::quoteNum($pTstC00).','.self::quoteNum($pTstC01).','.self::quoteNum($pTstC02).','.self::quoteNum($pTstC03).','.self::quoteNum($pTstC04).','.self::quoteNum($pTstC05).','.self::quoteNum($pTstC06).','.self::quoteNum($pTstC07).','.self::quoteBit($pTstC08).','.self::quoteString($pTstC09).','.self::quoteString($pTstC10).','.self::quoteString($pTstC11).','.self::quoteString($pTstC12).','.self::quoteNum($pTstC13).','.self::quoteString($pTstC14).','.self::quoteString($pTstC15).','.self::quoteString($pTstC16).','.self::quoteString($pTstC17).',?,?,?,?,?,?,?,?,'.self::quoteString($pTstC26).','.self::quoteString($pTstC27).')';
+    $stmt  = self::$mysqli->prepare($query);
+    if (!$stmt) self::mySqlError('mysqli::prepare');
+
+    $null = null;
+    $b = $stmt->bind_param('bbbbbbbb', $null,$null,$null,$null,$null,$null,$null,$null);
+    if (!$b) self::mySqlError('mysqli_stmt::bind_param');
+
+    self::getMaxAllowedPacket();
+
+    $n = strlen($pTstC18);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(0, substr($pTstC18, $p, self::$chunkSize));
+      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
+      $p += self::$chunkSize;
+    }
+
+    $n = strlen($pTstC19);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(1, substr($pTstC19, $p, self::$chunkSize));
+      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
+      $p += self::$chunkSize;
+    }
+
+    $n = strlen($pTstC20);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(2, substr($pTstC20, $p, self::$chunkSize));
+      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
+      $p += self::$chunkSize;
+    }
+
+    $n = strlen($pTstC21);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(3, substr($pTstC21, $p, self::$chunkSize));
+      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
+      $p += self::$chunkSize;
+    }
+
+    $n = strlen($pTstC22);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(4, substr($pTstC22, $p, self::$chunkSize));
+      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
+      $p += self::$chunkSize;
+    }
+
+    $n = strlen($pTstC23);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(5, substr($pTstC23, $p, self::$chunkSize));
+      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
+      $p += self::$chunkSize;
+    }
+
+    $n = strlen($pTstC24);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(6, substr($pTstC24, $p, self::$chunkSize));
+      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
+      $p += self::$chunkSize;
+    }
+
+    $n = strlen($pTstC25);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(7, substr($pTstC25, $p, self::$chunkSize));
+      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
+      $p += self::$chunkSize;
+    }
+
+    if (self::$logQueries)
+    {
+      $time0 = microtime(true);
+
+      $b = $stmt->execute();
+      if (!$b) self::mySqlError('mysqli_stmt::execute');
+
+      self::$queryLog[] = ['query' => $query,
+      'time'  => microtime(true) - $time0];
+    }
+    else
+    {
+      $b = $stmt->execute();
+      if (!$b) self::mySqlError('mysqli_stmt::execute');
+    }
+
+    $ret = self::$mysqli->affected_rows;
+
+    $stmt->close();
+    if (self::$mysqli->more_results()) self::$mysqli->next_result();
+
+    return $ret;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   *
+   * @param int    $pTstC00 @todo describe parameter
+   *                        int(11)
+   * @param int    $pTstC01 @todo describe parameter
+   *                        smallint(6)
+   * @param int    $pTstC02 @todo describe parameter
+   *                        tinyint(4)
+   * @param int    $pTstC03 @todo describe parameter
+   *                        mediumint(9)
+   * @param int    $pTstC04 @todo describe parameter
+   *                        bigint(20)
+   * @param float  $pTstC05 @todo describe parameter
+   *                        decimal(10,2)
+   * @param float  $pTstC06 @todo describe parameter
+   *                        float
+   * @param float  $pTstC07 @todo describe parameter
+   *                        double
+   * @param int    $pTstC08 @todo describe parameter
+   *                        bit(8)
+   * @param string $pTstC09 @todo describe parameter
+   *                        date
+   * @param string $pTstC10 @todo describe parameter
+   *                        datetime
+   * @param string $pTstC11 @todo describe parameter
+   *                        timestamp
+   * @param string $pTstC12 @todo describe parameter
+   *                        time
+   * @param int    $pTstC13 @todo describe parameter
+   *                        year(4)
+   * @param string $pTstC14 @todo describe parameter
+   *                        char(10) character set utf8 collation utf8_general_ci
+   * @param string $pTstC15 @todo describe parameter
+   *                        varchar(10) character set utf8 collation utf8_general_ci
+   * @param string $pTstC16 @todo describe parameter
+   *                        binary(10)
+   * @param string $pTstC17 @todo describe parameter
+   *                        varbinary(10)
+   * @param string $pTstC18 @todo describe parameter
+   *                        tinyblob
+   * @param string $pTstC19 @todo describe parameter
+   *                        blob
+   * @param string $pTstC20 @todo describe parameter
+   *                        mediumblob
+   * @param string $pTstC21 @todo describe parameter
+   *                        longblob
+   * @param string $pTstC22 @todo describe parameter
+   *                        tinytext character set utf8 collation utf8_general_ci
+   * @param string $pTstC23 @todo describe parameter
+   *                        text character set utf8 collation utf8_general_ci
+   * @param string $pTstC24 @todo describe parameter
+   *                        mediumtext character set utf8 collation utf8_general_ci
+   * @param string $pTstC25 @todo describe parameter
+   *                        longtext character set utf8 collation utf8_general_ci
+   * @param string $pTstC26 @todo describe parameter
+   *                        enum('a','b') character set utf8 collation utf8_general_ci
+   * @param string $pTstC27 @todo describe parameter
+   *                        set('a','b') character set utf8 collation utf8_general_ci
+   *
+   * @return string|null
+   * @throws ResultException
+   * @throws RuntimeException
+   */
+  public static function foo1Insert($pTstC00, $pTstC01, $pTstC02, $pTstC03, $pTstC04, $pTstC05, $pTstC06, $pTstC07, $pTstC08, $pTstC09, $pTstC10, $pTstC11, $pTstC12, $pTstC13, $pTstC14, $pTstC15, $pTstC16, $pTstC17, $pTstC18, $pTstC19, $pTstC20, $pTstC21, $pTstC22, $pTstC23, $pTstC24, $pTstC25, $pTstC26, $pTstC27)
+  {
+    $query = 'CALL tst_foo1_insert('.self::quoteNum($pTstC00).','.self::quoteNum($pTstC01).','.self::quoteNum($pTstC02).','.self::quoteNum($pTstC03).','.self::quoteNum($pTstC04).','.self::quoteNum($pTstC05).','.self::quoteNum($pTstC06).','.self::quoteNum($pTstC07).','.self::quoteBit($pTstC08).','.self::quoteString($pTstC09).','.self::quoteString($pTstC10).','.self::quoteString($pTstC11).','.self::quoteString($pTstC12).','.self::quoteNum($pTstC13).','.self::quoteString($pTstC14).','.self::quoteString($pTstC15).','.self::quoteString($pTstC16).','.self::quoteString($pTstC17).',?,?,?,?,?,?,?,?,'.self::quoteString($pTstC26).','.self::quoteString($pTstC27).')';
+    $stmt  = self::$mysqli->prepare($query);
+    if (!$stmt) self::mySqlError('mysqli::prepare');
+
+    $null = null;
+    $b = $stmt->bind_param('bbbbbbbb', $null,$null,$null,$null,$null,$null,$null,$null);
+    if (!$b) self::mySqlError('mysqli_stmt::bind_param');
+
+    self::getMaxAllowedPacket();
+
+    $n = strlen($pTstC18);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(0, substr($pTstC18, $p, self::$chunkSize));
+      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
+      $p += self::$chunkSize;
+    }
+
+    $n = strlen($pTstC19);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(1, substr($pTstC19, $p, self::$chunkSize));
+      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
+      $p += self::$chunkSize;
+    }
+
+    $n = strlen($pTstC20);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(2, substr($pTstC20, $p, self::$chunkSize));
+      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
+      $p += self::$chunkSize;
+    }
+
+    $n = strlen($pTstC21);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(3, substr($pTstC21, $p, self::$chunkSize));
+      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
+      $p += self::$chunkSize;
+    }
+
+    $n = strlen($pTstC22);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(4, substr($pTstC22, $p, self::$chunkSize));
+      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
+      $p += self::$chunkSize;
+    }
+
+    $n = strlen($pTstC23);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(5, substr($pTstC23, $p, self::$chunkSize));
+      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
+      $p += self::$chunkSize;
+    }
+
+    $n = strlen($pTstC24);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(6, substr($pTstC24, $p, self::$chunkSize));
+      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
+      $p += self::$chunkSize;
+    }
+
+    $n = strlen($pTstC25);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(7, substr($pTstC25, $p, self::$chunkSize));
+      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
+      $p += self::$chunkSize;
+    }
+
+    if (self::$logQueries)
+    {
+      $time0 = microtime(true);
+
+      $b = $stmt->execute();
+      if (!$b) self::mySqlError('mysqli_stmt::execute');
+
+      self::$queryLog[] = ['query' => $query,
+      'time'  => microtime(true) - $time0];
+    }
+    else
+    {
+      $b = $stmt->execute();
+      if (!$b) self::mySqlError('mysqli_stmt::execute');
+    }
+
+    $row = [];
+    self::bindAssoc($stmt, $row);
+
+    $tmp = [];
+    while (($b = $stmt->fetch()))
+    {
+      $new = [];
+      foreach($row as $value)
+      {
+        $new[] = $value;
+      }
+      $tmp[] = $new;
+    }
+
+    $stmt->close();
+    if (self::$mysqli->more_results()) self::$mysqli->next_result();
+
+    if ($b===false) self::mySqlError('mysqli_stmt::fetch');
+    if (count($tmp)!=1) throw new ResultException('1', count($tmp), $query);
+
+    return $tmp[0][0];
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   *
+   * @param int    $pTstC00 @todo describe parameter
+   *                        int(11)
+   * @param int    $pTstC01 @todo describe parameter
+   *                        smallint(6)
+   * @param int    $pTstC02 @todo describe parameter
+   *                        tinyint(4)
+   * @param int    $pTstC03 @todo describe parameter
+   *                        mediumint(9)
+   * @param int    $pTstC04 @todo describe parameter
+   *                        bigint(20)
+   * @param float  $pTstC05 @todo describe parameter
+   *                        decimal(10,2)
+   * @param float  $pTstC06 @todo describe parameter
+   *                        float
+   * @param float  $pTstC07 @todo describe parameter
+   *                        double
+   * @param int    $pTstC08 @todo describe parameter
+   *                        bit(8)
+   * @param string $pTstC09 @todo describe parameter
+   *                        date
+   * @param string $pTstC10 @todo describe parameter
+   *                        datetime
+   * @param string $pTstC11 @todo describe parameter
+   *                        timestamp
+   * @param string $pTstC12 @todo describe parameter
+   *                        time
+   * @param int    $pTstC13 @todo describe parameter
+   *                        year(4)
+   * @param string $pTstC14 @todo describe parameter
+   *                        char(10) character set utf8 collation utf8_general_ci
+   * @param string $pTstC15 @todo describe parameter
+   *                        varchar(10) character set utf8 collation utf8_general_ci
+   * @param string $pTstC16 @todo describe parameter
+   *                        binary(10)
+   * @param string $pTstC17 @todo describe parameter
+   *                        varbinary(10)
+   * @param string $pTstC18 @todo describe parameter
+   *                        tinyblob
+   * @param string $pTstC19 @todo describe parameter
+   *                        blob
+   * @param string $pTstC20 @todo describe parameter
+   *                        mediumblob
+   * @param string $pTstC21 @todo describe parameter
+   *                        longblob
+   * @param string $pTstC22 @todo describe parameter
+   *                        tinytext character set utf8 collation utf8_general_ci
+   * @param string $pTstC23 @todo describe parameter
+   *                        text character set utf8 collation utf8_general_ci
+   * @param string $pTstC24 @todo describe parameter
+   *                        mediumtext character set utf8 collation utf8_general_ci
+   * @param string $pTstC25 @todo describe parameter
+   *                        longtext character set utf8 collation utf8_general_ci
+   * @param string $pTstC26 @todo describe parameter
+   *                        enum('a','b') character set utf8 collation utf8_general_ci
+   * @param string $pTstC27 @todo describe parameter
+   *                        set('a','b') character set utf8 collation utf8_general_ci
+   *
+   * @return array
+   * @throws ResultException
+   * @throws RuntimeException
+   */
+  public static function foo1Select($pTstC00, $pTstC01, $pTstC02, $pTstC03, $pTstC04, $pTstC05, $pTstC06, $pTstC07, $pTstC08, $pTstC09, $pTstC10, $pTstC11, $pTstC12, $pTstC13, $pTstC14, $pTstC15, $pTstC16, $pTstC17, $pTstC18, $pTstC19, $pTstC20, $pTstC21, $pTstC22, $pTstC23, $pTstC24, $pTstC25, $pTstC26, $pTstC27)
+  {
+    $query = 'CALL tst_foo1_select('.self::quoteNum($pTstC00).','.self::quoteNum($pTstC01).','.self::quoteNum($pTstC02).','.self::quoteNum($pTstC03).','.self::quoteNum($pTstC04).','.self::quoteNum($pTstC05).','.self::quoteNum($pTstC06).','.self::quoteNum($pTstC07).','.self::quoteBit($pTstC08).','.self::quoteString($pTstC09).','.self::quoteString($pTstC10).','.self::quoteString($pTstC11).','.self::quoteString($pTstC12).','.self::quoteNum($pTstC13).','.self::quoteString($pTstC14).','.self::quoteString($pTstC15).','.self::quoteString($pTstC16).','.self::quoteString($pTstC17).',?,?,?,?,?,?,?,?,'.self::quoteString($pTstC26).','.self::quoteString($pTstC27).')';
+    $stmt  = self::$mysqli->prepare($query);
+    if (!$stmt) self::mySqlError('mysqli::prepare');
+
+    $null = null;
+    $b = $stmt->bind_param('bbbbbbbb', $null,$null,$null,$null,$null,$null,$null,$null);
+    if (!$b) self::mySqlError('mysqli_stmt::bind_param');
+
+    self::getMaxAllowedPacket();
+
+    $n = strlen($pTstC18);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(0, substr($pTstC18, $p, self::$chunkSize));
+      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
+      $p += self::$chunkSize;
+    }
+
+    $n = strlen($pTstC19);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(1, substr($pTstC19, $p, self::$chunkSize));
+      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
+      $p += self::$chunkSize;
+    }
+
+    $n = strlen($pTstC20);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(2, substr($pTstC20, $p, self::$chunkSize));
+      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
+      $p += self::$chunkSize;
+    }
+
+    $n = strlen($pTstC21);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(3, substr($pTstC21, $p, self::$chunkSize));
+      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
+      $p += self::$chunkSize;
+    }
+
+    $n = strlen($pTstC22);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(4, substr($pTstC22, $p, self::$chunkSize));
+      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
+      $p += self::$chunkSize;
+    }
+
+    $n = strlen($pTstC23);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(5, substr($pTstC23, $p, self::$chunkSize));
+      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
+      $p += self::$chunkSize;
+    }
+
+    $n = strlen($pTstC24);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(6, substr($pTstC24, $p, self::$chunkSize));
+      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
+      $p += self::$chunkSize;
+    }
+
+    $n = strlen($pTstC25);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(7, substr($pTstC25, $p, self::$chunkSize));
+      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
+      $p += self::$chunkSize;
+    }
+
+    if (self::$logQueries)
+    {
+      $time0 = microtime(true);
+
+      $b = $stmt->execute();
+      if (!$b) self::mySqlError('mysqli_stmt::execute');
+
+      self::$queryLog[] = ['query' => $query,
+      'time'  => microtime(true) - $time0];
+    }
+    else
+    {
+      $b = $stmt->execute();
+      if (!$b) self::mySqlError('mysqli_stmt::execute');
+    }
+
+    $row = [];
+    self::bindAssoc($stmt, $row);
+
+    $tmp = [];
+    while (($b = $stmt->fetch()))
+    {
+      $new = [];
+      foreach($row as $key => $value)
+      {
+        $new[$key] = $value;
+      }
+      $tmp[] = $new;
+    }
+
+    $stmt->close();
+    if (self::$mysqli->more_results()) self::$mysqli->next_result();
+
+    if ($b===false) self::mySqlError('mysqli_stmt::fetch');
+    if (count($tmp)!=1) throw new ResultException('1', count($tmp), $query);
+
+    return $row;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   *
+   * @param int    $pTstC00 @todo describe parameter
+   *                        int(11)
+   * @param int    $pTstC01 @todo describe parameter
+   *                        smallint(6)
+   * @param int    $pTstC02 @todo describe parameter
+   *                        tinyint(4)
+   * @param int    $pTstC03 @todo describe parameter
+   *                        mediumint(9)
+   * @param int    $pTstC04 @todo describe parameter
+   *                        bigint(20)
+   * @param float  $pTstC05 @todo describe parameter
+   *                        decimal(10,2)
+   * @param float  $pTstC06 @todo describe parameter
+   *                        float
+   * @param float  $pTstC07 @todo describe parameter
+   *                        double
+   * @param int    $pTstC08 @todo describe parameter
+   *                        bit(8)
+   * @param string $pTstC09 @todo describe parameter
+   *                        date
+   * @param string $pTstC10 @todo describe parameter
+   *                        datetime
+   * @param string $pTstC11 @todo describe parameter
+   *                        timestamp
+   * @param string $pTstC12 @todo describe parameter
+   *                        time
+   * @param int    $pTstC13 @todo describe parameter
+   *                        year(4)
+   * @param string $pTstC14 @todo describe parameter
+   *                        char(10) character set utf8 collation utf8_general_ci
+   * @param string $pTstC15 @todo describe parameter
+   *                        varchar(10) character set utf8 collation utf8_general_ci
+   * @param string $pTstC16 @todo describe parameter
+   *                        binary(10)
+   * @param string $pTstC17 @todo describe parameter
+   *                        varbinary(10)
+   * @param string $pTstC18 @todo describe parameter
+   *                        tinyblob
+   * @param string $pTstC19 @todo describe parameter
+   *                        blob
+   * @param string $pTstC20 @todo describe parameter
+   *                        mediumblob
+   * @param string $pTstC21 @todo describe parameter
+   *                        longblob
+   * @param string $pTstC22 @todo describe parameter
+   *                        tinytext character set utf8 collation utf8_general_ci
+   * @param string $pTstC23 @todo describe parameter
+   *                        text character set utf8 collation utf8_general_ci
+   * @param string $pTstC24 @todo describe parameter
+   *                        mediumtext character set utf8 collation utf8_general_ci
+   * @param string $pTstC25 @todo describe parameter
+   *                        longtext character set utf8 collation utf8_general_ci
+   * @param string $pTstC26 @todo describe parameter
+   *                        enum('a','b') character set utf8 collation utf8_general_ci
+   * @param string $pTstC27 @todo describe parameter
+   *                        set('a','b') character set utf8 collation utf8_general_ci
+   *
+   * @return int
+   * @throws RuntimeException
+   */
+  public static function foo1Update($pTstC00, $pTstC01, $pTstC02, $pTstC03, $pTstC04, $pTstC05, $pTstC06, $pTstC07, $pTstC08, $pTstC09, $pTstC10, $pTstC11, $pTstC12, $pTstC13, $pTstC14, $pTstC15, $pTstC16, $pTstC17, $pTstC18, $pTstC19, $pTstC20, $pTstC21, $pTstC22, $pTstC23, $pTstC24, $pTstC25, $pTstC26, $pTstC27)
+  {
+    $query = 'CALL tst_foo1_update('.self::quoteNum($pTstC00).','.self::quoteNum($pTstC01).','.self::quoteNum($pTstC02).','.self::quoteNum($pTstC03).','.self::quoteNum($pTstC04).','.self::quoteNum($pTstC05).','.self::quoteNum($pTstC06).','.self::quoteNum($pTstC07).','.self::quoteBit($pTstC08).','.self::quoteString($pTstC09).','.self::quoteString($pTstC10).','.self::quoteString($pTstC11).','.self::quoteString($pTstC12).','.self::quoteNum($pTstC13).','.self::quoteString($pTstC14).','.self::quoteString($pTstC15).','.self::quoteString($pTstC16).','.self::quoteString($pTstC17).',?,?,?,?,?,?,?,?,'.self::quoteString($pTstC26).','.self::quoteString($pTstC27).')';
+    $stmt  = self::$mysqli->prepare($query);
+    if (!$stmt) self::mySqlError('mysqli::prepare');
+
+    $null = null;
+    $b = $stmt->bind_param('bbbbbbbb', $null,$null,$null,$null,$null,$null,$null,$null);
+    if (!$b) self::mySqlError('mysqli_stmt::bind_param');
+
+    self::getMaxAllowedPacket();
+
+    $n = strlen($pTstC18);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(0, substr($pTstC18, $p, self::$chunkSize));
+      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
+      $p += self::$chunkSize;
+    }
+
+    $n = strlen($pTstC19);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(1, substr($pTstC19, $p, self::$chunkSize));
+      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
+      $p += self::$chunkSize;
+    }
+
+    $n = strlen($pTstC20);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(2, substr($pTstC20, $p, self::$chunkSize));
+      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
+      $p += self::$chunkSize;
+    }
+
+    $n = strlen($pTstC21);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(3, substr($pTstC21, $p, self::$chunkSize));
+      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
+      $p += self::$chunkSize;
+    }
+
+    $n = strlen($pTstC22);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(4, substr($pTstC22, $p, self::$chunkSize));
+      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
+      $p += self::$chunkSize;
+    }
+
+    $n = strlen($pTstC23);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(5, substr($pTstC23, $p, self::$chunkSize));
+      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
+      $p += self::$chunkSize;
+    }
+
+    $n = strlen($pTstC24);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(6, substr($pTstC24, $p, self::$chunkSize));
+      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
+      $p += self::$chunkSize;
+    }
+
+    $n = strlen($pTstC25);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(7, substr($pTstC25, $p, self::$chunkSize));
+      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
+      $p += self::$chunkSize;
+    }
+
+    if (self::$logQueries)
+    {
+      $time0 = microtime(true);
+
+      $b = $stmt->execute();
+      if (!$b) self::mySqlError('mysqli_stmt::execute');
+
+      self::$queryLog[] = ['query' => $query,
+      'time'  => microtime(true) - $time0];
+    }
+    else
+    {
+      $b = $stmt->execute();
+      if (!$b) self::mySqlError('mysqli_stmt::execute');
+    }
+
+    $ret = self::$mysqli->affected_rows;
+
+    $stmt->close();
+    if (self::$mysqli->more_results()) self::$mysqli->next_result();
+
+    return $ret;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Test for magic constant.
    *
    * @return string|null
@@ -377,6 +1093,18 @@ class DataLayer extends StaticDataLayer
   public static function tstTestIllegalQuery()
   {
     return self::executeRows('CALL tst_test_illegal_query()');
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Test for labels.
+   *
+   * @return \array[]
+   * @throws RuntimeException
+   */
+  public static function testLabel()
+  {
+    return self::executeRows('CALL tst_test_label()');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
