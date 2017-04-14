@@ -33,6 +33,13 @@ class ConstantsCommand extends MySqlCommand
   private $className;
 
   /**
+   * Regular expression for matching columns names.
+   *
+   * @var string
+   */
+  private $columnExpression;
+
+  /**
    * All columns in the MySQL schema.
    *
    * @var array
@@ -334,7 +341,7 @@ class ConstantsCommand extends MySqlCommand
    */
   private function getLabels()
   {
-    $tables = DataLayer::getLabelTables();
+    $tables = DataLayer::getLabelTables($this->columnExpression);
     foreach ($tables as $table)
     {
       $rows = DataLayer::getLabelsFromTable($table['table_name'], $table['id'], $table['label']);
@@ -471,6 +478,7 @@ class ConstantsCommand extends MySqlCommand
 
     $this->constantsFilename = self::getSetting($settings, false, 'constants', 'columns');
     $this->className         = self::getSetting($settings, false, 'constants', 'class');
+    $this->columnExpression  = self::getSetting($settings, false, 'constants', 'column');
 
     return $settings;
   }
