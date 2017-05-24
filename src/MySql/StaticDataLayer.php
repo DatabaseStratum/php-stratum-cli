@@ -105,6 +105,7 @@ class StaticDataLayer
   protected static $queryLog;
 
   //--------------------------------------------------------------------------------------------------------------------
+
   /**
    * Starts a transaction.
    *
@@ -714,6 +715,17 @@ class StaticDataLayer
   }
 
   //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns a literal for an expression with a separated list of integers that can be safely used in SQL
+   * statements. Throws an exception if the value is a list of integers.
+   *
+   * @param string|array $list      The list of integers.
+   * @param string       $delimiter The field delimiter (one character only).
+   * @param string       $enclosure The field enclosure character (one character only).
+   * @param string       $escape    The escape character (one character only)
+   *
+   * @return string
+   */
   public static function quoteListOfInt($list, $delimiter, $enclosure, $escape)
   {
     if ($list===null || $list===false || $list==='' || $list===[])
@@ -968,7 +980,7 @@ class StaticDataLayer
     foreach ($columns as $column)
     {
       $separator .= str_repeat('-', $column['length'] + 2).'+';
-      $spaces = ($column['length'] + 2) - strlen($column['header']);
+      $spaces    = ($column['length'] + 2) - strlen($column['header']);
 
       $l_spaces = $spaces / 2;
       $r_spaces = ($spaces / 2) + ($spaces % 2);

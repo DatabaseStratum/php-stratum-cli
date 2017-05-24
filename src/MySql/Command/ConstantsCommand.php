@@ -418,6 +418,11 @@ class ConstantsCommand extends MySqlCommand
   }
 
   //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Generates PHP code with constant declarations.
+   *
+   * @return array The generated PHP code, lines are stored as rows in the array.
+   */
   private function makeConstantStatements()
   {
     $width1    = 0;
