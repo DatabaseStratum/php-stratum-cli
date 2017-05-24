@@ -20,15 +20,15 @@
     }
   ],
   "require-dev": {
-    "phpunit/phpunit": "4.* || 5.*",
-    "setbased/phing-extensions": "2.*"
+    "phpunit/phpunit": "^4.0 || ^5.0",
+    "setbased/phing-extensions": "^2.0.1"
   },
   "require": {
     "php": ">=5.4.0",
-    "setbased/exception": "1.*",
-    "setbased/helper-code-store-mysql": "1.*",
-    "setbased/helper-code-store-php": "1.*",
-    "setbased/php-affirm": "*",
+    "setbased/exception": "^1.0.0",
+    "setbased/helper-code-store-mysql": "^1.0.0",
+    "setbased/helper-code-store-php": "^1.0.1",
+    "setbased/php-affirm": "^0.1.2",
     "symfony/console": "^2.8 || ^3.0",
     "zendframework/zend-code": ">=2.0"
   },
