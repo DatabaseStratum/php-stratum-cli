@@ -22,9 +22,9 @@ before_install:
   
 install:
   - rm -f composer.lock
+  - ln -sf C.txt test/MySql/C.php
   - composer self-update
   - composer update
-  - ln -sf C.txt test/MySql/C.php
     
 script:
 
