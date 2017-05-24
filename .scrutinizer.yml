@@ -8,7 +8,7 @@ tools:
 
 build:
     dependencies:
-        overide:
+        override:
             - ln -sf C.txt test/MySql/C.php
             - composer install --no-interaction
 
