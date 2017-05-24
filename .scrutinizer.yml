@@ -7,7 +7,7 @@ tools:
                         - SetBased\Stratum\MySql\Wrapper
 
 build:
-    project_setup:
+    dependencies:
         before:
             - ln -sf C.txt test/MySql/C.php
 
