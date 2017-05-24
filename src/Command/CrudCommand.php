@@ -3,11 +3,11 @@
 namespace SetBased\Stratum\Command;
 
 use SetBased\Exception\FallenException;
-use SetBased\Stratum\MySql\DataLayer;
 use SetBased\Stratum\MySql\Helper\Crud\DeleteRoutine;
 use SetBased\Stratum\MySql\Helper\Crud\InsertRoutine;
 use SetBased\Stratum\MySql\Helper\Crud\SelectRoutine;
 use SetBased\Stratum\MySql\Helper\Crud\UpdateRoutine;
+use SetBased\Stratum\MySql\MetadataDataLayer;
 use SetBased\Stratum\MySql\StaticDataLayer;
 use SetBased\Stratum\Style\StratumStyle;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -70,6 +70,7 @@ class CrudCommand extends BaseCommand
   private $sourceDirectory;
 
   //--------------------------------------------------------------------------------------------------------------------
+
   /**
    * {@inheritdoc}
    */
@@ -101,10 +102,10 @@ class CrudCommand extends BaseCommand
     $password              = $this->getSetting($settings, true, 'database', 'password');
     $this->dataSchema      = $this->getSetting($settings, true, 'database', 'database');
 
-    DataLayer::connect($host, $user, $password, $this->dataSchema);
-    DataLayer::setIo($this->io);
+    MetadataDataLayer::connect($host, $user, $password, $this->dataSchema);
+    MetadataDataLayer::setIo($this->io);
 
-    $tableList = DataLayer::getTablesNames($this->dataSchema);
+    $tableList = MetadataDataLayer::getTablesNames($this->dataSchema);
 
     $this->helper = new QuestionHelper();
 
@@ -112,7 +113,7 @@ class CrudCommand extends BaseCommand
 
     $this->startAsking($tableList);
 
-    DataLayer::disconnect();
+    MetadataDataLayer::disconnect();
   }
 
   //--------------------------------------------------------------------------------------------------------------------

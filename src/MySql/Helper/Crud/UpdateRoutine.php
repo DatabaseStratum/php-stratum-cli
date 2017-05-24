@@ -2,7 +2,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\MySql\Helper\Crud;
 
-use SetBased\Stratum\MySql\DataLayer;
+use SetBased\Stratum\MySql\MetadataDataLayer;
 use SetBased\Stratum\MySql\StaticDataLayer;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -18,7 +18,7 @@ class UpdateRoutine extends BaseRoutine
   protected function generateBody($params, $columns)
   {
     $set         = [];
-    $primaryKeys = DataLayer::getTablePrimaryKeys($this->dataSchema, $this->tableName);
+    $primaryKeys = MetadataDataLayer::getTablePrimaryKeys($this->dataSchema, $this->tableName);
 
     foreach ($columns as $column)
     {

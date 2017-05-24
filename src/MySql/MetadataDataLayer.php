@@ -286,6 +286,7 @@ union all
 
     return (string)self::executeSingleton1($query);
   }
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Selects metadata of tables with a label column.
@@ -307,7 +308,6 @@ and   t2.column_name like '%%\\_label'";
 
     return self::executeRows($query);
   }
-
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Selects all labels from a table with labels.
@@ -378,6 +378,94 @@ where ROUTINE_SCHEMA = database()
 order by routine_name';
 
     return self::executeRows($query);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Selects metadata of all columns of table.
+   *
+   * @param string $schemaName The name of the table schema.
+   * @param string $tableName  The name of the table.
+   *
+   * @return \array[]
+   */
+  public static function getTableColumns($schemaName, $tableName)
+  {
+    $sql = sprintf('
+select COLUMN_NAME        as column_name
+,      COLUMN_TYPE        as column_type
+,      IS_NULLABLE        as is_nullable
+,      CHARACTER_SET_NAME as character_set_name
+,      COLLATION_NAME     as collation_name
+,      EXTRA              as extra
+from   information_schema.COLUMNS
+where  TABLE_SCHEMA = %s
+and    TABLE_NAME   = %s
+order by ORDINAL_POSITION',
+                   self::$dl->quoteString($schemaName),
+                   self::$dl->quoteString($tableName));
+
+    return self::$dl->executeRows($sql);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Selects all primary keys from table.
+   *
+   * @param string $schemaName The name of the table schema.
+   * @param string $tableName  The name of the table.
+   *
+   * @return \array[]
+   */
+  public static function getTablePrimaryKeys($schemaName, $tableName)
+  {
+    $sql = sprintf('
+SHOW INDEX FROM %s.%s
+WHERE Key_name = \'PRIMARY\'',
+                   $schemaName,
+                   $tableName);
+
+    return self::$dl->executeRows($sql);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Selects all unique keys from table.
+   *
+   * @param string $schemaName The name of the table schema.
+   * @param string $tableName  The name of the table.
+   *
+   * @return \array[]
+   */
+  public static function getTableUniqueKeys($schemaName, $tableName)
+  {
+    $sql = sprintf('
+SHOW INDEX FROM %s.%s
+WHERE Non_unique = 0',
+                   $schemaName,
+                   $tableName);
+
+    return self::$dl->executeRows($sql);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Selects all table names in a schema.
+   *
+   * @param string $schemaName The name of the schema.
+   *
+   * @return \array[]
+   */
+  public static function getTablesNames($schemaName)
+  {
+    $sql = sprintf("
+select TABLE_NAME as table_name
+from   information_schema.TABLES
+where  TABLE_SCHEMA = %s
+and    TABLE_TYPE   = 'BASE TABLE'
+order by TABLE_NAME", self::$dl->quoteString($schemaName));
+
+    return self::$dl->executeRows($sql);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

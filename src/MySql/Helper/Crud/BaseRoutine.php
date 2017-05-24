@@ -4,7 +4,7 @@ namespace SetBased\Stratum\MySql\Helper\Crud;
 
 use SetBased\Exception\FallenException;
 use SetBased\Helper\CodeStore\MySqlCompoundSyntaxCodeStore;
-use SetBased\Stratum\MySql\DataLayer;
+use SetBased\Stratum\MySql\MetadataDataLayer;
 use SetBased\Stratum\MySql\StaticDataLayer;
 use SetBased\Stratum\Style\StratumStyle;
 use Symfony\Component\Console\Helper\Helper;
@@ -124,7 +124,7 @@ abstract class BaseRoutine
 
     $this->codeStore = new MySqlCompoundSyntaxCodeStore();
 
-    $tableColumns = DataLayer::getTableColumns($this->dataSchema, $this->tableName);
+    $tableColumns = MetadataDataLayer::getTableColumns($this->dataSchema, $this->tableName);
     $params       = [];
     if ($spType!=='INSERT')
     {
@@ -200,8 +200,8 @@ abstract class BaseRoutine
    */
   protected function checkUniqueKeys($columns, $spType = null)
   {
-    $primaryKeys = DataLayer::getTablePrimaryKeys($this->dataSchema, $this->tableName);
-    $uniqueKeys  = DataLayer::getTableUniqueKeys($this->dataSchema, $this->tableName);
+    $primaryKeys = MetadataDataLayer::getTablePrimaryKeys($this->dataSchema, $this->tableName);
+    $uniqueKeys  = MetadataDataLayer::getTableUniqueKeys($this->dataSchema, $this->tableName);
 
     $resultColumns = [];
 
