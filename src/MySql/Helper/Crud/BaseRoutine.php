@@ -196,7 +196,7 @@ abstract class BaseRoutine
    * @param array[]     $columns Columns from table.
    * @param string|null $spType  Stored procedure type {insert|update|delete|select}.
    *
-   * @return array[]|null
+   * @return array|null
    */
   protected function checkUniqueKeys($columns, $spType = null)
   {
@@ -207,7 +207,7 @@ abstract class BaseRoutine
 
     if (!isset($spType))
     {
-      if (count($uniqueKeys)<=0 && count($primaryKeys)<=0)
+      if (empty($uniqueKeys) && empty($primaryKeys))
       {
         return null;
       }
@@ -217,7 +217,7 @@ abstract class BaseRoutine
       }
     }
 
-    if (count($primaryKeys)>0)
+    if (!empty($primaryKeys))
     {
       foreach ($columns as $column)
       {
@@ -232,7 +232,7 @@ abstract class BaseRoutine
     }
     else
     {
-      if (count($uniqueKeys)>0)
+      if (!empty($uniqueKeys))
       {
         reset($uniqueKeys);
         $first = key($uniqueKeys);
