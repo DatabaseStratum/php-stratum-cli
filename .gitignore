@@ -2,6 +2,7 @@
 /bin/phing
 /bin/phpunit
 /build/
+/composer.lock
 /doc/
 /test/coverage.xml
 /test/MySql/C.php
