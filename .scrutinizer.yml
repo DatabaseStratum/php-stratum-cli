@@ -15,6 +15,7 @@ build:
             - mysql -u root -e "grant all on test.*  to 'test'@'localhost';"
             - mysql -u root -e "set global binlog_format = 'row';"
             - mysql -u root -e "set global log_bin_trust_function_creators = 1;"
+            - ln -s C.txt test/MySql/C.php
 
         override:
             -

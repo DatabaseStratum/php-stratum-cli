@@ -2,9 +2,9 @@
 /bin/phing
 /bin/phpunit
 /build/
-/composer.lock
 /doc/
 /test/coverage.xml
+/test/MySql/C.php
 /test/MySql/etc/routines.json
 /test/report/
 /vendor/
