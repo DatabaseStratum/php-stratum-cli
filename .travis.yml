@@ -22,9 +22,13 @@ before_install:
   - mysql -u root -e "set global log_bin_trust_function_creators = 1;"
   
 install:
+  - composer self-update
+  - rm -f composer.lock
+  - composer update
   - ln -sf C.txt test/MySql/C.php
     
-script: 
+script:
+
   - ./bin/phing unit
   
 
