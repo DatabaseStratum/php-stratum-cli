@@ -21,7 +21,7 @@ class TableTest extends DataLayerTestCase
 ';
 
     ob_start();
-    DataLayer::tstTestTable();
+    TestDataLayer::tstTestTable();
     $table = ob_get_contents();
     ob_end_clean();
 

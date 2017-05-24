@@ -11,7 +11,7 @@ class MagicConstantTest extends DataLayerTestCase
    */
   public function test1()
   {
-    $ret = DataLayer::tstMagicConstant01();
+    $ret = TestDataLayer::tstMagicConstant01();
     $this->assertEquals('tst_magic_constant01', $ret);
   }
 
@@ -21,7 +21,7 @@ class MagicConstantTest extends DataLayerTestCase
    */
   public function test2()
   {
-    $ret = DataLayer::tstMagicConstant02();
+    $ret = TestDataLayer::tstMagicConstant02();
     $this->assertEquals(8, $ret);
   }
 
@@ -33,7 +33,7 @@ class MagicConstantTest extends DataLayerTestCase
   {
     $filename = realpath(__DIR__.'/../../test/MySql/psql/tst_magic_constant03.psql');
 
-    $ret = DataLayer::tstMagicConstant03();
+    $ret = TestDataLayer::tstMagicConstant03();
     $this->assertEquals($filename, $ret);
   }
 
@@ -45,7 +45,7 @@ class MagicConstantTest extends DataLayerTestCase
   {
     $dir_name = realpath(__DIR__.'/../../test/MySql/psql');
 
-    $ret = DataLayer::tstMagicConstant04();
+    $ret = TestDataLayer::tstMagicConstant04();
     $this->assertEquals($dir_name, $ret);
   }
 
@@ -59,7 +59,7 @@ class MagicConstantTest extends DataLayerTestCase
 
     if ($dir_name)
     {
-      $ret = DataLayer::tstMagicConstant05();
+      $ret = TestDataLayer::tstMagicConstant05();
       $this->assertEquals($dir_name, $ret);
     }
   }

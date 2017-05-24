@@ -11,7 +11,7 @@ class DataLayerTestCase extends \PHPUnit_Framework_TestCase
    */
   protected function setUp()
   {
-    DataLayer::connect('localhost', 'test', 'test', 'test');
+    TestDataLayer::connect('localhost', 'test', 'test', 'test');
   }
 
   //--------------------------------------------------------------------------------------------------------------------

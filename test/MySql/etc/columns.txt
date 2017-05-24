@@ -1,3 +1,21 @@
+ABC_BLOB.blb_id         10
+ABC_BLOB.cmp_id          5
+ABC_BLOB.bdt_id         10
+ABC_BLOB.blb_size       10
+ABC_BLOB.blb_md5        16
+ABC_BLOB.blb_filename  255
+ABC_BLOB.blb_mime_type  48
+ABC_BLOB.blb_timestamp  16
+
+ABC_BLOB_DATA.bdt_id           10
+ABC_BLOB_DATA.cmp_id            5
+ABC_BLOB_DATA.bdt_md5          16
+ABC_BLOB_DATA.bdt_data 4294967295
+
+AUT_COMPANY.cmp_id     5
+AUT_COMPANY.cmp_abbr  15
+AUT_COMPANY.cmp_label 20
+
 TST_FOO1.tst_c00         10
 TST_FOO1.tst_c01          5
 TST_FOO1.tst_c02          3
@@ -681,7 +699,7 @@ information_schema.INNODB_CMP.compress_time   10
 information_schema.INNODB_CMP.uncompress_ops  10
 information_schema.INNODB_CMP.uncompress_time 10
 
-information_schema.INNODB_FT_INDEX_TABLE.WORD         255
+information_schema.INNODB_FT_INDEX_TABLE.WORD         337
 information_schema.INNODB_FT_INDEX_TABLE.FIRST_DOC_ID  20
 information_schema.INNODB_FT_INDEX_TABLE.LAST_DOC_ID   20
 information_schema.INNODB_FT_INDEX_TABLE.DOC_COUNT     20
@@ -767,7 +785,7 @@ information_schema.INNODB_BUFFER_POOL_STATS.LRU_IO_CURRENT                   20
 information_schema.INNODB_BUFFER_POOL_STATS.UNCOMPRESS_TOTAL                 20
 information_schema.INNODB_BUFFER_POOL_STATS.UNCOMPRESS_CURRENT               20
 
-information_schema.INNODB_FT_INDEX_CACHE.WORD         255
+information_schema.INNODB_FT_INDEX_CACHE.WORD         337
 information_schema.INNODB_FT_INDEX_CACHE.FIRST_DOC_ID  20
 information_schema.INNODB_FT_INDEX_CACHE.LAST_DOC_ID   20
 information_schema.INNODB_FT_INDEX_CACHE.DOC_COUNT     20
@@ -900,6 +918,34 @@ information_schema.INNODB_TABLESPACES_SCRUBBING.CURRENT_SCRUB_ACTIVE_THREADS   1
 information_schema.INNODB_TABLESPACES_SCRUBBING.CURRENT_SCRUB_PAGE_NUMBER      20
 information_schema.INNODB_TABLESPACES_SCRUBBING.CURRENT_SCRUB_MAX_PAGE_NUMBER  20
 
+sample01.BAR_USER.usr_id            10
+sample01.BAR_USER.ust_id             3
+sample01.BAR_USER.usr_name          40
+sample01.BAR_USER.usr_password_hash 60
+sample01.BAR_USER.usr_email         80
+
+sample01.BAR_USER_STATUS.ust_id           3
+sample01.BAR_USER_STATUS.ust_description 40
+sample01.BAR_USER_STATUS.ust_label       20
+
+test.ABC_BLOB.blb_id         10
+test.ABC_BLOB.cmp_id          5
+test.ABC_BLOB.bdt_id         10
+test.ABC_BLOB.blb_size       10
+test.ABC_BLOB.blb_md5        16
+test.ABC_BLOB.blb_filename  255
+test.ABC_BLOB.blb_mime_type  48
+test.ABC_BLOB.blb_timestamp  16
+
+test.ABC_BLOB_DATA.bdt_id           10
+test.ABC_BLOB_DATA.cmp_id            5
+test.ABC_BLOB_DATA.bdt_md5          16
+test.ABC_BLOB_DATA.bdt_data 4294967295
+
+test.AUT_COMPANY.cmp_id     5
+test.AUT_COMPANY.cmp_abbr  15
+test.AUT_COMPANY.cmp_label 20
+
 test.TST_FOO1.tst_c00         10
 test.TST_FOO1.tst_c01          5
 test.TST_FOO1.tst_c02          3
@@ -943,4 +989,13 @@ test.TST_TABLE.tst_c03 10
 test.TST_TABLE.tst_c04 16
 test.TST_TABLE.t       10
 test.TST_TABLE.s       10
+
+test_audit.TABLE1.c1  3
+test_audit.TABLE1.c2  5
+test_audit.TABLE1.c4 10
+
+test_data.TABLE1.c1  3
+test_data.TABLE1.c2  5
+test_data.TABLE1.c3  7
+test_data.TABLE1.c4 10
 

@@ -11,7 +11,7 @@ class Singleton1WithLobTest extends DataLayerTestCase
    */
   public function test1()
   {
-    $ret = DataLayer::tstTestSingleton1aWithLob(1, 'blob');
+    $ret = TestDataLayer::tstTestSingleton1aWithLob(1, 'blob');
     $this->assertEquals('1', $ret);
   }
 
@@ -23,7 +23,7 @@ class Singleton1WithLobTest extends DataLayerTestCase
    */
   public function test2()
   {
-    DataLayer::tstTestSingleton1aWithLob(0, 'blob');
+    TestDataLayer::tstTestSingleton1aWithLob(0, 'blob');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ class Singleton1WithLobTest extends DataLayerTestCase
    */
   public function test3()
   {
-    DataLayer::tstTestSingleton1aWithLob(2, 'blob');
+    TestDataLayer::tstTestSingleton1aWithLob(2, 'blob');
   }
 
   //--------------------------------------------------------------------------------------------------------------------

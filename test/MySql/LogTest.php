@@ -11,7 +11,7 @@ class LogTest extends DataLayerTestCase
    */
   public function test1()
   {
-    $n = DataLayer::tstTestLog();
+    $n = TestDataLayer::tstTestLog();
 
     $this->expectOutputRegex('/^(\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}\sHello, world\n){2}$/');
     $this->assertEquals(2, $n);

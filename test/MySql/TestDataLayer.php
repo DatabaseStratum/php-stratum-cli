@@ -10,7 +10,7 @@ use SetBased\Stratum\MySql\StaticDataLayer;
 /**
  * The data layer.
  */
-class DataLayer extends StaticDataLayer
+class TestDataLayer extends StaticDataLayer
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -570,9 +570,9 @@ class DataLayer extends StaticDataLayer
   /**
    * Test for conversion of MySQL types to PHP types.
    *
-   * @param float $pPhpType1 Must be converted to PHP type float in the DataLayer.
+   * @param float $pPhpType1 Must be converted to PHP type float in the TestDataLayer.
    *                         decimal(10,2)
-   * @param int   $pPhpType2 Must be converted to PHP type int in the DataLayer.
+   * @param int   $pPhpType2 Must be converted to PHP type int in the TestDataLayer.
    *                         decimal(10,0)
    *
    * @return int

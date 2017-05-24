@@ -1,8 +1,8 @@
 /**
  * Test for conversion of MySQL types to PHP types.
  *
- * @param p_php_type1 Must be converted to PHP type float in the DataLayer.
- * @param p_php_type2 Must be converted to PHP type int in the DataLayer.
+ * @param p_php_type1 Must be converted to PHP type float in the TestDataLayer.
+ * @param p_php_type2 Must be converted to PHP type int in the TestDataLayer.
  */
 create procedure tst_test_parameter_type( p_php_type1 decimal(10,2),
                                           p_php_type2 decimal(10,0) )

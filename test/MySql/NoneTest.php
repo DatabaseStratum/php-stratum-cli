@@ -11,7 +11,7 @@ class NoneTest extends DataLayerTestCase
    */
   public function test1()
   {
-    $ret = DataLayer::tstTestNone(0);
+    $ret = TestDataLayer::tstTestNone(0);
     $this->assertEquals(0, $ret);
   }
 
@@ -21,7 +21,7 @@ class NoneTest extends DataLayerTestCase
    */
   public function test2()
   {
-    $ret = DataLayer::tstTestNone(1);
+    $ret = TestDataLayer::tstTestNone(1);
     $this->assertEquals(1, $ret);
   }
 
@@ -31,7 +31,7 @@ class NoneTest extends DataLayerTestCase
    */
   public function test3()
   {
-    $ret = DataLayer::tstTestNone(20);
+    $ret = TestDataLayer::tstTestNone(20);
     $this->assertEquals(20, $ret);
   }
 

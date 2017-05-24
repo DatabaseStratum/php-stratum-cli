@@ -13,7 +13,7 @@ class ExceptionTest extends DataLayerTestCase
    */
   public function test1()
   {
-    DataLayer::tstTestIllegalQuery();
+    TestDataLayer::tstTestIllegalQuery();
   }
 
   //--------------------------------------------------------------------------------------------------------------------

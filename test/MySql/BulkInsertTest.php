@@ -98,10 +98,10 @@ class BulkInsertTest extends DataLayerTestCase
                'field19' => 'a,b', //  set('a','b','c'),
                'field20' => 1010]; //  bit(4),
 
-    DataLayer::tstTestBulkInsert01($data);
+    TestDataLayer::tstTestBulkInsert01($data);
 
     $query = 'SELECT count(*) FROM `TST_TEMPO`';
-    $ret   = DataLayer::executeSingleton1($query);
+    $ret   = TestDataLayer::executeSingleton1($query);
 
     $this->assertEquals(4, $ret);
   }
@@ -119,7 +119,7 @@ class BulkInsertTest extends DataLayerTestCase
                'field4' => 1, //  int,
                'field5' => 1]; //  int,
 
-    DataLayer::tstTestBulkInsert02($data);
+    TestDataLayer::tstTestBulkInsert02($data);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
