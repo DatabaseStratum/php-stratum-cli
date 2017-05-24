@@ -1,13 +1,5 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-/**
- * PhpStratum
- *
- * @copyright 2005-2015 Paul Water / Set Based IT Consultancy (https://www.setbased.nl)
- * @license   http://www.opensource.org/licenses/mit-license.php MIT
- * @link
- */
-//----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\MySql\Wrapper;
 
 use SetBased\Exception\FallenException;
@@ -364,7 +356,7 @@ abstract class Wrapper
   {
     if ($routine['designation']=='bulk')
     {
-      $ret = '$theBulkHandler';
+      $ret = '$bulkHandler';
     }
     else
     {

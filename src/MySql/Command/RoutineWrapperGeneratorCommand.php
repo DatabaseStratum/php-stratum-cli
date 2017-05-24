@@ -1,13 +1,5 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-/**
- * PhpStratum
- *
- * @copyright 2005-2015 Paul Water / Set Based IT Consultancy (https://www.setbased.nl)
- * @license   http://www.opensource.org/licenses/mit-license.php MIT
- * @link
- */
-//----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\MySql\Command;
 
 use SetBased\Exception\RuntimeException;
@@ -46,42 +38,42 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
    *
    * @var bool
    */
-  private $myLobAsStringFlag;
+  private $lobAsString;
 
   /**
    * The filename of the file with the metadata of all stored procedures.
    *
    * @var string
    */
-  private $myMetadataFilename;
+  private $metadataFilename;
 
   /**
    * Class name for mangling routine and parameter names.
    *
    * @var string
    */
-  private $myNameMangler;
+  private $nameMangler;
 
   /**
    * The class name (including namespace) of the parent class of the routine wrapper.
    *
    * @var string
    */
-  private $myParentClassName;
+  private $parentClassName;
 
   /**
    * The class name (including namespace) of the routine wrapper.
    *
    * @var string
    */
-  private $myWrapperClassName;
+  private $wrapperClassName;
 
   /**
    * The filename where the generated wrapper class must be stored
    *
    * @var string
    */
-  private $myWrapperFilename;
+  private $wrapperFilename;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -108,7 +100,7 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
 
     $this->readConfigurationFile($configFileName);
 
-    if ($this->myWrapperClassName!==null)
+    if ($this->wrapperClassName!==null)
     {
       $this->generateWrapperClass();
     }
@@ -125,7 +117,7 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
     $this->io->title('Wrapper');
 
     /** @var NameMangler $mangler */
-    $mangler  = new $this->myNameMangler();
+    $mangler  = new $this->nameMangler();
     $routines = $this->readRoutineMetadata();
 
     if (!empty($routines))
@@ -167,7 +159,7 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
     $this->writeClassTrailer();
 
     // Write the wrapper class to the filesystem.
-    $this->writeTwoPhases($this->myWrapperFilename, $this->codeStore->getCode());
+    $this->writeTwoPhases($this->wrapperFilename, $this->codeStore->getCode());
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -187,14 +179,14 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
       $settings['wrapper']['lob_as_string'] = false;
     }
 
-    $this->myWrapperClassName = self::getSetting($settings, false, 'wrapper', 'wrapper_class');
-    if ($this->myWrapperClassName!==null)
+    $this->wrapperClassName = self::getSetting($settings, false, 'wrapper', 'wrapper_class');
+    if ($this->wrapperClassName!==null)
     {
-      $this->myParentClassName  = self::getSetting($settings, true, 'wrapper', 'parent_class');
-      $this->myNameMangler      = self::getSetting($settings, true, 'wrapper', 'mangler_class');
-      $this->myWrapperFilename  = self::getSetting($settings, true, 'wrapper', 'wrapper_file');
-      $this->myLobAsStringFlag  = (self::getSetting($settings, true, 'wrapper', 'lob_as_string')) ? true : false;
-      $this->myMetadataFilename = self::getSetting($settings, true, 'loader', 'metadata');
+      $this->parentClassName  = self::getSetting($settings, true, 'wrapper', 'parent_class');
+      $this->nameMangler      = self::getSetting($settings, true, 'wrapper', 'mangler_class');
+      $this->wrapperFilename  = self::getSetting($settings, true, 'wrapper', 'wrapper_file');
+      $this->lobAsString      = (self::getSetting($settings, true, 'wrapper', 'lob_as_string')) ? true : false;
+      $this->metadataFilename = self::getSetting($settings, true, 'loader', 'metadata');
     }
   }
 
@@ -206,7 +198,7 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
    */
   private function readRoutineMetadata()
   {
-    $data = file_get_contents($this->myMetadataFilename);
+    $data = file_get_contents($this->metadataFilename);
 
     $routines = (array)json_decode($data, true);
     if (json_last_error()!=JSON_ERROR_NONE)
@@ -223,16 +215,16 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
    */
   private function writeClassHeader()
   {
-    $p = strrpos($this->myWrapperClassName, '\\');
+    $p = strrpos($this->wrapperClassName, '\\');
     if ($p!==false)
     {
-      $namespace  = ltrim(substr($this->myWrapperClassName, 0, $p), '\\');
-      $class_name = substr($this->myWrapperClassName, $p + 1);
+      $namespace  = ltrim(substr($this->wrapperClassName, 0, $p), '\\');
+      $class_name = substr($this->wrapperClassName, $p + 1);
     }
     else
     {
       $namespace  = null;
-      $class_name = $this->myWrapperClassName;
+      $class_name = $this->wrapperClassName;
     }
 
     // Write PHP tag.
@@ -246,11 +238,11 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
 
     // If the child class and parent class have different names import the parent class. Otherwise use the fully
     // qualified parent class name.
-    $parent_class_name = substr($this->myParentClassName, strrpos($this->myParentClassName, '\\') + 1);
+    $parent_class_name = substr($this->parentClassName, strrpos($this->parentClassName, '\\') + 1);
     if ($class_name!=$parent_class_name)
     {
-      $this->imports[]         = $this->myParentClassName;
-      $this->myParentClassName = $parent_class_name;
+      $this->imports[]       = $this->parentClassName;
+      $this->parentClassName = $parent_class_name;
     }
 
     // Write use statements.
@@ -269,7 +261,7 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
     $this->codeStore->append('/**');
     $this->codeStore->append(' * The data layer.', false);
     $this->codeStore->append(' */', false);
-    $this->codeStore->append(sprintf('class %s extends %s', $class_name, $this->myParentClassName));
+    $this->codeStore->append(sprintf('class %s extends %s', $class_name, $this->parentClassName));
     $this->codeStore->append('{');
   }
 
@@ -294,7 +286,7 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
    */
   private function writeRoutineFunction($routine, $nameMangler)
   {
-    $wrapper = Wrapper::createRoutineWrapper($routine, $this->codeStore, $nameMangler, $this->myLobAsStringFlag);
+    $wrapper = Wrapper::createRoutineWrapper($routine, $this->codeStore, $nameMangler, $this->lobAsString);
     $wrapper->writeRoutineFunction($routine);
 
     $this->imports = array_merge($this->imports, $wrapper->getImports());
