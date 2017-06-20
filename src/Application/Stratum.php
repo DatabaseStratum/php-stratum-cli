@@ -22,7 +22,7 @@ class Stratum extends Application
    */
   public function __construct()
   {
-    parent::__construct('stratum', '0.0.0');
+    parent::__construct('stratum', '0.9.49');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
