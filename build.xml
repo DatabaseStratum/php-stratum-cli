@@ -17,6 +17,19 @@
         <readSemanticVersion file=".version"
                              versionProperty="VERSION"
                              haltOnError="true"/>
+        <!-- Set version of application. -->
+        <reflexive>
+            <fileset dir=".">
+                <include name="src/Application/Stratum.php"/>
+            </fileset>
+            <filterchain>
+                <replaceregexp>
+                    <regexp pattern="parent::__construct\('stratum', .*"
+                            replace="parent::__construct('stratum', '${VERSION}');"/>
+                </replaceregexp>
+            </filterchain>
+        </reflexive>
+
         <gitcommit repository="." message="Release: ${VERSION}" allFiles="true"/>
         <gitpush repository="."/>
         <gittag repository="." name="${VERSION}"/>

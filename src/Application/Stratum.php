@@ -18,6 +18,15 @@ class Stratum extends Application
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * Object constructor.
+   */
+  public function __construct()
+  {
+    parent::__construct('stratum', '0.0.0');
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Gets the default commands that should always be available.
    *
    * @return Command[] An array of default Command instances
