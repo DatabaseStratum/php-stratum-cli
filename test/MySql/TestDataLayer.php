@@ -4,25 +4,23 @@ namespace SetBased\Stratum\Test\MySql;
 
 use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\Exception\ResultException;
-use SetBased\Stratum\MySql\StaticDataLayer;
+use SetBased\Stratum\MySql\DataLayer;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
  * The data layer.
  */
-class TestDataLayer extends StaticDataLayer
+class TestDataLayer extends DataLayer
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for magic constant.
    *
    * @return string|null
-   * @throws ResultException
-   * @throws RuntimeException
    */
-  public static function tstMagicConstant01()
+  public function tstMagicConstant01()
   {
-    return self::executeSingleton1('CALL tst_magic_constant01()');
+    return $this->executeSingleton1('CALL tst_magic_constant01()');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -30,12 +28,10 @@ class TestDataLayer extends StaticDataLayer
    * Test for magic constant.
    *
    * @return string|null
-   * @throws ResultException
-   * @throws RuntimeException
    */
-  public static function tstMagicConstant02()
+  public function tstMagicConstant02()
   {
-    return self::executeSingleton1('CALL tst_magic_constant02()');
+    return $this->executeSingleton1('CALL tst_magic_constant02()');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -43,12 +39,10 @@ class TestDataLayer extends StaticDataLayer
    * Test for magic constant.
    *
    * @return string|null
-   * @throws ResultException
-   * @throws RuntimeException
    */
-  public static function tstMagicConstant03()
+  public function tstMagicConstant03()
   {
-    return self::executeSingleton1('CALL tst_magic_constant03()');
+    return $this->executeSingleton1('CALL tst_magic_constant03()');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -56,12 +50,10 @@ class TestDataLayer extends StaticDataLayer
    * Test for magic constant.
    *
    * @return string|null
-   * @throws ResultException
-   * @throws RuntimeException
    */
-  public static function tstMagicConstant04()
+  public function tstMagicConstant04()
   {
-    return self::executeSingleton1('CALL tst_magic_constant04()');
+    return $this->executeSingleton1('CALL tst_magic_constant04()');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -69,12 +61,10 @@ class TestDataLayer extends StaticDataLayer
    * Test for magic constant.
    *
    * @return string|null
-   * @throws ResultException
-   * @throws RuntimeException
    */
-  public static function tstMagicConstant05()
+  public function tstMagicConstant05()
   {
-    return self::executeSingleton1('CALL tst_magic_constant05()');
+    return $this->executeSingleton1('CALL tst_magic_constant05()');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -123,11 +113,10 @@ class TestDataLayer extends StaticDataLayer
    *                         set('a','b') character set latin1 collation latin1_swedish_ci
    *
    * @return int
-   * @throws RuntimeException
    */
-  public static function tstTest01($pParam00, $pParam01, $pParam02, $pParam03, $pParam04, $pParam05, $pParam06, $pParam07, $pParam08, $pParam09, $pParam10, $pParam11, $pParam12, $pParam13, $pParam14, $pParam15, $pParam16, $pParam17, $pParam26, $pParam27)
+  public function tstTest01($pParam00, $pParam01, $pParam02, $pParam03, $pParam04, $pParam05, $pParam06, $pParam07, $pParam08, $pParam09, $pParam10, $pParam11, $pParam12, $pParam13, $pParam14, $pParam15, $pParam16, $pParam17, $pParam26, $pParam27)
   {
-    return self::executeNone('CALL tst_test01('.self::quoteNum($pParam00).','.self::quoteNum($pParam01).','.self::quoteNum($pParam02).','.self::quoteNum($pParam03).','.self::quoteNum($pParam04).','.self::quoteNum($pParam05).','.self::quoteNum($pParam06).','.self::quoteNum($pParam07).','.self::quoteBit($pParam08).','.self::quoteString($pParam09).','.self::quoteString($pParam10).','.self::quoteString($pParam11).','.self::quoteString($pParam12).','.self::quoteNum($pParam13).','.self::quoteString($pParam14).','.self::quoteString($pParam15).','.self::quoteString($pParam16).','.self::quoteString($pParam17).','.self::quoteString($pParam26).','.self::quoteString($pParam27).')');
+    return $this->executeNone('CALL tst_test01('.$this->quoteNum($pParam00).','.$this->quoteNum($pParam01).','.$this->quoteNum($pParam02).','.$this->quoteNum($pParam03).','.$this->quoteNum($pParam04).','.$this->quoteNum($pParam05).','.$this->quoteNum($pParam06).','.$this->quoteNum($pParam07).','.$this->quoteBit($pParam08).','.$this->quoteString($pParam09).','.$this->quoteString($pParam10).','.$this->quoteString($pParam11).','.$this->quoteString($pParam12).','.$this->quoteNum($pParam13).','.$this->quoteString($pParam14).','.$this->quoteString($pParam15).','.$this->quoteString($pParam16).','.$this->quoteString($pParam17).','.$this->quoteString($pParam26).','.$this->quoteString($pParam27).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -192,112 +181,111 @@ class TestDataLayer extends StaticDataLayer
    *                         set('a','b') character set latin1 collation latin1_swedish_ci
    *
    * @return int
-   * @throws RuntimeException
    */
-  public static function tstTest02($pParam00, $pParam01, $pParam02, $pParam03, $pParam04, $pParam05, $pParam06, $pParam07, $pParam08, $pParam09, $pParam10, $pParam11, $pParam12, $pParam13, $pParam14, $pParam15, $pParam16, $pParam17, $pParam18, $pParam19, $pParam20, $pParam21, $pParam22, $pParam23, $pParam24, $pParam25, $pParam26, $pParam27)
+  public function tstTest02($pParam00, $pParam01, $pParam02, $pParam03, $pParam04, $pParam05, $pParam06, $pParam07, $pParam08, $pParam09, $pParam10, $pParam11, $pParam12, $pParam13, $pParam14, $pParam15, $pParam16, $pParam17, $pParam18, $pParam19, $pParam20, $pParam21, $pParam22, $pParam23, $pParam24, $pParam25, $pParam26, $pParam27)
   {
-    $query = 'CALL tst_test02('.self::quoteNum($pParam00).','.self::quoteNum($pParam01).','.self::quoteNum($pParam02).','.self::quoteNum($pParam03).','.self::quoteNum($pParam04).','.self::quoteNum($pParam05).','.self::quoteNum($pParam06).','.self::quoteNum($pParam07).','.self::quoteBit($pParam08).','.self::quoteString($pParam09).','.self::quoteString($pParam10).','.self::quoteString($pParam11).','.self::quoteString($pParam12).','.self::quoteNum($pParam13).','.self::quoteString($pParam14).','.self::quoteString($pParam15).','.self::quoteString($pParam16).','.self::quoteString($pParam17).',?,?,?,?,?,?,?,?,'.self::quoteString($pParam26).','.self::quoteString($pParam27).')';
-    $stmt  = self::$mysqli->prepare($query);
-    if (!$stmt) self::mySqlError('mysqli::prepare');
+    $query = 'CALL tst_test02('.$this->quoteNum($pParam00).','.$this->quoteNum($pParam01).','.$this->quoteNum($pParam02).','.$this->quoteNum($pParam03).','.$this->quoteNum($pParam04).','.$this->quoteNum($pParam05).','.$this->quoteNum($pParam06).','.$this->quoteNum($pParam07).','.$this->quoteBit($pParam08).','.$this->quoteString($pParam09).','.$this->quoteString($pParam10).','.$this->quoteString($pParam11).','.$this->quoteString($pParam12).','.$this->quoteNum($pParam13).','.$this->quoteString($pParam14).','.$this->quoteString($pParam15).','.$this->quoteString($pParam16).','.$this->quoteString($pParam17).',?,?,?,?,?,?,?,?,'.$this->quoteString($pParam26).','.$this->quoteString($pParam27).')';
+    $stmt  = $this->mysqli->prepare($query);
+    if (!$stmt) $this->mySqlError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('bbbbbbbb', $null,$null,$null,$null,$null,$null,$null,$null);
-    if (!$b) self::mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
 
-    self::getMaxAllowedPacket();
+    $this->getMaxAllowedPacket();
 
     $n = strlen($pParam18);
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data(0, substr($pParam18, $p, self::$chunkSize));
-      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
-      $p += self::$chunkSize;
+      $b = $stmt->send_long_data(0, substr($pParam18, $p, $this->chunkSize));
+      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
+      $p += $this->chunkSize;
     }
 
     $n = strlen($pParam19);
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data(1, substr($pParam19, $p, self::$chunkSize));
-      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
-      $p += self::$chunkSize;
+      $b = $stmt->send_long_data(1, substr($pParam19, $p, $this->chunkSize));
+      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
+      $p += $this->chunkSize;
     }
 
     $n = strlen($pParam20);
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data(2, substr($pParam20, $p, self::$chunkSize));
-      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
-      $p += self::$chunkSize;
+      $b = $stmt->send_long_data(2, substr($pParam20, $p, $this->chunkSize));
+      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
+      $p += $this->chunkSize;
     }
 
     $n = strlen($pParam21);
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data(3, substr($pParam21, $p, self::$chunkSize));
-      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
-      $p += self::$chunkSize;
+      $b = $stmt->send_long_data(3, substr($pParam21, $p, $this->chunkSize));
+      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
+      $p += $this->chunkSize;
     }
 
     $n = strlen($pParam22);
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data(4, substr($pParam22, $p, self::$chunkSize));
-      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
-      $p += self::$chunkSize;
+      $b = $stmt->send_long_data(4, substr($pParam22, $p, $this->chunkSize));
+      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
+      $p += $this->chunkSize;
     }
 
     $n = strlen($pParam23);
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data(5, substr($pParam23, $p, self::$chunkSize));
-      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
-      $p += self::$chunkSize;
+      $b = $stmt->send_long_data(5, substr($pParam23, $p, $this->chunkSize));
+      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
+      $p += $this->chunkSize;
     }
 
     $n = strlen($pParam24);
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data(6, substr($pParam24, $p, self::$chunkSize));
-      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
-      $p += self::$chunkSize;
+      $b = $stmt->send_long_data(6, substr($pParam24, $p, $this->chunkSize));
+      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
+      $p += $this->chunkSize;
     }
 
     $n = strlen($pParam25);
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data(7, substr($pParam25, $p, self::$chunkSize));
-      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
-      $p += self::$chunkSize;
+      $b = $stmt->send_long_data(7, substr($pParam25, $p, $this->chunkSize));
+      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
+      $p += $this->chunkSize;
     }
 
-    if (self::$logQueries)
+    if ($this->logQueries)
     {
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
-      self::$queryLog[] = ['query' => $query,
+      $this->queryLog[] = ['query' => $query,
       'time'  => microtime(true) - $time0];
     }
     else
     {
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
     }
 
-    $ret = self::$mysqli->affected_rows;
+    $ret = $this->mysqli->affected_rows;
 
     $stmt->close();
-    if (self::$mysqli->more_results()) self::$mysqli->next_result();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
     return $ret;
   }
@@ -307,22 +295,21 @@ class TestDataLayer extends StaticDataLayer
    * Test for designation bulk_insert.
    *
    * @param array $rows
-   * @throws RuntimeException
    */
-  public static function tstTestBulkInsert01($rows)
+  public function tstTestBulkInsert01($rows)
   {
-    self::query('CALL tst_test_bulk_insert01()');
+    $this->query('CALL tst_test_bulk_insert01()');
     if (is_array($rows) && !empty($rows))
     {
       $sql = "INSERT INTO `TST_TEMPO`(`tst_col1`,`tst_col2`,`tst_col3`,`tst_col4`,`tst_col5`,`tst_col6`,`tst_col7`,`tst_col8`,`tst_col9`,`tst_col10`,`tst_col11`,`tst_col12`,`tst_col13`,`tst_col14`,`tst_col15`,`tst_col16`,`tst_col17`,`tst_col18`,`tst_col19`,`tst_col20`)";
       $first = true;
       foreach($rows as $row)
       {
-        if ($first) $sql .=' values('.self::quoteNum($row['field1']).','.self::quoteNum($row['field2']).','.self::quoteNum($row['field3']).','.self::quoteNum($row['field4']).','.self::quoteNum($row['field5']).','.self::quoteNum($row['field6']).','.self::quoteNum($row['field7']).','.self::quoteNum($row['field8']).','.self::quoteNum($row['field9']).','.self::quoteString($row['field10']).','.self::quoteString($row['field11']).','.self::quoteString($row['field12']).','.self::quoteString($row['field13']).','.self::quoteString($row['field14']).','.self::quoteString($row['field15']).','.self::quoteString($row['field16']).','.self::quoteString($row['field17']).','.self::quoteString($row['field18']).','.self::quoteString($row['field19']).','.self::quoteBit($row['field20']).')';
-        else        $sql .=',      ('.self::quoteNum($row['field1']).','.self::quoteNum($row['field2']).','.self::quoteNum($row['field3']).','.self::quoteNum($row['field4']).','.self::quoteNum($row['field5']).','.self::quoteNum($row['field6']).','.self::quoteNum($row['field7']).','.self::quoteNum($row['field8']).','.self::quoteNum($row['field9']).','.self::quoteString($row['field10']).','.self::quoteString($row['field11']).','.self::quoteString($row['field12']).','.self::quoteString($row['field13']).','.self::quoteString($row['field14']).','.self::quoteString($row['field15']).','.self::quoteString($row['field16']).','.self::quoteString($row['field17']).','.self::quoteString($row['field18']).','.self::quoteString($row['field19']).','.self::quoteBit($row['field20']).')';
+        if ($first) $sql .=' values('.$this->quoteNum($row['field1']).','.$this->quoteNum($row['field2']).','.$this->quoteNum($row['field3']).','.$this->quoteNum($row['field4']).','.$this->quoteNum($row['field5']).','.$this->quoteNum($row['field6']).','.$this->quoteNum($row['field7']).','.$this->quoteNum($row['field8']).','.$this->quoteNum($row['field9']).','.$this->quoteString($row['field10']).','.$this->quoteString($row['field11']).','.$this->quoteString($row['field12']).','.$this->quoteString($row['field13']).','.$this->quoteString($row['field14']).','.$this->quoteString($row['field15']).','.$this->quoteString($row['field16']).','.$this->quoteString($row['field17']).','.$this->quoteString($row['field18']).','.$this->quoteString($row['field19']).','.$this->quoteBit($row['field20']).')';
+        else        $sql .=',      ('.$this->quoteNum($row['field1']).','.$this->quoteNum($row['field2']).','.$this->quoteNum($row['field3']).','.$this->quoteNum($row['field4']).','.$this->quoteNum($row['field5']).','.$this->quoteNum($row['field6']).','.$this->quoteNum($row['field7']).','.$this->quoteNum($row['field8']).','.$this->quoteNum($row['field9']).','.$this->quoteString($row['field10']).','.$this->quoteString($row['field11']).','.$this->quoteString($row['field12']).','.$this->quoteString($row['field13']).','.$this->quoteString($row['field14']).','.$this->quoteString($row['field15']).','.$this->quoteString($row['field16']).','.$this->quoteString($row['field17']).','.$this->quoteString($row['field18']).','.$this->quoteString($row['field19']).','.$this->quoteBit($row['field20']).')';
         $first = false;
       }
-      self::query($sql);
+      $this->query($sql);
     }
   }
 
@@ -331,22 +318,21 @@ class TestDataLayer extends StaticDataLayer
    * Test for designation bulk_insert.
    *
    * @param array $rows
-   * @throws RuntimeException
    */
-  public static function tstTestBulkInsert02($rows)
+  public function tstTestBulkInsert02($rows)
   {
-    self::query('CALL tst_test_bulk_insert02()');
+    $this->query('CALL tst_test_bulk_insert02()');
     if (is_array($rows) && !empty($rows))
     {
       $sql = "INSERT INTO `TST_TEMPO`(`tst_col1`,`tst_col4`,`tst_col5`)";
       $first = true;
       foreach($rows as $row)
       {
-        if ($first) $sql .=' values('.self::quoteNum($row['field1']).','.self::quoteNum($row['field4']).','.self::quoteNum($row['field5']).')';
-        else        $sql .=',      ('.self::quoteNum($row['field1']).','.self::quoteNum($row['field4']).','.self::quoteNum($row['field5']).')';
+        if ($first) $sql .=' values('.$this->quoteNum($row['field1']).','.$this->quoteNum($row['field4']).','.$this->quoteNum($row['field5']).')';
+        else        $sql .=',      ('.$this->quoteNum($row['field1']).','.$this->quoteNum($row['field4']).','.$this->quoteNum($row['field5']).')';
         $first = false;
       }
-      self::query($sql);
+      $this->query($sql);
     }
   }
 
@@ -360,11 +346,10 @@ class TestDataLayer extends StaticDataLayer
    *                int(11)
    *
    * @return string
-   * @throws RuntimeException
    */
-  public static function tstTestFunction($pA, $pB)
+  public function tstTestFunction($pA, $pB)
   {
-    return self::executeSingleton0('SELECT tst_test_function('.self::quoteNum($pA).','.self::quoteNum($pB).')');
+    return $this->executeSingleton0('SELECT tst_test_function('.$this->quoteNum($pA).','.$this->quoteNum($pB).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -372,11 +357,10 @@ class TestDataLayer extends StaticDataLayer
    * Test for illegal query.
    *
    * @return \array[]
-   * @throws RuntimeException
    */
-  public static function tstTestIllegalQuery()
+  public function tstTestIllegalQuery()
   {
-    return self::executeRows('CALL tst_test_illegal_query()');
+    return $this->executeRows('CALL tst_test_illegal_query()');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -386,15 +370,14 @@ class TestDataLayer extends StaticDataLayer
    *                           varchar(255) character set latin1 collation latin1_swedish_ci
    *
    * @return \array[]
-   * @throws RuntimeException
    */
-  public static function tstTestListOfInt($pIds)
+  public function tstTestListOfInt($pIds)
   {
-    $result = self::query('CALL tst_test_list_of_int('.self::quoteListOfInt($pIds, ',', '\"', '\\').')');
+    $result = $this->query('CALL tst_test_list_of_int('.$this->quoteListOfInt($pIds, ',', '\"', '\\').')');
     $ret = [];
     while($row = $result->fetch_array(MYSQLI_ASSOC)) $ret[$row['tst_id']] = $row;
     $result->free();
-    if (self::$mysqli->more_results()) self::$mysqli->next_result();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
     return  $ret;
   }
@@ -404,11 +387,10 @@ class TestDataLayer extends StaticDataLayer
    * Test for designation type log.
    *
    * @return int
-   * @throws RuntimeException
    */
-  public static function tstTestLog()
+  public function tstTestLog()
   {
-    return self::executeLog('CALL tst_test_log()');
+    return $this->executeLog('CALL tst_test_log()');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -419,48 +401,46 @@ class TestDataLayer extends StaticDataLayer
    *                         longblob
    *
    * @return string|null
-   * @throws ResultException
-   * @throws RuntimeException
    */
-  public static function tstTestMaxAllowedPacket($pTmpBlob)
+  public function tstTestMaxAllowedPacket($pTmpBlob)
   {
     $query = 'CALL tst_test_max_allowed_packet(?)';
-    $stmt  = self::$mysqli->prepare($query);
-    if (!$stmt) self::mySqlError('mysqli::prepare');
+    $stmt  = $this->mysqli->prepare($query);
+    if (!$stmt) $this->mySqlError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('b', $null);
-    if (!$b) self::mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
 
-    self::getMaxAllowedPacket();
+    $this->getMaxAllowedPacket();
 
     $n = strlen($pTmpBlob);
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data(0, substr($pTmpBlob, $p, self::$chunkSize));
-      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
-      $p += self::$chunkSize;
+      $b = $stmt->send_long_data(0, substr($pTmpBlob, $p, $this->chunkSize));
+      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
+      $p += $this->chunkSize;
     }
 
-    if (self::$logQueries)
+    if ($this->logQueries)
     {
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
-      self::$queryLog[] = ['query' => $query,
+      $this->queryLog[] = ['query' => $query,
       'time'  => microtime(true) - $time0];
     }
     else
     {
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
     }
 
     $row = [];
-    self::bindAssoc($stmt, $row);
+    $this->bindAssoc($stmt, $row);
 
     $tmp = [];
     while (($b = $stmt->fetch()))
@@ -474,9 +454,9 @@ class TestDataLayer extends StaticDataLayer
     }
 
     $stmt->close();
-    if (self::$mysqli->more_results()) self::$mysqli->next_result();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
-    if ($b===false) self::mySqlError('mysqli_stmt::fetch');
+    if ($b===false) $this->mySqlError('mysqli_stmt::fetch');
     if (count($tmp)!=1) throw new ResultException('1', count($tmp), $query);
 
     return $tmp[0][0];
@@ -486,12 +466,10 @@ class TestDataLayer extends StaticDataLayer
   /**
    *
    * @return array
-   * @throws ResultException
-   * @throws RuntimeException
    */
-  public static function tstTestNoDocBlock()
+  public function tstTestNoDocBlock()
   {
-    return self::executeRow1('CALL tst_test_no_doc_block()');
+    return $this->executeRow1('CALL tst_test_no_doc_block()');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -502,11 +480,10 @@ class TestDataLayer extends StaticDataLayer
    *                    bigint(20)
    *
    * @return int
-   * @throws RuntimeException
    */
-  public static function tstTestNone($pCount)
+  public function tstTestNone($pCount)
   {
-    return self::executeNone('CALL tst_test_none('.self::quoteNum($pCount).')');
+    return $this->executeNone('CALL tst_test_none('.$this->quoteNum($pCount).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -519,49 +496,48 @@ class TestDataLayer extends StaticDataLayer
    *                       blob
    *
    * @return int
-   * @throws RuntimeException
    */
-  public static function tstTestNoneWithLob($pCount, $pBlob)
+  public function tstTestNoneWithLob($pCount, $pBlob)
   {
-    $query = 'CALL tst_test_none_with_lob('.self::quoteNum($pCount).',?)';
-    $stmt  = self::$mysqli->prepare($query);
-    if (!$stmt) self::mySqlError('mysqli::prepare');
+    $query = 'CALL tst_test_none_with_lob('.$this->quoteNum($pCount).',?)';
+    $stmt  = $this->mysqli->prepare($query);
+    if (!$stmt) $this->mySqlError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('b', $null);
-    if (!$b) self::mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
 
-    self::getMaxAllowedPacket();
+    $this->getMaxAllowedPacket();
 
     $n = strlen($pBlob);
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data(0, substr($pBlob, $p, self::$chunkSize));
-      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
-      $p += self::$chunkSize;
+      $b = $stmt->send_long_data(0, substr($pBlob, $p, $this->chunkSize));
+      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
+      $p += $this->chunkSize;
     }
 
-    if (self::$logQueries)
+    if ($this->logQueries)
     {
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
-      self::$queryLog[] = ['query' => $query,
+      $this->queryLog[] = ['query' => $query,
       'time'  => microtime(true) - $time0];
     }
     else
     {
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
     }
 
-    $ret = self::$mysqli->affected_rows;
+    $ret = $this->mysqli->affected_rows;
 
     $stmt->close();
-    if (self::$mysqli->more_results()) self::$mysqli->next_result();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
     return $ret;
   }
@@ -576,11 +552,10 @@ class TestDataLayer extends StaticDataLayer
    *                         decimal(10,0)
    *
    * @return int
-   * @throws RuntimeException
    */
-  public static function tstTestParameterType($pPhpType1, $pPhpType2)
+  public function tstTestParameterType($pPhpType1, $pPhpType2)
   {
-    return self::executeNone('CALL tst_test_parameter_type('.self::quoteNum($pPhpType1).','.self::quoteNum($pPhpType2).')');
+    return $this->executeNone('CALL tst_test_parameter_type('.$this->quoteNum($pPhpType1).','.$this->quoteNum($pPhpType2).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -591,12 +566,10 @@ class TestDataLayer extends StaticDataLayer
    *                    int(11)
    *
    * @return array|null
-   * @throws ResultException
-   * @throws RuntimeException
    */
-  public static function tstTestRow0a($pCount)
+  public function tstTestRow0a($pCount)
   {
-    return self::executeRow0('CALL tst_test_row0a('.self::quoteNum($pCount).')');
+    return $this->executeRow0('CALL tst_test_row0a('.$this->quoteNum($pCount).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -609,48 +582,46 @@ class TestDataLayer extends StaticDataLayer
    *                       blob
    *
    * @return array|null
-   * @throws ResultException
-   * @throws RuntimeException
    */
-  public static function tstTestRow0aWithLob($pCount, $pBlob)
+  public function tstTestRow0aWithLob($pCount, $pBlob)
   {
-    $query = 'CALL tst_test_row0a_with_lob('.self::quoteNum($pCount).',?)';
-    $stmt  = self::$mysqli->prepare($query);
-    if (!$stmt) self::mySqlError('mysqli::prepare');
+    $query = 'CALL tst_test_row0a_with_lob('.$this->quoteNum($pCount).',?)';
+    $stmt  = $this->mysqli->prepare($query);
+    if (!$stmt) $this->mySqlError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('b', $null);
-    if (!$b) self::mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
 
-    self::getMaxAllowedPacket();
+    $this->getMaxAllowedPacket();
 
     $n = strlen($pBlob);
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data(0, substr($pBlob, $p, self::$chunkSize));
-      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
-      $p += self::$chunkSize;
+      $b = $stmt->send_long_data(0, substr($pBlob, $p, $this->chunkSize));
+      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
+      $p += $this->chunkSize;
     }
 
-    if (self::$logQueries)
+    if ($this->logQueries)
     {
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
-      self::$queryLog[] = ['query' => $query,
+      $this->queryLog[] = ['query' => $query,
       'time'  => microtime(true) - $time0];
     }
     else
     {
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
     }
 
     $row = [];
-    self::bindAssoc($stmt, $row);
+    $this->bindAssoc($stmt, $row);
 
     $tmp = [];
     while (($b = $stmt->fetch()))
@@ -664,9 +635,9 @@ class TestDataLayer extends StaticDataLayer
     }
 
     $stmt->close();
-    if (self::$mysqli->more_results()) self::$mysqli->next_result();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
-    if ($b===false) self::mySqlError('mysqli_stmt::fetch');
+    if ($b===false) $this->mySqlError('mysqli_stmt::fetch');
     if (count($tmp)>1) throw new ResultException('0 or 1', count($tmp), $query);
 
     return ($tmp) ? $tmp[0] : null;
@@ -680,12 +651,10 @@ class TestDataLayer extends StaticDataLayer
    *                    int(11)
    *
    * @return array
-   * @throws ResultException
-   * @throws RuntimeException
    */
-  public static function tstTestRow1a($pCount)
+  public function tstTestRow1a($pCount)
   {
-    return self::executeRow1('CALL tst_test_row1a('.self::quoteNum($pCount).')');
+    return $this->executeRow1('CALL tst_test_row1a('.$this->quoteNum($pCount).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -698,48 +667,46 @@ class TestDataLayer extends StaticDataLayer
    *                       blob
    *
    * @return array
-   * @throws ResultException
-   * @throws RuntimeException
    */
-  public static function tstTestRow1aWithLob($pCount, $pBlob)
+  public function tstTestRow1aWithLob($pCount, $pBlob)
   {
-    $query = 'CALL tst_test_row1a_with_lob('.self::quoteNum($pCount).',?)';
-    $stmt  = self::$mysqli->prepare($query);
-    if (!$stmt) self::mySqlError('mysqli::prepare');
+    $query = 'CALL tst_test_row1a_with_lob('.$this->quoteNum($pCount).',?)';
+    $stmt  = $this->mysqli->prepare($query);
+    if (!$stmt) $this->mySqlError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('b', $null);
-    if (!$b) self::mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
 
-    self::getMaxAllowedPacket();
+    $this->getMaxAllowedPacket();
 
     $n = strlen($pBlob);
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data(0, substr($pBlob, $p, self::$chunkSize));
-      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
-      $p += self::$chunkSize;
+      $b = $stmt->send_long_data(0, substr($pBlob, $p, $this->chunkSize));
+      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
+      $p += $this->chunkSize;
     }
 
-    if (self::$logQueries)
+    if ($this->logQueries)
     {
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
-      self::$queryLog[] = ['query' => $query,
+      $this->queryLog[] = ['query' => $query,
       'time'  => microtime(true) - $time0];
     }
     else
     {
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
     }
 
     $row = [];
-    self::bindAssoc($stmt, $row);
+    $this->bindAssoc($stmt, $row);
 
     $tmp = [];
     while (($b = $stmt->fetch()))
@@ -753,9 +720,9 @@ class TestDataLayer extends StaticDataLayer
     }
 
     $stmt->close();
-    if (self::$mysqli->more_results()) self::$mysqli->next_result();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
-    if ($b===false) self::mySqlError('mysqli_stmt::fetch');
+    if ($b===false) $this->mySqlError('mysqli_stmt::fetch');
     if (count($tmp)!=1) throw new ResultException('1', count($tmp), $query);
 
     return $row;
@@ -769,11 +736,10 @@ class TestDataLayer extends StaticDataLayer
    *                    int(11)
    *
    * @return \array[]
-   * @throws RuntimeException
    */
-  public static function tstTestRows1($pCount)
+  public function tstTestRows1($pCount)
   {
-    return self::executeRows('CALL tst_test_rows1('.self::quoteNum($pCount).')');
+    return $this->executeRows('CALL tst_test_rows1('.$this->quoteNum($pCount).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -786,47 +752,46 @@ class TestDataLayer extends StaticDataLayer
    *                       blob
    *
    * @return \array[]
-   * @throws RuntimeException
    */
-  public static function tstTestRows1WithLob($pCount, $pBlob)
+  public function tstTestRows1WithLob($pCount, $pBlob)
   {
-    $query = 'CALL tst_test_rows1_with_lob('.self::quoteNum($pCount).',?)';
-    $stmt  = self::$mysqli->prepare($query);
-    if (!$stmt) self::mySqlError('mysqli::prepare');
+    $query = 'CALL tst_test_rows1_with_lob('.$this->quoteNum($pCount).',?)';
+    $stmt  = $this->mysqli->prepare($query);
+    if (!$stmt) $this->mySqlError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('b', $null);
-    if (!$b) self::mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
 
-    self::getMaxAllowedPacket();
+    $this->getMaxAllowedPacket();
 
     $n = strlen($pBlob);
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data(0, substr($pBlob, $p, self::$chunkSize));
-      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
-      $p += self::$chunkSize;
+      $b = $stmt->send_long_data(0, substr($pBlob, $p, $this->chunkSize));
+      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
+      $p += $this->chunkSize;
     }
 
-    if (self::$logQueries)
+    if ($this->logQueries)
     {
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
-      self::$queryLog[] = ['query' => $query,
+      $this->queryLog[] = ['query' => $query,
       'time'  => microtime(true) - $time0];
     }
     else
     {
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
     }
 
     $row = [];
-    self::bindAssoc($stmt, $row);
+    $this->bindAssoc($stmt, $row);
 
     $tmp = [];
     while (($b = $stmt->fetch()))
@@ -840,9 +805,9 @@ class TestDataLayer extends StaticDataLayer
     }
 
     $stmt->close();
-    if (self::$mysqli->more_results()) self::$mysqli->next_result();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
-    if ($b===false) self::mySqlError('mysqli_stmt::fetch');
+    if ($b===false) $this->mySqlError('mysqli_stmt::fetch');
 
     return $tmp;
   }
@@ -855,15 +820,14 @@ class TestDataLayer extends StaticDataLayer
    *                    int(11)
    *
    * @return \array[]
-   * @throws RuntimeException
    */
-  public static function tstTestRowsWithIndex1($pCount)
+  public function tstTestRowsWithIndex1($pCount)
   {
-    $result = self::query('CALL tst_test_rows_with_index1('.self::quoteNum($pCount).')');
+    $result = $this->query('CALL tst_test_rows_with_index1('.$this->quoteNum($pCount).')');
     $ret = [];
     while($row = $result->fetch_array(MYSQLI_ASSOC)) $ret[$row['tst_c01']][$row['tst_c02']][] = $row;
     $result->free();
-    if (self::$mysqli->more_results()) self::$mysqli->next_result();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
     return $ret;
   }
@@ -878,47 +842,46 @@ class TestDataLayer extends StaticDataLayer
    *                       blob
    *
    * @return \array[]
-   * @throws RuntimeException
    */
-  public static function tstTestRowsWithIndex1WithLob($pCount, $pBlob)
+  public function tstTestRowsWithIndex1WithLob($pCount, $pBlob)
   {
-    $query = 'CALL tst_test_rows_with_index1_with_lob('.self::quoteNum($pCount).',?)';
-    $stmt  = self::$mysqli->prepare($query);
-    if (!$stmt) self::mySqlError('mysqli::prepare');
+    $query = 'CALL tst_test_rows_with_index1_with_lob('.$this->quoteNum($pCount).',?)';
+    $stmt  = $this->mysqli->prepare($query);
+    if (!$stmt) $this->mySqlError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('b', $null);
-    if (!$b) self::mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
 
-    self::getMaxAllowedPacket();
+    $this->getMaxAllowedPacket();
 
     $n = strlen($pBlob);
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data(0, substr($pBlob, $p, self::$chunkSize));
-      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
-      $p += self::$chunkSize;
+      $b = $stmt->send_long_data(0, substr($pBlob, $p, $this->chunkSize));
+      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
+      $p += $this->chunkSize;
     }
 
-    if (self::$logQueries)
+    if ($this->logQueries)
     {
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
-      self::$queryLog[] = ['query' => $query,
+      $this->queryLog[] = ['query' => $query,
       'time'  => microtime(true) - $time0];
     }
     else
     {
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
     }
 
     $row = [];
-    self::bindAssoc($stmt, $row);
+    $this->bindAssoc($stmt, $row);
 
     $ret = [];
     while (($b = $stmt->fetch()))
@@ -932,9 +895,9 @@ class TestDataLayer extends StaticDataLayer
     }
 
     $stmt->close();
-    if (self::$mysqli->more_results()) self::$mysqli->next_result();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
-    if ($b===false) self::mySqlError('mysqli_stmt::fetch');
+    if ($b===false) $this->mySqlError('mysqli_stmt::fetch');
 
     return $ret;
   }
@@ -947,15 +910,14 @@ class TestDataLayer extends StaticDataLayer
    *                    int(11)
    *
    * @return \array[]
-   * @throws RuntimeException
    */
-  public static function tstTestRowsWithKey1($pCount)
+  public function tstTestRowsWithKey1($pCount)
   {
-    $result = self::query('CALL tst_test_rows_with_key1('.self::quoteNum($pCount).')');
+    $result = $this->query('CALL tst_test_rows_with_key1('.$this->quoteNum($pCount).')');
     $ret = [];
     while($row = $result->fetch_array(MYSQLI_ASSOC)) $ret[$row['tst_c01']][$row['tst_c02']][$row['tst_c03']] = $row;
     $result->free();
-    if (self::$mysqli->more_results()) self::$mysqli->next_result();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
     return  $ret;
   }
@@ -970,47 +932,46 @@ class TestDataLayer extends StaticDataLayer
    *                       blob
    *
    * @return \array[]
-   * @throws RuntimeException
    */
-  public static function tstTestRowsWithKey1WithLob($pCount, $pBlob)
+  public function tstTestRowsWithKey1WithLob($pCount, $pBlob)
   {
-    $query = 'CALL tst_test_rows_with_key1_with_lob('.self::quoteNum($pCount).',?)';
-    $stmt  = self::$mysqli->prepare($query);
-    if (!$stmt) self::mySqlError('mysqli::prepare');
+    $query = 'CALL tst_test_rows_with_key1_with_lob('.$this->quoteNum($pCount).',?)';
+    $stmt  = $this->mysqli->prepare($query);
+    if (!$stmt) $this->mySqlError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('b', $null);
-    if (!$b) self::mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
 
-    self::getMaxAllowedPacket();
+    $this->getMaxAllowedPacket();
 
     $n = strlen($pBlob);
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data(0, substr($pBlob, $p, self::$chunkSize));
-      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
-      $p += self::$chunkSize;
+      $b = $stmt->send_long_data(0, substr($pBlob, $p, $this->chunkSize));
+      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
+      $p += $this->chunkSize;
     }
 
-    if (self::$logQueries)
+    if ($this->logQueries)
     {
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
-      self::$queryLog[] = ['query' => $query,
+      $this->queryLog[] = ['query' => $query,
       'time'  => microtime(true) - $time0];
     }
     else
     {
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
     }
 
     $row = [];
-    self::bindAssoc($stmt, $row);
+    $this->bindAssoc($stmt, $row);
 
     $ret = [];
     while (($b = $stmt->fetch()))
@@ -1024,9 +985,9 @@ class TestDataLayer extends StaticDataLayer
     }
 
     $stmt->close();
-    if (self::$mysqli->more_results()) self::$mysqli->next_result();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
-    if ($b===false) self::mySqlError('mysqli_stmt::fetch');
+    if ($b===false) $this->mySqlError('mysqli_stmt::fetch');
 
     return $ret;
   }
@@ -1039,12 +1000,10 @@ class TestDataLayer extends StaticDataLayer
    *                    int(11)
    *
    * @return string|null
-   * @throws ResultException
-   * @throws RuntimeException
    */
-  public static function tstTestSingleton0a($pCount)
+  public function tstTestSingleton0a($pCount)
   {
-    return self::executeSingleton0('CALL tst_test_singleton0a('.self::quoteNum($pCount).')');
+    return $this->executeSingleton0('CALL tst_test_singleton0a('.$this->quoteNum($pCount).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -1057,48 +1016,46 @@ class TestDataLayer extends StaticDataLayer
    *                       blob
    *
    * @return string|null
-   * @throws ResultException
-   * @throws RuntimeException
    */
-  public static function tstTestSingleton0aWithLob($pCount, $pBlob)
+  public function tstTestSingleton0aWithLob($pCount, $pBlob)
   {
-    $query = 'CALL tst_test_singleton0a_with_lob('.self::quoteNum($pCount).',?)';
-    $stmt  = self::$mysqli->prepare($query);
-    if (!$stmt) self::mySqlError('mysqli::prepare');
+    $query = 'CALL tst_test_singleton0a_with_lob('.$this->quoteNum($pCount).',?)';
+    $stmt  = $this->mysqli->prepare($query);
+    if (!$stmt) $this->mySqlError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('b', $null);
-    if (!$b) self::mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
 
-    self::getMaxAllowedPacket();
+    $this->getMaxAllowedPacket();
 
     $n = strlen($pBlob);
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data(0, substr($pBlob, $p, self::$chunkSize));
-      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
-      $p += self::$chunkSize;
+      $b = $stmt->send_long_data(0, substr($pBlob, $p, $this->chunkSize));
+      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
+      $p += $this->chunkSize;
     }
 
-    if (self::$logQueries)
+    if ($this->logQueries)
     {
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
-      self::$queryLog[] = ['query' => $query,
+      $this->queryLog[] = ['query' => $query,
       'time'  => microtime(true) - $time0];
     }
     else
     {
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
     }
 
     $row = [];
-    self::bindAssoc($stmt, $row);
+    $this->bindAssoc($stmt, $row);
 
     $tmp = [];
     while (($b = $stmt->fetch()))
@@ -1112,9 +1069,9 @@ class TestDataLayer extends StaticDataLayer
     }
 
     $stmt->close();
-    if (self::$mysqli->more_results()) self::$mysqli->next_result();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
-    if ($b===false) self::mySqlError('mysqli_stmt::fetch');
+    if ($b===false) $this->mySqlError('mysqli_stmt::fetch');
     if (count($tmp)>1) throw new ResultException('0 or 1', count($tmp), $query);
 
     return ($tmp) ? $tmp[0][0] : null;
@@ -1128,12 +1085,10 @@ class TestDataLayer extends StaticDataLayer
    *                    int(11)
    *
    * @return string|null
-   * @throws ResultException
-   * @throws RuntimeException
    */
-  public static function tstTestSingleton1a($pCount)
+  public function tstTestSingleton1a($pCount)
   {
-    return self::executeSingleton1('CALL tst_test_singleton1a('.self::quoteNum($pCount).')');
+    return $this->executeSingleton1('CALL tst_test_singleton1a('.$this->quoteNum($pCount).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -1146,48 +1101,46 @@ class TestDataLayer extends StaticDataLayer
    *                       blob
    *
    * @return string|null
-   * @throws ResultException
-   * @throws RuntimeException
    */
-  public static function tstTestSingleton1aWithLob($pCount, $pBlob)
+  public function tstTestSingleton1aWithLob($pCount, $pBlob)
   {
-    $query = 'CALL tst_test_singleton1a_with_lob('.self::quoteNum($pCount).',?)';
-    $stmt  = self::$mysqli->prepare($query);
-    if (!$stmt) self::mySqlError('mysqli::prepare');
+    $query = 'CALL tst_test_singleton1a_with_lob('.$this->quoteNum($pCount).',?)';
+    $stmt  = $this->mysqli->prepare($query);
+    if (!$stmt) $this->mySqlError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('b', $null);
-    if (!$b) self::mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
 
-    self::getMaxAllowedPacket();
+    $this->getMaxAllowedPacket();
 
     $n = strlen($pBlob);
     $p = 0;
     while ($p<$n)
     {
-      $b = $stmt->send_long_data(0, substr($pBlob, $p, self::$chunkSize));
-      if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
-      $p += self::$chunkSize;
+      $b = $stmt->send_long_data(0, substr($pBlob, $p, $this->chunkSize));
+      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
+      $p += $this->chunkSize;
     }
 
-    if (self::$logQueries)
+    if ($this->logQueries)
     {
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
-      self::$queryLog[] = ['query' => $query,
+      $this->queryLog[] = ['query' => $query,
       'time'  => microtime(true) - $time0];
     }
     else
     {
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
     }
 
     $row = [];
-    self::bindAssoc($stmt, $row);
+    $this->bindAssoc($stmt, $row);
 
     $tmp = [];
     while (($b = $stmt->fetch()))
@@ -1201,9 +1154,9 @@ class TestDataLayer extends StaticDataLayer
     }
 
     $stmt->close();
-    if (self::$mysqli->more_results()) self::$mysqli->next_result();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
-    if ($b===false) self::mySqlError('mysqli_stmt::fetch');
+    if ($b===false) $this->mySqlError('mysqli_stmt::fetch');
     if (count($tmp)!=1) throw new ResultException('1', count($tmp), $query);
 
     return $tmp[0][0];
@@ -1214,11 +1167,10 @@ class TestDataLayer extends StaticDataLayer
    * Test for designation type table.
    *
    * @return int
-   * @throws RuntimeException
    */
-  public static function tstTestTable()
+  public function tstTestTable()
   {
-    return self::executeTable('CALL tst_test_table()');
+    return $this->executeTable('CALL tst_test_table()');
   }
 
   //--------------------------------------------------------------------------------------------------------------------

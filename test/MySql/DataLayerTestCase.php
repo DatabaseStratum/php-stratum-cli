@@ -2,16 +2,28 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\Test\MySql;
 
-//----------------------------------------------------------------------------------------------------------------------
+/**
+ * Parent class for all test cases.
+ */
 class DataLayerTestCase extends \PHPUnit_Framework_TestCase
 {
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * The data layer.
+   *
+   * @var object
+   */
+  protected $dataLayer;
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Connects to the MySQL server.
    */
   protected function setUp()
   {
-    TestDataLayer::connect('localhost', 'test', 'test', 'test');
+    $this->dataLayer = new TestDataLayer();
+
+    $this->dataLayer->connect('localhost', 'test', 'test', 'test');
   }
 
   //--------------------------------------------------------------------------------------------------------------------

@@ -11,7 +11,7 @@ class RowsWithKeyWithLobTest extends DataLayerTestCase
    */
   public function test1()
   {
-    $rows = TestDataLayer::tstTestRowsWithKey1WithLob(100, 'blob');
+    $rows = $this->dataLayer->tstTestRowsWithKey1WithLob(100, 'blob');
     $this->assertInternalType('array', $rows);
     $this->assertCount(1, $rows);
 
@@ -31,7 +31,7 @@ class RowsWithKeyWithLobTest extends DataLayerTestCase
    */
   public function test2()
   {
-    $rows = TestDataLayer::tstTestRowsWithKey1WithLob(0, 'blob');
+    $rows = $this->dataLayer->tstTestRowsWithKey1WithLob(0, 'blob');
     $this->assertInternalType('array', $rows);
     $this->assertCount(0, $rows);
 

@@ -11,7 +11,7 @@ class FunctionTest extends DataLayerTestCase
    */
   public function test1()
   {
-    $ret = TestDataLayer::tstTestFunction(2, 3);
+    $ret = $this->dataLayer->tstTestFunction(2, 3);
     $this->assertEquals(5, $ret);
   }
 
@@ -21,7 +21,7 @@ class FunctionTest extends DataLayerTestCase
    */
   public function test2()
   {
-    $ret = TestDataLayer::tstTestFunction(3, 4);
+    $ret = $this->dataLayer->tstTestFunction(3, 4);
     $this->assertNotEquals(5, $ret);
   }
 

@@ -17,35 +17,35 @@ class StaticDataLayerTest extends DataLayerTestCase
   {
     $value    = 123;
     $expected = '123';
-    $this->assertSame($expected, StaticDataLayer::quoteNum($value), var_export($value, true));
+    $this->assertSame($expected, $this->dataLayer->quoteNum($value), var_export($value, true));
 
     $value    = '123';
     $expected = '123';
-    $this->assertSame($expected, StaticDataLayer::quoteNum($value), var_export($value, true));
+    $this->assertSame($expected, $this->dataLayer->quoteNum($value), var_export($value, true));
 
     $value    = 0;
     $expected = '0';
-    $this->assertSame($expected, StaticDataLayer::quoteNum($value), var_export($value, true));
+    $this->assertSame($expected, $this->dataLayer->quoteNum($value), var_export($value, true));
 
     $value    = '0';
     $expected = '0';
-    $this->assertSame($expected, StaticDataLayer::quoteNum($value), var_export($value, true));
+    $this->assertSame($expected, $this->dataLayer->quoteNum($value), var_export($value, true));
 
     $value    = '';
     $expected = 'NULL';
-    $this->assertSame($expected, StaticDataLayer::quoteNum($value), var_export($value, true));
+    $this->assertSame($expected, $this->dataLayer->quoteNum($value), var_export($value, true));
 
     $value    = null;
     $expected = 'NULL';
-    $this->assertSame($expected, StaticDataLayer::quoteNum($value), var_export($value, true));
+    $this->assertSame($expected, $this->dataLayer->quoteNum($value), var_export($value, true));
 
     $value    = false;
     $expected = '0';
-    $this->assertSame($expected, StaticDataLayer::quoteNum($value), var_export($value, true));
+    $this->assertSame($expected, $this->dataLayer->quoteNum($value), var_export($value, true));
 
     $value    = true;
     $expected = '1';
-    $this->assertSame($expected, StaticDataLayer::quoteNum($value), var_export($value, true));
+    $this->assertSame($expected, $this->dataLayer->quoteNum($value), var_export($value, true));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -56,7 +56,7 @@ class StaticDataLayerTest extends DataLayerTestCase
    */
   public function testQuoteNum2()
   {
-    StaticDataLayer::quoteNum([]);
+    $this->dataLayer->quoteNum([]);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -67,7 +67,7 @@ class StaticDataLayerTest extends DataLayerTestCase
    */
   public function testQuoteNum3()
   {
-    StaticDataLayer::quoteNum(['1', '2']);
+    $this->dataLayer->quoteNum(['1', '2']);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -78,7 +78,7 @@ class StaticDataLayerTest extends DataLayerTestCase
    */
   public function testQuoteNum4()
   {
-    StaticDataLayer::quoteNum(new StaticDataLayer());
+    $this->dataLayer->quoteNum(new StaticDataLayer());
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -89,35 +89,35 @@ class StaticDataLayerTest extends DataLayerTestCase
   {
     $value    = 123;
     $expected = "'123'";
-    $this->assertSame($expected, StaticDataLayer::quoteString($value), var_export($value, true));
+    $this->assertSame($expected, $this->dataLayer->quoteString($value), var_export($value, true));
 
     $value    = '123';
     $expected = "'123'";
-    $this->assertSame($expected, StaticDataLayer::quoteString($value), var_export($value, true));
+    $this->assertSame($expected, $this->dataLayer->quoteString($value), var_export($value, true));
 
     $value    = 0;
     $expected = "'0'";
-    $this->assertSame($expected, StaticDataLayer::quoteString($value), var_export($value, true));
+    $this->assertSame($expected, $this->dataLayer->quoteString($value), var_export($value, true));
 
     $value    = '0';
     $expected = "'0'";
-    $this->assertSame($expected, StaticDataLayer::quoteString($value), var_export($value, true));
+    $this->assertSame($expected, $this->dataLayer->quoteString($value), var_export($value, true));
 
     $value    = '';
     $expected = 'NULL';
-    $this->assertSame($expected, StaticDataLayer::quoteString($value), var_export($value, true));
+    $this->assertSame($expected, $this->dataLayer->quoteString($value), var_export($value, true));
 
     $value    = null;
     $expected = 'NULL';
-    $this->assertSame($expected, StaticDataLayer::quoteString($value), var_export($value, true));
+    $this->assertSame($expected, $this->dataLayer->quoteString($value), var_export($value, true));
 
     $value    = false;
     $expected = 'NULL';
-    $this->assertSame($expected, StaticDataLayer::quoteString($value), var_export($value, true));
+    $this->assertSame($expected, $this->dataLayer->quoteString($value), var_export($value, true));
 
     $value    = true;
     $expected = "'1'";
-    $this->assertSame($expected, StaticDataLayer::quoteString($value), var_export($value, true));
+    $this->assertSame($expected, $this->dataLayer->quoteString($value), var_export($value, true));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -128,7 +128,7 @@ class StaticDataLayerTest extends DataLayerTestCase
    */
   public function testQuoteString2()
   {
-    StaticDataLayer::quoteString([]);
+    $this->dataLayer->quoteString([]);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -139,7 +139,7 @@ class StaticDataLayerTest extends DataLayerTestCase
    */
   public function testQuoteString3()
   {
-    StaticDataLayer::quoteString(['hello', 'world']);
+    $this->dataLayer->quoteString(['hello', 'world']);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -150,7 +150,7 @@ class StaticDataLayerTest extends DataLayerTestCase
    */
   public function testQuoteString4()
   {
-    StaticDataLayer::quoteString(new StaticDataLayer());
+    $this->dataLayer->quoteString(new StaticDataLayer());
   }
 
   //--------------------------------------------------------------------------------------------------------------------

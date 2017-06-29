@@ -2,9 +2,11 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\MySql\Command;
 
+use SetBased\Exception\FallenException;
 use SetBased\Exception\RuntimeException;
 use SetBased\Helper\CodeStore\PhpCodeStore;
 use SetBased\Stratum\Command\BaseCommand;
+use SetBased\Stratum\MySql\Helper\NonStatic;
 use SetBased\Stratum\MySql\Wrapper\Wrapper;
 use SetBased\Stratum\NameMangler\NameMangler;
 use SetBased\Stratum\Style\StratumStyle;
@@ -12,7 +14,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-//----------------------------------------------------------------------------------------------------------------------
 /**
  * Command for generating a class with wrapper methods for calling stored routines in a MySQL database.
  */
@@ -67,6 +68,13 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
    * @var string
    */
   private $wrapperClassName;
+
+  /**
+   * The type of the wrapper class. Either 'static' or 'non static'.
+   *
+   * @var string
+   */
+  private $wrapperClassType;
 
   /**
    * The filename where the generated wrapper class must be stored
@@ -159,7 +167,7 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
     $this->writeClassTrailer();
 
     // Write the wrapper class to the filesystem.
-    $this->writeTwoPhases($this->wrapperFilename, $this->codeStore->getCode());
+    $this->storeWrapperClass();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -187,6 +195,7 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
       $this->wrapperFilename  = self::getSetting($settings, true, 'wrapper', 'wrapper_file');
       $this->lobAsString      = (self::getSetting($settings, true, 'wrapper', 'lob_as_string')) ? true : false;
       $this->metadataFilename = self::getSetting($settings, true, 'loader', 'metadata');
+      $this->wrapperClassType = self::getSetting($settings, true, 'wrapper', 'wrapper_type');
     }
   }
 
@@ -207,6 +216,31 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
     }
 
     return $routines;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Writes the wrapper class to the filesystem.
+   */
+  private function storeWrapperClass()
+  {
+    $code = $this->codeStore->getCode();
+
+    switch ($this->wrapperClassType)
+    {
+      case 'static':
+        // Nothing to do.
+        break;
+
+      case 'non static':
+        $code = NonStatic::nonStatic($code);
+        break;
+
+      default:
+        throw new FallenException('wrapper class type', $this->wrapperClassType);
+    }
+
+    $this->writeTwoPhases($this->wrapperFilename, $code);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

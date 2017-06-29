@@ -8,10 +8,10 @@ class CommandsOutOfSyncTest extends DataLayerTestCase
   //--------------------------------------------------------------------------------------------------------------------
   public function test1()
   {
-    TestDataLayer::tstTestRow0a(1);
-    TestDataLayer::tstTestRows1(1);
-    TestDataLayer::tstTestRowsWithIndex1(100);
-    TestDataLayer::tstTestRowsWithKey1(100);
+    $this->dataLayer->tstTestRow0a(1);
+    $this->dataLayer->tstTestRows1(1);
+    $this->dataLayer->tstTestRowsWithIndex1(100);
+    $this->dataLayer->tstTestRowsWithKey1(100);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

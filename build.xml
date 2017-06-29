@@ -30,6 +30,9 @@
             </filterchain>
         </reflexive>
 
+        <!-- Generate non static base data layer. -->
+        <exec command="./bin/stratum non-static src/MySql/StaticDataLayer.php DataLayer.php" passthru="true" checkreturn="true"/>
+
         <gitcommit repository="." message="Release: ${VERSION}" allFiles="true"/>
         <gitpush repository="."/>
         <gittag repository="." name="${VERSION}"/>
@@ -42,6 +45,11 @@
         <exec command="cat test/MySql/create_test.sql | mysql -utest -ptest test" passthru="true" checkreturn="true"/>
         <!-- Rename folder for \MagicConstantTest::test5 -->
         <move file="test/MySql/psql/rename" tofile="test/MySql/psql/ test_escape ' &quot; @ $ ! ." overwrite="true"/>
+        <!-- Run unit test with static data layer. -->
+        <exec command="ln -fs stratum-static.cfg test/MySql/etc/stratum.cfg" passthru="true" checkreturn="true"/>
+        <exec command="bin/phpunit" passthru="true" checkreturn="true"/>
+        <!-- Run unit test with non static data layer. -->
+        <exec command="ln -fs stratum-non-static.cfg test/MySql/etc/stratum.cfg" passthru="true" checkreturn="true"/>
         <exec command="bin/phpunit" passthru="true" checkreturn="true"/>
         <!-- Rename folder back for \MagicConstantTest::test5 -->
         <move file="test/MySql/psql/ test_escape ' &quot; @ $ ! ." tofile="test/MySql/psql/rename" overwrite="true"/>

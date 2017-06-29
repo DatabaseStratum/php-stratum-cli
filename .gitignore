@@ -7,5 +7,6 @@
 /test/coverage.xml
 /test/MySql/C.php
 /test/MySql/etc/routines.json
+/test/MySql/etc/stratum.cfg
 /test/report/
 /vendor/

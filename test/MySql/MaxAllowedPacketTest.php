@@ -23,7 +23,7 @@ class MaxAllowedPacketTest extends DataLayerTestCase
 
     $crc32_php = sprintf("%u", crc32($data));
 
-    $crc32_db = TestDataLayer::tstTestMaxAllowedPacket($data);
+    $crc32_db = $this->dataLayer->tstTestMaxAllowedPacket($data);
 
     $this->assertEquals($crc32_php, $crc32_db);
   }
@@ -33,7 +33,7 @@ class MaxAllowedPacketTest extends DataLayerTestCase
    */
   public function test1()
   {
-    $this->crc32WithStoredRoutine(0.5 * TestDataLayer::getMaxAllowedPacket());
+    $this->crc32WithStoredRoutine(0.5 * $this->dataLayer->getMaxAllowedPacket());
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -41,7 +41,7 @@ class MaxAllowedPacketTest extends DataLayerTestCase
    */
   public function test2()
   {
-    $this->crc32WithStoredRoutine(TestDataLayer::getMaxAllowedPacket());
+    $this->crc32WithStoredRoutine($this->dataLayer->getMaxAllowedPacket());
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -51,7 +51,7 @@ class MaxAllowedPacketTest extends DataLayerTestCase
    */
   public function test4()
   {
-    $this->crc32WithStoredRoutine(2 * TestDataLayer::getMaxAllowedPacket());
+    $this->crc32WithStoredRoutine(2 * $this->dataLayer->getMaxAllowedPacket());
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -61,7 +61,7 @@ class MaxAllowedPacketTest extends DataLayerTestCase
    */
   public function xtest3()
   {
-    $this->crc32WithStoredRoutine(1.05 * TestDataLayer::getMaxAllowedPacket());
+    $this->crc32WithStoredRoutine(1.05 * $this->dataLayer->getMaxAllowedPacket());
   }
 
   //--------------------------------------------------------------------------------------------------------------------

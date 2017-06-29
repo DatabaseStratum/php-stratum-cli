@@ -3,6 +3,7 @@
 namespace SetBased\Stratum\Application;
 
 use SetBased\Stratum\Command\CrudCommand;
+use SetBased\Stratum\Command\NonStaticCommand;
 use SetBased\Stratum\Command\StratumCommand;
 use SetBased\Stratum\MySql\Command\ConstantsCommand;
 use SetBased\Stratum\MySql\Command\RoutineLoaderCommand;
@@ -38,6 +39,7 @@ class Stratum extends Application
 
     $defaultCommands[] = new ConstantsCommand();
     $defaultCommands[] = new CrudCommand();
+    $defaultCommands[] = new NonStaticCommand();
     $defaultCommands[] = new RoutineLoaderCommand();
     $defaultCommands[] = new RoutineWrapperGeneratorCommand();
     $defaultCommands[] = new StratumCommand();

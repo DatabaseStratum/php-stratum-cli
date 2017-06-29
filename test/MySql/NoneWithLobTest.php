@@ -11,7 +11,7 @@ class NoneWithLobTest extends DataLayerTestCase
    */
   public function test1()
   {
-    $ret = TestDataLayer::tstTestNoneWithLob(0, 'blob');
+    $ret = $this->dataLayer->tstTestNoneWithLob(0, 'blob');
     $this->assertEquals(0, $ret);
   }
 
@@ -21,7 +21,7 @@ class NoneWithLobTest extends DataLayerTestCase
    */
   public function test2()
   {
-    $ret = TestDataLayer::tstTestNoneWithLob(1, 'blob');
+    $ret = $this->dataLayer->tstTestNoneWithLob(1, 'blob');
     $this->assertEquals(1, $ret);
   }
 
@@ -31,7 +31,7 @@ class NoneWithLobTest extends DataLayerTestCase
    */
   public function test3()
   {
-    $ret = TestDataLayer::tstTestNoneWithLob(20, 'blob');
+    $ret = $this->dataLayer->tstTestNoneWithLob(20, 'blob');
     $this->assertEquals(20, $ret);
   }
 
