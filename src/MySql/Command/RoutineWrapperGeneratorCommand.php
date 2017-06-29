@@ -6,7 +6,7 @@ use SetBased\Exception\FallenException;
 use SetBased\Exception\RuntimeException;
 use SetBased\Helper\CodeStore\PhpCodeStore;
 use SetBased\Stratum\Command\BaseCommand;
-use SetBased\Stratum\MySql\Helper\NonStatic;
+use SetBased\Stratum\Helper\NonStatic;
 use SetBased\Stratum\MySql\Wrapper\Wrapper;
 use SetBased\Stratum\NameMangler\NameMangler;
 use SetBased\Stratum\Style\StratumStyle;

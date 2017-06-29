@@ -1,6 +1,6 @@
 <?php
 //----------------------------------------------------------------------------------------------------------------------
-namespace SetBased\Stratum\MySql\Helper;
+namespace SetBased\Stratum\Helper;
 
 /**
  * Helper class for generating code for a non static class based on a static class.

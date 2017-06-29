@@ -6,7 +6,7 @@ use SetBased\Abc\Abc;
 use SetBased\Abc\Babel;
 use SetBased\Abc\C;
 use SetBased\Exception\RuntimeException;
-use SetBased\Stratum\MySql\Helper\NonStatic;
+use SetBased\Stratum\Helper\NonStatic;
 use SetBased\Stratum\Style\StratumStyle;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
