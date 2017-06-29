@@ -17,7 +17,6 @@ class DataTypeHelper
    * @param string[] $dataTypeInfo Metadata of the MySQL data type.
    *
    * @return string
-   * @throws FallenException
    */
   public static function columnTypeToPhpType($dataTypeInfo)
   {
@@ -81,7 +80,6 @@ class DataTypeHelper
    * @param array $dataTypeInfo Metadata of the column on which the field is based.
    *
    * @return int|null
-   * @throws FallenException
    */
   public static function deriveFieldLength($dataTypeInfo)
   {

@@ -508,8 +508,6 @@ class RoutineLoaderHelper
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Gets info of extended parameters.
-   *
-   * @throws \Exception
    */
   private function getExtendedParametersInfo()
   {
@@ -837,8 +835,6 @@ class RoutineLoaderHelper
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Update information about specific parameters of stored routine.
-   *
-   * @throws \Exception
    */
   private function updateParametersInfo()
   {

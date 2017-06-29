@@ -32,8 +32,6 @@ class BaseCommand extends Command
    * @param string $settingName The name of the setting of the requested setting.
    *
    * @return null|string
-   *
-   * @throws RuntimeException
    */
   protected static function getSetting($settings, $mandatory, $sectionName, $settingName)
   {

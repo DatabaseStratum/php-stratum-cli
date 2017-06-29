@@ -22,13 +22,6 @@ abstract class Wrapper
   protected $codeStore;
 
   /**
-   * The exceptions that the wrapper method can throw.
-   *
-   * @var array
-   */
-  protected $exceptions = [];
-
-  /**
    * Array with fully qualified names that must be imported for this wrapper method.
    *
    * @var array
@@ -61,7 +54,6 @@ abstract class Wrapper
     $this->codeStore       = $codeStore;
     $this->nameMangler     = $nameMangler;
     $this->lobAsStringFlag = $lobAsString;
-    $this->exceptions[]    = 'RuntimeException';
     $this->imports[]       = 'SetBased\Exception\RuntimeException';
   }
 
@@ -302,19 +294,6 @@ abstract class Wrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns the exception that can be thrown by this method.
-   *
-   * @return array
-   */
-  protected function getDocBlockExceptions()
-  {
-    sort($this->exceptions);
-
-    return $this->exceptions;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
    * Returns the return type the be used in the DocBlock.
    *
    * @return string
@@ -479,17 +458,6 @@ abstract class Wrapper
     {
       $this->codeStore->append(' *', false);
       $this->codeStore->append(' * @return '.$return, false);
-    }
-
-    // Generate exceptions doc.
-    $exceptions = $this->getDocBlockExceptions();
-    if (!empty($exceptions))
-    {
-      $exceptions = array_unique($exceptions);
-      foreach ($exceptions as $exception)
-      {
-        $this->codeStore->append(' * @throws '.$exception, false);
-      }
     }
 
     $this->codeStore->append(' */', false);

@@ -8,7 +8,6 @@ use SetBased\Stratum\BulkHandler;
 use SetBased\Stratum\Exception\ResultException;
 use SetBased\Stratum\MySql\Exception\DataLayerException;
 
-//----------------------------------------------------------------------------------------------------------------------
 /**
  * Supper class for a static stored routine wrapper class.
  */
@@ -97,7 +96,6 @@ class StaticDataLayer
   protected static $queryLog;
 
   //--------------------------------------------------------------------------------------------------------------------
-
   /**
    * Starts a transaction.
    *
@@ -327,7 +325,6 @@ class StaticDataLayer
    * @param string $query The SQL statement.
    *
    * @return array|null The selected row.
-   * @throws ResultException
    *
    * @since 1.0.0
    * @api
@@ -357,7 +354,6 @@ class StaticDataLayer
    * @param string $query The SQL statement.
    *
    * @return array The selected row.
-   * @throws ResultException
    *
    * @since 1.0.0
    * @api
@@ -420,7 +416,6 @@ class StaticDataLayer
    * @param string $query The SQL statement.
    *
    * @return int|string|null The selected value.
-   * @throws ResultException
    *
    * @since 1.0.0
    * @api
@@ -450,7 +445,6 @@ class StaticDataLayer
    * @param string $query The SQL statement.
    *
    * @return int|string The selected value.
-   * @throws ResultException
    *
    * @since 1.0.0
    * @api
@@ -658,7 +652,6 @@ class StaticDataLayer
    * @param string $query The SQL statement.
    *
    * @return \mysqli_result
-   * @throws DataLayerException
    */
   public static function query($query)
   {
@@ -893,8 +886,6 @@ class StaticDataLayer
    * error only.
    *
    * @param string $method The name of the method that has failed.
-   *
-   * @throws RuntimeException
    */
   protected static function mySqlError($method)
   {
