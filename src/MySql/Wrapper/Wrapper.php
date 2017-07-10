@@ -41,6 +41,7 @@ abstract class Wrapper
   private $lobAsStringFlag;
 
   //--------------------------------------------------------------------------------------------------------------------
+
   /**
    * Object constructor.
    *
@@ -54,7 +55,6 @@ abstract class Wrapper
     $this->codeStore       = $codeStore;
     $this->nameMangler     = $nameMangler;
     $this->lobAsStringFlag = $lobAsString;
-    $this->imports[]       = 'SetBased\Exception\RuntimeException';
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -294,6 +294,24 @@ abstract class Wrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * Enhances the metadata of the parameters of the store routine wrapper.
+   *
+   * @param array[] $parameters The metadata of the parameters. For each parameter the following keys must be defined:
+   *                            <ul>
+   *                            <li> php_name             The name of the paramter (including $).
+   *                            <li> description          The description of the parameter.
+   *                            <li> php_type             The type of the parameter.
+   *                            <li> data_type_descriptor The data type of the correseponding parameter of the
+   *                                                      stored routine. Null if there is no corresponding parameter.
+   *                            </ul>
+   */
+  protected function enhancePhpDocParameters(&$parameters)
+  {
+    // Nothing to do.
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Returns the return type the be used in the DocBlock.
    *
    * @return string
@@ -382,6 +400,20 @@ abstract class Wrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * Genrates the PHP doc block for the return type of the stored routine wrapper.
+   */
+  private function geberatePhpDocBlockReturn()
+  {
+    $return = $this->getDocBlockReturnType();
+    if ($return!=='')
+    {
+      $this->codeStore->append(' *', false);
+      $this->codeStore->append(' * @return '.$return, false);
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Generate php doc block in the data layer for stored routine.
    *
    * @param array $routine Metadata of the stored routine.
@@ -391,47 +423,78 @@ abstract class Wrapper
     $this->codeStore->append('/**', false);
 
     // Generate phpdoc with short description of routine wrapper.
-    if ($routine['phpdoc']['sort_description'])
-    {
-      $this->codeStore->append(' * '.$routine['phpdoc']['sort_description'], false);
-    }
+    $this->generatePhpDocSortDescription($routine);
 
     // Generate phpdoc with long description of routine wrapper.
-    if ($routine['phpdoc']['long_description'])
+    $this->generatePhpDocLongDescription($routine);
+
+    // Generate phpDoc with parameters and descriptions of parameters.
+    $this->generatePhpDocParameters($routine);
+
+    // Generate return parameter doc.
+    $this->geberatePhpDocBlockReturn();
+
+    $this->codeStore->append(' */', false);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Generates the long description of stored routine wrapper.
+   *
+   * @param array  $routine The metadata of the stored routine.
+   */
+  private function generatePhpDocLongDescription($routine)
+  {
+    if ($routine['phpdoc']['long_description']!=='')
     {
       $this->codeStore->append(' * '.$routine['phpdoc']['long_description'], false);
     }
+  }
 
-    // Generate phpDoc with parameters and descriptions of parameters.
-    if (!empty($routine['phpdoc']['parameters']))
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Generates the doc block for parameters of stored routine wrapper.
+   *
+   * @param array $routine The metadata of the stored routine.
+   */
+  private function generatePhpDocParameters($routine)
+  {
+    $parameters = [];
+    foreach ($routine['phpdoc']['parameters'] as $parameter)
     {
-      $this->codeStore->append(' *', false);
+      $mangledName = $this->nameMangler->getParameterName($parameter['parameter_name']);
 
+      $parameters[] = ['php_name'             => '$'.$mangledName,
+                       'description'          => $parameter['description'],
+                       'php_type'             => $parameter['php_type'],
+                       'data_type_descriptor' => $parameter['data_type_descriptor']];
+    }
+
+    $this->enhancePhpDocParameters($parameters);
+
+    if (!empty($parameters))
+    {
       // Compute the max lengths of parameter names and the PHP types of the parameters.
       $max_name_length = 0;
       $max_type_length = 0;
-      foreach ($routine['phpdoc']['parameters'] as $parameter)
+      foreach ($parameters as $parameter)
       {
-        $mangledName = $this->nameMangler->getParameterName($parameter['parameter_name']);
-
-        $max_name_length = max($max_name_length, strlen($mangledName));
+        $max_name_length = max($max_name_length, strlen($parameter['php_name']));
         $max_type_length = max($max_type_length, strlen($parameter['php_type']));
       }
-      // Add 1 character for $.
-      $max_name_length++;
+
+      $this->codeStore->append(' *', false);
 
       // Generate phpDoc for the parameters of the wrapper method.
-      foreach ($routine['phpdoc']['parameters'] as $parameter)
+      foreach ($parameters as $parameter)
       {
-        $mangledName = $this->nameMangler->getParameterName($parameter['parameter_name']);
-
         $format = sprintf(' * %%-%ds %%-%ds %%-%ds %%s', strlen('@param'), $max_type_length, $max_name_length);
 
         $lines = explode("\n", $parameter['description']);
         if (!empty($lines))
         {
           $line = array_shift($lines);
-          $this->codeStore->append(sprintf($format, '@param', $parameter['php_type'], '$'.$mangledName, $line), false);
+          $this->codeStore->append(sprintf($format, '@param', $parameter['php_type'], $parameter['php_name'], $line), false);
           foreach ($lines as $line)
           {
             $this->codeStore->append(sprintf($format, ' ', ' ', ' ', $line), false);
@@ -439,28 +502,29 @@ abstract class Wrapper
         }
         else
         {
-          $this->codeStore->append(sprintf($format, '@param', $parameter['php_type'], '$'.$mangledName, ''), false);
+          $this->codeStore->append(sprintf($format, '@param', $parameter['php_type'], $parameter['php_name'], ''), false);
         }
 
-        $this->codeStore->append(sprintf($format, ' ', ' ', ' ', $parameter['data_type_descriptor']), false);
+        if ($parameter['data_type_descriptor']!==null)
+        {
+          $this->codeStore->append(sprintf($format, ' ', ' ', ' ', $parameter['data_type_descriptor']), false);
+        }
       }
     }
-    elseif ($routine['designation']==='bulk_insert')
-    {
-      // Generate parameter for bulk_insert routine type.
-      $this->codeStore->append(' *', false);
-      $this->codeStore->append(' * @param array $rows', false);
-    }
+  }
 
-    // Generate return parameter doc.
-    $return = $this->getDocBlockReturnType();
-    if ($return)
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Generates the sort description of stored routine wrapper.
+   *
+   * @param array $routine The metadata of the stored routine.
+   */
+  private function generatePhpDocSortDescription($routine)
+  {
+    if ($routine['phpdoc']['sort_description']!=='')
     {
-      $this->codeStore->append(' *', false);
-      $this->codeStore->append(' * @return '.$return, false);
+      $this->codeStore->append(' * '.$routine['phpdoc']['sort_description'], false);
     }
-
-    $this->codeStore->append(' */', false);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

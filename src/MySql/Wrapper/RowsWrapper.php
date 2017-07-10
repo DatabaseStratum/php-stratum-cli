@@ -4,9 +4,7 @@ namespace SetBased\Stratum\MySql\Wrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class RowsMySqlWrapper
- *
- * @package SetBased\DataLayer\Generator\Wrapper
+ * Class for generating a wrapper method for a stored procedure that selects 0, 1, or more rows.
  */
 class RowsWrapper extends Wrapper
 {

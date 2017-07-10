@@ -25,6 +25,20 @@ class BulkInsertWrapper extends Wrapper
   /**
    * {@inheritdoc}
    */
+  protected function enhancePhpDocParameters(&$parameters)
+  {
+    $parameter =  $parameters[] = ['php_name'             => '$rows',
+                                   'description'          => 'The rows that must inserted.',
+                                   'php_type'             => 'array[]',
+                                   'data_type_descriptor' => null];
+
+    $parameters = array_merge([$parameter], $parameters);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * {@inheritdoc}
+   */
   protected function getWrapperArgs($routine)
   {
     return '$rows';

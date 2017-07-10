@@ -4,23 +4,10 @@ namespace SetBased\Stratum\MySql\Wrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class Row1MySqlWrapper
- *
- * @package SetBased\DataLayer\Generator\Wrapper
+ * Class for generating a wrapper method for a stored procedure that selects 1 row.
  */
 class Row1Wrapper extends Wrapper
 {
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * {@inheritdoc}
-   */
-  public function __construct($codeStore, $nameMangler, $lobAsString)
-  {
-    parent::__construct($codeStore, $nameMangler, $lobAsString);
-
-    $this->imports[] = 'SetBased\Stratum\Exception\ResultException';
-  }
-
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * {@inheritdoc}
@@ -68,6 +55,8 @@ class Row1Wrapper extends Wrapper
    */
   protected function writeRoutineFunctionLobReturnData()
   {
+    $this->imports[] = 'SetBased\Stratum\Exception\ResultException';
+
     $this->codeStore->append('if ($b===false) self::mySqlError(\'mysqli_stmt::fetch\');');
     $this->codeStore->append('if (count($tmp)!=1) throw new ResultException(\'1\', count($tmp), $query);');
     $this->codeStore->append('');

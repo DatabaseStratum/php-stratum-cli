@@ -4,9 +4,7 @@ namespace SetBased\Stratum\MySql\Wrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class LogMySqlWrapper
- *
- * @package SetBased\DataLayer\Generator\Wrapper
+ * Class for generating a wrapper method for a stored procedure 'selecting' rows for logging.
  */
 class LogWrapper extends Wrapper
 {

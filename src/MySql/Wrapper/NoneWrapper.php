@@ -5,8 +5,6 @@ namespace SetBased\Stratum\MySql\Wrapper;
 //----------------------------------------------------------------------------------------------------------------------
 /**
  * Class for generating a wrapper method for a stored procedure without result set.
- *
- * @package SetBased\DataLayer\Generator\Wrapper
  */
 class NoneWrapper extends Wrapper
 {

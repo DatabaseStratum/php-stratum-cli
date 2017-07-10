@@ -12,17 +12,6 @@ class Row0Wrapper extends Wrapper
   /**
    * {@inheritdoc}
    */
-  public function __construct($codeStore, $nameMangler, $lobAsString)
-  {
-    parent::__construct($codeStore, $nameMangler, $lobAsString);
-
-    $this->imports[] = 'SetBased\Stratum\Exception\ResultException';
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * {@inheritdoc}
-   */
   protected function getDocBlockReturnType()
   {
     return 'array|null';
@@ -66,6 +55,8 @@ class Row0Wrapper extends Wrapper
    */
   protected function writeRoutineFunctionLobReturnData()
   {
+    $this->imports[] = 'SetBased\Stratum\Exception\ResultException';
+
     $this->codeStore->append('if ($b===false) self::mySqlError(\'mysqli_stmt::fetch\');');
     $this->codeStore->append('if (count($tmp)>1) throw new ResultException(\'0 or 1\', count($tmp), $query);');
     $this->codeStore->append('');

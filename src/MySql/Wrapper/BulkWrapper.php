@@ -4,12 +4,26 @@ namespace SetBased\Stratum\MySql\Wrapper;
 
 //----------------------------------------------------------------------------------------------------------------------
 /**
- * Class BulkMySqlWrapper
- *
- * @package SetBased\DataLayer\Generator\MySqlRoutineWrapper
+ * Class for generating a wrapper method for a stored procedure selecting a large amount of rows.
  */
 class BulkWrapper extends Wrapper
 {
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * {@inheritdoc}
+   */
+  protected function enhancePhpDocParameters(&$parameters)
+  {
+    $this->imports[] = 'SetBased\Stratum\BulkHandler';
+
+    $parameter = ['php_name'             => '$bulkHandler',
+                  'description'          => 'The bulk row handler',
+                  'php_type'             => 'BulkHandler',
+                  'data_type_descriptor' => null];
+
+    $parameters = array_merge([$parameter], $parameters);
+  }
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * {@inheritdoc}
