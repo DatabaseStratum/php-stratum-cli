@@ -2,9 +2,6 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\Command;
 
-use SetBased\Abc\Abc;
-use SetBased\Abc\Babel;
-use SetBased\Abc\C;
 use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\Helper\NonStatic;
 use SetBased\Stratum\Style\StratumStyle;
