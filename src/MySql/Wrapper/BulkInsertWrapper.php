@@ -6,6 +6,7 @@ use SetBased\Exception\LogicException;
 use SetBased\Stratum\MySql\Helper\DataTypeHelper;
 
 //----------------------------------------------------------------------------------------------------------------------
+
 /**
  * Class for generating a wrapper method for a stored procedure that prepares a table to be used with a bulk SQL
  * statement.
@@ -16,23 +17,23 @@ class BulkInsertWrapper extends Wrapper
   /**
    * {@inheritdoc}
    */
-  protected function getDocBlockReturnType()
+  protected function enhancePhpDocParameters(&$parameters)
   {
-    return '';
+    $parameter = ['php_name'             => '$rows',
+                  'description'          => 'The rows that must inserted.',
+                  'php_type'             => 'array[]',
+                  'data_type_descriptor' => null];
+
+    $parameters = array_merge([$parameter], $parameters);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * {@inheritdoc}
    */
-  protected function enhancePhpDocParameters(&$parameters)
+  protected function getDocBlockReturnType()
   {
-    $parameter =  $parameters[] = ['php_name'             => '$rows',
-                                   'description'          => 'The rows that must inserted.',
-                                   'php_type'             => 'array[]',
-                                   'data_type_descriptor' => null];
-
-    $parameters = array_merge([$parameter], $parameters);
+    return '';
   }
 
   //--------------------------------------------------------------------------------------------------------------------

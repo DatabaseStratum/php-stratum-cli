@@ -2,7 +2,6 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\Test\MySql;
 
-use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\Exception\ResultException;
 use SetBased\Stratum\MySql\DataLayer;
 
@@ -294,7 +293,7 @@ class TestDataLayer extends DataLayer
   /**
    * Test for designation bulk_insert.
    *
-   * @param array $rows
+   * @param array[] $rows The rows that must inserted.
    */
   public function tstTestBulkInsert01($rows)
   {
@@ -317,7 +316,7 @@ class TestDataLayer extends DataLayer
   /**
    * Test for designation bulk_insert.
    *
-   * @param array $rows
+   * @param array[] $rows The rows that must inserted.
    */
   public function tstTestBulkInsert02($rows)
   {
