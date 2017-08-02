@@ -4,7 +4,9 @@ namespace SetBased\Stratum\Test\MySql;
 
 use SetBased\Exception\RuntimeException;
 
-//----------------------------------------------------------------------------------------------------------------------
+/**
+ * Test cases with max-allowed-packet.
+ */
 class MaxAllowedPacketTest extends DataLayerTestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
@@ -25,11 +27,12 @@ class MaxAllowedPacketTest extends DataLayerTestCase
 
     $crc32_db = $this->dataLayer->tstTestMaxAllowedPacket($data);
 
-    $this->assertEquals($crc32_php, $crc32_db);
+    self::assertEquals($crc32_php, $crc32_db);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Calling a stored routine with a BLOB less than max_allowed_packet must not be a problem.
+  /**
+   * Calling a stored routine with a BLOB less than max_allowed_packet must not be a problem.
    */
   public function test1()
   {
@@ -37,7 +40,8 @@ class MaxAllowedPacketTest extends DataLayerTestCase
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Calling a stored routine with a BLOB of max_allowed_packet bytes must not be a problem.
+  /**
+   * Calling a stored routine with a BLOB of max_allowed_packet bytes must not be a problem.
    */
   public function test2()
   {
@@ -45,7 +49,8 @@ class MaxAllowedPacketTest extends DataLayerTestCase
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Calling a stored routine with a BLOB of larger than max_allowed_packet bytes is not possible.
+  /**
+   * Calling a stored routine with a BLOB of larger than max_allowed_packet bytes is not possible.
    *
    * @expectedException RuntimeException
    */
@@ -55,7 +60,8 @@ class MaxAllowedPacketTest extends DataLayerTestCase
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  /** Calling a stored routine with a BLOB larger than max_allowed_packet bytes is not possible.
+  /**
+   * Calling a stored routine with a BLOB larger than max_allowed_packet bytes is not possible.
    *
    * @expectedException RuntimeException
    */

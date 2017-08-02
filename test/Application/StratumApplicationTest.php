@@ -2,11 +2,14 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\Test\Application;
 
+use PHPUnit\Framework\TestCase;
 use SetBased\Stratum\Application\Stratum;
 use Symfony\Component\Console\Tester\ApplicationTester;
 
-//----------------------------------------------------------------------------------------------------------------------
-class StratumApplicationTest extends \PHPUnit_Framework_TestCase
+/**
+ * Test cases for the stratum application.
+ */
+class StratumApplicationTest extends TestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
   public function testExecute()
@@ -18,7 +21,7 @@ class StratumApplicationTest extends \PHPUnit_Framework_TestCase
     $tester->run(['command'     => 'stratum',
                   'config file' => 'test/MySql/etc/stratum.cfg']);
 
-    $this->assertSame(0, $tester->getStatusCode(), $tester->getDisplay());
+    self::assertSame(0, $tester->getStatusCode(), $tester->getDisplay());
   }
 
   //--------------------------------------------------------------------------------------------------------------------

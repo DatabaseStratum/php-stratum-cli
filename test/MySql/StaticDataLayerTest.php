@@ -2,11 +2,12 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\Test\MySql;
 
-//----------------------------------------------------------------------------------------------------------------------
 use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\MySql\StaticDataLayer;
 
-//----------------------------------------------------------------------------------------------------------------------
+/**
+ * Test cases for class DataLayer.
+ */
 class StaticDataLayerTest extends DataLayerTestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
@@ -17,35 +18,35 @@ class StaticDataLayerTest extends DataLayerTestCase
   {
     $value    = 123;
     $expected = '123';
-    $this->assertSame($expected, $this->dataLayer->quoteNum($value), var_export($value, true));
+    self::assertSame($expected, $this->dataLayer->quoteNum($value), var_export($value, true));
 
     $value    = '123';
     $expected = '123';
-    $this->assertSame($expected, $this->dataLayer->quoteNum($value), var_export($value, true));
+    self::assertSame($expected, $this->dataLayer->quoteNum($value), var_export($value, true));
 
     $value    = 0;
     $expected = '0';
-    $this->assertSame($expected, $this->dataLayer->quoteNum($value), var_export($value, true));
+    self::assertSame($expected, $this->dataLayer->quoteNum($value), var_export($value, true));
 
     $value    = '0';
     $expected = '0';
-    $this->assertSame($expected, $this->dataLayer->quoteNum($value), var_export($value, true));
+    self::assertSame($expected, $this->dataLayer->quoteNum($value), var_export($value, true));
 
     $value    = '';
     $expected = 'NULL';
-    $this->assertSame($expected, $this->dataLayer->quoteNum($value), var_export($value, true));
+    self::assertSame($expected, $this->dataLayer->quoteNum($value), var_export($value, true));
 
     $value    = null;
     $expected = 'NULL';
-    $this->assertSame($expected, $this->dataLayer->quoteNum($value), var_export($value, true));
+    self::assertSame($expected, $this->dataLayer->quoteNum($value), var_export($value, true));
 
     $value    = false;
     $expected = '0';
-    $this->assertSame($expected, $this->dataLayer->quoteNum($value), var_export($value, true));
+    self::assertSame($expected, $this->dataLayer->quoteNum($value), var_export($value, true));
 
     $value    = true;
     $expected = '1';
-    $this->assertSame($expected, $this->dataLayer->quoteNum($value), var_export($value, true));
+    self::assertSame($expected, $this->dataLayer->quoteNum($value), var_export($value, true));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -89,35 +90,35 @@ class StaticDataLayerTest extends DataLayerTestCase
   {
     $value    = 123;
     $expected = "'123'";
-    $this->assertSame($expected, $this->dataLayer->quoteString($value), var_export($value, true));
+    self::assertSame($expected, $this->dataLayer->quoteString($value), var_export($value, true));
 
     $value    = '123';
     $expected = "'123'";
-    $this->assertSame($expected, $this->dataLayer->quoteString($value), var_export($value, true));
+    self::assertSame($expected, $this->dataLayer->quoteString($value), var_export($value, true));
 
     $value    = 0;
     $expected = "'0'";
-    $this->assertSame($expected, $this->dataLayer->quoteString($value), var_export($value, true));
+    self::assertSame($expected, $this->dataLayer->quoteString($value), var_export($value, true));
 
     $value    = '0';
     $expected = "'0'";
-    $this->assertSame($expected, $this->dataLayer->quoteString($value), var_export($value, true));
+    self::assertSame($expected, $this->dataLayer->quoteString($value), var_export($value, true));
 
     $value    = '';
     $expected = 'NULL';
-    $this->assertSame($expected, $this->dataLayer->quoteString($value), var_export($value, true));
+    self::assertSame($expected, $this->dataLayer->quoteString($value), var_export($value, true));
 
     $value    = null;
     $expected = 'NULL';
-    $this->assertSame($expected, $this->dataLayer->quoteString($value), var_export($value, true));
+    self::assertSame($expected, $this->dataLayer->quoteString($value), var_export($value, true));
 
     $value    = false;
     $expected = 'NULL';
-    $this->assertSame($expected, $this->dataLayer->quoteString($value), var_export($value, true));
+    self::assertSame($expected, $this->dataLayer->quoteString($value), var_export($value, true));
 
     $value    = true;
     $expected = "'1'";
-    $this->assertSame($expected, $this->dataLayer->quoteString($value), var_export($value, true));
+    self::assertSame($expected, $this->dataLayer->quoteString($value), var_export($value, true));
   }
 
   //--------------------------------------------------------------------------------------------------------------------

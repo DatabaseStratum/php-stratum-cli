@@ -2,9 +2,8 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\Test\MySql;
 
-//----------------------------------------------------------------------------------------------------------------------
 /**
- * Class BulkInsertTest
+ * Test case for bulk inserts.
  */
 class BulkInsertTest extends DataLayerTestCase
 {
@@ -103,12 +102,12 @@ class BulkInsertTest extends DataLayerTestCase
     $query = 'SELECT count(*) FROM `TST_TEMPO`';
     $ret   = $this->dataLayer->executeSingleton1($query);
 
-    $this->assertEquals(4, $ret);
+    self::assertEquals(4, $ret);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Test must not be a problem.
+   * Test for empty fields.
    */
   public function test2()
   {
@@ -120,6 +119,11 @@ class BulkInsertTest extends DataLayerTestCase
                'field5' => 1]; //  int,
 
     $this->dataLayer->tstTestBulkInsert02($data);
+
+    $query = 'SELECT count(*) FROM `TST_TEMPO`';
+    $ret   = $this->dataLayer->executeSingleton1($query);
+
+    self::assertEquals(1, $ret);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

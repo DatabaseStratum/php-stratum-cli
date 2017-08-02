@@ -2,11 +2,10 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\Test\MySql;
 
-//----------------------------------------------------------------------------------------------------------------------
 use SetBased\Exception\RuntimeException;
 
 /**
- * Unit test for a parameter with a list on integers.
+ * Test cases for a parameter with a list on integers.
  */
 class ListOfIntTest extends DataLayerTestCase
 {

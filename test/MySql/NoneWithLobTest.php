@@ -2,7 +2,9 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\Test\MySql;
 
-//----------------------------------------------------------------------------------------------------------------------
+/**
+ * Test cases for stored routines with designation type none with LOBs.
+ */
 class NoneWithLobTest extends DataLayerTestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
@@ -12,7 +14,7 @@ class NoneWithLobTest extends DataLayerTestCase
   public function test1()
   {
     $ret = $this->dataLayer->tstTestNoneWithLob(0, 'blob');
-    $this->assertEquals(0, $ret);
+    self::assertEquals(0, $ret);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -22,7 +24,7 @@ class NoneWithLobTest extends DataLayerTestCase
   public function test2()
   {
     $ret = $this->dataLayer->tstTestNoneWithLob(1, 'blob');
-    $this->assertEquals(1, $ret);
+    self::assertEquals(1, $ret);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -32,7 +34,7 @@ class NoneWithLobTest extends DataLayerTestCase
   public function test3()
   {
     $ret = $this->dataLayer->tstTestNoneWithLob(20, 'blob');
-    $this->assertEquals(20, $ret);
+    self::assertEquals(20, $ret);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

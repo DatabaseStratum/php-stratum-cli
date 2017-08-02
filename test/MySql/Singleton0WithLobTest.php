@@ -2,7 +2,9 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\Test\MySql;
 
-//----------------------------------------------------------------------------------------------------------------------
+/**
+ * Test cases for stored routines with designation type singleton0 with LOBs.
+ */
 class Singleton0WithLobTest extends DataLayerTestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
@@ -22,7 +24,7 @@ class Singleton0WithLobTest extends DataLayerTestCase
   public function test2()
   {
     $ret = $this->dataLayer->tstTestSingleton0aWithLob(1, 'blob');
-    $this->assertEquals('1', $ret);
+    self::assertEquals('1', $ret);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

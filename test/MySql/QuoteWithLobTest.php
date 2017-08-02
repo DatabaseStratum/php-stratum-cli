@@ -2,9 +2,11 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\Test\MySql;
 
-//----------------------------------------------------------------------------------------------------------------------
 use SetBased\Exception\RuntimeException;
 
+/**
+ * Test cases for quoting variables with LOBs.
+ */
 class QuoteWithLobTest extends DataLayerTestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
@@ -13,45 +15,6 @@ class QuoteWithLobTest extends DataLayerTestCase
     try
     {
       $this->dataLayer->tstTest02(($column=='int') ? $value : null,
-                               ($column=='smallint') ? $value : null,
-                               ($column=='tinyint') ? $value : null,
-                               ($column=='mediumint') ? $value : null,
-                               ($column=='bigint') ? $value : null,
-                               ($column=='decimal') ? $value : null,
-                               ($column=='float') ? $value : null,
-                               ($column=='double') ? $value : null,
-                               ($column=='bit') ? $value : null,
-                               ($column=='date') ? $value : null,
-                               ($column=='datetime') ? $value : null,
-                               ($column=='timestamp') ? $value : null,
-                               ($column=='time') ? $value : null,
-                               ($column=='year') ? $value : null,
-                               ($column=='char') ? $value : null,
-                               ($column=='varchar') ? $value : null,
-                               ($column=='binary') ? $value : null,
-                               ($column=='varbinary') ? $value : null,
-                               ($column=='tinyblob') ? $value : null,
-                               ($column=='blob') ? $value : null,
-                               ($column=='mediumblob') ? $value : null,
-                               ($column=='longblob') ? $value : null,
-                               ($column=='tinytext') ? $value : null,
-                               ($column=='text') ? $value : null,
-                               ($column=='mediumtext') ? $value : null,
-                               ($column=='longtext') ? $value : null,
-                               ($column=='enum') ? $value : null,
-                               ($column=='set') ? $value : null);
-      $this->assertTrue(false, "column: $column, value: $value");
-    }
-    catch (RuntimeException $e)
-    {
-      $this->assertTrue(true);
-    }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  public function genericValid($column, $value)
-  {
-    $n = $this->dataLayer->tstTest02(($column=='int') ? $value : null,
                                   ($column=='smallint') ? $value : null,
                                   ($column=='tinyint') ? $value : null,
                                   ($column=='mediumint') ? $value : null,
@@ -79,7 +42,46 @@ class QuoteWithLobTest extends DataLayerTestCase
                                   ($column=='longtext') ? $value : null,
                                   ($column=='enum') ? $value : null,
                                   ($column=='set') ? $value : null);
-    $this->assertEquals(1, $n);
+      $this->assertTrue(false, "column: $column, value: $value");
+    }
+    catch (RuntimeException $e)
+    {
+      $this->assertTrue(true);
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  public function genericValid($column, $value)
+  {
+    $n = $this->dataLayer->tstTest02(($column=='int') ? $value : null,
+                                     ($column=='smallint') ? $value : null,
+                                     ($column=='tinyint') ? $value : null,
+                                     ($column=='mediumint') ? $value : null,
+                                     ($column=='bigint') ? $value : null,
+                                     ($column=='decimal') ? $value : null,
+                                     ($column=='float') ? $value : null,
+                                     ($column=='double') ? $value : null,
+                                     ($column=='bit') ? $value : null,
+                                     ($column=='date') ? $value : null,
+                                     ($column=='datetime') ? $value : null,
+                                     ($column=='timestamp') ? $value : null,
+                                     ($column=='time') ? $value : null,
+                                     ($column=='year') ? $value : null,
+                                     ($column=='char') ? $value : null,
+                                     ($column=='varchar') ? $value : null,
+                                     ($column=='binary') ? $value : null,
+                                     ($column=='varbinary') ? $value : null,
+                                     ($column=='tinyblob') ? $value : null,
+                                     ($column=='blob') ? $value : null,
+                                     ($column=='mediumblob') ? $value : null,
+                                     ($column=='longblob') ? $value : null,
+                                     ($column=='tinytext') ? $value : null,
+                                     ($column=='text') ? $value : null,
+                                     ($column=='mediumtext') ? $value : null,
+                                     ($column=='longtext') ? $value : null,
+                                     ($column=='enum') ? $value : null,
+                                     ($column=='set') ? $value : null);
+    self::assertEquals(1, $n);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

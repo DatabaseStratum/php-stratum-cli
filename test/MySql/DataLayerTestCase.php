@@ -2,10 +2,12 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\Test\MySql;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Parent class for all test cases.
  */
-class DataLayerTestCase extends \PHPUnit_Framework_TestCase
+class DataLayerTestCase extends TestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**

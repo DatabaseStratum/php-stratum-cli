@@ -2,7 +2,9 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\Test\MySql;
 
-//----------------------------------------------------------------------------------------------------------------------
+/**
+ * Test multiple calls to wrapper functions don't cause "command out of sync" errors.
+ */
 class CommandsOutOfSyncTest extends DataLayerTestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
@@ -12,6 +14,8 @@ class CommandsOutOfSyncTest extends DataLayerTestCase
     $this->dataLayer->tstTestRows1(1);
     $this->dataLayer->tstTestRowsWithIndex1(100);
     $this->dataLayer->tstTestRowsWithKey1(100);
+
+    self::assertTrue(true);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

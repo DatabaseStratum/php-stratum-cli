@@ -27,8 +27,7 @@ A stored procedure loader and wrapper class generator for MySQL in PHP.
 <a href="https://scrutinizer-ci.com/g/SetBased/php-stratum/?branch=master"><img src="https://scrutinizer-ci.com/g/SetBased/php-stratum/badges/coverage.png?b=master" alt="Code Coverage"/></a><br/>
 </td>
 <td>
-<a href="https://scrutinizer-ci.com/g/SetBased/php-stratum/?branch=master"><img src="https://scrutinizer-ci.com/g/SetBased/php-stratum/badges/quality-score.png?b=master" alt="Scrutinizer Code Quality"/></a><br/>
-<a href="https://travis-ci.org/SetBased/php-stratum"><img src="http://php7ready.timesplinter.ch/SetBased/php-stratum/badge.svg" alt="PHP 7 ready"/></a>
+<a href="https://scrutinizer-ci.com/g/SetBased/php-stratum/?branch=master"><img src="https://scrutinizer-ci.com/g/SetBased/php-stratum/badges/quality-score.png?b=master" alt="Scrutinizer Code Quality"/></a><
 </td>
 </tr>
 </tbody>

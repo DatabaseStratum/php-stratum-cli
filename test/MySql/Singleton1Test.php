@@ -2,7 +2,9 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\Test\MySql;
 
-//----------------------------------------------------------------------------------------------------------------------
+/**
+ * Test cases for stored routines with designation type singleton1.
+ */
 class Singleton1Test extends DataLayerTestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
@@ -12,7 +14,7 @@ class Singleton1Test extends DataLayerTestCase
   public function test1()
   {
     $ret = $this->dataLayer->tstTestSingleton1a(1);
-    $this->assertEquals(1, $ret);
+    self::assertEquals(1, $ret);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

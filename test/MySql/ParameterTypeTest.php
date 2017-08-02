@@ -2,12 +2,14 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\Test\MySql;
 
-//----------------------------------------------------------------------------------------------------------------------
+/**
+ * Test cases for PHP parameter names.
+ */
 class ParameterTypeTest extends DataLayerTestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Stored routine with designation type table must show table.
+   * Test parameter names.
    */
   public function test1()
   {

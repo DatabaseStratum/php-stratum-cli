@@ -2,7 +2,9 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\Test\MySql;
 
-//----------------------------------------------------------------------------------------------------------------------
+/**
+ * Test cases for stored routines with designation type table.
+ */
 class TableTest extends DataLayerTestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
@@ -25,7 +27,7 @@ class TableTest extends DataLayerTestCase
     $table = ob_get_contents();
     ob_end_clean();
 
-    $this->assertEquals($table, $template_table);
+    self::assertEquals($table, $template_table);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
