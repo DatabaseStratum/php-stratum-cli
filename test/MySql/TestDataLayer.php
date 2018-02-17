@@ -99,17 +99,17 @@ class TestDataLayer extends DataLayer
    * @param int    $pParam13 Test parameter 13.
    *                         year(4)
    * @param string $pParam14 Test parameter 14.
-   *                         char(10) character set latin1 collation latin1_swedish_ci
+   *                         char(10) character set utf8 collation utf8_general_ci
    * @param string $pParam15 Test parameter 15.
-   *                         varchar(10) character set latin1 collation latin1_swedish_ci
+   *                         varchar(10) character set utf8 collation utf8_general_ci
    * @param string $pParam16 Test parameter 16.
    *                         binary(10)
    * @param string $pParam17 Test parameter 17.
    *                         varbinary(10)
    * @param string $pParam26 Test parameter 26.
-   *                         enum('a','b') character set latin1 collation latin1_swedish_ci
+   *                         enum('a','b') character set utf8 collation utf8_general_ci
    * @param string $pParam27 Test parameter 27.
-   *                         set('a','b') character set latin1 collation latin1_swedish_ci
+   *                         set('a','b') character set utf8 collation utf8_general_ci
    *
    * @return int
    */
@@ -151,9 +151,9 @@ class TestDataLayer extends DataLayer
    * @param int    $pParam13 Test parameter 13.
    *                         year(4)
    * @param string $pParam14 Test parameter 14.
-   *                         char(10) character set latin1 collation latin1_swedish_ci
+   *                         char(10) character set utf8 collation utf8_general_ci
    * @param string $pParam15 Test parameter 15.
-   *                         varchar(10) character set latin1 collation latin1_swedish_ci
+   *                         varchar(10) character set utf8 collation utf8_general_ci
    * @param string $pParam16 Test parameter 16.
    *                         binary(10)
    * @param string $pParam17 Test parameter 17.
@@ -167,17 +167,17 @@ class TestDataLayer extends DataLayer
    * @param string $pParam21 Test parameter 21.
    *                         longblob
    * @param string $pParam22 Test parameter 22.
-   *                         tinytext character set latin1 collation latin1_swedish_ci
+   *                         tinytext character set utf8 collation utf8_general_ci
    * @param string $pParam23 Test parameter 23.
-   *                         text character set latin1 collation latin1_swedish_ci
+   *                         text character set utf8 collation utf8_general_ci
    * @param string $pParam24 Test parameter 24.
-   *                         mediumtext character set latin1 collation latin1_swedish_ci
+   *                         mediumtext character set utf8 collation utf8_general_ci
    * @param string $pParam25 Test parameter 25.
-   *                         longtext character set latin1 collation latin1_swedish_ci
+   *                         longtext character set utf8 collation utf8_general_ci
    * @param string $pParam26 Test parameter 26.
-   *                         enum('a','b') character set latin1 collation latin1_swedish_ci
+   *                         enum('a','b') character set utf8 collation utf8_general_ci
    * @param string $pParam27 Test parameter 27.
-   *                         set('a','b') character set latin1 collation latin1_swedish_ci
+   *                         set('a','b') character set utf8 collation utf8_general_ci
    *
    * @return int
    */
@@ -366,7 +366,7 @@ class TestDataLayer extends DataLayer
   /**
    *
    * @param string|int[] $pIds The id's in CSV format.
-   *                           varchar(255) character set latin1 collation latin1_swedish_ci
+   *                           varchar(255) character set utf8 collation utf8_general_ci
    *
    * @return \array[]
    */
@@ -378,7 +378,7 @@ class TestDataLayer extends DataLayer
     $result->free();
     if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
-    return  $ret;
+    return $ret;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -390,6 +390,85 @@ class TestDataLayer extends DataLayer
   public function tstTestLog()
   {
     return $this->executeLog('CALL tst_test_log()');
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Test for designation type map.
+   *
+   * @param int $pCount Number of rows selected.
+   *                    int(11)
+   *
+   * @return array
+   */
+  public function tstTestMap1($pCount)
+  {
+    $result = $this->query('CALL tst_test_map1('.$this->quoteNum($pCount).')');
+    $ret = [];
+    while($row = $result->fetch_array(MYSQLI_NUM)) $ret[$row[0]] = $row[1];
+    $result->free();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
+
+    return $ret;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Test for designation type rows_with_key with BLOB.
+   *
+   * @param int    $pCount Number of rows selected.
+   *                       int(11)
+   * @param string $pBlob  The BLOB.
+   *                       blob
+   *
+   * @return array
+   */
+  public function tstTestMap1WithLob($pCount, $pBlob)
+  {
+    $query = 'CALL tst_test_map1_with_lob('.$this->quoteNum($pCount).',?)';
+    $stmt  = $this->mysqli->prepare($query);
+    if (!$stmt) $this->mySqlError('mysqli::prepare');
+
+    $null = null;
+    $b = $stmt->bind_param('b', $null);
+    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
+
+    $this->getMaxAllowedPacket();
+
+    $n = strlen($pBlob);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(0, substr($pBlob, $p, $this->chunkSize));
+      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
+      $p += $this->chunkSize;
+    }
+
+    if ($this->logQueries)
+    {
+      $time0 = microtime(true);
+
+      $b = $stmt->execute();
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
+
+      $this->queryLog[] = ['query' => $query,
+      'time'  => microtime(true) - $time0];
+    }
+    else
+    {
+      $b = $stmt->execute();
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
+    }
+
+    $result = $stmt->get_result();
+    $ret = [];
+    while($row = $result->fetch_array(MYSQLI_NUM)) $ret[$row[0]] = $row[1];
+    $result->free();
+
+    $stmt->close();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
+
+    return $ret;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -918,7 +997,7 @@ class TestDataLayer extends DataLayer
     $result->free();
     if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
-    return  $ret;
+    return $ret;
   }
 
   //--------------------------------------------------------------------------------------------------------------------

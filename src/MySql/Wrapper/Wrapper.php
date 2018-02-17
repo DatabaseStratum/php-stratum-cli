@@ -83,6 +83,10 @@ abstract class Wrapper
         $wrapper = new LogWrapper($codeStore, $nameMangler, $lobAsString);
         break;
 
+      case 'map':
+        $wrapper = new MapWrapper($codeStore, $nameMangler, $lobAsString);
+        break;
+
       case 'none':
         $wrapper = new NoneWrapper($codeStore, $nameMangler, $lobAsString);
         break;
