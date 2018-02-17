@@ -11,7 +11,7 @@ class RowsWithIndexWrapper extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * {@inheritdoc}
+   * @inheritdoc
    */
   protected function getDocBlockReturnType()
   {
@@ -20,7 +20,7 @@ class RowsWithIndexWrapper extends Wrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * {@inheritdoc}
+   * @inheritdoc
    */
   protected function writeResultHandler($routine)
   {
@@ -43,7 +43,7 @@ class RowsWithIndexWrapper extends Wrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * {@inheritdoc}
+   * @inheritdoc
    */
   protected function writeRoutineFunctionLobFetchData($routine)
   {
@@ -71,7 +71,7 @@ class RowsWithIndexWrapper extends Wrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * {@inheritdoc}
+   * @inheritdoc
    */
   protected function writeRoutineFunctionLobReturnData()
   {

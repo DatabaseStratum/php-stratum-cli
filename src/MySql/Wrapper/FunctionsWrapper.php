@@ -10,7 +10,7 @@ class FunctionsWrapper extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * {@inheritdoc}
+   * @inheritdoc
    */
   protected function getDocBlockReturnType()
   {
@@ -19,7 +19,7 @@ class FunctionsWrapper extends Wrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * {@inheritdoc}
+   * @inheritdoc
    */
   protected function writeResultHandler($routine)
   {
@@ -29,7 +29,7 @@ class FunctionsWrapper extends Wrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * {@inheritdoc}
+   * @inheritdoc
    */
   protected function writeRoutineFunctionLobFetchData($routine)
   {
@@ -39,7 +39,7 @@ class FunctionsWrapper extends Wrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * {@inheritdoc}
+   * @inheritdoc
    */
   protected function writeRoutineFunctionLobReturnData()
   {

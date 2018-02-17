@@ -43,7 +43,7 @@ class NonStaticCommand extends Command
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * {@inheritdoc}
+   * @inheritdoc
    */
   protected function configure()
   {

@@ -10,7 +10,7 @@ class Singleton1Wrapper extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * {@inheritdoc}
+   * @inheritdoc
    */
   protected function getDocBlockReturnType()
   {
@@ -19,7 +19,7 @@ class Singleton1Wrapper extends Wrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * {@inheritdoc}
+   * @inheritdoc
    */
   protected function writeResultHandler($routine)
   {
@@ -29,7 +29,7 @@ class Singleton1Wrapper extends Wrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * {@inheritdoc}
+   * @inheritdoc
    */
   protected function writeRoutineFunctionLobFetchData($routine)
   {
@@ -51,7 +51,7 @@ class Singleton1Wrapper extends Wrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * {@inheritdoc}
+   * @inheritdoc
    */
   protected function writeRoutineFunctionLobReturnData()
   {

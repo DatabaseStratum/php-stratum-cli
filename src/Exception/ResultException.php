@@ -74,7 +74,7 @@ class ResultException extends RuntimeException
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * {@inheritdoc}
+   * @inheritdoc
    */
   public function getName()
   {

@@ -11,7 +11,7 @@ class TableWrapper extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * {@inheritdoc}
+   * @inheritdoc
    */
   protected function getDocBlockReturnType()
   {
@@ -20,7 +20,7 @@ class TableWrapper extends Wrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * {@inheritdoc}
+   * @inheritdoc
    */
   protected function writeResultHandler($routine)
   {
@@ -30,7 +30,7 @@ class TableWrapper extends Wrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * {@inheritdoc}
+   * @inheritdoc
    */
   protected function writeRoutineFunctionLobFetchData($routine)
   {
@@ -39,7 +39,7 @@ class TableWrapper extends Wrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * {@inheritdoc}
+   * @inheritdoc
    */
   protected function writeRoutineFunctionLobReturnData()
   {

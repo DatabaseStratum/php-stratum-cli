@@ -10,7 +10,7 @@ class InsertRoutine extends BaseRoutine
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * {@inheritdoc}
+   * @inheritdoc
    */
   protected function generateBody($params, $columns)
   {

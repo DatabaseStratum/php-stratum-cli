@@ -15,7 +15,7 @@ class StratumStyle extends SymfonyStyle
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * {@inheritdoc}
+   * @inheritdoc
    */
   public function __construct(InputInterface $input, OutputInterface $output)
   {
