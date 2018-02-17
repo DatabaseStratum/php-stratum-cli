@@ -1,55 +1,3 @@
-ABC_AUTH_SESSION.ses_id               10
-ABC_AUTH_SESSION.cmp_id                5
-ABC_AUTH_SESSION.usr_id               10
-ABC_AUTH_SESSION.ses_session_token    64
-ABC_AUTH_SESSION.ses_csrf_token       64
-ABC_AUTH_SESSION.ses_data          65535
-ABC_AUTH_SESSION.ses_last_request     16
-
-ABC_BLOB.blb_id         10
-ABC_BLOB.cmp_id          5
-ABC_BLOB.bdt_id         10
-ABC_BLOB.blb_size       10
-ABC_BLOB.blb_md5        16
-ABC_BLOB.blb_filename  255
-ABC_BLOB.blb_mime_type  48
-ABC_BLOB.blb_timestamp  16
-
-ABC_BLOB_DATA.bdt_id           10
-ABC_BLOB_DATA.cmp_id            5
-ABC_BLOB_DATA.bdt_md5          16
-ABC_BLOB_DATA.bdt_data 4294967295
-
-AUT_COMPANY.cmp_id     5
-AUT_COMPANY.cmp_abbr  15
-AUT_COMPANY.cmp_label 20
-
-AUT_PROFILE.pro_id        5
-AUT_PROFILE.cmp_id        5
-AUT_PROFILE.pro_flags    10
-AUT_PROFILE.pro_rol_ids 100
-
-AUT_USER.usr_id            10
-AUT_USER.cmp_id             5
-AUT_USER.lan_id             3
-AUT_USER.pro_id             5
-AUT_USER.usr_name          64
-AUT_USER.usr_password_hash 60
-AUT_USER.usr_anonymous      3
-AUT_USER.usr_blocked        3
-AUT_USER.usr_last_login    16
-
-BBL_LANGUAGE.lan_id                                3
-BBL_LANGUAGE.wrd_id                                5
-BBL_LANGUAGE.lan_code                              8
-BBL_LANGUAGE.lan_locale                           12
-BBL_LANGUAGE.lan_date_format_full                 12
-BBL_LANGUAGE.lan_date_format_abbr1                12
-BBL_LANGUAGE.lan_date_format_abbr2                12
-BBL_LANGUAGE.lan_date_format_compact              12
-BBL_LANGUAGE.lan_date_format_compact_weekday_abbr 16
-BBL_LANGUAGE.lan_date_time_format_full            32
-
 TST_FOO1.tst_c00         10
 TST_FOO1.tst_c01          5
 TST_FOO1.tst_c02          3
@@ -963,58 +911,6 @@ sample01.BAR_USER_STATUS.ust_id           3
 sample01.BAR_USER_STATUS.ust_description 40
 sample01.BAR_USER_STATUS.ust_label       20
 
-test.ABC_AUTH_SESSION.ses_id               10
-test.ABC_AUTH_SESSION.cmp_id                5
-test.ABC_AUTH_SESSION.usr_id               10
-test.ABC_AUTH_SESSION.ses_session_token    64
-test.ABC_AUTH_SESSION.ses_csrf_token       64
-test.ABC_AUTH_SESSION.ses_data          65535
-test.ABC_AUTH_SESSION.ses_last_request     16
-
-test.ABC_BLOB.blb_id         10
-test.ABC_BLOB.cmp_id          5
-test.ABC_BLOB.bdt_id         10
-test.ABC_BLOB.blb_size       10
-test.ABC_BLOB.blb_md5        16
-test.ABC_BLOB.blb_filename  255
-test.ABC_BLOB.blb_mime_type  48
-test.ABC_BLOB.blb_timestamp  16
-
-test.ABC_BLOB_DATA.bdt_id           10
-test.ABC_BLOB_DATA.cmp_id            5
-test.ABC_BLOB_DATA.bdt_md5          16
-test.ABC_BLOB_DATA.bdt_data 4294967295
-
-test.AUT_COMPANY.cmp_id     5
-test.AUT_COMPANY.cmp_abbr  15
-test.AUT_COMPANY.cmp_label 20
-
-test.AUT_PROFILE.pro_id        5
-test.AUT_PROFILE.cmp_id        5
-test.AUT_PROFILE.pro_flags    10
-test.AUT_PROFILE.pro_rol_ids 100
-
-test.AUT_USER.usr_id            10
-test.AUT_USER.cmp_id             5
-test.AUT_USER.lan_id             3
-test.AUT_USER.pro_id             5
-test.AUT_USER.usr_name          64
-test.AUT_USER.usr_password_hash 60
-test.AUT_USER.usr_anonymous      3
-test.AUT_USER.usr_blocked        3
-test.AUT_USER.usr_last_login    16
-
-test.BBL_LANGUAGE.lan_id                                3
-test.BBL_LANGUAGE.wrd_id                                5
-test.BBL_LANGUAGE.lan_code                              8
-test.BBL_LANGUAGE.lan_locale                           12
-test.BBL_LANGUAGE.lan_date_format_full                 12
-test.BBL_LANGUAGE.lan_date_format_abbr1                12
-test.BBL_LANGUAGE.lan_date_format_abbr2                12
-test.BBL_LANGUAGE.lan_date_format_compact              12
-test.BBL_LANGUAGE.lan_date_format_compact_weekday_abbr 16
-test.BBL_LANGUAGE.lan_date_time_format_full            32
-
 test.TST_FOO1.tst_c00         10
 test.TST_FOO1.tst_c01          5
 test.TST_FOO1.tst_c02          3
@@ -1058,13 +954,4 @@ test.TST_TABLE.tst_c03 10
 test.TST_TABLE.tst_c04 16
 test.TST_TABLE.t       10
 test.TST_TABLE.s       10
-
-test_audit.TABLE1.c1  3
-test_audit.TABLE1.c2  5
-test_audit.TABLE1.c4 10
-
-test_data.TABLE1.c1  3
-test_data.TABLE1.c2  5
-test_data.TABLE1.c3  7
-test_data.TABLE1.c4 10
 
