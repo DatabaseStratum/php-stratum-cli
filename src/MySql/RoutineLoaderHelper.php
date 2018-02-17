@@ -11,7 +11,6 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
 use Zend\Code\Reflection\DocBlock\Tag\ParamTag;
 use Zend\Code\Reflection\DocBlockReflection;
 
-//----------------------------------------------------------------------------------------------------------------------
 /**
  * Class for loading a single stored routine into a MySQL instance from pseudo SQL file.
  */

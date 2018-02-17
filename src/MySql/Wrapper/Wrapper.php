@@ -7,7 +7,6 @@ use SetBased\Helper\CodeStore\PhpCodeStore;
 use SetBased\Stratum\MySql\Helper\DataTypeHelper;
 use SetBased\Stratum\NameMangler\NameMangler;
 
-//----------------------------------------------------------------------------------------------------------------------
 /**
  * Abstract parent class for all wrapper generators.
  */
@@ -41,7 +40,6 @@ abstract class Wrapper
   private $lobAsStringFlag;
 
   //--------------------------------------------------------------------------------------------------------------------
-
   /**
    * Object constructor.
    *

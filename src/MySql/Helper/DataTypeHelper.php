@@ -4,7 +4,6 @@ namespace SetBased\Stratum\MySql\Helper;
 
 use SetBased\Exception\FallenException;
 
-//----------------------------------------------------------------------------------------------------------------------
 /**
  * Utility class for deriving information based on a MySQL data type.
  */

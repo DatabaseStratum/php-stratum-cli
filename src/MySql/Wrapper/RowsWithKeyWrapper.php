@@ -2,7 +2,6 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\MySql\Wrapper;
 
-//----------------------------------------------------------------------------------------------------------------------
 /**
  * Class for generating a wrapper method for a stored procedure that selects 0 or more rows. The rows are returned as
  * nested arrays.
@@ -38,7 +37,7 @@ class RowsWithKeyWrapper extends Wrapper
     $this->codeStore->append('$result->free();');
     $this->codeStore->append('if (self::$mysqli->more_results()) self::$mysqli->next_result();');
     $this->codeStore->append('');
-    $this->codeStore->append('return  $ret;');
+    $this->codeStore->append('return $ret;');
   }
 
   //--------------------------------------------------------------------------------------------------------------------

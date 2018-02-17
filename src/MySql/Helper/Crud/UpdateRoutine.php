@@ -5,7 +5,6 @@ namespace SetBased\Stratum\MySql\Helper\Crud;
 use SetBased\Stratum\MySql\MetadataDataLayer;
 use SetBased\Stratum\MySql\StaticDataLayer;
 
-//----------------------------------------------------------------------------------------------------------------------
 /**
  * Generates the code for a stored routine that updates a row.
  */

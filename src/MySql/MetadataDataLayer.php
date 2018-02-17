@@ -4,7 +4,6 @@ namespace SetBased\Stratum\MySql;
 
 use SetBased\Stratum\Style\StratumStyle;
 
-//----------------------------------------------------------------------------------------------------------------------
 /**
  * Data layer for retrieving metadata and loading stored routines.
  */

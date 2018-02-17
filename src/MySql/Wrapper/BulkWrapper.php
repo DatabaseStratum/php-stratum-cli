@@ -2,7 +2,6 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\MySql\Wrapper;
 
-//----------------------------------------------------------------------------------------------------------------------
 /**
  * Class for generating a wrapper method for a stored procedure selecting a large amount of rows.
  */

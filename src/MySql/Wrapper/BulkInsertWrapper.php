@@ -5,8 +5,6 @@ namespace SetBased\Stratum\MySql\Wrapper;
 use SetBased\Exception\LogicException;
 use SetBased\Stratum\MySql\Helper\DataTypeHelper;
 
-//----------------------------------------------------------------------------------------------------------------------
-
 /**
  * Class for generating a wrapper method for a stored procedure that prepares a table to be used with a bulk SQL
  * statement.

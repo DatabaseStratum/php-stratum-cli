@@ -5,7 +5,6 @@ namespace SetBased\Stratum\MySql\Command;
 use SetBased\Stratum\Command\BaseCommand;
 use SetBased\Stratum\MySql\MetadataDataLayer;
 
-//----------------------------------------------------------------------------------------------------------------------
 /**
  * Base class for commands which needs to connect to a MySQL instance.
  */

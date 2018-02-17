@@ -11,7 +11,6 @@ use SetBased\Stratum\MySql\Command\RoutineWrapperGeneratorCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 
-//----------------------------------------------------------------------------------------------------------------------
 /**
  * The PhpStratum program.
  */

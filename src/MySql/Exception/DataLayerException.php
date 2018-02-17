@@ -5,7 +5,6 @@ namespace SetBased\Stratum\MySql\Exception;
 use SetBased\Exception\RuntimeException;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 
-//----------------------------------------------------------------------------------------------------------------------
 /**
  * Exception for situations where the execution of s SQL query has failed.
  */
