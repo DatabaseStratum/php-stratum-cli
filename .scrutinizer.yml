@@ -7,17 +7,16 @@ tools:
                         - SetBased\Stratum\MySql\Wrapper
 
 build:
+    environment:
+        mysql: 5.7
+
     dependencies:
         override:
-            - ln -sf C.txt test/MySql/C.php
             - composer install --no-interaction
 
     tests:
         before:
             - mysql --version
-            - mysql -u root -e "create database if not exists test;"
-            - mysql -u root -e "create user 'test'@'localhost' identified by 'test';"
-            - mysql -u root -e "grant all on test.*  to 'test'@'localhost';"
             - mysql -u root -e "set global binlog_format = 'row';"
             - mysql -u root -e "set global log_bin_trust_function_creators = 1;"
 

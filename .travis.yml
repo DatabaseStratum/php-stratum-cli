@@ -2,24 +2,21 @@ language: php
 php:
   - '7.0'
   - '7.1'
+  - '7.2'
   - nightly
   
 sudo: true
 
 addons:
-  mariadb: 5.5
+  mariadb: 10.2
 
 before_install:
   - mysql --version
-  - mysql -u root -e "create database if not exists test;"
-  - mysql -u root -e "create user 'test'@'localhost' identified by 'test';"
-  - mysql -u root -e "grant all on test.*  to 'test'@'localhost';"
   - mysql -u root -e "set global binlog_format = 'row';"
   - mysql -u root -e "set global log_bin_trust_function_creators = 1;"
   
 install:
   - rm -f composer.lock
-  - ln -sf C.txt test/MySql/C.php
   - composer self-update
   - composer update
     
