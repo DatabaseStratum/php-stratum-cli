@@ -165,13 +165,6 @@ class RoutineLoaderHelper
   private $routineType;
 
   /**
-   * The extension of the source file of the stored routine.
-   *
-   * @var string
-   */
-  private $sourceFileExtension;
-
-  /**
    * The source filename holding the stored routine.
    *
    * @var string
@@ -198,7 +191,6 @@ class RoutineLoaderHelper
    *
    * @param StratumStyle $io                            The output for log messages.
    * @param string       $routineFilename               The filename of the source of the stored routine.
-   * @param string       $routineFileExtension          The extension of the source file of the stored routine.
    * @param array        $phpStratumMetadata            The metadata of the stored routine from PhpStratum.
    * @param array        $replacePairs                  A map from placeholders to their actual values.
    * @param array        $rdbmsOldRoutineMetadata       The old metadata of the stored routine from MySQL.
@@ -211,7 +203,6 @@ class RoutineLoaderHelper
    */
   public function __construct($io,
                               $routineFilename,
-                              $routineFileExtension,
                               $phpStratumMetadata,
                               $replacePairs,
                               $rdbmsOldRoutineMetadata,
@@ -222,7 +213,6 @@ class RoutineLoaderHelper
   {
     $this->io                      = $io;
     $this->sourceFilename          = $routineFilename;
-    $this->sourceFileExtension     = $routineFileExtension;
     $this->phpStratumMetadata      = $phpStratumMetadata;
     $this->replacePairs            = $replacePairs;
     $this->rdbmsOldRoutineMetadata = $rdbmsOldRoutineMetadata;
@@ -243,7 +233,7 @@ class RoutineLoaderHelper
     try
     {
       // We assume that the basename of the routine file and routine name are equal.
-      $this->routineName = basename($this->sourceFilename, $this->sourceFileExtension);
+      $this->routineName = pathinfo($this->sourceFilename, PATHINFO_FILENAME);
 
       // Save old metadata.
       $this->phpStratumOldMetadata = $this->phpStratumMetadata;

@@ -2,9 +2,8 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace SetBased\Stratum\MySql\Command;
 
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
 use SetBased\Exception\RuntimeException;
+use SetBased\Stratum\Helper\SourceFinderHelper;
 use SetBased\Stratum\MySql\MetadataDataLayer as DataLayer;
 use SetBased\Stratum\MySql\RoutineLoaderHelper;
 use SetBased\Stratum\NameMangler\NameMangler;
@@ -35,6 +34,13 @@ class RoutineLoaderCommand extends MySqlCommand
   private $collate;
 
   /**
+   * The path to the config file.
+   *
+   * @var string
+   */
+  private $configFilename;
+
+  /**
    * Name of the class that contains all constants.
    *
    * @var string
@@ -46,7 +52,7 @@ class RoutineLoaderCommand extends MySqlCommand
    *
    * @var array
    */
-  private $errorFileNames = [];
+  private $errorFilenames = [];
 
   /**
    * Class name for mangling routine and parameter names.
@@ -84,18 +90,11 @@ class RoutineLoaderCommand extends MySqlCommand
   private $replacePairs = [];
 
   /**
-   * Path where source files can be found.
+   * Pattern where of the sources files.
    *
    * @var string
    */
-  private $sourceDirectory;
-
-  /**
-   * The extension of the source files.
-   *
-   * @var string
-   */
-  private $sourceFileExtension;
+  private $sourcePattern;
 
   /**
    * All sources with stored routines. Each element is an array with the following keys:
@@ -117,6 +116,7 @@ class RoutineLoaderCommand extends MySqlCommand
   private $sqlMode;
 
   //--------------------------------------------------------------------------------------------------------------------
+
   /**
    * @inheritdoc
    */
@@ -138,26 +138,26 @@ class RoutineLoaderCommand extends MySqlCommand
 
     $this->io->title('Loader');
 
-    $configFileName = $input->getArgument('config file');
-    $file_names     = $input->getArgument('sources');
-    $settings       = $this->readConfigFile($configFileName);
+    $this->configFilename = $input->getArgument('config file');
+    $filenames            = $input->getArgument('sources');
+    $settings             = $this->readConfigFile($this->configFilename);
 
     $this->connect($settings);
 
-    if (empty($file_names))
+    if (empty($filenames))
     {
       $this->loadAll();
     }
     else
     {
-      $this->loadList($file_names);
+      $this->loadList($filenames);
     }
 
     $this->logOverviewErrors();
 
     $this->disconnect();
 
-    return ($this->errorFileNames) ? 1 : 0;
+    return ($this->errorFilenames) ? 1 : 0;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -173,8 +173,7 @@ class RoutineLoaderCommand extends MySqlCommand
     $settings = parse_ini_file($configFilename, true);
 
     $this->phpStratumMetadataFilename = self::getSetting($settings, true, 'loader', 'metadata');
-    $this->sourceDirectory            = self::getSetting($settings, true, 'loader', 'source_directory');
-    $this->sourceFileExtension        = self::getSetting($settings, true, 'loader', 'extension');
+    $this->sourcePattern              = self::getSetting($settings, true, 'loader', 'sources');
     $this->sqlMode                    = self::getSetting($settings, true, 'loader', 'sql_mode');
     $this->characterSet               = self::getSetting($settings, true, 'loader', 'character_set');
     $this->collate                    = self::getSetting($settings, true, 'loader', 'collate');
@@ -196,7 +195,7 @@ class RoutineLoaderCommand extends MySqlCommand
     // Add every not unique method name to myErrorFileNames
     foreach ($sources_by_path as $source)
     {
-      $this->errorFileNames[] = $source['path_name'];
+      $this->errorFilenames[] = $source['path_name'];
     }
 
     // Log the sources files with duplicate method names.
@@ -253,26 +252,20 @@ class RoutineLoaderCommand extends MySqlCommand
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Searches recursively for all source files in a directory.
+   * Searches recursively for all source files.
    *
-   * @param string|null $sourceDir The directory.
    */
-  private function findSourceFiles($sourceDir = null)
+  private function findSourceFiles()
   {
-    if ($sourceDir===null) $sourceDir = $this->sourceDirectory;
+    $helper    = new SourceFinderHelper(dirname($this->configFilename));
+    $filenames = $helper->findSources($this->sourcePattern);
 
-    $directory = new RecursiveDirectoryIterator($sourceDir);
-    $directory->setFlags(RecursiveDirectoryIterator::FOLLOW_SYMLINKS);
-    $files = new RecursiveIteratorIterator($directory);
-    foreach ($files as $full_path => $file)
+    foreach ($filenames as $filename)
     {
-      // If the file is a source file with stored routine add it to my sources.
-      if ($file->isFile() && '.'.$file->getExtension()==$this->sourceFileExtension)
-      {
-        $this->sources[] = ['path_name'    => $full_path,
-                            'routine_name' => $file->getBasename($this->sourceFileExtension),
-                            'method_name'  => $this->methodName($file->getFilename())];
-      }
+      $routineName     = pathinfo($filename, PATHINFO_FILENAME);
+      $this->sources[] = ['path_name'    => $filename,
+                          'routine_name' => $routineName,
+                          'method_name'  => $this->methodName($routineName)];
     }
   }
 
@@ -280,27 +273,23 @@ class RoutineLoaderCommand extends MySqlCommand
   /**
    * Finds all source files that actually exists from a list of file names.
    *
-   * @param string[] $fileNames The list of file names.
+   * @param string[] $filenames The list of file names.
    */
-  private function findSourceFilesFromList($fileNames)
+  private function findSourceFilesFromList($filenames)
   {
-    foreach ($fileNames as $psql_filename)
+    foreach ($filenames as $filename)
     {
-      if (!file_exists($psql_filename))
+      if (!file_exists($filename))
       {
-        $this->io->error(sprintf("File not exists: '%s'", $psql_filename));
-        $this->errorFileNames[] = $psql_filename;
+        $this->io->error(sprintf("File not exists: '%s'", $filename));
+        $this->errorFilenames[] = $filename;
       }
       else
       {
-        $extension = '.'.pathinfo($psql_filename, PATHINFO_EXTENSION);
-        if ($extension==$this->sourceFileExtension)
-        {
-          $routine_name    = pathinfo($psql_filename, PATHINFO_FILENAME);
-          $this->sources[] = ['path_name'    => $psql_filename,
-                              'routine_name' => $routine_name,
-                              'method_name'  => $this->methodName($routine_name)];
-        }
+        $routineName     = pathinfo($filename, PATHINFO_FILENAME);
+        $this->sources[] = ['path_name'    => $filename,
+                            'routine_name' => $routineName,
+                            'method_name'  => $this->methodName($routineName)];
       }
     }
   }
@@ -472,8 +461,7 @@ class RoutineLoaderCommand extends MySqlCommand
     $this->io->writeln('');
 
     // Sort the sources by routine name.
-    usort($this->sources, function ($a, $b)
-    {
+    usort($this->sources, function ($a, $b) {
       return strcmp($a['routine_name'], $b['routine_name']);
     });
 
@@ -484,7 +472,6 @@ class RoutineLoaderCommand extends MySqlCommand
 
       $helper = new RoutineLoaderHelper($this->io,
                                         $filename['path_name'],
-                                        $this->sourceFileExtension,
                                         isset($this->phpStratumMetadata[$routine_name]) ? $this->phpStratumMetadata[$routine_name] : null,
                                         $this->replacePairs,
                                         isset($this->rdbmsOldMetadata[$routine_name]) ? $this->rdbmsOldMetadata[$routine_name] : null,
@@ -496,7 +483,7 @@ class RoutineLoaderCommand extends MySqlCommand
       if ($meta_data===false)
       {
         // An error occurred during the loading of the stored routine.
-        $this->errorFileNames[] = $filename['path_name'];
+        $this->errorFilenames[] = $filename['path_name'];
         unset($this->phpStratumMetadata[$routine_name]);
       }
       else
@@ -513,10 +500,10 @@ class RoutineLoaderCommand extends MySqlCommand
    */
   private function logOverviewErrors()
   {
-    if (!empty($this->errorFileNames))
+    if (!empty($this->errorFilenames))
     {
       $this->io->warning('Routines in the files below are not loaded:');
-      $this->io->listing($this->errorFileNames);
+      $this->io->listing($this->errorFilenames);
     }
   }
 
