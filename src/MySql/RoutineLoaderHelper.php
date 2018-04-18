@@ -186,6 +186,7 @@ class RoutineLoaderHelper
   private $tableName;
 
   //--------------------------------------------------------------------------------------------------------------------
+
   /**
    * Object constructor.
    *
@@ -208,8 +209,7 @@ class RoutineLoaderHelper
                               $rdbmsOldRoutineMetadata,
                               $sqlMode,
                               $characterSet,
-                              $collate
-  )
+                              $collate)
   {
     $this->io                      = $io;
     $this->sourceFilename          = $routineFilename;
@@ -575,8 +575,7 @@ class RoutineLoaderHelper
     foreach ($this->phpStratumOldMetadata['replace'] as $place_holder => $old_value)
     {
       if (!isset($this->replacePairs[strtoupper($place_holder)]) ||
-        $this->replacePairs[strtoupper($place_holder)]!==$old_value
-      )
+        $this->replacePairs[strtoupper($place_holder)]!==$old_value)
       {
         return true;
       }
