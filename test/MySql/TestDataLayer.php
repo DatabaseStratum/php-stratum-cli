@@ -355,7 +355,7 @@ class TestDataLayer extends DataLayer
   /**
    * Test for illegal query.
    *
-   * @return \array[]
+   * @return array[]
    */
   public function tstTestIllegalQuery()
   {
@@ -368,7 +368,7 @@ class TestDataLayer extends DataLayer
    * @param string|int[] $pIds The id's in CSV format.
    *                           varchar(255) character set utf8 collation utf8_general_ci
    *
-   * @return \array[]
+   * @return array[]
    */
   public function tstTestListOfInt($pIds)
   {
@@ -813,7 +813,7 @@ class TestDataLayer extends DataLayer
    * @param int $pCount The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
    *                    int(11)
    *
-   * @return \array[]
+   * @return array[]
    */
   public function tstTestRows1($pCount)
   {
@@ -829,7 +829,7 @@ class TestDataLayer extends DataLayer
    * @param string $pBlob  The BLOB.
    *                       blob
    *
-   * @return \array[]
+   * @return array[]
    */
   public function tstTestRows1WithLob($pCount, $pBlob)
   {
@@ -897,7 +897,7 @@ class TestDataLayer extends DataLayer
    * @param int $pCount The number of rows selected.
    *                    int(11)
    *
-   * @return \array[]
+   * @return array[]
    */
   public function tstTestRowsWithIndex1($pCount)
   {
@@ -919,7 +919,7 @@ class TestDataLayer extends DataLayer
    * @param string $pBlob  The BLOB.
    *                       blob
    *
-   * @return \array[]
+   * @return array[]
    */
   public function tstTestRowsWithIndex1WithLob($pCount, $pBlob)
   {
@@ -987,7 +987,7 @@ class TestDataLayer extends DataLayer
    * @param int $pCount Number of rows selected.
    *                    int(11)
    *
-   * @return \array[]
+   * @return array[]
    */
   public function tstTestRowsWithKey1($pCount)
   {
@@ -1009,7 +1009,7 @@ class TestDataLayer extends DataLayer
    * @param string $pBlob  The BLOB.
    *                       blob
    *
-   * @return \array[]
+   * @return array[]
    */
   public function tstTestRowsWithKey1WithLob($pCount, $pBlob)
   {

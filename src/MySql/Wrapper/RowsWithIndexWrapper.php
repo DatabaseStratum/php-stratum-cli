@@ -14,7 +14,7 @@ class RowsWithIndexWrapper extends Wrapper
    */
   protected function getDocBlockReturnType()
   {
-    return '\array[]';
+    return 'array[]';
   }
 
   //--------------------------------------------------------------------------------------------------------------------

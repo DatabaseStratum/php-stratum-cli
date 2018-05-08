@@ -91,7 +91,7 @@ class StaticDataLayer
   /**
    * The query log.
    *
-   * @var \array[]
+   * @var array[]
    */
   protected static $queryLog;
 
@@ -381,7 +381,7 @@ class StaticDataLayer
    *
    * @param string $query The SQL statement.
    *
-   * @return \array[] The selected rows.
+   * @return array[] The selected rows.
    *
    * @since 1.0.0
    * @api
@@ -565,7 +565,7 @@ class StaticDataLayer
    *
    * To enable the query log set {@link $queryLog} to true.
    *
-   * @return \array[]
+   * @return array[]
    *
    * @since 1.0.0
    * @api

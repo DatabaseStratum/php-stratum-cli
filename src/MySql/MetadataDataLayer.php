@@ -82,7 +82,7 @@ and   table_name   = %s', self::$dl->quoteString($tableName));
    *
    * @param string $tableName The table name.
    *
-   * @return \array[]
+   * @return array[]
    */
   public static function describeTable($tableName)
   {
@@ -182,7 +182,7 @@ and   table_name   = %s', self::$dl->quoteString($tableName));
    *
    * @param string $query The SQL statement.
    *
-   * @return \array[]
+   * @return array[]
    */
   public static function executeRows($query)
   {
@@ -227,7 +227,7 @@ and   table_name   = %s', self::$dl->quoteString($tableName));
   /**
    * Selects metadata of all columns of all tables.
    *
-   * @return \array[]
+   * @return array[]
    */
   public static function getAllTableColumns()
   {
@@ -290,7 +290,7 @@ union all
   /**
    * Selects metadata of tables with a label column.
    *
-   * @return \array[]
+   * @return array[]
    */
   public static function getLabelTables()
   {
@@ -315,7 +315,7 @@ and   t2.column_name like '%%\\_label'";
    * @param string $idColumnName    The name of the auto increment column.
    * @param string $labelColumnName The name of the column with labels.
    *
-   * @return \array[]
+   * @return array[]
    */
   public static function getLabelsFromTable($tableName, $idColumnName, $labelColumnName)
   {
@@ -336,7 +336,7 @@ where   nullif(`%s`,'') is not null";
    *
    * @param string $routineName The name of the routine.
    *
-   * @return \array[]
+   * @return array[]
    */
   public static function getRoutineParameters($routineName)
   {
@@ -362,7 +362,7 @@ and   t1.routine_name   = '%s'", $routineName);
   /**
    * Selects all routines in the current schema.
    *
-   * @return \array[]
+   * @return array[]
    */
   public static function getRoutines()
   {
@@ -386,7 +386,7 @@ order by routine_name';
    * @param string $schemaName The name of the table schema.
    * @param string $tableName  The name of the table.
    *
-   * @return \array[]
+   * @return array[]
    */
   public static function getTableColumns($schemaName, $tableName)
   {
@@ -414,7 +414,7 @@ order by ORDINAL_POSITION',
    * @param string $schemaName The name of the table schema.
    * @param string $tableName  The name of the table.
    *
-   * @return \array[]
+   * @return array[]
    */
   public static function getTablePrimaryKeys($schemaName, $tableName)
   {
@@ -434,7 +434,7 @@ WHERE Key_name = \'PRIMARY\'',
    * @param string $schemaName The name of the table schema.
    * @param string $tableName  The name of the table.
    *
-   * @return \array[]
+   * @return array[]
    */
   public static function getTableUniqueKeys($schemaName, $tableName)
   {
@@ -453,7 +453,7 @@ WHERE Non_unique = 0',
    *
    * @param string $schemaName The name of the schema.
    *
-   * @return \array[]
+   * @return array[]
    */
   public static function getTablesNames($schemaName)
   {

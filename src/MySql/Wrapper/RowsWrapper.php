@@ -13,7 +13,7 @@ class RowsWrapper extends Wrapper
    */
   protected function getDocBlockReturnType()
   {
-    return '\array[]';
+    return 'array[]';
   }
 
   //--------------------------------------------------------------------------------------------------------------------
