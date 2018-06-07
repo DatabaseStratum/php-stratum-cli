@@ -21,17 +21,17 @@ class RowsWithIndexWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeResultHandler($routine)
+  protected function writeResultHandler()
   {
-    $routine_args = $this->getRoutineArgs($routine);
+    $routine_args = $this->getRoutineArgs();
 
     $index = '';
-    foreach ($routine['columns'] as $column)
+    foreach ($this->routine['columns'] as $column)
     {
       $index .= '[$row[\''.$column.'\']]';
     }
 
-    $this->codeStore->append('$result = self::query(\'CALL '.$routine['routine_name'].'('.$routine_args.')\');');
+    $this->codeStore->append('$result = self::query(\'CALL '.$this->routine['routine_name'].'('.$routine_args.')\');');
     $this->codeStore->append('$ret = [];');
     $this->codeStore->append('while($row = $result->fetch_array(MYSQLI_ASSOC)) $ret'.$index.'[] = $row;');
     $this->codeStore->append('$result->free();');
@@ -44,10 +44,10 @@ class RowsWithIndexWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeRoutineFunctionLobFetchData($routine)
+  protected function writeRoutineFunctionLobFetchData()
   {
     $index = '';
-    foreach ($routine['columns'] as $column)
+    foreach ($this->routine['columns'] as $column)
     {
       $index .= '[$new[\''.$column.'\']]';
     }

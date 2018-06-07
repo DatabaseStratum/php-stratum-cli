@@ -21,17 +21,17 @@ class TableWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeResultHandler($routine)
+  protected function writeResultHandler()
   {
-    $routine_args = $this->getRoutineArgs($routine);
-    $this->codeStore->append('return self::executeTable(\'CALL '.$routine['routine_name'].'('.$routine_args.')\');');
+    $routine_args = $this->getRoutineArgs();
+    $this->codeStore->append('return self::executeTable(\'CALL '.$this->routine['routine_name'].'('.$routine_args.')\');');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * @inheritdoc
    */
-  protected function writeRoutineFunctionLobFetchData($routine)
+  protected function writeRoutineFunctionLobFetchData()
   {
     // Nothing to do.
   }

@@ -9,7 +9,8 @@ create function tst_test_function( p_a int,
 returns int
 deterministic
 reads sql data
--- type: function
+-- type:   function
+-- return: int|null
 begin
   return p_a + p_b;
 end

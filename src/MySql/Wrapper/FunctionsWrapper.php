@@ -13,24 +13,25 @@ class FunctionsWrapper extends Wrapper
    */
   protected function getDocBlockReturnType()
   {
-    return 'string';
+    return $this->routine['return'];
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * @inheritdoc
    */
-  protected function writeResultHandler($routine)
+  protected function writeResultHandler()
   {
-    $routine_args = $this->getRoutineArgs($routine);
-    $this->codeStore->append('return self::executeSingleton0(\'SELECT '.$routine['routine_name'].'('.$routine_args.')\');');
+    $this->codeStore->append(sprintf("return self::executeSingleton0('select %s(%s)');",
+                                     $this->routine['routine_name'],
+                                     $this->getRoutineArgs()));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * @inheritdoc
    */
-  protected function writeRoutineFunctionLobFetchData($routine)
+  protected function writeRoutineFunctionLobFetchData()
   {
     $this->codeStore->append('$ret = self::$mysqli->affected_rows;');
     $this->codeStore->append('');

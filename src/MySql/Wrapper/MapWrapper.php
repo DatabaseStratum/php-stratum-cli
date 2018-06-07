@@ -21,11 +21,11 @@ class MapWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeResultHandler($routine)
+  protected function writeResultHandler()
   {
-    $routine_args = $this->getRoutineArgs($routine);
+    $routine_args = $this->getRoutineArgs();
 
-    $this->codeStore->append('$result = self::query(\'CALL '.$routine['routine_name'].'('.$routine_args.')\');');
+    $this->codeStore->append('$result = self::query(\'CALL '.$this->routine['routine_name'].'('.$routine_args.')\');');
     $this->codeStore->append('$ret = [];');
     $this->codeStore->append('while($row = $result->fetch_array(MYSQLI_NUM)) $ret[$row[0]] = $row[1];');
     $this->codeStore->append('$result->free();');
@@ -38,7 +38,7 @@ class MapWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeRoutineFunctionLobFetchData($routine)
+  protected function writeRoutineFunctionLobFetchData()
   {
     $this->codeStore->append('$result = $stmt->get_result();');
     $this->codeStore->append('$ret = [];');

@@ -15,7 +15,7 @@ class TestDataLayer extends DataLayer
   /**
    * Test for magic constant.
    *
-   * @return string|null
+   * @return string
    */
   public function tstMagicConstant01()
   {
@@ -26,7 +26,7 @@ class TestDataLayer extends DataLayer
   /**
    * Test for magic constant.
    *
-   * @return string|null
+   * @return int
    */
   public function tstMagicConstant02()
   {
@@ -37,7 +37,7 @@ class TestDataLayer extends DataLayer
   /**
    * Test for magic constant.
    *
-   * @return string|null
+   * @return string
    */
   public function tstMagicConstant03()
   {
@@ -48,7 +48,7 @@ class TestDataLayer extends DataLayer
   /**
    * Test for magic constant.
    *
-   * @return string|null
+   * @return string
    */
   public function tstMagicConstant04()
   {
@@ -59,7 +59,7 @@ class TestDataLayer extends DataLayer
   /**
    * Test for magic constant.
    *
-   * @return string|null
+   * @return string
    */
   public function tstMagicConstant05()
   {
@@ -344,11 +344,11 @@ class TestDataLayer extends DataLayer
    * @param int $pB Parameter B.
    *                int(11)
    *
-   * @return string
+   * @return int|null
    */
   public function tstTestFunction($pA, $pB)
   {
-    return $this->executeSingleton0('SELECT tst_test_function('.$this->quoteNum($pA).','.$this->quoteNum($pB).')');
+    return $this->executeSingleton0('select tst_test_function('.$this->quoteNum($pA).','.$this->quoteNum($pB).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -478,7 +478,7 @@ class TestDataLayer extends DataLayer
    * @param string $pTmpBlob The BLOB larger than max_allowed_packet.
    *                         longblob
    *
-   * @return string|null
+   * @return mixed
    */
   public function tstTestMaxAllowedPacket($pTmpBlob)
   {
@@ -1077,7 +1077,7 @@ class TestDataLayer extends DataLayer
    * @param int $pCount The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test.
    *                    int(11)
    *
-   * @return string|null
+   * @return int|null
    */
   public function tstTestSingleton0a($pCount)
   {
@@ -1093,7 +1093,7 @@ class TestDataLayer extends DataLayer
    * @param string $pBlob  The BLOB.
    *                       blob
    *
-   * @return string|null
+   * @return int|null
    */
   public function tstTestSingleton0aWithLob($pCount, $pBlob)
   {
@@ -1162,7 +1162,7 @@ class TestDataLayer extends DataLayer
    * @param int $pCount The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
    *                    int(11)
    *
-   * @return string|null
+   * @return int
    */
   public function tstTestSingleton1a($pCount)
   {
@@ -1178,7 +1178,7 @@ class TestDataLayer extends DataLayer
    * @param string $pBlob  The BLOB.
    *                       blob
    *
-   * @return string|null
+   * @return int
    */
   public function tstTestSingleton1aWithLob($pCount, $pBlob)
   {

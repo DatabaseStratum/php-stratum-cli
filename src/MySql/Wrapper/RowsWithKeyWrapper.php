@@ -21,17 +21,17 @@ class RowsWithKeyWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeResultHandler($routine)
+  protected function writeResultHandler()
   {
-    $routine_args = $this->getRoutineArgs($routine);
+    $routine_args = $this->getRoutineArgs();
 
     $key = '';
-    foreach ($routine['columns'] as $column)
+    foreach ($this->routine['columns'] as $column)
     {
       $key .= '[$row[\''.$column.'\']]';
     }
 
-    $this->codeStore->append('$result = self::query(\'CALL '.$routine['routine_name'].'('.$routine_args.')\');');
+    $this->codeStore->append('$result = self::query(\'CALL '.$this->routine['routine_name'].'('.$routine_args.')\');');
     $this->codeStore->append('$ret = [];');
     $this->codeStore->append('while($row = $result->fetch_array(MYSQLI_ASSOC)) $ret'.$key.' = $row;');
     $this->codeStore->append('$result->free();');
@@ -44,10 +44,10 @@ class RowsWithKeyWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeRoutineFunctionLobFetchData($routine)
+  protected function writeRoutineFunctionLobFetchData()
   {
     $key = '';
-    foreach ($routine['columns'] as $column)
+    foreach ($this->routine['columns'] as $column)
     {
       $key .= '[$new[\''.$column.'\']]';
     }

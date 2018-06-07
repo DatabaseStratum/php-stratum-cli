@@ -20,17 +20,17 @@ class Row0Wrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeResultHandler($routine)
+  protected function writeResultHandler()
   {
-    $routine_args = $this->getRoutineArgs($routine);
-    $this->codeStore->append('return self::executeRow0(\'CALL '.$routine['routine_name'].'('.$routine_args.')\');');
+    $routine_args = $this->getRoutineArgs();
+    $this->codeStore->append('return self::executeRow0(\'CALL '.$this->routine['routine_name'].'('.$routine_args.')\');');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * @inheritdoc
    */
-  protected function writeRoutineFunctionLobFetchData($routine)
+  protected function writeRoutineFunctionLobFetchData()
   {
     $this->codeStore->append('$row = [];');
     $this->codeStore->append('self::bindAssoc($stmt, $row);');

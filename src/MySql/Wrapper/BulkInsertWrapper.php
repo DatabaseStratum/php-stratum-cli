@@ -38,7 +38,7 @@ class BulkInsertWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function getWrapperArgs($routine)
+  protected function getWrapperArgs()
   {
     return '$rows';
   }
@@ -47,30 +47,30 @@ class BulkInsertWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeResultHandler($routine)
+  protected function writeResultHandler()
   {
     // Validate number of column names and number of column types are equal.
-    $n1 = count($routine['columns']);
-    $n2 = count($routine['column_types']);
+    $n1 = count($this->routine['columns']);
+    $n2 = count($this->routine['column_types']);
     if ($n1!=$n2)
     {
       throw new LogicException("Number of fields %d and number of columns %d don't match.", $n1, $n2);
     }
 
-    $routine_args = $this->getRoutineArgs($routine);
-    $this->codeStore->append('self::query(\'CALL '.$routine['routine_name'].'('.$routine_args.')\');');
+    $routine_args = $this->getRoutineArgs();
+    $this->codeStore->append('self::query(\'CALL '.$this->routine['routine_name'].'('.$routine_args.')\');');
 
     $columns = '';
     $fields  = '';
-    foreach ($routine['columns'] as $i => $field)
+    foreach ($this->routine['columns'] as $i => $field)
     {
       if ($field!='_')
       {
         if ($columns) $columns .= ',';
-        $columns .= '`'.$routine['fields'][$i].'`';
+        $columns .= '`'.$this->routine['fields'][$i].'`';
 
         if ($fields) $fields .= ',';
-        $fields .= DataTypeHelper::escapePhpExpression(['data_type' => $routine['column_types'][$i]],
+        $fields .= DataTypeHelper::escapePhpExpression(['data_type' => $this->routine['column_types'][$i]],
                                                        '$row[\''.$field.'\']',
                                                        true);
       }
@@ -78,7 +78,7 @@ class BulkInsertWrapper extends Wrapper
 
     $this->codeStore->append('if (is_array($rows) && !empty($rows))');
     $this->codeStore->append('{');
-    $this->codeStore->append('$sql = "INSERT INTO `'.$routine['table_name'].'`('.$columns.')";');
+    $this->codeStore->append('$sql = "INSERT INTO `'.$this->routine['table_name'].'`('.$columns.')";');
     $this->codeStore->append('$first = true;');
     $this->codeStore->append('foreach($rows as $row)');
     $this->codeStore->append('{');
@@ -97,7 +97,7 @@ class BulkInsertWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeRoutineFunctionLobFetchData($routine)
+  protected function writeRoutineFunctionLobFetchData()
   {
     // Nothing to do.
   }

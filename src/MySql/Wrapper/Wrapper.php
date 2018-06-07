@@ -39,17 +39,26 @@ abstract class Wrapper
    */
   private $lobAsStringFlag;
 
+  /**
+   * The metadata of the stored routine.
+   *
+   * @var array
+   */
+  protected $routine;
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Object constructor.
    *
+   * @param array        $routine     The metadata of the stored routine.
    * @param PhpCodeStore $codeStore   The code store for the generated code.
    * @param NameMangler  $nameMangler The mangler for wrapper and parameter names.
    * @param bool         $lobAsString If set BLOBs and CLOBs are treated as string. Otherwise, BLOBs and CLOBs will be
    *                                  send as long data.
    */
-  public function __construct($codeStore, $nameMangler, $lobAsString)
+  public function __construct($routine, $codeStore, $nameMangler, $lobAsString)
   {
+    $this->routine         = $routine;
     $this->codeStore       = $codeStore;
     $this->nameMangler     = $nameMangler;
     $this->lobAsStringFlag = $lobAsString;
@@ -72,59 +81,59 @@ abstract class Wrapper
     switch ($routine['designation'])
     {
       case 'bulk':
-        $wrapper = new BulkWrapper($codeStore, $nameMangler, $lobAsString);
+        $wrapper = new BulkWrapper($routine, $codeStore, $nameMangler, $lobAsString);
         break;
 
       case 'bulk_insert':
-        $wrapper = new BulkInsertWrapper($codeStore, $nameMangler, $lobAsString);
+        $wrapper = new BulkInsertWrapper($routine, $codeStore, $nameMangler, $lobAsString);
         break;
 
       case 'log':
-        $wrapper = new LogWrapper($codeStore, $nameMangler, $lobAsString);
+        $wrapper = new LogWrapper($routine, $codeStore, $nameMangler, $lobAsString);
         break;
 
       case 'map':
-        $wrapper = new MapWrapper($codeStore, $nameMangler, $lobAsString);
+        $wrapper = new MapWrapper($routine, $codeStore, $nameMangler, $lobAsString);
         break;
 
       case 'none':
-        $wrapper = new NoneWrapper($codeStore, $nameMangler, $lobAsString);
+        $wrapper = new NoneWrapper($routine, $codeStore, $nameMangler, $lobAsString);
         break;
 
       case 'row0':
-        $wrapper = new Row0Wrapper($codeStore, $nameMangler, $lobAsString);
+        $wrapper = new Row0Wrapper($routine, $codeStore, $nameMangler, $lobAsString);
         break;
 
       case 'row1':
-        $wrapper = new Row1Wrapper($codeStore, $nameMangler, $lobAsString);
+        $wrapper = new Row1Wrapper($routine, $codeStore, $nameMangler, $lobAsString);
         break;
 
       case 'rows':
-        $wrapper = new RowsWrapper($codeStore, $nameMangler, $lobAsString);
+        $wrapper = new RowsWrapper($routine, $codeStore, $nameMangler, $lobAsString);
         break;
 
       case 'rows_with_key':
-        $wrapper = new RowsWithKeyWrapper($codeStore, $nameMangler, $lobAsString);
+        $wrapper = new RowsWithKeyWrapper($routine, $codeStore, $nameMangler, $lobAsString);
         break;
 
       case 'rows_with_index':
-        $wrapper = new RowsWithIndexWrapper($codeStore, $nameMangler, $lobAsString);
+        $wrapper = new RowsWithIndexWrapper($routine, $codeStore, $nameMangler, $lobAsString);
         break;
 
       case 'singleton0':
-        $wrapper = new Singleton0Wrapper($codeStore, $nameMangler, $lobAsString);
+        $wrapper = new Singleton0Wrapper($routine, $codeStore, $nameMangler, $lobAsString);
         break;
 
       case 'singleton1':
-        $wrapper = new Singleton1Wrapper($codeStore, $nameMangler, $lobAsString);
+        $wrapper = new Singleton1Wrapper($routine, $codeStore, $nameMangler, $lobAsString);
         break;
 
       case 'function':
-        $wrapper = new FunctionsWrapper($codeStore, $nameMangler, $lobAsString);
+        $wrapper = new FunctionsWrapper($routine, $codeStore, $nameMangler, $lobAsString);
         break;
 
       case 'table':
-        $wrapper = new TableWrapper($codeStore, $nameMangler, $lobAsString);
+        $wrapper = new TableWrapper($routine, $codeStore, $nameMangler, $lobAsString);
         break;
 
       default:
@@ -171,36 +180,32 @@ abstract class Wrapper
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Generates a complete wrapper method.
-   *
-   * @param array $routine Metadata of the stored routine.
    */
-  public function writeRoutineFunction($routine)
+  public function writeRoutineFunction()
   {
-    if (!$this->lobAsStringFlag && $this->isBlobParameter($routine['parameters']))
+    if (!$this->lobAsStringFlag && $this->isBlobParameter($this->routine['parameters']))
     {
-      $this->writeRoutineFunctionWithLob($routine);
+      $this->writeRoutineFunctionWithLob();
     }
     else
     {
-      $this->writeRoutineFunctionWithoutLob($routine);
+      $this->writeRoutineFunctionWithoutLob();
     }
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Generates a complete wrapper method for a stored routine with a LOB parameter.
-   *
-   * @param array $routine The metadata of the stored routine.
    */
-  public function writeRoutineFunctionWithLob($routine)
+  public function writeRoutineFunctionWithLob()
   {
-    $wrapper_args = $this->getWrapperArgs($routine);
-    $routine_args = $this->getRoutineArgs($routine);
-    $method_name  = $this->nameMangler->getMethodName($routine['routine_name']);
+    $wrapper_args = $this->getWrapperArgs();
+    $routine_args = $this->getRoutineArgs();
+    $method_name  = $this->nameMangler->getMethodName($this->routine['routine_name']);
 
     $bindings = '';
     $nulls    = '';
-    foreach ($routine['parameters'] as $parameter_info)
+    foreach ($this->routine['parameters'] as $parameter_info)
     {
       $binding = DataTypeHelper::getBindVariableType($parameter_info['data_type'], $this->lobAsStringFlag);
       if ($binding=='b')
@@ -212,10 +217,10 @@ abstract class Wrapper
     }
 
     $this->codeStore->appendSeparator();
-    $this->generatePhpDoc($routine);
+    $this->generatePhpDoc();
     $this->codeStore->append('public static function '.$method_name.'('.$wrapper_args.')');
     $this->codeStore->append('{');
-    $this->codeStore->append('$query = \'CALL '.$routine['routine_name'].'('.$routine_args.')\';');
+    $this->codeStore->append('$query = \'CALL '.$this->routine['routine_name'].'('.$routine_args.')\';');
     $this->codeStore->append('$stmt  = self::$mysqli->prepare($query);');
     $this->codeStore->append('if (!$stmt) self::mySqlError(\'mysqli::prepare\');');
     $this->codeStore->append('');
@@ -227,7 +232,7 @@ abstract class Wrapper
     $this->codeStore->append('');
 
     $blob_argument_index = 0;
-    foreach ($routine['parameters'] as $parameter_info)
+    foreach ($this->routine['parameters'] as $parameter_info)
     {
       if (DataTypeHelper::getBindVariableType($parameter_info['data_type'], $this->lobAsStringFlag)=='b')
       {
@@ -263,7 +268,7 @@ abstract class Wrapper
     $this->codeStore->append('if (!$b) self::mySqlError(\'mysqli_stmt::execute\');');
     $this->codeStore->append('}');
     $this->codeStore->append('');
-    $this->writeRoutineFunctionLobFetchData($routine);
+    $this->writeRoutineFunctionLobFetchData();
     $this->codeStore->append('$stmt->close();');
     $this->codeStore->append('if (self::$mysqli->more_results()) self::$mysqli->next_result();');
     $this->codeStore->append('');
@@ -276,20 +281,18 @@ abstract class Wrapper
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Returns a wrapper method for a stored routine without LOB parameters.
-   *
-   * @param array $routine The metadata of the stored routine.
    */
-  public function writeRoutineFunctionWithoutLob($routine)
+  public function writeRoutineFunctionWithoutLob()
   {
-    $wrapper_args = $this->getWrapperArgs($routine);
-    $method_name  = $this->nameMangler->getMethodName($routine['routine_name']);
+    $wrapper_args = $this->getWrapperArgs();
+    $method_name  = $this->nameMangler->getMethodName($this->routine['routine_name']);
 
     $this->codeStore->appendSeparator();
-    $this->generatePhpDoc($routine);
+    $this->generatePhpDoc();
     $this->codeStore->append('public static function '.$method_name.'('.$wrapper_args.')');
     $this->codeStore->append('{');
 
-    $this->writeResultHandler($routine);
+    $this->writeResultHandler();
     $this->codeStore->append('}');
     $this->codeStore->append('');
   }
@@ -298,14 +301,17 @@ abstract class Wrapper
   /**
    * Enhances the metadata of the parameters of the store routine wrapper.
    *
-   * @param array[] $parameters The metadata of the parameters. For each parameter the following keys must be defined:
-   *                            <ul>
-   *                            <li> php_name             The name of the paramter (including $).
-   *                            <li> description          The description of the parameter.
-   *                            <li> php_type             The type of the parameter.
-   *                            <li> data_type_descriptor The data type of the correseponding parameter of the
-   *                                                      stored routine. Null if there is no corresponding parameter.
-   *                            </ul>
+   * @param array[] $parameters                           The metadata of the parameters. For each parameter the
+   *                                                      following keys must be defined:
+   *                                                      <ul>
+   *                                                      <li> php_name             The name of the parader (including
+   *                                                      $).
+   *                                                      <li> description          The description of the parameter.
+   *                                                      <li> php_type             The type of the parameter.
+   *                                                      <li> data_type_descriptor The data type of the corresponding
+   *                                                      parameter of the stored routine. Null if there is no
+   *                                                      corresponding parameter.
+   *                                                      </ul>
    */
   protected function enhancePhpDocParameters(&$parameters)
   {
@@ -324,15 +330,13 @@ abstract class Wrapper
   /**
    * Returns code for the arguments for calling the stored routine in a wrapper method.
    *
-   * @param array $routine The metadata of the stored routine.
-   *
    * @return string
    */
-  protected function getRoutineArgs($routine)
+  protected function getRoutineArgs()
   {
     $ret = '';
 
-    foreach ($routine['parameters'] as $parameter_info)
+    foreach ($this->routine['parameters'] as $parameter_info)
     {
       $mangledName = $this->nameMangler->getParameterName($parameter_info['parameter_name']);
 
@@ -347,13 +351,11 @@ abstract class Wrapper
   /**
    * Returns code for the parameters of the wrapper method for the stored routine.
    *
-   * @param array $routine The metadata of the stored routine.
-   *
    * @return string
    */
-  protected function getWrapperArgs($routine)
+  protected function getWrapperArgs()
   {
-    if ($routine['designation']=='bulk')
+    if ($this->routine['designation']=='bulk')
     {
       $ret = '$bulkHandler';
     }
@@ -362,7 +364,7 @@ abstract class Wrapper
       $ret = '';
     }
 
-    foreach ($routine['parameters'] as $i => $parameter_info)
+    foreach ($this->routine['parameters'] as $i => $parameter_info)
     {
       if ($ret) $ret .= ', ';
       $ret .= '$';
@@ -376,21 +378,17 @@ abstract class Wrapper
   /**
    * Generates code for calling the stored routine in the wrapper method.
    *
-   * @param array $routine The metadata of the stored routine.
-   *
    * @return void
    */
-  abstract protected function writeResultHandler($routine);
+  abstract protected function writeResultHandler();
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Generates code for fetching data of a stored routine with one or more LOB parameters.
    *
-   * @param array $routine The metadata of the stored routine.
-   *
    * @return void
    */
-  abstract protected function writeRoutineFunctionLobFetchData($routine);
+  abstract protected function writeRoutineFunctionLobFetchData();
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -402,9 +400,32 @@ abstract class Wrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Genrates the PHP doc block for the return type of the stored routine wrapper.
+   * Generate php doc block in the data layer for stored routine.
    */
-  private function geberatePhpDocBlockReturn()
+  private function generatePhpDoc()
+  {
+    $this->codeStore->append('/**', false);
+
+    // Generate phpdoc with short description of routine wrapper.
+    $this->generatePhpDocSortDescription();
+
+    // Generate phpdoc with long description of routine wrapper.
+    $this->generatePhpDocLongDescription();
+
+    // Generate phpDoc with parameters and descriptions of parameters.
+    $this->generatePhpDocParameters();
+
+    // Generate return parameter doc.
+    $this->generatePhpDocBlockReturn();
+
+    $this->codeStore->append(' */', false);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Generates the PHP doc block for the return type of the stored routine wrapper.
+   */
+  private function generatePhpDocBlockReturn()
   {
     $return = $this->getDocBlockReturnType();
     if ($return!=='')
@@ -416,53 +437,24 @@ abstract class Wrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Generate php doc block in the data layer for stored routine.
-   *
-   * @param array $routine Metadata of the stored routine.
-   */
-  private function generatePhpDoc($routine)
-  {
-    $this->codeStore->append('/**', false);
-
-    // Generate phpdoc with short description of routine wrapper.
-    $this->generatePhpDocSortDescription($routine);
-
-    // Generate phpdoc with long description of routine wrapper.
-    $this->generatePhpDocLongDescription($routine);
-
-    // Generate phpDoc with parameters and descriptions of parameters.
-    $this->generatePhpDocParameters($routine);
-
-    // Generate return parameter doc.
-    $this->geberatePhpDocBlockReturn();
-
-    $this->codeStore->append(' */', false);
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
    * Generates the long description of stored routine wrapper.
-   *
-   * @param array  $routine The metadata of the stored routine.
    */
-  private function generatePhpDocLongDescription($routine)
+  private function generatePhpDocLongDescription()
   {
-    if ($routine['phpdoc']['long_description']!=='')
+    if ($this->routine['phpdoc']['long_description']!=='')
     {
-      $this->codeStore->append(' * '.$routine['phpdoc']['long_description'], false);
+      $this->codeStore->append(' * '.$this->routine['phpdoc']['long_description'], false);
     }
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Generates the doc block for parameters of stored routine wrapper.
-   *
-   * @param array $routine The metadata of the stored routine.
    */
-  private function generatePhpDocParameters($routine)
+  private function generatePhpDocParameters()
   {
     $parameters = [];
-    foreach ($routine['phpdoc']['parameters'] as $parameter)
+    foreach ($this->routine['phpdoc']['parameters'] as $parameter)
     {
       $mangledName = $this->nameMangler->getParameterName($parameter['parameter_name']);
 
@@ -518,14 +510,12 @@ abstract class Wrapper
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Generates the sort description of stored routine wrapper.
-   *
-   * @param array $routine The metadata of the stored routine.
    */
-  private function generatePhpDocSortDescription($routine)
+  private function generatePhpDocSortDescription()
   {
-    if ($routine['phpdoc']['sort_description']!=='')
+    if ($this->routine['phpdoc']['sort_description']!=='')
     {
-      $this->codeStore->append(' * '.$routine['phpdoc']['sort_description'], false);
+      $this->codeStore->append(' * '.$this->routine['phpdoc']['sort_description'], false);
     }
   }
 

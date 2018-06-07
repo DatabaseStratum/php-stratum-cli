@@ -3,7 +3,8 @@
  */
 create procedure tst_magic_constant03()
 reads sql data
--- type: singleton1
+-- type:   singleton1
+-- return: string
 begin
   select __FILE__;
 end

@@ -8,7 +8,8 @@
  */
 create procedure tst_test_singleton0a( p_count int )
 reads sql data
--- type: singleton0
+-- type:   singleton0
+-- return: int|null
 begin
   select 1
   from   TST_FOO2

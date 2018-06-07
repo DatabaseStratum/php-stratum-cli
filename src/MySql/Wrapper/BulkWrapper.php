@@ -36,17 +36,17 @@ class BulkWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeResultHandler($routine)
+  protected function writeResultHandler()
   {
-    $routine_args = $this->getRoutineArgs($routine);
-    $this->codeStore->append('self::executeBulk($bulkHandler, \'CALL '.$routine['routine_name'].'('.$routine_args.')\');');
+    $routine_args = $this->getRoutineArgs();
+    $this->codeStore->append('self::executeBulk($bulkHandler, \'CALL '.$this->routine['routine_name'].'('.$routine_args.')\');');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * @inheritdoc
    */
-  protected function writeRoutineFunctionLobFetchData($routine)
+  protected function writeRoutineFunctionLobFetchData()
   {
     // Nothing to do.
   }

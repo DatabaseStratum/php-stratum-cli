@@ -137,6 +137,13 @@ class RoutineLoaderHelper
   private $replacePairs = [];
 
   /**
+   * The return type of the stored routine (only if designation type singleton0, singleton1, or function).
+   *
+   * @var string|null
+   */
+  private $returnType;
+
+  /**
    * The name of the stored routine.
    *
    * @var string
@@ -186,7 +193,6 @@ class RoutineLoaderHelper
   private $tableName;
 
   //--------------------------------------------------------------------------------------------------------------------
-
   /**
    * Object constructor.
    *
@@ -255,15 +261,17 @@ class RoutineLoaderHelper
         if ($this->routineSourceCodeLines===false) return false;
 
         // Extract placeholders from the stored routine source code.
-        $ok = $this->getPlaceholders();
+        $ok = $this->extractPlaceholders();
         if ($ok===false) return false;
 
         // Extract the designation type and key or index columns from the stored routine source code.
-        $ok = $this->getDesignationType();
+        $ok = $this->extractDesignationType();
         if ($ok===false) return false;
 
+        $this->extractReturnType();
+
         // Extract the stored routine type (procedure or function) and stored routine name from the source code.
-        $ok = $this->getName();
+        $ok = $this->extractRoutineTypeAndName();
         if ($ok===false) return false;
 
         // Load the stored routine into MySQL.
@@ -325,57 +333,11 @@ class RoutineLoaderHelper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   *  Gets the column names and column types of the current table for bulk insert.
-   */
-  private function getBulkInsertTableColumnsInfo()
-  {
-    // Check if table is a temporary table or a non-temporary table.
-    $table_is_non_temporary = MetaDataLayer::checkTableExists($this->tableName);
-
-    // Create temporary table if table is non-temporary table.
-    if (!$table_is_non_temporary)
-    {
-      MetaDataLayer::callProcedure($this->routineName);
-    }
-
-    // Get information about the columns of the table.
-    $columns = MetaDataLayer::describeTable($this->tableName);
-
-    // Drop temporary table if table is non-temporary.
-    if (!$table_is_non_temporary)
-    {
-      MetaDataLayer::dropTemporaryTable($this->tableName);
-    }
-
-    // Check number of columns in the table match the number of fields given in the designation type.
-    $n1 = count($this->columns);
-    $n2 = count($columns);
-    if ($n1!=$n2)
-    {
-      throw new RuntimeException("Number of fields %d and number of columns %d don't match.", $n1, $n2);
-    }
-
-    // Fill arrays with column names and column types.
-    $tmp_column_types = [];
-    $tmp_fields       = [];
-    foreach ($columns as $column)
-    {
-      preg_match('(\\w+)', $column['Type'], $type);
-      $tmp_column_types[] = $type['0'];
-      $tmp_fields[]       = $column['Field'];
-    }
-
-    $this->columnsTypes = $tmp_column_types;
-    $this->fields       = $tmp_fields;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
    * Extracts the designation type of the stored routine.
    *
    * @return bool True on success. Otherwise returns false.
    */
-  private function getDesignationType()
+  private function extractDesignationType()
   {
     $ret = true;
     $key = array_search('begin', $this->routineSourceCodeLines);
@@ -434,6 +396,155 @@ class RoutineLoaderHelper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * Extracts the placeholders from the stored routine source.
+   *
+   * @return bool
+   */
+  private function extractPlaceholders()
+  {
+    $unknown = [];
+
+    preg_match_all('(@[A-Za-z0-9\_\.]+(\%type)?@)', $this->routineSourceCode, $matches);
+    if (!empty($matches[0]))
+    {
+      foreach ($matches[0] as $placeholder)
+      {
+        if (isset($this->replacePairs[strtoupper($placeholder)]))
+        {
+          $this->replace[$placeholder] = $this->replacePairs[strtoupper($placeholder)];
+        }
+        else
+        {
+          $unknown[] = $placeholder;
+        }
+      }
+    }
+
+    $this->logUnknownPlaceholders($unknown);
+
+    return (empty($unknown));
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Extracts the return type of the stored routine.
+   */
+  private function extractReturnType()
+  {
+    if (!in_array($this->designationType, ['function', 'singleton0', 'singleton1'])) return;
+
+    $key = array_search('begin', $this->routineSourceCodeLines);
+
+    if ($key!==false)
+    {
+      for ($i = 1; $i<$key; $i++)
+      {
+        $n = preg_match('/^\s*--\s+return:\s*((\w|\|)+)\s*$/',
+                        $this->routineSourceCodeLines[$key - $i],
+                        $matches);
+        if ($n==1)
+        {
+          $this->returnType = $matches[1];
+
+          break;
+        }
+      }
+    }
+
+    if ($this->returnType===null)
+    {
+      $this->returnType = 'mixed';
+
+      $this->io->warning(sprintf("Unable to find the return type of the stored routine in file '%s'",
+                                 $this->sourceFilename));
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Extracts the name of the stored routine and the stored routine type (i.e. procedure or function) source.
+   *
+   * @return bool
+   */
+  private function extractRoutineTypeAndName()
+  {
+    $ret = true;
+
+    $n = preg_match('/create\\s+(procedure|function)\\s+([a-zA-Z0-9_]+)/i', $this->routineSourceCode, $matches);
+    if ($n==1)
+    {
+      $this->routineType = strtolower($matches[1]);
+
+      if ($this->routineName!=$matches[2])
+      {
+        $this->io->error(sprintf("Stored routine name '%s' does not corresponds with filename '%s'",
+                                 $matches[2],
+                                 $this->sourceFilename));
+        $ret = false;
+      }
+    }
+    else
+    {
+      $ret = false;
+    }
+
+    if (!isset($this->routineType))
+    {
+      $this->io->error(sprintf("Unable to find the stored routine name and type in file '%s'",
+                               $this->sourceFilename));
+    }
+
+    return $ret;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   *  Gets the column names and column types of the current table for bulk insert.
+   */
+  private function getBulkInsertTableColumnsInfo()
+  {
+    // Check if table is a temporary table or a non-temporary table.
+    $table_is_non_temporary = MetaDataLayer::checkTableExists($this->tableName);
+
+    // Create temporary table if table is non-temporary table.
+    if (!$table_is_non_temporary)
+    {
+      MetaDataLayer::callProcedure($this->routineName);
+    }
+
+    // Get information about the columns of the table.
+    $columns = MetaDataLayer::describeTable($this->tableName);
+
+    // Drop temporary table if table is non-temporary.
+    if (!$table_is_non_temporary)
+    {
+      MetaDataLayer::dropTemporaryTable($this->tableName);
+    }
+
+    // Check number of columns in the table match the number of fields given in the designation type.
+    $n1 = count($this->columns);
+    $n2 = count($columns);
+    if ($n1!=$n2)
+    {
+      throw new RuntimeException("Number of fields %d and number of columns %d don't match.", $n1, $n2);
+    }
+
+    // Fill arrays with column names and column types.
+    $tmp_column_types = [];
+    $tmp_fields       = [];
+    foreach ($columns as $column)
+    {
+      preg_match('(\\w+)', $column['Type'], $type);
+      $tmp_column_types[] = $type['0'];
+      $tmp_fields[]       = $column['Field'];
+    }
+
+    $this->columnsTypes = $tmp_column_types;
+    $this->fields       = $tmp_fields;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    *  Extracts the DocBlock (in parts) from the source of the stored routine.
    */
   private function getDocBlockPartsSource()
@@ -468,6 +579,7 @@ class RoutineLoaderHelper
       }
     }
   }
+
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -556,7 +668,6 @@ class RoutineLoaderHelper
     }
   }
 
-
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Returns true if the source file must be load or reloaded. Otherwise returns false.
@@ -598,44 +709,6 @@ class RoutineLoaderHelper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Extracts the name of the stored routine and the stored routine type (i.e. procedure or function) source.
-   *
-   * @todo Skip comments and string literals.
-   * @return bool Returns true on success, false otherwise.
-   */
-  private function getName()
-  {
-    $ret = true;
-
-    $n = preg_match('/create\\s+(procedure|function)\\s+([a-zA-Z0-9_]+)/i', $this->routineSourceCode, $matches);
-    if ($n==1)
-    {
-      $this->routineType = strtolower($matches[1]);
-
-      if ($this->routineName!=$matches[2])
-      {
-        $this->io->error(sprintf("Stored routine name '%s' does not corresponds with filename '%s'",
-                                 $matches[2],
-                                 $this->sourceFilename));
-        $ret = false;
-      }
-    }
-    else
-    {
-      $ret = false;
-    }
-
-    if (!isset($this->routineType))
-    {
-      $this->io->error(sprintf("Unable to find the stored routine name and type in file '%s'",
-                               $this->sourceFilename));
-    }
-
-    return $ret;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
    * Gets description by name of the parameter as found in the DocBlock of the stored routine.
    *
    * @param string $name Name of the parameter.
@@ -653,37 +726,6 @@ class RoutineLoaderHelper
     }
 
     return null;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Extracts the placeholders from the stored routine source.
-   *
-   * @return bool True if all placeholders are defined, false otherwise.
-   */
-  private function getPlaceholders()
-  {
-    $unknown = [];
-
-    preg_match_all('(@[A-Za-z0-9\_\.]+(\%type)?@)', $this->routineSourceCode, $matches);
-    if (!empty($matches[0]))
-    {
-      foreach ($matches[0] as $placeholder)
-      {
-        if (isset($this->replacePairs[strtoupper($placeholder)]))
-        {
-          $this->replace[$placeholder] = $this->replacePairs[strtoupper($placeholder)];
-        }
-        else
-        {
-          $unknown[] = $placeholder;
-        }
-      }
-    }
-
-    $this->logUnknownPlaceholders($unknown);
-
-    return (empty($unknown));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -800,7 +842,6 @@ class RoutineLoaderHelper
     unset($this->replace['__LINE__']);
   }
 
-
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Updates the metadata for the stored routine.
@@ -809,6 +850,7 @@ class RoutineLoaderHelper
   {
     $this->phpStratumMetadata['routine_name'] = $this->routineName;
     $this->phpStratumMetadata['designation']  = $this->designationType;
+    $this->phpStratumMetadata['return']       = $this->returnType;
     $this->phpStratumMetadata['table_name']   = $this->tableName;
     $this->phpStratumMetadata['parameters']   = $this->parameters;
     $this->phpStratumMetadata['columns']      = $this->columns;

@@ -20,17 +20,17 @@ class NoneWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeResultHandler($routine)
+  protected function writeResultHandler()
   {
-    $routine_args = $this->getRoutineArgs($routine);
-    $this->codeStore->append('return self::executeNone(\'CALL '.$routine['routine_name'].'('.$routine_args.')\');');
+    $routine_args = $this->getRoutineArgs();
+    $this->codeStore->append('return self::executeNone(\'CALL '.$this->routine['routine_name'].'('.$routine_args.')\');');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * @inheritdoc
    */
-  protected function writeRoutineFunctionLobFetchData($routine)
+  protected function writeRoutineFunctionLobFetchData()
   {
     $this->codeStore->append('$ret = self::$mysqli->affected_rows;');
     $this->codeStore->append('');
