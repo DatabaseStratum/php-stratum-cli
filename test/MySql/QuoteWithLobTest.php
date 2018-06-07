@@ -90,6 +90,8 @@ class QuoteWithLobTest extends DataLayerTestCase
    */
   public function testInvalid()
   {
+    $tests = [];
+
     $tests[] = ['column' => 'int', 'value' => 'abc'];
     $tests[] = ['column' => 'smallint', 'value' => 'abc'];
     $tests[] = ['column' => 'tinyint', 'value' => 'abc'];
@@ -124,6 +126,8 @@ class QuoteWithLobTest extends DataLayerTestCase
    */
   public function testValid()
   {
+    $tests = [];
+
     $tests[] = ['column' => 'int', 'value' => 1];
     $tests[] = ['column' => 'int', 'value' => '1'];
     $tests[] = ['column' => 'smallint', 'value' => 1];

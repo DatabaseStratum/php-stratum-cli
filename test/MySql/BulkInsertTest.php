@@ -13,6 +13,8 @@ class BulkInsertTest extends DataLayerTestCase
    */
   public function test1()
   {
+    $data = [];
+
     $data[] = ['field1'  => 1, //  int,
                'field2'  => 1, //  smallint,
                'field3'  => 1, //  mediumint,
@@ -111,7 +113,7 @@ class BulkInsertTest extends DataLayerTestCase
    */
   public function test2()
   {
-
+    $data   = [];
     $data[] = ['field1' => 1, //  int,
                'field2' => 1, //  int,
                'field3' => 1, //  int,
