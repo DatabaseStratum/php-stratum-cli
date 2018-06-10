@@ -1,26 +1,19 @@
+image: centos:latest
+
 cache:
   paths:
   - vendor/
 
 before_script:
-- apt-get update -yqq
-- apt-get install -yqq git libmcrypt-dev libcurl4-gnutls-dev libicu-dev libvpx-dev libjpeg-dev libpng-dev libxpm-dev zlib1g-dev libfreetype6-dev libxml2-dev libexpat1-dev libbz2-dev libgmp3-dev libldap2-dev unixodbc-dev libsqlite3-dev libaspell-dev libsnmp-dev libpcre3-dev libtidy-dev
-- apt-get install -yqq mysql-client
-- docker-php-ext-install mbstring mcrypt curl json intl gd xml zip bz2 opcache mysqlnd
-- pecl install xdebug
-- docker-php-ext-enable xdebug
-- curl -sS https://getcomposer.org/installer | php
-- php composer.phar install
-- echo "[client]" > $HOME/.my.cnf
-- echo "host=mysql" >> $HOME/.my.cnf
-
-services:
-  - mysql:5.7
-  
-variables:
-  MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+  - cp .gitlab-ci/MariaDB.repo /etc/yum.repos.d/
+  - rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+  - rpm -Uvh https://centos7.iuscommunity.org/ius-release.rpm
+  - yum -y install git curl wget
+  - yum -y install MariaDB-compat MariaDB-common MariaDB-client MariaDB-server MariaDB-shared
+  - systemctl start mariadb
 
 test:7.0:
-  image: php:7.0
+  before_script:
+  - yum -y install php71u-common php71u-cli php71u-json php71u-mysqlnd php71u-mbstring
   script:
   - ./bin/phing unit
