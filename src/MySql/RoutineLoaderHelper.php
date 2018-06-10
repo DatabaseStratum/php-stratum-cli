@@ -193,6 +193,7 @@ class RoutineLoaderHelper
   private $tableName;
 
   //--------------------------------------------------------------------------------------------------------------------
+
   /**
    * Object constructor.
    *
@@ -455,8 +456,7 @@ class RoutineLoaderHelper
     {
       $this->returnType = 'mixed';
 
-      $this->io->warning(sprintf("Unable to find the return type of the stored routine in file '%s'",
-                                 $this->sourceFilename));
+      $this->io->logNote("Unable to find the return type of the stored routine in file '%s'", $this->sourceFilename);
     }
   }
 
