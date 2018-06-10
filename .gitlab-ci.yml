@@ -12,7 +12,7 @@ before_script:
 - php composer.phar install
 
 services:
-  - mariadb: 10.2
+  - mysql: 5.7
 
 test:7.0:
   image: php:7.0
