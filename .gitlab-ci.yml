@@ -16,7 +16,7 @@ services:
   - mysql:5.7
   
 variables:
-  MYSQL_ALLOW_EMPTY_PASSWORD: yes
+  MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
 
 test:7.0:
   image: php:7.0
