@@ -4,16 +4,15 @@ cache:
   paths:
   - vendor/
 
-before_script:
+test:7.0:
+  before_script:
   - cp .gitlab-ci/MariaDB.repo /etc/yum.repos.d/
   - rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
   - rpm -Uvh https://centos7.iuscommunity.org/ius-release.rpm
   - yum -y install git curl wget
   - yum -y install MariaDB-compat MariaDB-common MariaDB-client MariaDB-server MariaDB-shared
   - systemctl start mariadb
-
-test:7.0:
-  before_script:
   - yum -y install php71u-common php71u-cli php71u-json php71u-mysqlnd php71u-mbstring
+
   script:
   - ./bin/phing unit
