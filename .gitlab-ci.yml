@@ -11,6 +11,8 @@ before_script:
 - docker-php-ext-enable xdebug
 - curl -sS https://getcomposer.org/installer | php
 - php composer.phar install
+- echo "[client]" > $HOME/.my.cnf
+- echo "host=mysql" >> $HOME/.my.cnf
 
 services:
   - mysql:5.7
