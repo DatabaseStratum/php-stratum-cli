@@ -1,5 +1,5 @@
 <?php
-//----------------------------------------------------------------------------------------------------------------------
+
 namespace SetBased\Stratum\MySql;
 
 use SetBased\Exception\FallenException;

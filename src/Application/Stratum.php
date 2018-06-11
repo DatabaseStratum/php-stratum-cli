@@ -1,5 +1,5 @@
 <?php
-//----------------------------------------------------------------------------------------------------------------------
+
 namespace SetBased\Stratum\Application;
 
 use SetBased\Stratum\Command\CrudCommand;

@@ -1,5 +1,5 @@
 <?php
-//----------------------------------------------------------------------------------------------------------------------
+
 namespace SetBased\Stratum\MySql\Helper\Crud;
 
 use SetBased\Exception\FallenException;

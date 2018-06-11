@@ -1,5 +1,5 @@
 <?php
-//----------------------------------------------------------------------------------------------------------------------
+
 namespace SetBased\Stratum\MySql\Command;
 
 use SetBased\Stratum\Command\BaseCommand;

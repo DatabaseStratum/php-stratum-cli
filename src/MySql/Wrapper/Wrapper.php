@@ -1,5 +1,5 @@
 <?php
-//----------------------------------------------------------------------------------------------------------------------
+
 namespace SetBased\Stratum\MySql\Wrapper;
 
 use SetBased\Exception\FallenException;
@@ -301,17 +301,15 @@ abstract class Wrapper
   /**
    * Enhances the metadata of the parameters of the store routine wrapper.
    *
-   * @param array[] $parameters                           The metadata of the parameters. For each parameter the
-   *                                                      following keys must be defined:
-   *                                                      <ul>
-   *                                                      <li> php_name             The name of the parader (including
-   *                                                      $).
-   *                                                      <li> description          The description of the parameter.
-   *                                                      <li> php_type             The type of the parameter.
-   *                                                      <li> data_type_descriptor The data type of the corresponding
-   *                                                      parameter of the stored routine. Null if there is no
-   *                                                      corresponding parameter.
-   *                                                      </ul>
+   * @param array[] $parameters The metadata of the parameters. For each parameter the
+   *                            following keys must be defined:
+   *                            <ul>
+   *                            <li> php_name             The name of the parader (including $).
+   *                            <li> description          The description of the parameter.
+   *                            <li> php_type             The type of the parameter.
+   *                            <li> data_type_descriptor The data type of the corresponding parameter of the stored
+   *                            routine. Null if there is no corresponding parameter.
+   *                            </ul>
    */
   protected function enhancePhpDocParameters(&$parameters)
   {

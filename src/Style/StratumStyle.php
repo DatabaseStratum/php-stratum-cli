@@ -1,5 +1,5 @@
 <?php
-//----------------------------------------------------------------------------------------------------------------------
+
 namespace SetBased\Stratum\Style;
 
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;

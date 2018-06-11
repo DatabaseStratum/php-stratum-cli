@@ -1068,3 +1068,12 @@ test.TST_TABLE.tst_c04 16
 test.TST_TABLE.t       10
 test.TST_TABLE.s       10
 
+test_audit.TABLE1.c1  3
+test_audit.TABLE1.c2  5
+test_audit.TABLE1.c4 10
+
+test_data.TABLE1.c1  3
+test_data.TABLE1.c2  5
+test_data.TABLE1.c3  7
+test_data.TABLE1.c4 10
+

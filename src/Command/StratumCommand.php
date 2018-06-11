@@ -1,5 +1,5 @@
 <?php
-//----------------------------------------------------------------------------------------------------------------------
+
 namespace SetBased\Stratum\Command;
 
 use SetBased\Stratum\Style\StratumStyle;
