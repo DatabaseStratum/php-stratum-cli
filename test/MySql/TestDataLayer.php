@@ -1,5 +1,5 @@
 <?php
-//----------------------------------------------------------------------------------------------------------------------
+
 namespace SetBased\Stratum\Test\MySql;
 
 use SetBased\Stratum\Exception\ResultException;

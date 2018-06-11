@@ -265,7 +265,7 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
     $this->codeStore->append('<?php');
     if ($namespace!==null)
     {
-      $this->codeStore->appendSeparator();
+      $this->codeStore->append('');
       $this->codeStore->append(sprintf('namespace %s;', $namespace));
       $this->codeStore->append('');
     }

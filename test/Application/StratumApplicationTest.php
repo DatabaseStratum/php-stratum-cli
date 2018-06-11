@@ -1,5 +1,5 @@
 <?php
-//----------------------------------------------------------------------------------------------------------------------
+
 namespace SetBased\Stratum\Test\Application;
 
 use PHPUnit\Framework\TestCase;
