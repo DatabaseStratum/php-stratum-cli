@@ -3,7 +3,9 @@
 namespace SetBased\Stratum\MySql\Command;
 
 use SetBased\Exception\RuntimeException;
+use SetBased\Stratum\Exception\RoutineLoaderException;
 use SetBased\Stratum\Helper\SourceFinderHelper;
+use SetBased\Stratum\MySql\Exception\DataLayerException;
 use SetBased\Stratum\MySql\MetadataDataLayer as DataLayer;
 use SetBased\Stratum\MySql\RoutineLoaderHelper;
 use SetBased\Stratum\NameMangler\NameMangler;
@@ -468,28 +470,42 @@ class RoutineLoaderCommand extends MySqlCommand
     // Process all sources.
     foreach ($this->sources as $filename)
     {
-      $routine_name = $filename['routine_name'];
+      $routineName = $filename['routine_name'];
 
       $helper = new RoutineLoaderHelper($this->io,
                                         $filename['path_name'],
-                                        isset($this->phpStratumMetadata[$routine_name]) ? $this->phpStratumMetadata[$routine_name] : null,
+                                        $this->phpStratumMetadata[$routineName] ?? null,
                                         $this->replacePairs,
-                                        isset($this->rdbmsOldMetadata[$routine_name]) ? $this->rdbmsOldMetadata[$routine_name] : null,
+                                        $this->rdbmsOldMetadata[$routineName] ?? null,
                                         $this->sqlMode,
                                         $this->characterSet,
                                         $this->collate);
 
-      $meta_data = $helper->loadStoredRoutine();
-      if ($meta_data===false)
+      try
       {
-        // An error occurred during the loading of the stored routine.
-        $this->errorFilenames[] = $filename['path_name'];
-        unset($this->phpStratumMetadata[$routine_name]);
+        $this->phpStratumMetadata[$routineName] = $helper->loadStoredRoutine();;
       }
-      else
+      catch (RoutineLoaderException $e)
       {
-        // Stored routine is successfully loaded.
-        $this->phpStratumMetadata[$routine_name] = $meta_data;
+        $messages = [$e->getMessage(),
+                     sprintf("Failed to load file '%s'", $filename['path_name'])];
+        $this->io->error($messages);
+
+        $this->errorFilenames[] = $filename['path_name'];
+        unset($this->phpStratumMetadata[$routineName]);
+      }
+      catch (DataLayerException $e)
+      {
+        if ($e->isQueryError())
+        {
+          // Exception is caused by a SQL error. Log the message and the SQL statement with highlighting the error.
+          $this->io->error($e->getShortMessage());
+          $this->io->text($e->getMarkedQuery());
+        }
+        else
+        {
+          $this->io->error($e->getMessage());
+        }
       }
     }
   }
