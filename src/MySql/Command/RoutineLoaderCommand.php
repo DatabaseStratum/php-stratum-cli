@@ -483,7 +483,7 @@ class RoutineLoaderCommand extends MySqlCommand
 
       try
       {
-        $this->phpStratumMetadata[$routineName] = $helper->loadStoredRoutine();;
+        $this->phpStratumMetadata[$routineName] = $helper->loadStoredRoutine();
       }
       catch (RoutineLoaderException $e)
       {
