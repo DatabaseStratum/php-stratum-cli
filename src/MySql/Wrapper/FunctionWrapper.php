@@ -5,7 +5,7 @@ namespace SetBased\Stratum\MySql\Wrapper;
 /**
  * Class for generating a wrapper method for a stored function.
  */
-class FunctionsWrapper extends Wrapper
+class FunctionWrapper extends Wrapper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -22,9 +22,18 @@ class FunctionsWrapper extends Wrapper
    */
   protected function writeResultHandler()
   {
-    $this->codeStore->append(sprintf("return self::executeSingleton0('select %s(%s)');",
-                                     $this->routine['routine_name'],
-                                     $this->getRoutineArgs()));
+    if ($this->routine['return']=='bool')
+    {
+      $this->codeStore->append(sprintf("return !empty(self::executeSingleton0('select %s(%s)'));",
+                                       $this->routine['routine_name'],
+                                       $this->getRoutineArgs()));
+    }
+    else
+    {
+      $this->codeStore->append(sprintf("return self::executeSingleton0('select %s(%s)');",
+                                       $this->routine['routine_name'],
+                                       $this->getRoutineArgs()));
+    }
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -43,7 +52,14 @@ class FunctionsWrapper extends Wrapper
    */
   protected function writeRoutineFunctionLobReturnData()
   {
-    $this->codeStore->append('return $ret;');
+    if ($this->routine['return']=='bool')
+    {
+      $this->codeStore->append('return !empty($ret);');
+    }
+    else
+    {
+      $this->codeStore->append('return $ret;');
+    }
   }
 
   //--------------------------------------------------------------------------------------------------------------------

@@ -23,7 +23,15 @@ class Singleton0Wrapper extends Wrapper
   protected function writeResultHandler()
   {
     $routine_args = $this->getRoutineArgs();
-    $this->codeStore->append('return self::executeSingleton0(\'CALL '.$this->routine['routine_name'].'('.$routine_args.')\');');
+
+    if ($this->routine['return']=='bool')
+    {
+      $this->codeStore->append('return !empty(self::executeSingleton0(\'CALL '.$this->routine['routine_name'].'('.$routine_args.')\'));');
+    }
+    else
+    {
+      $this->codeStore->append('return self::executeSingleton0(\'CALL '.$this->routine['routine_name'].'('.$routine_args.')\');');
+    }
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -59,7 +67,15 @@ class Singleton0Wrapper extends Wrapper
     $this->codeStore->append('if ($b===false) self::mySqlError(\'mysqli_stmt::fetch\');');
     $this->codeStore->append('if (count($tmp)>1) throw new ResultException(\'0 or 1\', count($tmp), $query);');
     $this->codeStore->append('');
-    $this->codeStore->append('return ($tmp) ? $tmp[0][0] : null;');
+
+    if ($this->routine['return']=='bool')
+    {
+      $this->codeStore->append('return !empty($tmp[0][0]);');
+    }
+    else
+    {
+      $this->codeStore->append('return $tmp[0][0] ?? null;');
+    }
   }
 
   //--------------------------------------------------------------------------------------------------------------------

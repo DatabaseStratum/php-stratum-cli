@@ -11,31 +11,86 @@ class Singleton0Test extends DataLayerTestCase
   /**
    * Stored routine with designation type singleton0 must return null.
    */
-  public function test1()
+  public function test01()
   {
-    $ret = $this->dataLayer->tstTestSingleton0a(0);
-    $this->assertInternalType('null', $ret);
+    $value = $this->dataLayer->tstTestSingleton0a(0);
+    $this->assertInternalType('null', $value);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Stored routine with designation type singleton0 must return 1 value.
    */
-  public function test2()
+  public function test02()
   {
-    $ret = $this->dataLayer->tstTestSingleton0a(1);
-    $this->assertInternalType('string', $ret);
+    $value = $this->dataLayer->tstTestSingleton0a(1);
+    $this->assertInternalType('string', $value);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * An exception must be thrown when a stored routine with designation type singleton0 returns more than 1 values.
+   * An exception must be thrown when a stored routine with designation type singleton0 returns more than 1 rows.
    *
-   * @expectedException SetBased\Stratum\Exception\ResultException
+   * @expectedException \SetBased\Stratum\Exception\ResultException
    */
-  public function test3()
+  public function test03()
   {
     $this->dataLayer->tstTestSingleton0a(2);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Stored routine with designation type singleton0 and return type bool must return false when selecting 0 rows.
+   */
+  public function test11()
+  {
+    $value = $this->dataLayer->tstTestSingleton0b(0, 1);
+    $this->assertFalse($value);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Stored routine with designation type singleton0 and return type bool|null must return false when selecting 1 row
+   * with null value.
+   */
+  public function test12()
+  {
+    $value = $this->dataLayer->tstTestSingleton0b(1, null);
+    $this->assertFalse($value);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Stored routine with designation type singleton0 and return type bool must return false when selecting 1 row
+   * with empty value.
+   */
+  public function test13()
+  {
+    $value = $this->dataLayer->tstTestSingleton0b(1, 0);
+    $this->assertFalse($value);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Stored routine with designation type singleton0 and return type bool must return true when selecting 1 row
+   * with non-empty value.
+   */
+  public function test14()
+  {
+    $value = $this->dataLayer->tstTestSingleton0b(1, 123);
+    $this->assertTrue($value);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * An exception must be thrown when a stored routine with designation type singleton0  and return type bool returns
+   * more than 1 rows.
+   *
+   * @expectedException \SetBased\Stratum\Exception\ResultException
+   */
+  public function test15()
+  {
+    $this->dataLayer->tstTestSingleton0b(2, 1);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
