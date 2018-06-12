@@ -129,7 +129,7 @@ abstract class Wrapper
         break;
 
       case 'function':
-        $wrapper = new FunctionsWrapper($routine, $codeStore, $nameMangler, $lobAsString);
+        $wrapper = new FunctionWrapper($routine, $codeStore, $nameMangler, $lobAsString);
         break;
 
       case 'table':

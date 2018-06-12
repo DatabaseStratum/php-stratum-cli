@@ -353,6 +353,34 @@ class TestDataLayer extends DataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * Test for stored function with return type bool wrapper.
+   *
+   * @param int $pRet The return value.
+   *                  int(11)
+   *
+   * @return bool
+   */
+  public function tstTestFunctionBool1($pRet)
+  {
+    return !empty($this->executeSingleton0('select tst_test_function_bool1('.$this->quoteNum($pRet).')'));
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Test for stored function with return type bool wrapper.
+   *
+   * @param string $pRet The return value.
+   *                     varchar(8) character set utf8 collation utf8_general_ci
+   *
+   * @return bool
+   */
+  public function tstTestFunctionBool2($pRet)
+  {
+    return !empty($this->executeSingleton0('select tst_test_function_bool2('.$this->quoteString($pRet).')'));
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Test for illegal query.
    *
    * @return array[]
@@ -1152,7 +1180,96 @@ class TestDataLayer extends DataLayer
     if ($b===false) $this->mySqlError('mysqli_stmt::fetch');
     if (count($tmp)>1) throw new ResultException('0 or 1', count($tmp), $query);
 
-    return ($tmp) ? $tmp[0][0] : null;
+    return $tmp[0][0] ?? null;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Test for designation type singleton0 with return type bool.
+   *
+   * @param int $pCount The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test.
+   *                    int(11)
+   * @param int $pValue The selected value.
+   *                    int(11)
+   *
+   * @return bool
+   */
+  public function tstTestSingleton0b($pCount, $pValue)
+  {
+    return !empty($this->executeSingleton0('CALL tst_test_singleton0b('.$this->quoteNum($pCount).','.$this->quoteNum($pValue).')'));
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Test for designation type singleton0 with BLOB..
+   *
+   * @param int    $pCount The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test.
+   *                       int(11)
+   * @param int    $pValue The selected value.
+   *                       int(11)
+   * @param string $pBlob  The BLOB.
+   *                       blob
+   *
+   * @return bool
+   */
+  public function tstTestSingleton0bWithLob($pCount, $pValue, $pBlob)
+  {
+    $query = 'CALL tst_test_singleton0b_with_lob('.$this->quoteNum($pCount).','.$this->quoteNum($pValue).',?)';
+    $stmt  = $this->mysqli->prepare($query);
+    if (!$stmt) $this->mySqlError('mysqli::prepare');
+
+    $null = null;
+    $b = $stmt->bind_param('b', $null);
+    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
+
+    $this->getMaxAllowedPacket();
+
+    $n = strlen($pBlob);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(0, substr($pBlob, $p, $this->chunkSize));
+      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
+      $p += $this->chunkSize;
+    }
+
+    if ($this->logQueries)
+    {
+      $time0 = microtime(true);
+
+      $b = $stmt->execute();
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
+
+      $this->queryLog[] = ['query' => $query,
+      'time'  => microtime(true) - $time0];
+    }
+    else
+    {
+      $b = $stmt->execute();
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
+    }
+
+    $row = [];
+    $this->bindAssoc($stmt, $row);
+
+    $tmp = [];
+    while (($b = $stmt->fetch()))
+    {
+      $new = [];
+      foreach($row as $value)
+      {
+        $new[] = $value;
+      }
+      $tmp[] = $new;
+    }
+
+    $stmt->close();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
+
+    if ($b===false) $this->mySqlError('mysqli_stmt::fetch');
+    if (count($tmp)>1) throw new ResultException('0 or 1', count($tmp), $query);
+
+    return !empty($tmp[0][0]);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -1238,6 +1355,95 @@ class TestDataLayer extends DataLayer
     if (count($tmp)!=1) throw new ResultException('1', count($tmp), $query);
 
     return $tmp[0][0];
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Test for designation type singleton1 with return type bool.
+   *
+   * @param int $pCount The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
+   *                    int(11)
+   * @param int $pValue The selected value.
+   *                    int(11)
+   *
+   * @return bool
+   */
+  public function tstTestSingleton1b($pCount, $pValue)
+  {
+    return !empty($this->executeSingleton1('CALL tst_test_singleton1b('.$this->quoteNum($pCount).','.$this->quoteNum($pValue).')'));
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Test for designation type singleton1 with BLOB.
+   *
+   * @param int    $pCount The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
+   *                       int(11)
+   * @param int    $pValue The selected value.
+   *                       int(11)
+   * @param string $pBlob  The BLOB.
+   *                       blob
+   *
+   * @return bool
+   */
+  public function tstTestSingleton1bWithLob($pCount, $pValue, $pBlob)
+  {
+    $query = 'CALL tst_test_singleton1b_with_lob('.$this->quoteNum($pCount).','.$this->quoteNum($pValue).',?)';
+    $stmt  = $this->mysqli->prepare($query);
+    if (!$stmt) $this->mySqlError('mysqli::prepare');
+
+    $null = null;
+    $b = $stmt->bind_param('b', $null);
+    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
+
+    $this->getMaxAllowedPacket();
+
+    $n = strlen($pBlob);
+    $p = 0;
+    while ($p<$n)
+    {
+      $b = $stmt->send_long_data(0, substr($pBlob, $p, $this->chunkSize));
+      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
+      $p += $this->chunkSize;
+    }
+
+    if ($this->logQueries)
+    {
+      $time0 = microtime(true);
+
+      $b = $stmt->execute();
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
+
+      $this->queryLog[] = ['query' => $query,
+      'time'  => microtime(true) - $time0];
+    }
+    else
+    {
+      $b = $stmt->execute();
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
+    }
+
+    $row = [];
+    $this->bindAssoc($stmt, $row);
+
+    $tmp = [];
+    while (($b = $stmt->fetch()))
+    {
+      $new = [];
+      foreach($row as $value)
+      {
+        $new[] = $value;
+      }
+      $tmp[] = $new;
+    }
+
+    $stmt->close();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
+
+    if ($b===false) $this->mySqlError('mysqli_stmt::fetch');
+    if (count($tmp)!=1) throw new ResultException('1', count($tmp), $query);
+
+    return !empty($tmp[0][0]);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

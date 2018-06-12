@@ -4,8 +4,7 @@
  * @param p_a Parameter A.
  * @param p_b Parameter B.
  */
-create function tst_test_function( p_a int,
-                                   p_b int )
+create function tst_test_function(p_a int, p_b int)
 returns int
 deterministic
 reads sql data

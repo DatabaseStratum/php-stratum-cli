@@ -248,6 +248,7 @@ class RoutineLoaderHelper
       $this->extractDesignationType();
       $this->extractReturnType();
       $this->extractRoutineTypeAndName();
+      $this->validateReturnType();
       $this->loadRoutineFile();
       $this->extractBulkInsertTableColumnsInfo();
       $this->extractExtendedParametersInfo();
@@ -860,6 +861,24 @@ class RoutineLoaderHelper
     foreach ($tmp as $name)
     {
       $this->io->logNote('Unknown parameter <dbo>%s</dbo> found in doc block', $name);
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Validates the specified return type of the stored routine.
+   */
+  private function validateReturnType()
+  {
+    // Return immediately if designation type is not appropriate for this method.
+    if (!in_array($this->designationType, ['function', 'singleton0', 'singleton1'])) return;
+
+    $types = explode('|', $this->returnType);
+    $diff  = array_diff($types, ['string', 'int', 'float', 'double', 'bool', 'null']);
+
+    if (!($this->returnType=='mixed' || $this->returnType=='bool' || empty($diff)))
+    {
+      throw new RoutineLoaderException("Return type must be 'mixed', 'bool', or a combination of int, double (or float), string, and null");
     }
   }
 
