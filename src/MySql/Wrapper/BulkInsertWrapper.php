@@ -15,7 +15,7 @@ class BulkInsertWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function enhancePhpDocParameters(&$parameters)
+  protected function enhancePhpDocParameters(array &$parameters): void
   {
     $parameter = ['php_name'             => '$rows',
                   'description'          => 'The rows that must inserted.',
@@ -29,7 +29,7 @@ class BulkInsertWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function getDocBlockReturnType()
+  protected function getDocBlockReturnType(): string
   {
     return '';
   }
@@ -38,7 +38,7 @@ class BulkInsertWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function getWrapperArgs()
+  protected function getWrapperArgs(): string
   {
     return '$rows';
   }
@@ -47,7 +47,7 @@ class BulkInsertWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeResultHandler()
+  protected function writeResultHandler(): void
   {
     // Validate number of column names and number of column types are equal.
     $n1 = count($this->routine['columns']);
@@ -58,7 +58,7 @@ class BulkInsertWrapper extends Wrapper
     }
 
     $routine_args = $this->getRoutineArgs();
-    $this->codeStore->append('self::query(\'CALL '.$this->routine['routine_name'].'('.$routine_args.')\');');
+    $this->codeStore->append('self::realQuery(\'CALL '.$this->routine['routine_name'].'('.$routine_args.')\');');
 
     $columns = '';
     $fields  = '';
@@ -88,7 +88,7 @@ class BulkInsertWrapper extends Wrapper
 
     $this->codeStore->append('$first = false;');
     $this->codeStore->append('}');
-    $this->codeStore->append('self::query($sql);');
+    $this->codeStore->append('self::realQuery($sql);');
     $this->codeStore->append('}');
   }
 
@@ -97,7 +97,7 @@ class BulkInsertWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeRoutineFunctionLobFetchData()
+  protected function writeRoutineFunctionLobFetchData(): void
   {
     // Nothing to do.
   }
@@ -106,7 +106,7 @@ class BulkInsertWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeRoutineFunctionLobReturnData()
+  protected function writeRoutineFunctionLobReturnData(): void
   {
     // Nothing to do.
   }

@@ -297,7 +297,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstTestBulkInsert01($rows)
   {
-    $this->query('CALL tst_test_bulk_insert01()');
+    $this->realQuery('CALL tst_test_bulk_insert01()');
     if (is_array($rows) && !empty($rows))
     {
       $sql = "INSERT INTO `TST_TEMPO`(`tst_col1`,`tst_col2`,`tst_col3`,`tst_col4`,`tst_col5`,`tst_col6`,`tst_col7`,`tst_col8`,`tst_col9`,`tst_col10`,`tst_col11`,`tst_col12`,`tst_col13`,`tst_col14`,`tst_col15`,`tst_col16`,`tst_col17`,`tst_col18`,`tst_col19`,`tst_col20`)";
@@ -308,7 +308,7 @@ class TestDataLayer extends DataLayer
         else        $sql .=',      ('.$this->quoteNum($row['field1']).','.$this->quoteNum($row['field2']).','.$this->quoteNum($row['field3']).','.$this->quoteNum($row['field4']).','.$this->quoteNum($row['field5']).','.$this->quoteNum($row['field6']).','.$this->quoteNum($row['field7']).','.$this->quoteNum($row['field8']).','.$this->quoteNum($row['field9']).','.$this->quoteString($row['field10']).','.$this->quoteString($row['field11']).','.$this->quoteString($row['field12']).','.$this->quoteString($row['field13']).','.$this->quoteString($row['field14']).','.$this->quoteString($row['field15']).','.$this->quoteString($row['field16']).','.$this->quoteString($row['field17']).','.$this->quoteString($row['field18']).','.$this->quoteString($row['field19']).','.$this->quoteBit($row['field20']).')';
         $first = false;
       }
-      $this->query($sql);
+      $this->realQuery($sql);
     }
   }
 
@@ -320,7 +320,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstTestBulkInsert02($rows)
   {
-    $this->query('CALL tst_test_bulk_insert02()');
+    $this->realQuery('CALL tst_test_bulk_insert02()');
     if (is_array($rows) && !empty($rows))
     {
       $sql = "INSERT INTO `TST_TEMPO`(`tst_col1`,`tst_col4`,`tst_col5`)";
@@ -331,7 +331,7 @@ class TestDataLayer extends DataLayer
         else        $sql .=',      ('.$this->quoteNum($row['field1']).','.$this->quoteNum($row['field4']).','.$this->quoteNum($row['field5']).')';
         $first = false;
       }
-      $this->query($sql);
+      $this->realQuery($sql);
     }
   }
 
@@ -506,7 +506,7 @@ class TestDataLayer extends DataLayer
    * @param string $pTmpBlob The BLOB larger than max_allowed_packet.
    *                         longblob
    *
-   * @return mixed
+   * @return int
    */
   public function tstTestMaxAllowedPacket($pTmpBlob)
   {

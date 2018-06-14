@@ -125,7 +125,7 @@ class StaticDataLayerTest extends DataLayerTestCase
   /**
    * Tests for quoteString.
    *
-   * @expectedException RuntimeException
+   * @expectedException \TypeError
    */
   public function testQuoteString2()
   {
@@ -136,7 +136,7 @@ class StaticDataLayerTest extends DataLayerTestCase
   /**
    * Tests for quoteString.
    *
-   * @expectedException RuntimeException
+   * @expectedException \TypeError
    */
   public function testQuoteString3()
   {
@@ -147,7 +147,7 @@ class StaticDataLayerTest extends DataLayerTestCase
   /**
    * Tests for quoteString.
    *
-   * @expectedException RuntimeException
+   * @expectedException \TypeError
    */
   public function testQuoteString4()
   {

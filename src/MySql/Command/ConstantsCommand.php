@@ -58,6 +58,7 @@ class ConstantsCommand extends MySqlCommand
   private $oldColumns = [];
 
   //--------------------------------------------------------------------------------------------------------------------
+
   /**
    * @inheritdoc
    */
@@ -103,7 +104,7 @@ class ConstantsCommand extends MySqlCommand
    * If the constant name is *, is is replaced with the column name prefixed by $this->myPrefix in uppercase.
    * Otherwise the constant name is set to uppercase.
    */
-  private function enhanceColumns()
+  private function enhanceColumns(): void
   {
     foreach ($this->oldColumns as $table)
     {
@@ -130,11 +131,11 @@ class ConstantsCommand extends MySqlCommand
   /**
    * Gathers constants based on column widths.
    */
-  private function executeColumnWidths()
+  private function executeColumnWidths(): void
   {
-    $this->getOldColumns();
+    $this->loadOldColumns();
 
-    $this->getColumns();
+    $this->loadColumns();
 
     $this->enhanceColumns();
 
@@ -147,9 +148,9 @@ class ConstantsCommand extends MySqlCommand
   /**
    * Creates constants declarations in a class.
    */
-  private function executeCreateConstants()
+  private function executeCreateConstants(): void
   {
-    $this->getLabels();
+    $this->loadLabels();
 
     $this->fillConstants();
 
@@ -160,7 +161,7 @@ class ConstantsCommand extends MySqlCommand
   /**
    * Executes the enabled functionalities.
    */
-  private function executeEnabled()
+  private function executeEnabled(): void
   {
     if ($this->constantsFilename!==null)
     {
@@ -187,7 +188,7 @@ class ConstantsCommand extends MySqlCommand
    *
    * @return array With the 3 line number as described
    */
-  private function extractLines($source)
+  private function extractLines(string $source): array
   {
     $tokens = token_get_all($source);
 
@@ -284,7 +285,7 @@ class ConstantsCommand extends MySqlCommand
   /**
    * Merges $columns and $labels (i.e. all known constants) into $constants.
    */
-  private function fillConstants()
+  private function fillConstants(): void
   {
     foreach ($this->columns as $table_name => $table)
     {
@@ -309,7 +310,7 @@ class ConstantsCommand extends MySqlCommand
   /**
    * Loads the width of all columns in the MySQL schema into $columns.
    */
-  private function getColumns()
+  private function loadColumns(): void
   {
     $rows = DataLayer::getAllTableColumns();
     foreach ($rows as $row)
@@ -321,9 +322,9 @@ class ConstantsCommand extends MySqlCommand
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Gets all primary key labels from the MySQL database.
+   * Loads all primary key labels from the MySQL database.
    */
-  private function getLabels()
+  private function loadLabels(): void
   {
     $tables = DataLayer::getLabelTables();
     foreach ($tables as $table)
@@ -338,10 +339,10 @@ class ConstantsCommand extends MySqlCommand
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Reads from file $constantsFilename the previous table and column names, the width of the column,
+   * Loads from file $constantsFilename the previous table and column names, the width of the column,
    * and the constant name (if assigned) and stores this data in $oldColumns.
    */
-  private function getOldColumns()
+  private function loadOldColumns(): void
   {
     if (file_exists($this->constantsFilename))
     {
@@ -398,7 +399,7 @@ class ConstantsCommand extends MySqlCommand
   /**
    * Logs the number of constants generated.
    */
-  private function logNumberOfConstants()
+  private function logNumberOfConstants(): void
   {
     $n_id  = sizeof($this->labels);
     $n_len = sizeof($this->constants) - $n_id;
@@ -414,7 +415,7 @@ class ConstantsCommand extends MySqlCommand
    *
    * @return array The generated PHP code, lines are stored as rows in the array.
    */
-  private function makeConstantStatements()
+  private function makeConstantStatements(): array
   {
     $width1    = 0;
     $width2    = 0;
@@ -439,7 +440,7 @@ class ConstantsCommand extends MySqlCommand
   /**
    * Preserves relevant data in $oldColumns into $columns.
    */
-  private function mergeColumns()
+  private function mergeColumns(): void
   {
     foreach ($this->oldColumns as $table_name => $table)
     {
@@ -461,7 +462,7 @@ class ConstantsCommand extends MySqlCommand
    *
    * @return array
    */
-  private function readConfigFile($configFilename)
+  private function readConfigFile(string $configFilename): array
   {
     $settings = parse_ini_file($configFilename, true);
 
@@ -476,7 +477,7 @@ class ConstantsCommand extends MySqlCommand
    * Writes table and column names, the width of the column, and the constant name (if assigned) to
    * $constantsFilename.
    */
-  private function writeColumns()
+  private function writeColumns(): void
   {
     $content = '';
     foreach ($this->columns as $table)
@@ -496,19 +497,19 @@ class ConstantsCommand extends MySqlCommand
           if (isset($column['constant_name']))
           {
             $line_format = sprintf("%%s.%%-%ds %%%dd %%s\n", $width1, $width2);
-            $content .= sprintf($line_format,
-                                $column['table_name'],
-                                $column['column_name'],
-                                $column['length'],
-                                $column['constant_name']);
+            $content     .= sprintf($line_format,
+                                    $column['table_name'],
+                                    $column['column_name'],
+                                    $column['length'],
+                                    $column['constant_name']);
           }
           else
           {
             $line_format = sprintf("%%s.%%-%ds %%%dd\n", $width1, $width2);
-            $content .= sprintf($line_format,
-                                $column['table_name'],
-                                $column['column_name'],
-                                $column['length']);
+            $content     .= sprintf($line_format,
+                                    $column['table_name'],
+                                    $column['column_name'],
+                                    $column['length']);
           }
         }
       }
@@ -524,7 +525,7 @@ class ConstantsCommand extends MySqlCommand
   /**
    * Inserts new and replace old (if any) constant declaration statements in a PHP source file.
    */
-  private function writeConstantClass()
+  private function writeConstantClass(): void
   {
     // Get the class loader.
     /** @var \Composer\Autoload\ClassLoader $loader */

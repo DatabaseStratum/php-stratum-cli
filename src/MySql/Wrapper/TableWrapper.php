@@ -12,7 +12,7 @@ class TableWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function getDocBlockReturnType()
+  protected function getDocBlockReturnType(): string
   {
     return 'int';
   }
@@ -21,7 +21,7 @@ class TableWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeResultHandler()
+  protected function writeResultHandler(): void
   {
     $routine_args = $this->getRoutineArgs();
     $this->codeStore->append('return self::executeTable(\'CALL '.$this->routine['routine_name'].'('.$routine_args.')\');');
@@ -31,7 +31,7 @@ class TableWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeRoutineFunctionLobFetchData()
+  protected function writeRoutineFunctionLobFetchData(): void
   {
     // Nothing to do.
   }
@@ -40,7 +40,7 @@ class TableWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeRoutineFunctionLobReturnData()
+  protected function writeRoutineFunctionLobReturnData(): void
   {
     // Nothing to do.
   }

@@ -30,7 +30,7 @@ class NonStaticCommand extends Command
    * @param string $sourceName The filename with the static class.
    * @param string $targetName The filename where the non static class must be written.
    */
-  public static function staticToStatic($sourceName, $targetName)
+  public static function staticToStatic(string $sourceName, string $targetName): void
   {
     $source      = file_get_contents($sourceName);
     $sourceClass = basename($sourceName, '.php');

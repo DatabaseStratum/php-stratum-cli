@@ -11,7 +11,7 @@ class RowsWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function getDocBlockReturnType()
+  protected function getDocBlockReturnType(): string
   {
     return 'array[]';
   }
@@ -20,7 +20,7 @@ class RowsWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeResultHandler()
+  protected function writeResultHandler(): void
   {
     $routine_args = $this->getRoutineArgs();
     $this->codeStore->append('return self::executeRows(\'CALL '.$this->routine['routine_name'].'('.$routine_args.')\');');
@@ -30,7 +30,7 @@ class RowsWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeRoutineFunctionLobFetchData()
+  protected function writeRoutineFunctionLobFetchData(): void
   {
     $this->codeStore->append('$row = [];');
     $this->codeStore->append('self::bindAssoc($stmt, $row);');
@@ -52,7 +52,7 @@ class RowsWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeRoutineFunctionLobReturnData()
+  protected function writeRoutineFunctionLobReturnData(): void
   {
     $this->codeStore->append('if ($b===false) self::mySqlError(\'mysqli_stmt::fetch\');');
     $this->codeStore->append('');

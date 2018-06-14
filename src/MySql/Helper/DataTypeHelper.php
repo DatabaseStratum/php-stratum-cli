@@ -17,7 +17,7 @@ class DataTypeHelper
    *
    * @return string
    */
-  public static function columnTypeToPhpType($dataTypeInfo)
+  public static function columnTypeToPhpType(array $dataTypeInfo): string
   {
     switch ($dataTypeInfo['data_type'])
     {
@@ -28,16 +28,16 @@ class DataTypeHelper
       case 'bigint':
       case 'year':
       case 'bit':
-        $php_type = 'int';
+        $phpType = 'int';
         break;
 
       case 'decimal':
-        $php_type = ($dataTypeInfo['numeric_scale']=='0') ? 'int' : 'float';
+        $phpType = ($dataTypeInfo['numeric_scale']=='0') ? 'int' : 'float';
         break;
 
       case 'float':
       case 'double':
-        $php_type = 'float';
+        $phpType = 'float';
         break;
 
       case 'varbinary':
@@ -58,18 +58,18 @@ class DataTypeHelper
       case 'blob':
       case 'mediumblob':
       case 'longblob':
-        $php_type = 'string';
+        $phpType = 'string';
         break;
 
       case 'list_of_int':
-        $php_type = 'string|int[]';
+        $phpType = 'string|int[]';
         break;
 
       default:
         throw new FallenException('data type', $dataTypeInfo['data_type']);
     }
 
-    return $php_type;
+    return $phpType;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -80,7 +80,7 @@ class DataTypeHelper
    *
    * @return int|null
    */
-  public static function deriveFieldLength($dataTypeInfo)
+  public static function deriveFieldLength(array $dataTypeInfo): ?int
   {
     switch ($dataTypeInfo['data_type'])
     {
@@ -154,7 +154,7 @@ class DataTypeHelper
    *
    * @return string The generated PHP code.
    */
-  public static function escapePhpExpression($dataTypeInfo, $expression, $lobAsString)
+  public static function escapePhpExpression(array $dataTypeInfo, string $expression, bool $lobAsString): string
   {
     switch ($dataTypeInfo['data_type'])
     {
@@ -229,7 +229,7 @@ class DataTypeHelper
    *
    * @return string
    */
-  public static function getBindVariableType($dataType, $lobAsString)
+  public static function getBindVariableType(string $dataType, bool $lobAsString): string
   {
     $ret = '';
     switch ($dataType)
@@ -293,7 +293,7 @@ class DataTypeHelper
    *
    * @return bool
    */
-  public static function isBlobParameter($dataType)
+  public static function isBlobParameter(string $dataType): bool
   {
     switch ($dataType)
     {

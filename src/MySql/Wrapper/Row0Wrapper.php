@@ -11,7 +11,7 @@ class Row0Wrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function getDocBlockReturnType()
+  protected function getDocBlockReturnType(): string
   {
     return 'array|null';
   }
@@ -20,7 +20,7 @@ class Row0Wrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeResultHandler()
+  protected function writeResultHandler(): void
   {
     $routine_args = $this->getRoutineArgs();
     $this->codeStore->append('return self::executeRow0(\'CALL '.$this->routine['routine_name'].'('.$routine_args.')\');');
@@ -30,7 +30,7 @@ class Row0Wrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeRoutineFunctionLobFetchData()
+  protected function writeRoutineFunctionLobFetchData(): void
   {
     $this->codeStore->append('$row = [];');
     $this->codeStore->append('self::bindAssoc($stmt, $row);');
@@ -52,7 +52,7 @@ class Row0Wrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeRoutineFunctionLobReturnData()
+  protected function writeRoutineFunctionLobReturnData(): void
   {
     $this->imports[] = 'SetBased\Stratum\Exception\ResultException';
 

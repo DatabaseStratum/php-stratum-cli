@@ -11,7 +11,7 @@ class SelectRoutine extends BaseRoutine
   /**
    * @inheritdoc
    */
-  protected function generateBody($params, $columns)
+  protected function generateBody(array $params, array $columns): void
   {
     $this->codeStore->append('select');
     $offset = mb_strlen($this->codeStore->getLastLine());

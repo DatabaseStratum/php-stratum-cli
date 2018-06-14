@@ -11,7 +11,7 @@ class FunctionWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function getDocBlockReturnType()
+  protected function getDocBlockReturnType(): string
   {
     return $this->routine['return'];
   }
@@ -20,7 +20,7 @@ class FunctionWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeResultHandler()
+  protected function writeResultHandler(): void
   {
     if ($this->routine['return']=='bool')
     {
@@ -40,7 +40,7 @@ class FunctionWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeRoutineFunctionLobFetchData()
+  protected function writeRoutineFunctionLobFetchData(): void
   {
     $this->codeStore->append('$ret = self::$mysqli->affected_rows;');
     $this->codeStore->append('');
@@ -50,7 +50,7 @@ class FunctionWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeRoutineFunctionLobReturnData()
+  protected function writeRoutineFunctionLobReturnData(): void
   {
     if ($this->routine['return']=='bool')
     {

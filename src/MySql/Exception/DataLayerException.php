@@ -40,7 +40,7 @@ class DataLayerException extends RuntimeException
    * @param string $error   Description of the last error ($mysqli->error).
    * @param string $message The SQL query or function name.
    */
-  public function __construct($errno, $error, $message)
+  public function __construct(int $errno, string $error, string $message)
   {
     parent::__construct('%s', self::message($errno, $error, $message));
 
@@ -55,7 +55,7 @@ class DataLayerException extends RuntimeException
    *
    * @return int
    */
-  public function getErrno()
+  public function getErrno(): int
   {
     return $this->errno;
   }
@@ -66,7 +66,7 @@ class DataLayerException extends RuntimeException
    *
    * @return string
    */
-  public function getError()
+  public function getError(): string
   {
     return $this->error;
   }
@@ -79,7 +79,7 @@ class DataLayerException extends RuntimeException
    *
    * @return array The lines of the SQL statement.
    */
-  public function getMarkedQuery($style = 'error')
+  public function getMarkedQuery(string $style = 'error'): array
   {
     $query   = trim($this->query); // MySQL ignores leading whitespace in queries.
     $message = [];
@@ -130,7 +130,7 @@ class DataLayerException extends RuntimeException
    *
    * @return string
    */
-  public function getQuery()
+  public function getQuery(): string
   {
     return $this->query;
   }
@@ -141,7 +141,7 @@ class DataLayerException extends RuntimeException
    *
    * @return string
    */
-  public function getShortMessage()
+  public function getShortMessage(): string
   {
     $message = 'MySQL Error no: '.$this->errno."\n";
     $message .= $this->error;
@@ -155,7 +155,7 @@ class DataLayerException extends RuntimeException
    *
    * @return bool
    */
-  public function isQueryError()
+  public function isQueryError(): bool
   {
     return ($this->errno==1064);
   }
@@ -170,7 +170,7 @@ class DataLayerException extends RuntimeException
    *
    * @return string
    */
-  private function message($errno, $error, $query)
+  private function message(int $errno, string $error, string $query): string
   {
     $message = 'MySQL Error no: '.$errno."\n";
     $message .= $error;

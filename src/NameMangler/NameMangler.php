@@ -17,7 +17,7 @@ interface NameMangler
    *
    * @return string
    */
-  static function getMethodName($routineName);
+  static function getMethodName(string $routineName): string;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -27,7 +27,7 @@ interface NameMangler
    *
    * @return string
    */
-  static function getParameterName($parameterName);
+  static function getParameterName(string $parameterName): string;
 
   //--------------------------------------------------------------------------------------------------------------------
 }

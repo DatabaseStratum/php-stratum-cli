@@ -14,7 +14,7 @@ class DeleteRoutine extends BaseRoutine
    * @param array[] $columns Columns from table.
    * @param array[] $params  Params for where block.
    */
-  protected function generateBody($params, $columns)
+  protected function generateBody(array $params, array $columns): void
   {
     $uniqueColumns = $this->checkUniqueKeys($columns);
     $limit         = ($uniqueColumns==null);

@@ -21,6 +21,7 @@ class BaseCommand extends Command
   protected $io;
 
   //--------------------------------------------------------------------------------------------------------------------
+
   /**
    * Returns the value of a setting.
    *
@@ -32,7 +33,10 @@ class BaseCommand extends Command
    *
    * @return null|string
    */
-  protected static function getSetting($settings, $mandatory, $sectionName, $settingName)
+  protected static function getSetting(array $settings,
+                                       bool $mandatory,
+                                       string $sectionName,
+                                       string $settingName): ?string
   {
     // Test if the section exists.
     if (!array_key_exists($sectionName, $settings))
@@ -79,7 +83,7 @@ class BaseCommand extends Command
    * @param string $filename The name of the file were the data must be stored.
    * @param string $data     The data that must be written.
    */
-  protected function writeTwoPhases($filename, $data)
+  protected function writeTwoPhases(string $filename, string $data): void
   {
     $write_flag = true;
     if (file_exists($filename))

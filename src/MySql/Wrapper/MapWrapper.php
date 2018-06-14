@@ -12,7 +12,7 @@ class MapWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function getDocBlockReturnType()
+  protected function getDocBlockReturnType(): string
   {
     return 'array';
   }
@@ -21,7 +21,7 @@ class MapWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeResultHandler()
+  protected function writeResultHandler(): void
   {
     $routine_args = $this->getRoutineArgs();
 
@@ -38,7 +38,7 @@ class MapWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeRoutineFunctionLobFetchData()
+  protected function writeRoutineFunctionLobFetchData(): void
   {
     $this->codeStore->append('$result = $stmt->get_result();');
     $this->codeStore->append('$ret = [];');
@@ -51,7 +51,7 @@ class MapWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeRoutineFunctionLobReturnData()
+  protected function writeRoutineFunctionLobReturnData(): void
   {
     $this->codeStore->append('return $ret;');
   }

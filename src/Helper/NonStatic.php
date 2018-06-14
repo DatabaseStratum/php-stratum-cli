@@ -17,7 +17,7 @@ class NonStatic
    *
    * @return string
    */
-  public static function nonStatic($source, $sourceClass = null, $targetClass = null)
+  public static function nonStatic(string $source, ?string $sourceClass = null, ?string $targetClass = null): string
   {
     // Replace static fields.
     $source = preg_replace('/(public|protected|private)\s+static(\s+)\$/i', '${1}${2}$', $source);

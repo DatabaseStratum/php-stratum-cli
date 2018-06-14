@@ -93,7 +93,7 @@ class DataLayer
    *
    * @var array[]
    */
-  protected $queryLog;
+  protected $queryLog = [];
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -105,7 +105,7 @@ class DataLayer
    * @since 1.0.0
    * @api
    */
-  public function begin()
+  public function begin(): void
   {
     $ret = $this->mysqli->autocommit(false);
     if (!$ret) $this->mySqlError('mysqli::autocommit');
@@ -116,7 +116,7 @@ class DataLayer
    * @param \mysqli_stmt $stmt
    * @param array        $out
    */
-  public function bindAssoc($stmt, &$out)
+  public function bindAssoc(\mysqli_stmt $stmt, array &$out): void
   {
     $data = $stmt->result_metadata();
     if (!$data) $this->mySqlError('mysqli_stmt::result_metadata');
@@ -145,7 +145,7 @@ class DataLayer
    * @since 1.0.0
    * @api
    */
-  public function commit()
+  public function commit(): void
   {
     $ret = $this->mysqli->commit();
     if (!$ret) $this->mySqlError('mysqli::commit');
@@ -167,7 +167,7 @@ class DataLayer
    * @since 1.0.0
    * @api
    */
-  public function connect($host, $user, $password, $database, $port = 3306)
+  public function connect(string $host, string $user, string $password, string $database, int $port = 3306): void
   {
     $this->mysqli = new \mysqli($host, $user, $password, $database, $port);
     if ($this->mysqli->connect_errno)
@@ -209,7 +209,7 @@ class DataLayer
    * @since 1.0.0
    * @api
    */
-  public function disconnect()
+  public function disconnect(): void
   {
     if ($this->mysqli)
     {
@@ -228,7 +228,7 @@ class DataLayer
    * @since 1.0.0
    * @api
    */
-  public function executeBulk($bulkHandler, $query)
+  public function executeBulk(BulkHandler $bulkHandler, string $query): void
   {
     $this->realQuery($query);
 
@@ -257,7 +257,7 @@ class DataLayer
    * @since 1.0.0
    * @api
    */
-  public function executeLog($queries)
+  public function executeLog(string $queries): int
   {
     // Counter for the number of rows written/logged.
     $n = 0;
@@ -306,9 +306,9 @@ class DataLayer
    * @since 1.0.0
    * @api
    */
-  public function executeNone($query)
+  public function executeNone(string $query): int
   {
-    $this->query($query);
+    $this->realQuery($query);
 
     $n = $this->mysqli->affected_rows;
 
@@ -329,7 +329,7 @@ class DataLayer
    * @since 1.0.0
    * @api
    */
-  public function executeRow0($query)
+  public function executeRow0(string $query): ?array
   {
     $result = $this->query($query);
     $row    = $result->fetch_assoc();
@@ -358,7 +358,7 @@ class DataLayer
    * @since 1.0.0
    * @api
    */
-  public function executeRow1($query)
+  public function executeRow1(string $query): array
   {
     $result = $this->query($query);
     $row    = $result->fetch_assoc();
@@ -386,7 +386,7 @@ class DataLayer
    * @since 1.0.0
    * @api
    */
-  public function executeRows($query)
+  public function executeRows(string $query): array
   {
     $result = $this->query($query);
     if ($this->haveFetchAll)
@@ -415,12 +415,12 @@ class DataLayer
    *
    * @param string $query The SQL statement.
    *
-   * @return int|string|null The selected value.
+   * @return mixed The selected value.
    *
    * @since 1.0.0
    * @api
    */
-  public function executeSingleton0($query)
+  public function executeSingleton0(string $query)
   {
     $result = $this->query($query);
     $row    = $result->fetch_array(MYSQLI_NUM);
@@ -444,12 +444,12 @@ class DataLayer
    *
    * @param string $query The SQL statement.
    *
-   * @return int|string The selected value.
+   * @return mixed The selected value.
    *
    * @since 1.0.0
    * @api
    */
-  public function executeSingleton1($query)
+  public function executeSingleton1(string $query)
   {
     $result = $this->query($query);
     $row    = $result->fetch_array(MYSQLI_NUM);
@@ -478,7 +478,7 @@ class DataLayer
    * @since 1.0.0
    * @api
    */
-  public function executeTable($query)
+  public function executeTable(string $query): int
   {
     $row_count = 0;
 
@@ -540,7 +540,7 @@ class DataLayer
    *
    * @return int
    */
-  public function getMaxAllowedPacket()
+  public function getMaxAllowedPacket(): int
   {
     if (!isset($this->maxAllowedPacket))
     {
@@ -570,7 +570,7 @@ class DataLayer
    * @since 1.0.0
    * @api
    */
-  public function getQueryLog()
+  public function getQueryLog(): array
   {
     return $this->queryLog;
   }
@@ -585,12 +585,12 @@ class DataLayer
    * @param mixed   $value      The value to be found.
    * @param array[] $rowSet     The row set.
    *
-   * @return mixed
+   * @return array
    *
    * @since 1.0.0
    * @api
    */
-  public function getRowInRowSet($columnName, $value, $rowSet)
+  public function getRowInRowSet(string $columnName, $value, array $rowSet): array
   {
     if (is_array($rowSet))
     {
@@ -615,16 +615,16 @@ class DataLayer
    *
    * @param string $queries The SQL statements.
    *
-   * @return bool
+   * @return void
    */
-  public function multiQuery($queries)
+  public function multiQuery(string $queries): void
   {
     if ($this->logQueries)
     {
       $time0 = microtime(true);
 
-      $ret = $this->mysqli->multi_query($queries);
-      if ($ret===false)
+      $tmp = $this->mysqli->multi_query($queries);
+      if ($tmp===false)
       {
         throw new DataLayerException($this->mysqli->errno, $this->mysqli->error, $queries);
       }
@@ -633,27 +633,27 @@ class DataLayer
     }
     else
     {
-      $ret = $this->mysqli->multi_query($queries);
-      if ($ret===false)
+      $tmp = $this->mysqli->multi_query($queries);
+      if ($tmp===false)
       {
         throw new DataLayerException($this->mysqli->errno, $this->mysqli->error, $queries);
       }
     }
-
-    return $ret;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Executes a SQL statement.
+   * Executes a SELECT, SHOW, DESCRIBE or EXPLAIN SQL statement.
    *
    * Wrapper around [mysqli::query](http://php.net/manual/mysqli.query.php), however on failure an exception is thrown.
+   *
+   * For other SQL statements, see @realQuery.
    *
    * @param string $query The SQL statement.
    *
    * @return \mysqli_result
    */
-  public function query($query)
+  public function query(string $query): \mysqli_result
   {
     if ($this->logQueries)
     {
@@ -683,13 +683,13 @@ class DataLayer
   /**
    * Returns a literal for a bit field that can be safely used in SQL statements.
    *
-   * @param string $bits The bit field.
+   * @param string|null $bits The bit field.
    *
    * @return string
    */
-  public function quoteBit($bits)
+  public function quoteBit(?string $bits): string
   {
-    if ($bits===null || $bits===false || $bits==='')
+    if ($bits===null || $bits==='')
     {
       return 'NULL';
     }
@@ -711,7 +711,7 @@ class DataLayer
    *
    * @return string
    */
-  public function quoteListOfInt($list, $delimiter, $enclosure, $escape)
+  public function quoteListOfInt($list, string $delimiter, string $enclosure, string $escape): string
   {
     if ($list===null || $list===false || $list==='' || $list===[])
     {
@@ -767,11 +767,11 @@ class DataLayer
    * <li>Throws an exception in all other cases.
    * </ul>
    *
-   * @param int|float|bool|null $value The numerical value.
+   * @param mixed $value The numerical value.
    *
    * @return string
    */
-  public function quoteNum($value)
+  public function quoteNum($value): string
   {
     if (is_numeric($value)) return (string)$value;
     if ($value===null || $value==='') return 'NULL';
@@ -795,12 +795,11 @@ class DataLayer
    *
    * @return string
    */
-  public function quoteString($value)
+  public function quoteString(?string $value): string
   {
-    if ($value===null || $value===false || $value==='') return 'NULL';
-    if (is_scalar($value)) return "'".$this->mysqli->real_escape_string($value)."'";
+    if ($value===null || $value==='') return 'NULL';
 
-    throw new RuntimeException("'%s' is not a string.", gettype($value));
+    return "'".$this->mysqli->real_escape_string($value)."'";
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -813,7 +812,7 @@ class DataLayer
    *
    * @return string
    */
-  public function realEscapeString($string)
+  public function realEscapeString(string $string): string
   {
     return $this->mysqli->real_escape_string($string);
   }
@@ -828,7 +827,7 @@ class DataLayer
    * @since 1.0.0
    * @api
    */
-  public function rollback()
+  public function rollback(): void
   {
     $ret = $this->mysqli->rollback();
     if (!$ret) $this->mySqlError('mysqli::rollback');
@@ -840,21 +839,21 @@ class DataLayer
    * found.
    *
    * @param string  $columnName The column name (or in PHP terms the key in an row (i.e. array) in the row set).
-   * @param string  $value      The value to be found.
+   * @param mixed   $value      The value to be found.
    * @param array[] $rowSet     The row set.
    *
-   * @return int|null|string
+   * @return int|string|null
    *
    * @since 1.0.0
    * @api
    */
-  public function searchInRowSet($columnName, $value, $rowSet)
+  public function searchInRowSet(string $columnName, $value, array $rowSet)
   {
     if (is_array($rowSet))
     {
       foreach ($rowSet as $key => $row)
       {
-        if ((string)$row[$columnName]==(string)$value)
+        if ((string)$row[$columnName]===(string)$value)
         {
           return $key;
         }
@@ -873,7 +872,7 @@ class DataLayer
    * @since 1.0.0
    * @api
    */
-  public function showWarnings()
+  public function showWarnings(): void
   {
     $this->executeLog('show warnings');
   }
@@ -887,7 +886,7 @@ class DataLayer
    *
    * @param string $method The name of the method that has failed.
    */
-  protected function mySqlError($method)
+  protected function mySqlError(string $method): void
   {
     $message = 'MySQL Error no: '.$this->mysqli->errno."\n";
     $message .= $this->mysqli->error;
@@ -900,21 +899,23 @@ class DataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Execute an SQL query.
+   * Execute a query without a result set.
    *
    * Wrapper around [mysqli::real_query](http://php.net/manual/en/mysqli.real-query.php), however on failure an
    * exception is thrown.
    *
+   * Foor SELECT, SHOW, DESCRIBE or EXPLAIN queries, see @query.
+   *
    * @param string $query The SQL statement.
    */
-  protected function realQuery($query)
+  protected function realQuery(string $query): void
   {
     if ($this->logQueries)
     {
       $time0 = microtime(true);
 
-      $ret = $this->mysqli->real_query($query);
-      if ($ret===false)
+      $tmp = $this->mysqli->real_query($query);
+      if ($tmp===false)
       {
         throw new DataLayerException($this->mysqli->errno, $this->mysqli->error, $query);
       }
@@ -924,8 +925,8 @@ class DataLayer
     }
     else
     {
-      $ret = $this->mysqli->real_query($query);
-      if ($ret===false)
+      $tmp = $this->mysqli->real_query($query);
+      if ($tmp===false)
       {
         throw new DataLayerException($this->mysqli->errno, $this->mysqli->error, $query);
       }
@@ -938,7 +939,7 @@ class DataLayer
    *
    * @param array $columns
    */
-  private function executeTableShowFooter($columns)
+  private function executeTableShowFooter(array $columns): void
   {
     $separator = '+';
 
@@ -955,7 +956,7 @@ class DataLayer
    *
    * @param array $columns
    */
-  private function executeTableShowHeader($columns)
+  private function executeTableShowHeader(array $columns): void
   {
     $separator = '+';
     $header    = '|';
@@ -983,10 +984,10 @@ class DataLayer
   /**
    * Helper method for method executeTable. Shows table cell with data.
    *
-   * @param array  $column
-   * @param string $value
+   * @param array  $column The metadata of the column.
+   * @param mixed  $value  The value of the table cell.
    */
-  private function executeTableShowTableColumn($column, $value)
+  private function executeTableShowTableColumn(array $column, $value): void
   {
     $spaces = str_repeat(' ', $column['length'] - strlen($value));
 
@@ -999,6 +1000,7 @@ class DataLayer
       case 5: // double
       case 8: // bigint
       case 9: // mediumint
+      case 246: // decimal
         echo ' ', $spaces.$value, ' ';
         break;
 
@@ -1011,10 +1013,6 @@ class DataLayer
       case 252: // is currently mapped to all text and blob types (MySQL 5.0.51a)
       case 253: // varchar
       case 254: // char
-        echo ' ', $value.$spaces, ' ';
-        break;
-
-      case 246: // decimal
         echo ' ', $value.$spaces, ' ';
         break;
 

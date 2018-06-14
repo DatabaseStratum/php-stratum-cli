@@ -21,7 +21,7 @@ class ResultException extends RuntimeException
   /**
    * The expected number selected of rows selected.
    *
-   * @var int
+   * @var string
    */
   private $expectedRowCount;
 
@@ -36,11 +36,11 @@ class ResultException extends RuntimeException
   /**
    * Object constructor.
    *
-   * @param int    $expectedRowCount The expected number of rows selected.
+   * @param string $expectedRowCount The expected number of rows selected.
    * @param int    $actualRowCount   The actual number of rows selected.
    * @param string $message          The SQL query
    */
-  public function __construct($expectedRowCount, $actualRowCount, $message)
+  public function __construct(string $expectedRowCount, int $actualRowCount, string $message)
   {
     parent::__construct('%s', self::message($expectedRowCount, $actualRowCount, $message));
 
@@ -55,7 +55,7 @@ class ResultException extends RuntimeException
    *
    * @return int
    */
-  public function getActualNumberRows()
+  public function getActualNumberRows(): int
   {
     return $this->actualRowCount;
   }
@@ -64,9 +64,9 @@ class ResultException extends RuntimeException
   /**
    * Returns the expected number of selected rows.
    *
-   * @return int
+   * @return string
    */
-  public function getExpectedNumberRows()
+  public function getExpectedNumberRows(): string
   {
     return $this->expectedRowCount;
   }
@@ -86,7 +86,7 @@ class ResultException extends RuntimeException
    *
    * @return string
    */
-  public function getQuery()
+  public function getQuery(): string
   {
     return $this->query;
   }
@@ -95,13 +95,13 @@ class ResultException extends RuntimeException
   /**
    * Composes the exception message.
    *
-   * @param int    $expectedRowCount The expected number of rows selected.
+   * @param string $expectedRowCount The expected number of rows selected.
    * @param int    $actualRowCount   The actual number of rows selected.
    * @param string $query            The SQL query.
    *
    * @return string
    */
-  private function message($expectedRowCount, $actualRowCount, $query)
+  private function message(string $expectedRowCount, int $actualRowCount, string $query): string
   {
     $query = trim($query);
 

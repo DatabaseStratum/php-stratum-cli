@@ -170,7 +170,7 @@ class RoutineLoaderCommand extends MySqlCommand
    *
    * @return array
    */
-  protected function readConfigFile($configFilename)
+  protected function readConfigFile(string $configFilename): array
   {
     $settings = parse_ini_file($configFilename, true);
 
@@ -189,7 +189,7 @@ class RoutineLoaderCommand extends MySqlCommand
   /**
    * Detects stored routines that would result in duplicate wrapper method name.
    */
-  private function detectNameConflicts()
+  private function detectNameConflicts(): void
   {
     // Get same method names from array
     list($sources_by_path, $sources_by_method) = $this->getDuplicates();
@@ -229,7 +229,7 @@ class RoutineLoaderCommand extends MySqlCommand
    * Drops obsolete stored routines (i.e. stored routines that exits in the current schema but for which we don't have
    * a source file).
    */
-  private function dropObsoleteRoutines()
+  private function dropObsoleteRoutines(): void
   {
     // Make a lookup table from routine name to source.
     $lookup = [];
@@ -257,7 +257,7 @@ class RoutineLoaderCommand extends MySqlCommand
    * Searches recursively for all source files.
    *
    */
-  private function findSourceFiles()
+  private function findSourceFiles(): void
   {
     $helper    = new SourceFinderHelper(dirname($this->configFilename));
     $filenames = $helper->findSources($this->sourcePattern);
@@ -277,7 +277,7 @@ class RoutineLoaderCommand extends MySqlCommand
    *
    * @param string[] $filenames The list of file names.
    */
-  private function findSourceFilesFromList($filenames)
+  private function findSourceFilesFromList(array $filenames): void
   {
     foreach ($filenames as $filename)
     {
@@ -300,7 +300,7 @@ class RoutineLoaderCommand extends MySqlCommand
   /**
    * Selects schema, table, column names and the column type from MySQL and saves them as replace pairs.
    */
-  private function getColumnTypes()
+  private function getColumnTypes(): void
   {
     $rows = DataLayer::getAllTableColumns();
     foreach ($rows as $row)
@@ -321,7 +321,7 @@ class RoutineLoaderCommand extends MySqlCommand
   /**
    * Reads constants set the PHP configuration file and  adds them to the replace pairs.
    */
-  private function getConstants()
+  private function getConstants(): void
   {
     // If myTargetConfigFilename is not set return immediately.
     if (!isset($this->constantClassName)) return;
@@ -345,7 +345,7 @@ class RoutineLoaderCommand extends MySqlCommand
   /**
    * Gets the SQL mode in the order as preferred by MySQL.
    */
-  private function getCorrectSqlMode()
+  private function getCorrectSqlMode(): void
   {
     $this->sqlMode = DataLayer::getCorrectSqlMode($this->sqlMode);
   }
@@ -356,7 +356,7 @@ class RoutineLoaderCommand extends MySqlCommand
    *
    * @return array[]
    */
-  private function getDuplicates()
+  private function getDuplicates(): array
   {
     // First pass make lookup table by method_name.
     $lookup = [];
@@ -392,7 +392,7 @@ class RoutineLoaderCommand extends MySqlCommand
   /**
    * Retrieves information about all stored routines in the current schema.
    */
-  private function getOldStoredRoutinesInfo()
+  private function getOldStoredRoutinesInfo(): void
   {
     $this->rdbmsOldMetadata = [];
 
@@ -407,7 +407,7 @@ class RoutineLoaderCommand extends MySqlCommand
   /**
    * Loads all stored routines into MySQL.
    */
-  private function loadAll()
+  private function loadAll(): void
   {
     $this->findSourceFiles();
     $this->detectNameConflicts();
@@ -437,7 +437,7 @@ class RoutineLoaderCommand extends MySqlCommand
    *
    * @param string[] $fileNames The list of files to be loaded.
    */
-  private function loadList($fileNames)
+  private function loadList(array $fileNames): void
   {
     $this->findSourceFilesFromList($fileNames);
     $this->detectNameConflicts();
@@ -457,7 +457,7 @@ class RoutineLoaderCommand extends MySqlCommand
   /**
    * Loads all stored routines.
    */
-  private function loadStoredRoutines()
+  private function loadStoredRoutines(): void
   {
     // Log an empty line.
     $this->io->writeln('');
@@ -514,7 +514,7 @@ class RoutineLoaderCommand extends MySqlCommand
   /**
    * Logs the source files that were not successfully loaded into MySQL.
    */
-  private function logOverviewErrors()
+  private function logOverviewErrors(): void
   {
     if (!empty($this->errorFilenames))
     {
@@ -531,7 +531,7 @@ class RoutineLoaderCommand extends MySqlCommand
    *
    * @return null|string
    */
-  private function methodName($routineName)
+  private function methodName(string $routineName): ?string
   {
     if ($this->nameMangler!==null)
     {
@@ -548,7 +548,7 @@ class RoutineLoaderCommand extends MySqlCommand
   /**
    * Reads the metadata of stored routines from the metadata file.
    */
-  private function readStoredRoutineMetadata()
+  private function readStoredRoutineMetadata(): void
   {
     if (file_exists($this->phpStratumMetadataFilename))
     {
@@ -564,7 +564,7 @@ class RoutineLoaderCommand extends MySqlCommand
   /**
    * Removes obsolete entries from the metadata of all stored routines.
    */
-  private function removeObsoleteMetadata()
+  private function removeObsoleteMetadata(): void
   {
     // 1 pass through $mySources make new array with routine_name is key.
     $clean = [];
@@ -584,7 +584,7 @@ class RoutineLoaderCommand extends MySqlCommand
   /**
    * Writes the metadata of all stored routines to the metadata file.
    */
-  private function writeStoredRoutineMetadata()
+  private function writeStoredRoutineMetadata(): void
   {
     $json_data = json_encode($this->phpStratumMetadata, JSON_PRETTY_PRINT);
     if (json_last_error()!=JSON_ERROR_NONE)

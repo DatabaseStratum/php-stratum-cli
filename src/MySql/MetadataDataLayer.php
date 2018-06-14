@@ -25,12 +25,13 @@ class MetadataDataLayer
   private static $io;
 
   //--------------------------------------------------------------------------------------------------------------------
+
   /**
    * Class a stored procedure without arguments.
    *
    * @param string $procedureName The name of the procedure.
    */
-  public static function callProcedure($procedureName)
+  public static function callProcedure(string $procedureName): void
   {
     $query = 'call '.$procedureName.'()';
 
@@ -43,9 +44,9 @@ class MetadataDataLayer
    *
    * @param string $tableName The name of the table.
    *
-   * @return int|null
+   * @return bool
    */
-  public static function checkTableExists($tableName)
+  public static function checkTableExists(string $tableName): bool
   {
     $query = sprintf('
 select 1
@@ -53,7 +54,7 @@ from   information_schema.TABLES
 where table_schema = database()
 and   table_name   = %s', self::$dl->quoteString($tableName));
 
-    return self::executeSingleton0($query);
+    return !empty(self::executeSingleton0($query));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -69,7 +70,7 @@ and   table_name   = %s', self::$dl->quoteString($tableName));
    * @param string $database The default database.
    * @param int    $port     The port number.
    */
-  public static function connect($host, $user, $passWord, $database, $port = 3306)
+  public static function connect(string $host, string $user, string $passWord, string $database, int $port = 3306): void
   {
     self::$dl = new StaticDataLayer();
 
@@ -84,7 +85,7 @@ and   table_name   = %s', self::$dl->quoteString($tableName));
    *
    * @return array[]
    */
-  public static function describeTable($tableName)
+  public static function describeTable(string $tableName): array
   {
     $query = sprintf('describe `%s`', $tableName);
 
@@ -95,7 +96,7 @@ and   table_name   = %s', self::$dl->quoteString($tableName));
   /**
    * Closes the connection to the MySQL instance, if connected.
    */
-  public static function disconnect()
+  public static function disconnect(): void
   {
     if (self::$dl!==null)
     {
@@ -111,7 +112,7 @@ and   table_name   = %s', self::$dl->quoteString($tableName));
    * @param string $routineType The type of the routine (function of procedure).
    * @param string $routineName The name of the routine.
    */
-  public static function dropRoutine($routineType, $routineName)
+  public static function dropRoutine(string $routineType, string $routineName): void
   {
     $query = sprintf('drop %s if exists `%s`', $routineType, $routineName);
 
@@ -124,7 +125,7 @@ and   table_name   = %s', self::$dl->quoteString($tableName));
    *
    * @param string $tableName the name of the temporary table.
    */
-  public static function dropTemporaryTable($tableName)
+  public static function dropTemporaryTable(string $tableName): void
   {
     $query = sprintf('drop temporary table `%s`', $tableName);
 
@@ -137,7 +138,7 @@ and   table_name   = %s', self::$dl->quoteString($tableName));
    *
    * @return int The number of affected rows (if any).
    */
-  public static function executeNone($query)
+  public static function executeNone(string $query): int
   {
     self::logQuery($query);
 
@@ -153,7 +154,7 @@ and   table_name   = %s', self::$dl->quoteString($tableName));
    *
    * @return array|null The selected row.
    */
-  public static function executeRow0($query)
+  public static function executeRow0(string $query): ?array
   {
     self::logQuery($query);
 
@@ -169,7 +170,7 @@ and   table_name   = %s', self::$dl->quoteString($tableName));
    *
    * @return array The selected row.
    */
-  public static function executeRow1($query)
+  public static function executeRow1(string $query): array
   {
     self::logQuery($query);
 
@@ -184,7 +185,7 @@ and   table_name   = %s', self::$dl->quoteString($tableName));
    *
    * @return array[]
    */
-  public static function executeRows($query)
+  public static function executeRows(string $query): array
   {
     self::logQuery($query);
 
@@ -198,9 +199,9 @@ and   table_name   = %s', self::$dl->quoteString($tableName));
    *
    * @param string $query The SQL statement.
    *
-   * @return int|string|null The selected row.
+   * @return mixed The selected row.
    */
-  public static function executeSingleton0($query)
+  public static function executeSingleton0(string $query)
   {
     self::logQuery($query);
 
@@ -214,9 +215,9 @@ and   table_name   = %s', self::$dl->quoteString($tableName));
    *
    * @param string $query The SQL statement.
    *
-   * @return int|string The selected row.
+   * @return mixed The selected row.
    */
-  public static function executeSingleton1($query)
+  public static function executeSingleton1(string $query)
   {
     self::logQuery($query);
 
@@ -229,7 +230,7 @@ and   table_name   = %s', self::$dl->quoteString($tableName));
    *
    * @return array[]
    */
-  public static function getAllTableColumns()
+  public static function getAllTableColumns(): array
   {
     $query = "
 (
@@ -276,7 +277,7 @@ union all
    *
    * @return string
    */
-  public static function getCorrectSqlMode($sqlMode)
+  public static function getCorrectSqlMode(string $sqlMode): string
   {
     $query = sprintf('set sql_mode = %s', self::$dl->quoteString($sqlMode));
     self::executeNone($query);
@@ -292,7 +293,7 @@ union all
    *
    * @return array[]
    */
-  public static function getLabelTables()
+  public static function getLabelTables(): array
   {
     $query = "
 select t1.table_name  table_name
@@ -317,7 +318,7 @@ and   t2.column_name like '%%\\_label'";
    *
    * @return array[]
    */
-  public static function getLabelsFromTable($tableName, $idColumnName, $labelColumnName)
+  public static function getLabelsFromTable(string $tableName, string $idColumnName, string $labelColumnName): array
   {
     $query = "
 select `%s`  id
@@ -338,7 +339,7 @@ where   nullif(`%s`,'') is not null";
    *
    * @return array[]
    */
-  public static function getRoutineParameters($routineName)
+  public static function getRoutineParameters(string $routineName): array
   {
     $query = sprintf("
 select t2.parameter_name
@@ -364,7 +365,7 @@ and   t1.routine_name   = '%s'", $routineName);
    *
    * @return array[]
    */
-  public static function getRoutines()
+  public static function getRoutines(): array
   {
     $query = '
 select routine_name
@@ -388,7 +389,7 @@ order by routine_name';
    *
    * @return array[]
    */
-  public static function getTableColumns($schemaName, $tableName)
+  public static function getTableColumns(string $schemaName, string $tableName): array
   {
     $sql = sprintf('
 select COLUMN_NAME        as column_name
@@ -416,7 +417,7 @@ order by ORDINAL_POSITION',
    *
    * @return array[]
    */
-  public static function getTablePrimaryKeys($schemaName, $tableName)
+  public static function getTablePrimaryKeys(string $schemaName, string $tableName): array
   {
     $sql = sprintf('
 SHOW INDEX FROM %s.%s
@@ -436,7 +437,7 @@ WHERE Key_name = \'PRIMARY\'',
    *
    * @return array[]
    */
-  public static function getTableUniqueKeys($schemaName, $tableName)
+  public static function getTableUniqueKeys(string $schemaName, string $tableName): array
   {
     $sql = sprintf('
 SHOW INDEX FROM %s.%s
@@ -455,7 +456,7 @@ WHERE Non_unique = 0',
    *
    * @return array[]
    */
-  public static function getTablesNames($schemaName)
+  public static function getTablesNames(string $schemaName): array
   {
     $sql = sprintf("
 select TABLE_NAME as table_name
@@ -473,7 +474,7 @@ order by TABLE_NAME", self::$dl->quoteString($schemaName));
    *
    * @param string $routineSource The source of the routine.
    */
-  public static function loadRoutine($routineSource)
+  public static function loadRoutine(string $routineSource): void
   {
     self::executeNone($routineSource);
   }
@@ -488,7 +489,7 @@ order by TABLE_NAME", self::$dl->quoteString($schemaName));
    *
    * @return string
    */
-  public static function realEscapeString($string)
+  public static function realEscapeString(string $string): string
   {
     return self::$dl->realEscapeString($string);
   }
@@ -500,7 +501,7 @@ order by TABLE_NAME", self::$dl->quoteString($schemaName));
    * @param string $characterSet The character set.
    * @param string $collate      The collate.
    */
-  public static function setCharacterSet($characterSet, $collate)
+  public static function setCharacterSet(string $characterSet, string $collate): void
   {
     $sql = sprintf('set names %s collate %s', self::$dl->quoteString($characterSet), self::$dl->quoteString($collate));
 
@@ -513,7 +514,7 @@ order by TABLE_NAME", self::$dl->quoteString($schemaName));
    *
    * @param StratumStyle $io The Output decorator.
    */
-  public static function setIo($io)
+  public static function setIo(StratumStyle $io): void
   {
     self::$io = $io;
   }
@@ -524,7 +525,7 @@ order by TABLE_NAME", self::$dl->quoteString($schemaName));
    *
    * @param string $sqlMode The SQL mode.
    */
-  public static function setSqlMode($sqlMode)
+  public static function setSqlMode(string $sqlMode): void
   {
     $sql = sprintf('set sql_mode = %s', self::$dl->quoteString($sqlMode));
 
@@ -537,7 +538,7 @@ order by TABLE_NAME", self::$dl->quoteString($schemaName));
    *
    * @param string $query The query.
    */
-  private static function logQuery($query)
+  private static function logQuery(string $query): void
   {
     $query = trim($query);
 

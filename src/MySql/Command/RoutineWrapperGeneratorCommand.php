@@ -120,7 +120,7 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
   /**
    * Generates the wrapper class.
    */
-  private function generateWrapperClass()
+  private function generateWrapperClass(): void
   {
     $this->io->title('Wrapper');
 
@@ -176,7 +176,7 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
    *
    * @param string $configFilename The filename of the configuration file.
    */
-  private function readConfigurationFile($configFilename)
+  private function readConfigurationFile(string $configFilename): void
   {
     // Read the configuration file.
     $settings = parse_ini_file($configFilename, true);
@@ -205,7 +205,7 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
    *
    * @return array
    */
-  private function readRoutineMetadata()
+  private function readRoutineMetadata(): array
   {
     $data = file_get_contents($this->metadataFilename);
 
@@ -222,7 +222,7 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
   /**
    * Writes the wrapper class to the filesystem.
    */
-  private function storeWrapperClass()
+  private function storeWrapperClass(): void
   {
     $code = $this->codeStore->getCode();
 
@@ -247,7 +247,7 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
   /**
    * Generate a class header for stored routine wrapper.
    */
-  private function writeClassHeader()
+  private function writeClassHeader(): void
   {
     $p = strrpos($this->wrapperClassName, '\\');
     if ($p!==false)
@@ -303,7 +303,7 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
   /**
    * Generate a class trailer for stored routine wrapper.
    */
-  private function writeClassTrailer()
+  private function writeClassTrailer(): void
   {
     $this->codeStore->appendSeparator();
     $this->codeStore->append('}');
@@ -318,7 +318,7 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
    * @param array       $routine     The metadata of the stored routine.
    * @param NameMangler $nameMangler The mangler for wrapper and parameter names.
    */
-  private function writeRoutineFunction($routine, $nameMangler)
+  private function writeRoutineFunction(array $routine, NameMangler $nameMangler): void
   {
     $wrapper = Wrapper::createRoutineWrapper($routine, $this->codeStore, $nameMangler, $this->lobAsString);
     $wrapper->writeRoutineFunction();

@@ -17,7 +17,7 @@ class PsrNameMangler implements NameMangler
    *
    * @return string
    */
-  public static function getMethodName($routineName)
+  public static function getMethodName(string $routineName): string
   {
     return lcfirst(str_replace(' ', '', ucwords(strtr($routineName, '_', ' '))));
   }
@@ -30,7 +30,7 @@ class PsrNameMangler implements NameMangler
    *
    * @return string
    */
-  public static function getParameterName($parameterName)
+  public static function getParameterName(string $parameterName): string
   {
     return lcfirst(str_replace(' ', '', ucwords(strtr($parameterName, '_', ' '))));
   }

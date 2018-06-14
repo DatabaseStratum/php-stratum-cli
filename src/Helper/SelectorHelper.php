@@ -19,7 +19,7 @@ class SelectorHelper
    *
    * @return bool
    */
-  public static function matchPath($pattern, $path, $isCaseSensitive = true)
+  public static function matchPath(string $pattern, string $path, bool $isCaseSensitive = true): bool
   {
     // Explicitly exclude directory itself.
     if ($path=='' && $pattern=='**/*')

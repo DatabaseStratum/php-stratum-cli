@@ -17,7 +17,7 @@
     "setbased/phing-extensions": "^2.0.1"
   },
   "require": {
-    "php": ">=7.0.0",
+    "php": ">=7.1.0",
     "setbased/exception": "^1.0.0",
     "setbased/helper-code-store-mysql": "^1.1.0",
     "setbased/helper-code-store-php": "^1.1.0",

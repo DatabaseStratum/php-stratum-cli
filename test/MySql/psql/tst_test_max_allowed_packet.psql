@@ -5,7 +5,8 @@
  */
 create procedure tst_test_max_allowed_packet( p_tmp_blob longblob )
 reads sql data
--- type: singleton1
+-- type:   singleton1
+-- return: int
 begin
  drop temporary table if exists TMP_TMP;
 

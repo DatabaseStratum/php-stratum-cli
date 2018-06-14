@@ -11,7 +11,7 @@ class LogWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function getDocBlockReturnType()
+  protected function getDocBlockReturnType(): string
   {
     return 'int';
   }
@@ -20,7 +20,7 @@ class LogWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeResultHandler()
+  protected function writeResultHandler(): void
   {
     $routine_args = $this->getRoutineArgs();
     $this->codeStore->append('return self::executeLog(\'CALL '.$this->routine['routine_name'].'('.$routine_args.')\');');
@@ -30,7 +30,7 @@ class LogWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeRoutineFunctionLobFetchData()
+  protected function writeRoutineFunctionLobFetchData(): void
   {
     // Nothing to do.
   }
@@ -39,7 +39,7 @@ class LogWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeRoutineFunctionLobReturnData()
+  protected function writeRoutineFunctionLobReturnData(): void
   {
     // Nothing to do.
   }

@@ -11,7 +11,7 @@ class BulkWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function enhancePhpDocParameters(&$parameters)
+  protected function enhancePhpDocParameters(array &$parameters): void
   {
     $this->imports[] = 'SetBased\Stratum\BulkHandler';
 
@@ -27,7 +27,7 @@ class BulkWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function getDocBlockReturnType()
+  protected function getDocBlockReturnType(): string
   {
     return '';
   }
@@ -36,7 +36,7 @@ class BulkWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeResultHandler()
+  protected function writeResultHandler(): void
   {
     $routine_args = $this->getRoutineArgs();
     $this->codeStore->append('self::executeBulk($bulkHandler, \'CALL '.$this->routine['routine_name'].'('.$routine_args.')\');');
@@ -46,13 +46,16 @@ class BulkWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeRoutineFunctionLobFetchData()
+  protected function writeRoutineFunctionLobFetchData(): void
   {
     // Nothing to do.
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-  protected function writeRoutineFunctionLobReturnData()
+  /**
+   * @inheritdoc
+   */
+  protected function writeRoutineFunctionLobReturnData(): void
   {
     // Nothing to do.
   }

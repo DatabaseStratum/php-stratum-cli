@@ -25,7 +25,7 @@ class SourceFinderHelper
    *
    * @param string $basedir The directory of the stratum configuration file.
    */
-  public function __construct($basedir)
+  public function __construct(string $basedir)
   {
     $this->basedir = $basedir;
   }
@@ -38,7 +38,7 @@ class SourceFinderHelper
    *
    * @return string
    */
-  private static function getLeadingDir($pattern)
+  private static function getLeadingDir(string $pattern): string
   {
     $dir = $pattern;
 
@@ -69,7 +69,7 @@ class SourceFinderHelper
    *
    * @return string[]
    */
-  public function findSources($sources)
+  public function findSources(string $sources): array
   {
     $patterns = $this->sourcesToPatterns($sources);
 
@@ -94,7 +94,7 @@ class SourceFinderHelper
    *
    * @return string[]
    */
-  private function findSourcesInPattern($pattern)
+  private function findSourcesInPattern(string $pattern): array
   {
     $sources = [];
 
@@ -121,7 +121,7 @@ class SourceFinderHelper
    *
    * @return string[]
    */
-  private function readPatterns($filename)
+  private function readPatterns(string $filename): array
   {
     $path  = $this->basedir.'/'.$filename;
     $lines = explode(PHP_EOL, file_get_contents($path));
@@ -147,7 +147,7 @@ class SourceFinderHelper
    *
    * @return string[]
    */
-  private function sourcesToPatterns($sources)
+  private function sourcesToPatterns(string $sources): array
   {
     if (substr($sources, 0, 5)=='file:')
     {

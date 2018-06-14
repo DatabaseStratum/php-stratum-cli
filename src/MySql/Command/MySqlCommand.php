@@ -25,7 +25,7 @@ class MySqlCommand extends BaseCommand
    *
    * @param array $settings The settings from the configuration file.
    */
-  protected function connect($settings)
+  protected function connect(array $settings): void
   {
     $host     = $this->getSetting($settings, true, 'database', 'host');
     $user     = $this->getSetting($settings, true, 'database', 'user');

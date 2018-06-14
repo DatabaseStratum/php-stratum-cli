@@ -35,16 +35,16 @@ abstract class Wrapper
   protected $nameMangler;
 
   /**
-   * @var bool If true BLOBs and CLOBs must be treated as strings.
-   */
-  private $lobAsStringFlag;
-
-  /**
    * The metadata of the stored routine.
    *
    * @var array
    */
   protected $routine;
+
+  /**
+   * @var bool If true BLOBs and CLOBs must be treated as strings.
+   */
+  private $lobAsStringFlag;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -56,7 +56,7 @@ abstract class Wrapper
    * @param bool         $lobAsString If set BLOBs and CLOBs are treated as string. Otherwise, BLOBs and CLOBs will be
    *                                  send as long data.
    */
-  public function __construct($routine, $codeStore, $nameMangler, $lobAsString)
+  public function __construct(array $routine, PhpCodeStore $codeStore, NameMangler $nameMangler, bool $lobAsString)
   {
     $this->routine         = $routine;
     $this->codeStore       = $codeStore;
@@ -76,7 +76,10 @@ abstract class Wrapper
    *
    * @return Wrapper
    */
-  public static function createRoutineWrapper($routine, $codeStore, $nameMangler, $lobAsString)
+  public static function createRoutineWrapper(array $routine,
+                                              PhpCodeStore $codeStore,
+                                              NameMangler $nameMangler,
+                                              bool $lobAsString): Wrapper
   {
     switch ($routine['designation'])
     {
@@ -149,7 +152,7 @@ abstract class Wrapper
    *
    * @return array
    */
-  public function getImports()
+  public function getImports(): array
   {
     return $this->imports;
   }
@@ -162,26 +165,26 @@ abstract class Wrapper
    *
    * @return bool
    */
-  public function isBlobParameter($parameters)
+  public function isBlobParameter(?array $parameters): bool
   {
-    $has_blob = false;
+    $hasBlob = false;
 
     if ($parameters)
     {
       foreach ($parameters as $parameter_info)
       {
-        $has_blob |= DataTypeHelper::isBlobParameter($parameter_info['data_type']);
+        $hasBlob |= DataTypeHelper::isBlobParameter($parameter_info['data_type']);
       }
     }
 
-    return $has_blob;
+    return $hasBlob;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Generates a complete wrapper method.
    */
-  public function writeRoutineFunction()
+  public function writeRoutineFunction(): void
   {
     if (!$this->lobAsStringFlag && $this->isBlobParameter($this->routine['parameters']))
     {
@@ -197,7 +200,7 @@ abstract class Wrapper
   /**
    * Generates a complete wrapper method for a stored routine with a LOB parameter.
    */
-  public function writeRoutineFunctionWithLob()
+  public function writeRoutineFunctionWithLob(): void
   {
     $wrapper_args = $this->getWrapperArgs();
     $routine_args = $this->getRoutineArgs();
@@ -282,7 +285,7 @@ abstract class Wrapper
   /**
    * Returns a wrapper method for a stored routine without LOB parameters.
    */
-  public function writeRoutineFunctionWithoutLob()
+  public function writeRoutineFunctionWithoutLob(): void
   {
     $wrapper_args = $this->getWrapperArgs();
     $method_name  = $this->nameMangler->getMethodName($this->routine['routine_name']);
@@ -311,7 +314,7 @@ abstract class Wrapper
    *                            routine. Null if there is no corresponding parameter.
    *                            </ul>
    */
-  protected function enhancePhpDocParameters(&$parameters)
+  protected function enhancePhpDocParameters(array &$parameters): void
   {
     // Nothing to do.
   }
@@ -322,7 +325,7 @@ abstract class Wrapper
    *
    * @return string
    */
-  abstract protected function getDocBlockReturnType();
+  abstract protected function getDocBlockReturnType(): string;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -330,7 +333,7 @@ abstract class Wrapper
    *
    * @return string
    */
-  protected function getRoutineArgs()
+  protected function getRoutineArgs(): string
   {
     $ret = '';
 
@@ -351,7 +354,7 @@ abstract class Wrapper
    *
    * @return string
    */
-  protected function getWrapperArgs()
+  protected function getWrapperArgs(): string
   {
     if ($this->routine['designation']=='bulk')
     {
@@ -378,7 +381,7 @@ abstract class Wrapper
    *
    * @return void
    */
-  abstract protected function writeResultHandler();
+  abstract protected function writeResultHandler(): void;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -386,7 +389,7 @@ abstract class Wrapper
    *
    * @return void
    */
-  abstract protected function writeRoutineFunctionLobFetchData();
+  abstract protected function writeRoutineFunctionLobFetchData(): void;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -394,13 +397,13 @@ abstract class Wrapper
    *
    * @return void
    */
-  abstract protected function writeRoutineFunctionLobReturnData();
+  abstract protected function writeRoutineFunctionLobReturnData(): void;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Generate php doc block in the data layer for stored routine.
    */
-  private function generatePhpDoc()
+  private function generatePhpDoc(): void
   {
     $this->codeStore->append('/**', false);
 
@@ -423,7 +426,7 @@ abstract class Wrapper
   /**
    * Generates the PHP doc block for the return type of the stored routine wrapper.
    */
-  private function generatePhpDocBlockReturn()
+  private function generatePhpDocBlockReturn(): void
   {
     $return = $this->getDocBlockReturnType();
     if ($return!=='')
@@ -437,7 +440,7 @@ abstract class Wrapper
   /**
    * Generates the long description of stored routine wrapper.
    */
-  private function generatePhpDocLongDescription()
+  private function generatePhpDocLongDescription(): void
   {
     if ($this->routine['phpdoc']['long_description']!=='')
     {
@@ -449,7 +452,7 @@ abstract class Wrapper
   /**
    * Generates the doc block for parameters of stored routine wrapper.
    */
-  private function generatePhpDocParameters()
+  private function generatePhpDocParameters(): void
   {
     $parameters = [];
     foreach ($this->routine['phpdoc']['parameters'] as $parameter)
@@ -509,7 +512,7 @@ abstract class Wrapper
   /**
    * Generates the sort description of stored routine wrapper.
    */
-  private function generatePhpDocSortDescription()
+  private function generatePhpDocSortDescription(): void
   {
     if ($this->routine['phpdoc']['sort_description']!=='')
     {

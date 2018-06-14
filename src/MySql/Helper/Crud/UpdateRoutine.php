@@ -14,7 +14,7 @@ class UpdateRoutine extends BaseRoutine
   /**
    * @inheritdoc
    */
-  protected function generateBody($params, $columns)
+  protected function generateBody(array $params, array $columns): void
   {
     $set         = [];
     $primaryKeys = MetadataDataLayer::getTablePrimaryKeys($this->dataSchema, $this->tableName);

@@ -109,7 +109,13 @@ abstract class BaseRoutine
    * @param string          $tableName  The table name.
    * @param string          $dataSchema Data schema.
    */
-  public function __construct($input, $output, $helper, $spType, $spName, $tableName, $dataSchema)
+  public function __construct(InputInterface $input,
+                              OutputInterface $output,
+                              $helper,
+                              string $spType,
+                              string $spName,
+                              string $tableName,
+                              string $dataSchema)
   {
     $this->io = new StratumStyle($input, $output);
 
@@ -162,7 +168,7 @@ abstract class BaseRoutine
    *
    * @return string
    */
-  public function getCode()
+  public function getCode(): string
   {
     return $this->codeStore->getCode();
   }
@@ -175,7 +181,7 @@ abstract class BaseRoutine
    *
    * @return bool
    */
-  protected function checkAutoIncrement($columns)
+  protected function checkAutoIncrement(array $columns): bool
   {
     foreach ($columns as $column)
     {
@@ -197,7 +203,7 @@ abstract class BaseRoutine
    *
    * @return array|null
    */
-  protected function checkUniqueKeys($columns, $spType = null)
+  protected function checkUniqueKeys(array $columns, ?string $spType = null): ?array
   {
     $primaryKeys = MetadataDataLayer::getTablePrimaryKeys($this->dataSchema, $this->tableName);
     $uniqueKeys  = MetadataDataLayer::getTableUniqueKeys($this->dataSchema, $this->tableName);
@@ -302,7 +308,7 @@ abstract class BaseRoutine
    *
    * @return void
    */
-  abstract protected function generateBody($params, $columns);
+  abstract protected function generateBody(array $params, array $columns): void;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -310,7 +316,7 @@ abstract class BaseRoutine
    *
    * @param array[] $columns Columns from table.
    */
-  protected function generateDocBlock($columns)
+  protected function generateDocBlock(array $columns): void
   {
     $this->codeStore->append('/**');
     $this->codeStore->append(' * @todo describe routine', false);
@@ -332,7 +338,7 @@ abstract class BaseRoutine
    *
    * @param array[] $columns Columns from table.
    */
-  protected function generateMainPart($columns)
+  protected function generateMainPart(array $columns): void
   {
     $this->codeStore->append(sprintf('create procedure %s(', $this->spName));
 
@@ -383,7 +389,7 @@ abstract class BaseRoutine
    *
    * @return int
    */
-  protected function getMaxColumnLength($columns)
+  protected function getMaxColumnLength(array $columns): int
   {
     $length = 0;
     foreach ($columns as $column)
@@ -400,7 +406,7 @@ abstract class BaseRoutine
    *
    * @param bool $flag Set or no type.
    */
-  protected function modifiesPart($flag)
+  protected function modifiesPart(bool $flag): void
   {
     if ($this->spType!=='SELECT')
     {

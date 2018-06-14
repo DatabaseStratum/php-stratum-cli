@@ -93,7 +93,7 @@ class StaticDataLayer
    *
    * @var array[]
    */
-  protected static $queryLog;
+  protected static $queryLog = [];
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -105,7 +105,7 @@ class StaticDataLayer
    * @since 1.0.0
    * @api
    */
-  public static function begin()
+  public static function begin(): void
   {
     $ret = self::$mysqli->autocommit(false);
     if (!$ret) self::mySqlError('mysqli::autocommit');
@@ -116,7 +116,7 @@ class StaticDataLayer
    * @param \mysqli_stmt $stmt
    * @param array        $out
    */
-  public static function bindAssoc($stmt, &$out)
+  public static function bindAssoc(\mysqli_stmt $stmt, array &$out): void
   {
     $data = $stmt->result_metadata();
     if (!$data) self::mySqlError('mysqli_stmt::result_metadata');
@@ -145,7 +145,7 @@ class StaticDataLayer
    * @since 1.0.0
    * @api
    */
-  public static function commit()
+  public static function commit(): void
   {
     $ret = self::$mysqli->commit();
     if (!$ret) self::mySqlError('mysqli::commit');
@@ -167,7 +167,7 @@ class StaticDataLayer
    * @since 1.0.0
    * @api
    */
-  public static function connect($host, $user, $password, $database, $port = 3306)
+  public static function connect(string $host, string $user, string $password, string $database, int $port = 3306): void
   {
     self::$mysqli = new \mysqli($host, $user, $password, $database, $port);
     if (self::$mysqli->connect_errno)
@@ -209,7 +209,7 @@ class StaticDataLayer
    * @since 1.0.0
    * @api
    */
-  public static function disconnect()
+  public static function disconnect(): void
   {
     if (self::$mysqli)
     {
@@ -228,7 +228,7 @@ class StaticDataLayer
    * @since 1.0.0
    * @api
    */
-  public static function executeBulk($bulkHandler, $query)
+  public static function executeBulk(BulkHandler $bulkHandler, string $query): void
   {
     self::realQuery($query);
 
@@ -257,7 +257,7 @@ class StaticDataLayer
    * @since 1.0.0
    * @api
    */
-  public static function executeLog($queries)
+  public static function executeLog(string $queries): int
   {
     // Counter for the number of rows written/logged.
     $n = 0;
@@ -306,9 +306,9 @@ class StaticDataLayer
    * @since 1.0.0
    * @api
    */
-  public static function executeNone($query)
+  public static function executeNone(string $query): int
   {
-    self::query($query);
+    self::realQuery($query);
 
     $n = self::$mysqli->affected_rows;
 
@@ -329,7 +329,7 @@ class StaticDataLayer
    * @since 1.0.0
    * @api
    */
-  public static function executeRow0($query)
+  public static function executeRow0(string $query): ?array
   {
     $result = self::query($query);
     $row    = $result->fetch_assoc();
@@ -358,7 +358,7 @@ class StaticDataLayer
    * @since 1.0.0
    * @api
    */
-  public static function executeRow1($query)
+  public static function executeRow1(string $query): array
   {
     $result = self::query($query);
     $row    = $result->fetch_assoc();
@@ -386,7 +386,7 @@ class StaticDataLayer
    * @since 1.0.0
    * @api
    */
-  public static function executeRows($query)
+  public static function executeRows(string $query): array
   {
     $result = self::query($query);
     if (self::$haveFetchAll)
@@ -415,12 +415,12 @@ class StaticDataLayer
    *
    * @param string $query The SQL statement.
    *
-   * @return int|string|null The selected value.
+   * @return mixed The selected value.
    *
    * @since 1.0.0
    * @api
    */
-  public static function executeSingleton0($query)
+  public static function executeSingleton0(string $query)
   {
     $result = self::query($query);
     $row    = $result->fetch_array(MYSQLI_NUM);
@@ -444,12 +444,12 @@ class StaticDataLayer
    *
    * @param string $query The SQL statement.
    *
-   * @return int|string The selected value.
+   * @return mixed The selected value.
    *
    * @since 1.0.0
    * @api
    */
-  public static function executeSingleton1($query)
+  public static function executeSingleton1(string $query)
   {
     $result = self::query($query);
     $row    = $result->fetch_array(MYSQLI_NUM);
@@ -478,7 +478,7 @@ class StaticDataLayer
    * @since 1.0.0
    * @api
    */
-  public static function executeTable($query)
+  public static function executeTable(string $query): int
   {
     $row_count = 0;
 
@@ -540,7 +540,7 @@ class StaticDataLayer
    *
    * @return int
    */
-  public static function getMaxAllowedPacket()
+  public static function getMaxAllowedPacket(): int
   {
     if (!isset(self::$maxAllowedPacket))
     {
@@ -570,7 +570,7 @@ class StaticDataLayer
    * @since 1.0.0
    * @api
    */
-  public static function getQueryLog()
+  public static function getQueryLog(): array
   {
     return self::$queryLog;
   }
@@ -585,12 +585,12 @@ class StaticDataLayer
    * @param mixed   $value      The value to be found.
    * @param array[] $rowSet     The row set.
    *
-   * @return mixed
+   * @return array
    *
    * @since 1.0.0
    * @api
    */
-  public static function getRowInRowSet($columnName, $value, $rowSet)
+  public static function getRowInRowSet(string $columnName, $value, array $rowSet): array
   {
     if (is_array($rowSet))
     {
@@ -615,16 +615,16 @@ class StaticDataLayer
    *
    * @param string $queries The SQL statements.
    *
-   * @return bool
+   * @return void
    */
-  public static function multiQuery($queries)
+  public static function multiQuery(string $queries): void
   {
     if (self::$logQueries)
     {
       $time0 = microtime(true);
 
-      $ret = self::$mysqli->multi_query($queries);
-      if ($ret===false)
+      $tmp = self::$mysqli->multi_query($queries);
+      if ($tmp===false)
       {
         throw new DataLayerException(self::$mysqli->errno, self::$mysqli->error, $queries);
       }
@@ -633,27 +633,27 @@ class StaticDataLayer
     }
     else
     {
-      $ret = self::$mysqli->multi_query($queries);
-      if ($ret===false)
+      $tmp = self::$mysqli->multi_query($queries);
+      if ($tmp===false)
       {
         throw new DataLayerException(self::$mysqli->errno, self::$mysqli->error, $queries);
       }
     }
-
-    return $ret;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Executes a SQL statement.
+   * Executes a query (i.e. SELECT, SHOW, DESCRIBE or EXPLAIN) with a result set.
    *
    * Wrapper around [mysqli::query](http://php.net/manual/mysqli.query.php), however on failure an exception is thrown.
+   *
+   * For other SQL statements, see @realQuery.
    *
    * @param string $query The SQL statement.
    *
    * @return \mysqli_result
    */
-  public static function query($query)
+  public static function query(string $query): \mysqli_result
   {
     if (self::$logQueries)
     {
@@ -683,13 +683,13 @@ class StaticDataLayer
   /**
    * Returns a literal for a bit field that can be safely used in SQL statements.
    *
-   * @param string $bits The bit field.
+   * @param string|null $bits The bit field.
    *
    * @return string
    */
-  public static function quoteBit($bits)
+  public static function quoteBit(?string $bits): string
   {
-    if ($bits===null || $bits===false || $bits==='')
+    if ($bits===null || $bits==='')
     {
       return 'NULL';
     }
@@ -711,7 +711,7 @@ class StaticDataLayer
    *
    * @return string
    */
-  public static function quoteListOfInt($list, $delimiter, $enclosure, $escape)
+  public static function quoteListOfInt($list, string $delimiter, string $enclosure, string $escape): string
   {
     if ($list===null || $list===false || $list==='' || $list===[])
     {
@@ -767,11 +767,11 @@ class StaticDataLayer
    * <li>Throws an exception in all other cases.
    * </ul>
    *
-   * @param int|float|bool|null $value The numerical value.
+   * @param mixed $value The numerical value.
    *
    * @return string
    */
-  public static function quoteNum($value)
+  public static function quoteNum($value): string
   {
     if (is_numeric($value)) return (string)$value;
     if ($value===null || $value==='') return 'NULL';
@@ -795,12 +795,11 @@ class StaticDataLayer
    *
    * @return string
    */
-  public static function quoteString($value)
+  public static function quoteString(?string $value): string
   {
-    if ($value===null || $value===false || $value==='') return 'NULL';
-    if (is_scalar($value)) return "'".self::$mysqli->real_escape_string($value)."'";
+    if ($value===null || $value==='') return 'NULL';
 
-    throw new RuntimeException("'%s' is not a string.", gettype($value));
+    return "'".self::$mysqli->real_escape_string($value)."'";
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -813,7 +812,7 @@ class StaticDataLayer
    *
    * @return string
    */
-  public static function realEscapeString($string)
+  public static function realEscapeString(string $string): string
   {
     return self::$mysqli->real_escape_string($string);
   }
@@ -828,7 +827,7 @@ class StaticDataLayer
    * @since 1.0.0
    * @api
    */
-  public static function rollback()
+  public static function rollback(): void
   {
     $ret = self::$mysqli->rollback();
     if (!$ret) self::mySqlError('mysqli::rollback');
@@ -840,21 +839,21 @@ class StaticDataLayer
    * found.
    *
    * @param string  $columnName The column name (or in PHP terms the key in an row (i.e. array) in the row set).
-   * @param string  $value      The value to be found.
+   * @param mixed   $value      The value to be found.
    * @param array[] $rowSet     The row set.
    *
-   * @return int|null|string
+   * @return int|string|null
    *
    * @since 1.0.0
    * @api
    */
-  public static function searchInRowSet($columnName, $value, $rowSet)
+  public static function searchInRowSet(string $columnName, $value, array $rowSet)
   {
     if (is_array($rowSet))
     {
       foreach ($rowSet as $key => $row)
       {
-        if ((string)$row[$columnName]==(string)$value)
+        if ((string)$row[$columnName]===(string)$value)
         {
           return $key;
         }
@@ -873,7 +872,7 @@ class StaticDataLayer
    * @since 1.0.0
    * @api
    */
-  public static function showWarnings()
+  public static function showWarnings(): void
   {
     self::executeLog('show warnings');
   }
@@ -887,7 +886,7 @@ class StaticDataLayer
    *
    * @param string $method The name of the method that has failed.
    */
-  protected static function mySqlError($method)
+  protected static function mySqlError(string $method): void
   {
     $message = 'MySQL Error no: '.self::$mysqli->errno."\n";
     $message .= self::$mysqli->error;
@@ -900,21 +899,23 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Execute an SQL query.
+   * Execute a query without a result set.
    *
    * Wrapper around [mysqli::real_query](http://php.net/manual/en/mysqli.real-query.php), however on failure an
    * exception is thrown.
    *
+   * Foor SELECT, SHOW, DESCRIBE or EXPLAIN queries, see @query.
+   *
    * @param string $query The SQL statement.
    */
-  protected static function realQuery($query)
+  protected static function realQuery(string $query): void
   {
     if (self::$logQueries)
     {
       $time0 = microtime(true);
 
-      $ret = self::$mysqli->real_query($query);
-      if ($ret===false)
+      $tmp = self::$mysqli->real_query($query);
+      if ($tmp===false)
       {
         throw new DataLayerException(self::$mysqli->errno, self::$mysqli->error, $query);
       }
@@ -924,8 +925,8 @@ class StaticDataLayer
     }
     else
     {
-      $ret = self::$mysqli->real_query($query);
-      if ($ret===false)
+      $tmp = self::$mysqli->real_query($query);
+      if ($tmp===false)
       {
         throw new DataLayerException(self::$mysqli->errno, self::$mysqli->error, $query);
       }
@@ -938,7 +939,7 @@ class StaticDataLayer
    *
    * @param array $columns
    */
-  private static function executeTableShowFooter($columns)
+  private static function executeTableShowFooter(array $columns): void
   {
     $separator = '+';
 
@@ -955,7 +956,7 @@ class StaticDataLayer
    *
    * @param array $columns
    */
-  private static function executeTableShowHeader($columns)
+  private static function executeTableShowHeader(array $columns): void
   {
     $separator = '+';
     $header    = '|';
@@ -983,10 +984,10 @@ class StaticDataLayer
   /**
    * Helper method for method executeTable. Shows table cell with data.
    *
-   * @param array  $column
-   * @param string $value
+   * @param array  $column The metadata of the column.
+   * @param mixed  $value  The value of the table cell.
    */
-  private static function executeTableShowTableColumn($column, $value)
+  private static function executeTableShowTableColumn(array $column, $value): void
   {
     $spaces = str_repeat(' ', $column['length'] - strlen($value));
 
@@ -999,6 +1000,7 @@ class StaticDataLayer
       case 5: // double
       case 8: // bigint
       case 9: // mediumint
+      case 246: // decimal
         echo ' ', $spaces.$value, ' ';
         break;
 
@@ -1011,10 +1013,6 @@ class StaticDataLayer
       case 252: // is currently mapped to all text and blob types (MySQL 5.0.51a)
       case 253: // varchar
       case 254: // char
-        echo ' ', $value.$spaces, ' ';
-        break;
-
-      case 246: // decimal
         echo ' ', $value.$spaces, ' ';
         break;
 

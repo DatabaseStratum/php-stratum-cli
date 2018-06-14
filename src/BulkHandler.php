@@ -1,8 +1,7 @@
 <?php
-// ---------------------------------------------------------------------------------------------------------------------
+
 namespace SetBased\Stratum;
 
-// ---------------------------------------------------------------------------------------------------------------------
 /**
  * Interface for defining classes for handling large result sets.
  */
@@ -12,14 +11,14 @@ interface BulkHandler
   /**
    * Will be invoked for each row in the result set.
    *
-   * @param string[] $row A row from the result set.
+   * @param array $row A row from the result set.
    *
    * @return void
    *
    * @since 1.0.0
    * @api
    */
-  public function row($row);
+  public function row(array $row): void;
 
   // -------------------------------------------------------------------------------------------------------------------
   /**
@@ -30,7 +29,7 @@ interface BulkHandler
    * @since 1.0.0
    * @api
    */
-  public function start();
+  public function start(): void;
 
   // -------------------------------------------------------------------------------------------------------------------
   /**
@@ -41,7 +40,7 @@ interface BulkHandler
    * @since 1.0.0
    * @api
    */
-  public function stop();
+  public function stop(): void;
 
   // -------------------------------------------------------------------------------------------------------------------
 }

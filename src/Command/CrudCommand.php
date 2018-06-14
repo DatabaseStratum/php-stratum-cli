@@ -69,6 +69,7 @@ class CrudCommand extends BaseCommand
   private $sourceDirectory;
 
   //--------------------------------------------------------------------------------------------------------------------
+
   /**
    * @inheritdoc
    */
@@ -121,7 +122,7 @@ class CrudCommand extends BaseCommand
    * @param string $spType    Stored procedure type {insert|update|delete|select}.
    * @param string $tableName The table name.
    */
-  private function askForCreateSP($spType, $tableName)
+  private function askForCreateSP(string $spType, string $tableName): void
   {
     $question = sprintf('Create SP for <dbo>%s</dbo> ? (default Yes): ', $spType);
     $question = new ConfirmationQuestion($question, true);
@@ -172,7 +173,7 @@ class CrudCommand extends BaseCommand
    *
    * @return string
    */
-  private function generateSP($tableName, $spType, $spName)
+  private function generateSP(string $tableName, string $spType, string $spName): string
   {
     switch ($spType)
     {
@@ -227,7 +228,7 @@ class CrudCommand extends BaseCommand
    *
    * @param array[] $tableList All existing tables from data schema.
    */
-  private function printAllTables($tableList)
+  private function printAllTables(array $tableList): void
   {
     if ($this->input->getOption('tables'))
     {
@@ -256,7 +257,7 @@ class CrudCommand extends BaseCommand
    *
    * @return array
    */
-  private function readConfigFile($configFilename)
+  private function readConfigFile(string $configFilename): array
   {
     $settings = parse_ini_file($configFilename, true);
 
@@ -269,7 +270,7 @@ class CrudCommand extends BaseCommand
    *
    * @param array[] $tableList All existing tables from data schema.
    */
-  private function startAsking($tableList)
+  private function startAsking(array $tableList): void
   {
     $question  = new Question('Please enter <note>TABLE NAME</note>: ');
     $tableName = $this->helper->ask($this->input, $this->output, $question);

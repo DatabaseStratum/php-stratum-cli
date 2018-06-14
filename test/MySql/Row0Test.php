@@ -31,7 +31,7 @@ class Row0Test extends DataLayerTestCase
   /**
    * An exception must be thrown when a stored routine with designation type row0 returns more than 1 rows.
    *
-   * @expectedException SetBased\Stratum\Exception\ResultException
+   * @expectedException \SetBased\Stratum\Exception\ResultException
    */
   public function test3()
   {

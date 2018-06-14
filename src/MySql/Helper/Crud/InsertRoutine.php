@@ -11,7 +11,7 @@ class InsertRoutine extends BaseRoutine
   /**
    * @inheritdoc
    */
-  protected function generateBody($params, $columns)
+  protected function generateBody(array $params, array $columns): void
   {
     $padding = $this->getMaxColumnLength($columns);
 

@@ -11,7 +11,7 @@ class NoneWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function getDocBlockReturnType()
+  protected function getDocBlockReturnType(): string
   {
     return 'int';
   }
@@ -20,7 +20,7 @@ class NoneWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeResultHandler()
+  protected function writeResultHandler(): void
   {
     $routine_args = $this->getRoutineArgs();
     $this->codeStore->append('return self::executeNone(\'CALL '.$this->routine['routine_name'].'('.$routine_args.')\');');
@@ -30,7 +30,7 @@ class NoneWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeRoutineFunctionLobFetchData()
+  protected function writeRoutineFunctionLobFetchData(): void
   {
     $this->codeStore->append('$ret = self::$mysqli->affected_rows;');
     $this->codeStore->append('');
@@ -40,7 +40,7 @@ class NoneWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function writeRoutineFunctionLobReturnData()
+  protected function writeRoutineFunctionLobReturnData(): void
   {
     $this->codeStore->append('return $ret;');
   }
