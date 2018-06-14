@@ -431,7 +431,7 @@ class RoutineLoaderHelper
     foreach ($this->parameters as $parameter_info)
     {
       $parameters[] = ['parameter_name'       => $parameter_info['parameter_name'],
-                       'php_type'             => DataTypeHelper::columnTypeToPhpType($parameter_info),
+                       'php_type'             => DataTypeHelper::columnTypeToPhpTypeHinting($parameter_info),
                        'data_type_descriptor' => $parameter_info['data_type_descriptor'],
                        'description'          => $this->getParameterDocDescription($parameter_info['parameter_name'])];
     }

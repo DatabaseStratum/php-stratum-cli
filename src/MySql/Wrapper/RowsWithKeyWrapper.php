@@ -21,6 +21,15 @@ class RowsWithKeyWrapper extends Wrapper
   /**
    * @inheritdoc
    */
+  protected function getReturnTypeDeclaration(): string
+  {
+    return ': array';
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * @inheritdoc
+   */
   protected function writeResultHandler(): void
   {
     $routine_args = $this->getRoutineArgs();

@@ -11,13 +11,26 @@ class DataTypeHelper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns the corresponding PHP data type of a MySQL column type.
+   * Returns the corresponding PHP type declaration of a MySQL column type.
    *
    * @param string[] $dataTypeInfo Metadata of the MySQL data type.
    *
    * @return string
    */
-  public static function columnTypeToPhpType(array $dataTypeInfo): string
+  public static function columnTypeToPhpTypeDeclaration(array $dataTypeInfo): string
+  {
+    return static::phpTypeHintingToPhpTypeDeclaration(static::columnTypeToPhpTypeHinting($dataTypeInfo));
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns the corresponding PHP type hinting of a MySQL column type.
+   *
+   * @param string[] $dataTypeInfo Metadata of the MySQL data type.
+   *
+   * @return string
+   */
+  public static function columnTypeToPhpTypeHinting(array $dataTypeInfo): string
   {
     switch ($dataTypeInfo['data_type'])
     {
@@ -337,6 +350,48 @@ class DataTypeHelper
     }
 
     return $isBlob;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns the corresponding PHP type declaration of a MySQL column type.
+   *
+   * @param string $phpTypeHint The PHP type hinting.
+   *
+   * @return string
+   */
+  public static function phpTypeHintingToPhpTypeDeclaration(string $phpTypeHint): string
+  {
+    $phpType = '';
+
+    switch ($phpTypeHint)
+    {
+      case 'array':
+      case 'array[]':
+      case 'bool':
+      case 'float':
+      case 'int':
+      case 'string':
+      case 'void':
+        $phpType = $phpTypeHint;
+        break;
+
+      default:
+        $parts = explode('|', $phpTypeHint);
+        $key   = array_search('null', $parts);
+        if (count($parts)==2 && $key!==false)
+        {
+          unset($parts[$key]);
+
+          $tmp = static::phpTypeHintingToPhpTypeDeclaration(implode('|', $parts));
+          if ($tmp!=='')
+          {
+            $phpType = '?'.$tmp;
+          }
+        }
+    }
+
+    return $phpType;
   }
 
   //--------------------------------------------------------------------------------------------------------------------

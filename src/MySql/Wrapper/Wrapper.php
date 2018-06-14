@@ -47,6 +47,7 @@ abstract class Wrapper
   private $lobAsStringFlag;
 
   //--------------------------------------------------------------------------------------------------------------------
+
   /**
    * Object constructor.
    *
@@ -287,12 +288,13 @@ abstract class Wrapper
    */
   public function writeRoutineFunctionWithoutLob(): void
   {
-    $wrapper_args = $this->getWrapperArgs();
-    $method_name  = $this->nameMangler->getMethodName($this->routine['routine_name']);
+    $wrapperArgs = $this->getWrapperArgs();
+    $methodName  = $this->nameMangler->getMethodName($this->routine['routine_name']);
+    $returnType  = $this->getReturnTypeDeclaration();
 
     $this->codeStore->appendSeparator();
     $this->generatePhpDoc();
-    $this->codeStore->append('public static function '.$method_name.'('.$wrapper_args.')');
+    $this->codeStore->append('public static function '.$methodName.'('.$wrapperArgs.')'.$returnType);
     $this->codeStore->append('{');
 
     $this->writeResultHandler();
@@ -329,6 +331,14 @@ abstract class Wrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * Returns the return type declaration of the wrapper method.
+   *
+   * @return string
+   */
+  abstract protected function getReturnTypeDeclaration(): string;
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Returns code for the arguments for calling the stored routine in a wrapper method.
    *
    * @return string
@@ -356,20 +366,24 @@ abstract class Wrapper
    */
   protected function getWrapperArgs(): string
   {
+    $ret = '';
+
     if ($this->routine['designation']=='bulk')
     {
-      $ret = '$bulkHandler';
-    }
-    else
-    {
-      $ret = '';
+      $ret .= 'BulkHandler $bulkHandler';
     }
 
-    foreach ($this->routine['parameters'] as $i => $parameter_info)
+    foreach ($this->routine['parameters'] as $i => $parameter)
     {
-      if ($ret) $ret .= ', ';
-      $ret .= '$';
-      $ret .= $this->nameMangler->getParameterName($parameter_info['parameter_name']);
+      if ($ret!='') $ret .= ', ';
+
+      $declaration = DataTypeHelper::columnTypeToPhpTypeDeclaration($parameter);
+      if ($declaration!=='')
+      {
+        $ret .= '?'.$declaration.' ';
+      }
+
+      $ret .= '$'.$this->nameMangler->getParameterName($parameter['parameter_name']);
     }
 
     return $ret;

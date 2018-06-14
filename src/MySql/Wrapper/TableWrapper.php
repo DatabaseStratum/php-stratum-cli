@@ -21,6 +21,15 @@ class TableWrapper extends Wrapper
   /**
    * @inheritdoc
    */
+  protected function getReturnTypeDeclaration(): string
+  {
+    return ': int';
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * @inheritdoc
+   */
   protected function writeResultHandler(): void
   {
     $routine_args = $this->getRoutineArgs();

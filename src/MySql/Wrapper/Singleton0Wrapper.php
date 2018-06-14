@@ -2,6 +2,8 @@
 
 namespace SetBased\Stratum\MySql\Wrapper;
 
+use SetBased\Stratum\MySql\Helper\DataTypeHelper;
+
 /**
  * Class for generating a wrapper method for a stored procedure that selects 0 or 1 row having a single column only.
  */
@@ -14,6 +16,19 @@ class Singleton0Wrapper extends Wrapper
   protected function getDocBlockReturnType(): string
   {
     return $this->routine['return'];
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * @inheritdoc
+   */
+  protected function getReturnTypeDeclaration(): string
+  {
+    $type = DataTypeHelper::phpTypeHintingToPhpTypeDeclaration($this->getDocBlockReturnType());
+
+    if ($type==='') return '';
+
+    return ': '.$type;
   }
 
   //--------------------------------------------------------------------------------------------------------------------

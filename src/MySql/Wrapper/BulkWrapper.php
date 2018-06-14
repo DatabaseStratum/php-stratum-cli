@@ -29,7 +29,16 @@ class BulkWrapper extends Wrapper
    */
   protected function getDocBlockReturnType(): string
   {
-    return '';
+    return 'void';
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * @inheritdoc
+   */
+  protected function getReturnTypeDeclaration(): string
+  {
+    return ': void';
   }
 
   //--------------------------------------------------------------------------------------------------------------------

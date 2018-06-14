@@ -31,7 +31,16 @@ class BulkInsertWrapper extends Wrapper
    */
   protected function getDocBlockReturnType(): string
   {
-    return '';
+    return 'void';
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * @inheritdoc
+   */
+  protected function getReturnTypeDeclaration(): string
+  {
+    return ': void';
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -40,7 +49,7 @@ class BulkInsertWrapper extends Wrapper
    */
   protected function getWrapperArgs(): string
   {
-    return '$rows';
+    return '?array $rows';
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -91,7 +100,6 @@ class BulkInsertWrapper extends Wrapper
     $this->codeStore->append('self::realQuery($sql);');
     $this->codeStore->append('}');
   }
-
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
