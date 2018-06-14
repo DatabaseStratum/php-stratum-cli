@@ -45,7 +45,7 @@ class DataTypeHelper
         break;
 
       case 'decimal':
-        $phpType = ($dataTypeInfo['numeric_scale']=='0') ? 'int' : 'float';
+        $phpType = ($dataTypeInfo['numeric_scale']=='0') ? 'int' : 'string';
         break;
 
       case 'float':
@@ -177,15 +177,15 @@ class DataTypeHelper
       case 'int':
       case 'bigint':
       case 'year':
-      case 'decimal':
       case 'float':
       case 'double':
         $ret = "'.self::quoteNum(".$expression.").'";
         break;
 
-      case 'varbinary':
       case 'binary':
       case 'char':
+      case 'decimal':
+      case 'varbinary':
       case 'varchar':
         $ret = "'.self::quoteString(".$expression.").'";
         break;
@@ -255,13 +255,13 @@ class DataTypeHelper
       case 'year':
         $ret = 'i';
         break;
-
-      case 'decimal':
       case 'float':
       case 'double':
         $ret = 'd';
         break;
 
+
+      case 'decimal':
       case 'time':
       case 'timestamp':
       case 'binary':
