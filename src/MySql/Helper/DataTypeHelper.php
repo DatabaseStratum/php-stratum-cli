@@ -177,9 +177,12 @@ class DataTypeHelper
       case 'int':
       case 'bigint':
       case 'year':
+        $ret = "'.self::quoteInt(".$expression.").'";
+        break;
+
       case 'float':
       case 'double':
-        $ret = "'.self::quoteNum(".$expression.").'";
+        $ret = "'.self::quoteFloat(".$expression.").'";
         break;
 
       case 'binary':
@@ -259,7 +262,6 @@ class DataTypeHelper
       case 'double':
         $ret = 'd';
         break;
-
 
       case 'decimal':
       case 'time':

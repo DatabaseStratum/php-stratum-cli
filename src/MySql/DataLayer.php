@@ -643,7 +643,7 @@ class DataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Executes a SELECT, SHOW, DESCRIBE or EXPLAIN SQL statement.
+   * Executes a query (i.e. SELECT, SHOW, DESCRIBE or EXPLAIN) with a result set.
    *
    * Wrapper around [mysqli::query](http://php.net/manual/mysqli.query.php), however on failure an exception is thrown.
    *
@@ -681,9 +681,9 @@ class DataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns a literal for a bit field that can be safely used in SQL statements.
+   * Returns a literal for a bit value that can be safely used in SQL statements.
    *
-   * @param string|null $bits The bit field.
+   * @param string|null $bits The bit value.
    *
    * @return string
    */
@@ -755,41 +755,37 @@ class DataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns a literal for a numerical field that can be safely used in SQL statements. Throws an exception if the value
-   * is not numeric.
+   * Returns a literal for an integer value that can be safely used in SQL statements.
    *
-   * To be more specific:
-   * <ul>
-   * <li>Returns the string representation of an int, float, and a string that is a number.
-   * <li>Returns 'NULL' if the value is null or ''.
-   * <li>Returns '0' if the value if false.
-   * <li>Returns '1' if the value is true.
-   * <li>Throws an exception in all other cases.
-   * </ul>
-   *
-   * @param mixed $value The numerical value.
+   * @param int|null $value The integer value.
    *
    * @return string
    */
-  public function quoteNum($value): string
+  public function quoteInt(?int $value): string
   {
-    if (is_numeric($value)) return (string)$value;
-    if ($value===null || $value==='') return 'NULL';
-    if ($value===false) return '0';
-    if ($value===true) return '1';
+    if ($value===null) return 'NULL';
 
-    throw new RuntimeException("Value '%s' is not a number.", (is_scalar($value) ? $value : gettype($value)));
+    return (string)$value;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns a literal for a string field that can be safely used in SQL statements.
+   * Returns a literal for a float value that can be safely used in SQL statements.
    *
-   * To be more specific:
-   * <ul>
-   * <li>Returns 'NULL' if the value is null, '', or false.
-   * <li>Otherwise returns the escaped value.
-   * </ul>
+   * @param float|null $value The float value.
+   *
+   * @return string
+   */
+  public function quoteFloat(?float $value): string
+  {
+    if ($value===null) return 'NULL';
+
+    return (string)$value;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns a literal for a string value that can be safely used in SQL statements.
    *
    * @param string|null $value The value.
    *

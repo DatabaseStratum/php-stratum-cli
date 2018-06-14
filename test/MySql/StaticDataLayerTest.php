@@ -2,7 +2,6 @@
 
 namespace SetBased\Stratum\Test\MySql;
 
-use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\MySql\StaticDataLayer;
 
 /**
@@ -10,76 +9,141 @@ use SetBased\Stratum\MySql\StaticDataLayer;
  */
 class StaticDataLayerTest extends DataLayerTestCase
 {
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Tests for quoteNum.
+   * Tests for quoteFloat.
    */
-  public function testQuoteNum1()
+  public function testQuoteFloat1()
   {
-    $value    = 123;
-    $expected = '123';
-    self::assertSame($expected, $this->dataLayer->quoteNum($value), var_export($value, true));
+    $value    = 123.123;
+    $expected = '123.123';
+    self::assertSame($expected, $this->dataLayer->quoteFloat($value), var_export($value, true));
 
-    $value    = '123';
-    $expected = '123';
-    self::assertSame($expected, $this->dataLayer->quoteNum($value), var_export($value, true));
+    $value    = '123.123';
+    $expected = '123.123';
+    self::assertSame($expected, $this->dataLayer->quoteFloat($value), var_export($value, true));
 
     $value    = 0;
     $expected = '0';
-    self::assertSame($expected, $this->dataLayer->quoteNum($value), var_export($value, true));
+    self::assertSame($expected, $this->dataLayer->quoteFloat($value), var_export($value, true));
 
     $value    = '0';
     $expected = '0';
-    self::assertSame($expected, $this->dataLayer->quoteNum($value), var_export($value, true));
-
-    $value    = '';
-    $expected = 'NULL';
-    self::assertSame($expected, $this->dataLayer->quoteNum($value), var_export($value, true));
+    self::assertSame($expected, $this->dataLayer->quoteFloat($value), var_export($value, true));
 
     $value    = null;
     $expected = 'NULL';
-    self::assertSame($expected, $this->dataLayer->quoteNum($value), var_export($value, true));
+    self::assertSame($expected, $this->dataLayer->quoteFloat($value), var_export($value, true));
 
     $value    = false;
     $expected = '0';
-    self::assertSame($expected, $this->dataLayer->quoteNum($value), var_export($value, true));
+    self::assertSame($expected, $this->dataLayer->quoteFloat($value), var_export($value, true));
 
     $value    = true;
     $expected = '1';
-    self::assertSame($expected, $this->dataLayer->quoteNum($value), var_export($value, true));
+    self::assertSame($expected, $this->dataLayer->quoteFloat($value), var_export($value, true));
+  }
+  
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Tests for quoteFloat.
+   *
+   * @expectedException \TypeError
+   */
+  public function testQuoteFloat2()
+  {
+    $this->dataLayer->quoteFloat([]);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Tests for quoteNum.
+   * Tests for quoteFloat.
    *
-   * @expectedException RuntimeException
+   * @expectedException \TypeError
    */
-  public function testQuoteNum2()
+  public function testQuoteFloat3()
   {
-    $this->dataLayer->quoteNum([]);
+    $this->dataLayer->quoteFloat(['1', '2']);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Tests for quoteNum.
+   * Tests for quoteFloat.
    *
-   * @expectedException RuntimeException
+   * @expectedException \TypeError
    */
-  public function testQuoteNum3()
+  public function testQuoteFloat4()
   {
-    $this->dataLayer->quoteNum(['1', '2']);
+    $this->dataLayer->quoteFloat(new StaticDataLayer());
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Tests for quoteNum.
-   *
-   * @expectedException RuntimeException
+   * Tests for quoteInt.
    */
-  public function testQuoteNum4()
+  public function testQuoteInt1()
   {
-    $this->dataLayer->quoteNum(new StaticDataLayer());
+    $value    = 123;
+    $expected = '123';
+    self::assertSame($expected, $this->dataLayer->quoteInt($value), var_export($value, true));
+
+    $value    = '123';
+    $expected = '123';
+    self::assertSame($expected, $this->dataLayer->quoteInt($value), var_export($value, true));
+
+    $value    = 0;
+    $expected = '0';
+    self::assertSame($expected, $this->dataLayer->quoteInt($value), var_export($value, true));
+
+    $value    = '0';
+    $expected = '0';
+    self::assertSame($expected, $this->dataLayer->quoteInt($value), var_export($value, true));
+
+    $value    = null;
+    $expected = 'NULL';
+    self::assertSame($expected, $this->dataLayer->quoteInt($value), var_export($value, true));
+
+    $value    = false;
+    $expected = '0';
+    self::assertSame($expected, $this->dataLayer->quoteInt($value), var_export($value, true));
+
+    $value    = true;
+    $expected = '1';
+    self::assertSame($expected, $this->dataLayer->quoteInt($value), var_export($value, true));
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Tests for quoteInt.
+   *
+   * @expectedException \TypeError
+   */
+  public function testQuoteInt2()
+  {
+    $this->dataLayer->quoteInt([]);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Tests for quoteInt.
+   *
+   * @expectedException \TypeError
+   */
+  public function testQuoteInt3()
+  {
+    $this->dataLayer->quoteInt(['1', '2']);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Tests for quoteInt.
+   *
+   * @expectedException \TypeError
+   */
+  public function testQuoteInt4()
+  {
+    $this->dataLayer->quoteInt(new StaticDataLayer());
   }
 
   //--------------------------------------------------------------------------------------------------------------------

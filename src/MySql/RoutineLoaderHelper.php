@@ -879,7 +879,7 @@ class RoutineLoaderHelper
 
     if (!($this->returnType=='mixed' || $this->returnType=='bool' || empty($diff)))
     {
-      throw new RoutineLoaderException("Return type must be 'mixed', 'bool', or a combination of int, double (or float), string, and null");
+      throw new RoutineLoaderException("Return type must be 'mixed', 'bool', or a combination of int, float (or double), string, and null");
     }
   }
 
