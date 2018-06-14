@@ -44,6 +44,10 @@ class QuoteWithLobTest extends DataLayerTestCase
                                   ($column=='set') ? $value : null);
       $this->assertTrue(false, "column: $column, value: $value");
     }
+    catch (\TypeError $e)
+    {
+      $this->assertTrue(true);
+    }
     catch (RuntimeException $e)
     {
       $this->assertTrue(true);

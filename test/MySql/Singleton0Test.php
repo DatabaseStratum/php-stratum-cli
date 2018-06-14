@@ -24,7 +24,7 @@ class Singleton0Test extends DataLayerTestCase
   public function test02()
   {
     $value = $this->dataLayer->tstTestSingleton0a(1);
-    $this->assertInternalType('string', $value);
+    $this->assertInternalType('int', $value);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
