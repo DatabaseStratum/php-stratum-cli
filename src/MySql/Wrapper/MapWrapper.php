@@ -34,7 +34,7 @@ class MapWrapper extends Wrapper
   {
     $routine_args = $this->getRoutineArgs();
 
-    $this->codeStore->append('$result = self::query(\'CALL '.$this->routine['routine_name'].'('.$routine_args.')\');');
+    $this->codeStore->append('$result = self::query(\'call '.$this->routine['routine_name'].'('.$routine_args.')\');');
     $this->codeStore->append('$ret = [];');
     $this->codeStore->append('while($row = $result->fetch_array(MYSQLI_NUM)) $ret[$row[0]] = $row[1];');
     $this->codeStore->append('$result->free();');

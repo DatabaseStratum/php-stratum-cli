@@ -96,6 +96,7 @@ class StaticDataLayer
   protected static $queryLog = [];
 
   //--------------------------------------------------------------------------------------------------------------------
+
   /**
    * Starts a transaction.
    *
@@ -691,12 +692,40 @@ class StaticDataLayer
   {
     if ($bits===null || $bits==='')
     {
-      return 'NULL';
+      return 'null';
     }
-    else
-    {
-      return "b'".self::$mysqli->real_escape_string($bits)."'";
-    }
+
+    return "b'".self::$mysqli->real_escape_string($bits)."'";
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns a literal for a float value that can be safely used in SQL statements.
+   *
+   * @param float|null $value The float value.
+   *
+   * @return string
+   */
+  public static function quoteFloat(?float $value): string
+  {
+    if ($value===null) return 'null';
+
+    return (string)$value;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns a literal for an integer value that can be safely used in SQL statements.
+   *
+   * @param int|null $value The integer value.
+   *
+   * @return string
+   */
+  public static function quoteInt(?int $value): string
+  {
+    if ($value===null) return 'null';
+
+    return (string)$value;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -715,72 +744,40 @@ class StaticDataLayer
   {
     if ($list===null || $list===false || $list==='' || $list===[])
     {
-      return 'NULL';
+      return 'null';
+    }
+
+    $ret = '';
+    if (is_scalar($list))
+    {
+      $list = str_getcsv($list, $delimiter, $enclosure, $escape);
+    }
+    elseif (is_array($list))
+    {
+      // Nothing to do.
+      ;
     }
     else
     {
-      $ret = '';
-      if (is_scalar($list))
-      {
-        $list = str_getcsv($list, $delimiter, $enclosure, $escape);
-      }
-      elseif (is_array($list))
-      {
-        // Nothing to do.
-        ;
-      }
-      else
-      {
-        throw new RuntimeException("Unexpected parameter type '%s'. Array or scalar expected.", gettype($list));
-      }
-
-      foreach ($list as $number)
-      {
-        if ($list===null || $list===false || $list==='')
-        {
-          throw new RuntimeException('Empty values are not allowed.');
-        }
-        if (!is_numeric($number))
-        {
-          throw new RuntimeException("Value '%s' is not a number.", (is_scalar($number)) ? $number : gettype($number));
-        }
-
-        if ($ret) $ret .= ',';
-        $ret .= $number;
-      }
-
-      return self::quoteString($ret);
+      throw new RuntimeException("Unexpected parameter type '%s'. Array or scalar expected.", gettype($list));
     }
-  }
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns a literal for an integer value that can be safely used in SQL statements.
-   *
-   * @param int|null $value The integer value.
-   *
-   * @return string
-   */
-  public static function quoteInt(?int $value): string
-  {
-    if ($value===null) return 'NULL';
+    foreach ($list as $number)
+    {
+      if ($list===null || $list===false || $list==='')
+      {
+        throw new RuntimeException('Empty values are not allowed.');
+      }
+      if (!is_numeric($number))
+      {
+        throw new RuntimeException("Value '%s' is not a number.", (is_scalar($number)) ? $number : gettype($number));
+      }
 
-    return (string)$value;
-  }
+      if ($ret) $ret .= ',';
+      $ret .= $number;
+    }
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns a literal for a float value that can be safely used in SQL statements.
-   *
-   * @param float|null $value The float value.
-   *
-   * @return string
-   */
-  public static function quoteFloat(?float $value): string
-  {
-    if ($value===null) return 'NULL';
-
-    return (string)$value;
+    return self::quoteString($ret);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -793,7 +790,7 @@ class StaticDataLayer
    */
   public static function quoteString(?string $value): string
   {
-    if ($value===null || $value==='') return 'NULL';
+    if ($value===null || $value==='') return 'null';
 
     return "'".self::$mysqli->real_escape_string($value)."'";
   }
@@ -980,8 +977,8 @@ class StaticDataLayer
   /**
    * Helper method for method executeTable. Shows table cell with data.
    *
-   * @param array  $column The metadata of the column.
-   * @param mixed  $value  The value of the table cell.
+   * @param array $column The metadata of the column.
+   * @param mixed $value  The value of the table cell.
    */
   private static function executeTableShowTableColumn(array $column, $value): void
   {

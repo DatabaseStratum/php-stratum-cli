@@ -420,8 +420,8 @@ order by ORDINAL_POSITION',
   public static function getTablePrimaryKeys(string $schemaName, string $tableName): array
   {
     $sql = sprintf('
-SHOW INDEX FROM %s.%s
-WHERE Key_name = \'PRIMARY\'',
+show index from %s.%s
+where Key_name = \'PRIMARY\'',
                    $schemaName,
                    $tableName);
 

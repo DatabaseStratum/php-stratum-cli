@@ -32,7 +32,7 @@ class Row0Wrapper extends Wrapper
   protected function writeResultHandler(): void
   {
     $routine_args = $this->getRoutineArgs();
-    $this->codeStore->append('return self::executeRow0(\'CALL '.$this->routine['routine_name'].'('.$routine_args.')\');');
+    $this->codeStore->append('return self::executeRow0(\'call '.$this->routine['routine_name'].'('.$routine_args.')\');');
   }
 
   //--------------------------------------------------------------------------------------------------------------------

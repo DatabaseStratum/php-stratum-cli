@@ -19,7 +19,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstMagicConstant01(): string
   {
-    return $this->executeSingleton1('CALL tst_magic_constant01()');
+    return $this->executeSingleton1('call tst_magic_constant01()');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -30,7 +30,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstMagicConstant02(): int
   {
-    return $this->executeSingleton1('CALL tst_magic_constant02()');
+    return $this->executeSingleton1('call tst_magic_constant02()');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -41,7 +41,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstMagicConstant03(): string
   {
-    return $this->executeSingleton1('CALL tst_magic_constant03()');
+    return $this->executeSingleton1('call tst_magic_constant03()');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -52,7 +52,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstMagicConstant04(): string
   {
-    return $this->executeSingleton1('CALL tst_magic_constant04()');
+    return $this->executeSingleton1('call tst_magic_constant04()');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -63,7 +63,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstMagicConstant05(): string
   {
-    return $this->executeSingleton1('CALL tst_magic_constant05()');
+    return $this->executeSingleton1('call tst_magic_constant05()');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -80,7 +80,7 @@ class TestDataLayer extends DataLayer
    *                         mediumint(9)
    * @param int    $pParam04 Test parameter 04.
    *                         bigint(20)
-   * @param float  $pParam05 Test parameter 05.
+   * @param string $pParam05 Test parameter 05.
    *                         decimal(10,2)
    * @param float  $pParam06 Test parameter 06.
    *                         float
@@ -113,9 +113,9 @@ class TestDataLayer extends DataLayer
    *
    * @return int
    */
-  public function tstTest01(?int $pParam00, ?int $pParam01, ?int $pParam02, ?int $pParam03, ?int $pParam04, ?float $pParam05, ?float $pParam06, ?float $pParam07, ?int $pParam08, ?string $pParam09, ?string $pParam10, ?string $pParam11, ?string $pParam12, ?int $pParam13, ?string $pParam14, ?string $pParam15, ?string $pParam16, ?string $pParam17, ?string $pParam26, ?string $pParam27): int
+  public function tstTest01(?int $pParam00, ?int $pParam01, ?int $pParam02, ?int $pParam03, ?int $pParam04, ?string $pParam05, ?float $pParam06, ?float $pParam07, ?int $pParam08, ?string $pParam09, ?string $pParam10, ?string $pParam11, ?string $pParam12, ?int $pParam13, ?string $pParam14, ?string $pParam15, ?string $pParam16, ?string $pParam17, ?string $pParam26, ?string $pParam27): int
   {
-    return $this->executeNone('CALL tst_test01('.$this->quoteNum($pParam00).','.$this->quoteNum($pParam01).','.$this->quoteNum($pParam02).','.$this->quoteNum($pParam03).','.$this->quoteNum($pParam04).','.$this->quoteNum($pParam05).','.$this->quoteNum($pParam06).','.$this->quoteNum($pParam07).','.$this->quoteBit($pParam08).','.$this->quoteString($pParam09).','.$this->quoteString($pParam10).','.$this->quoteString($pParam11).','.$this->quoteString($pParam12).','.$this->quoteNum($pParam13).','.$this->quoteString($pParam14).','.$this->quoteString($pParam15).','.$this->quoteString($pParam16).','.$this->quoteString($pParam17).','.$this->quoteString($pParam26).','.$this->quoteString($pParam27).')');
+    return $this->executeNone('call tst_test01('.$this->quoteInt($pParam00).','.$this->quoteInt($pParam01).','.$this->quoteInt($pParam02).','.$this->quoteInt($pParam03).','.$this->quoteInt($pParam04).','.$this->quoteString($pParam05).','.$this->quoteFloat($pParam06).','.$this->quoteFloat($pParam07).','.$this->quoteBit($pParam08).','.$this->quoteString($pParam09).','.$this->quoteString($pParam10).','.$this->quoteString($pParam11).','.$this->quoteString($pParam12).','.$this->quoteInt($pParam13).','.$this->quoteString($pParam14).','.$this->quoteString($pParam15).','.$this->quoteString($pParam16).','.$this->quoteString($pParam17).','.$this->quoteString($pParam26).','.$this->quoteString($pParam27).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -132,7 +132,7 @@ class TestDataLayer extends DataLayer
    *                         mediumint(9)
    * @param int    $pParam04 Test parameter 04.
    *                         bigint(20)
-   * @param float  $pParam05 Test parameter 05.
+   * @param string $pParam05 Test parameter 05.
    *                         decimal(10,2)
    * @param float  $pParam06 Test parameter 06.
    *                         float
@@ -181,9 +181,9 @@ class TestDataLayer extends DataLayer
    *
    * @return int
    */
-  public function tstTest02(?int $pParam00, ?int $pParam01, ?int $pParam02, ?int $pParam03, ?int $pParam04, ?float $pParam05, ?float $pParam06, ?float $pParam07, ?int $pParam08, ?string $pParam09, ?string $pParam10, ?string $pParam11, ?string $pParam12, ?int $pParam13, ?string $pParam14, ?string $pParam15, ?string $pParam16, ?string $pParam17, ?string $pParam18, ?string $pParam19, ?string $pParam20, ?string $pParam21, ?string $pParam22, ?string $pParam23, ?string $pParam24, ?string $pParam25, ?string $pParam26, ?string $pParam27)
+  public function tstTest02(?int $pParam00, ?int $pParam01, ?int $pParam02, ?int $pParam03, ?int $pParam04, ?string $pParam05, ?float $pParam06, ?float $pParam07, ?int $pParam08, ?string $pParam09, ?string $pParam10, ?string $pParam11, ?string $pParam12, ?int $pParam13, ?string $pParam14, ?string $pParam15, ?string $pParam16, ?string $pParam17, ?string $pParam18, ?string $pParam19, ?string $pParam20, ?string $pParam21, ?string $pParam22, ?string $pParam23, ?string $pParam24, ?string $pParam25, ?string $pParam26, ?string $pParam27)
   {
-    $query = 'CALL tst_test02('.$this->quoteNum($pParam00).','.$this->quoteNum($pParam01).','.$this->quoteNum($pParam02).','.$this->quoteNum($pParam03).','.$this->quoteNum($pParam04).','.$this->quoteNum($pParam05).','.$this->quoteNum($pParam06).','.$this->quoteNum($pParam07).','.$this->quoteBit($pParam08).','.$this->quoteString($pParam09).','.$this->quoteString($pParam10).','.$this->quoteString($pParam11).','.$this->quoteString($pParam12).','.$this->quoteNum($pParam13).','.$this->quoteString($pParam14).','.$this->quoteString($pParam15).','.$this->quoteString($pParam16).','.$this->quoteString($pParam17).',?,?,?,?,?,?,?,?,'.$this->quoteString($pParam26).','.$this->quoteString($pParam27).')';
+    $query = 'call tst_test02('.$this->quoteInt($pParam00).','.$this->quoteInt($pParam01).','.$this->quoteInt($pParam02).','.$this->quoteInt($pParam03).','.$this->quoteInt($pParam04).','.$this->quoteString($pParam05).','.$this->quoteFloat($pParam06).','.$this->quoteFloat($pParam07).','.$this->quoteBit($pParam08).','.$this->quoteString($pParam09).','.$this->quoteString($pParam10).','.$this->quoteString($pParam11).','.$this->quoteString($pParam12).','.$this->quoteInt($pParam13).','.$this->quoteString($pParam14).','.$this->quoteString($pParam15).','.$this->quoteString($pParam16).','.$this->quoteString($pParam17).',?,?,?,?,?,?,?,?,'.$this->quoteString($pParam26).','.$this->quoteString($pParam27).')';
     $stmt  = $this->mysqli->prepare($query);
     if (!$stmt) $this->mySqlError('mysqli::prepare');
 
@@ -299,15 +299,15 @@ class TestDataLayer extends DataLayer
    */
   public function tstTestBulkInsert01(?array $rows): void
   {
-    $this->realQuery('CALL tst_test_bulk_insert01()');
+    $this->realQuery('call tst_test_bulk_insert01()');
     if (is_array($rows) && !empty($rows))
     {
       $sql = "INSERT INTO `TST_TEMPO`(`tst_col1`,`tst_col2`,`tst_col3`,`tst_col4`,`tst_col5`,`tst_col6`,`tst_col7`,`tst_col8`,`tst_col9`,`tst_col10`,`tst_col11`,`tst_col12`,`tst_col13`,`tst_col14`,`tst_col15`,`tst_col16`,`tst_col17`,`tst_col18`,`tst_col19`,`tst_col20`)";
       $first = true;
       foreach($rows as $row)
       {
-        if ($first) $sql .=' values('.$this->quoteNum($row['field1']).','.$this->quoteNum($row['field2']).','.$this->quoteNum($row['field3']).','.$this->quoteNum($row['field4']).','.$this->quoteNum($row['field5']).','.$this->quoteNum($row['field6']).','.$this->quoteNum($row['field7']).','.$this->quoteNum($row['field8']).','.$this->quoteNum($row['field9']).','.$this->quoteString($row['field10']).','.$this->quoteString($row['field11']).','.$this->quoteString($row['field12']).','.$this->quoteString($row['field13']).','.$this->quoteString($row['field14']).','.$this->quoteString($row['field15']).','.$this->quoteString($row['field16']).','.$this->quoteString($row['field17']).','.$this->quoteString($row['field18']).','.$this->quoteString($row['field19']).','.$this->quoteBit($row['field20']).')';
-        else        $sql .=',      ('.$this->quoteNum($row['field1']).','.$this->quoteNum($row['field2']).','.$this->quoteNum($row['field3']).','.$this->quoteNum($row['field4']).','.$this->quoteNum($row['field5']).','.$this->quoteNum($row['field6']).','.$this->quoteNum($row['field7']).','.$this->quoteNum($row['field8']).','.$this->quoteNum($row['field9']).','.$this->quoteString($row['field10']).','.$this->quoteString($row['field11']).','.$this->quoteString($row['field12']).','.$this->quoteString($row['field13']).','.$this->quoteString($row['field14']).','.$this->quoteString($row['field15']).','.$this->quoteString($row['field16']).','.$this->quoteString($row['field17']).','.$this->quoteString($row['field18']).','.$this->quoteString($row['field19']).','.$this->quoteBit($row['field20']).')';
+        if ($first) $sql .=' values('.$this->quoteInt($row['field1']).','.$this->quoteInt($row['field2']).','.$this->quoteInt($row['field3']).','.$this->quoteInt($row['field4']).','.$this->quoteInt($row['field5']).','.$this->quoteInt($row['field6']).','.$this->quoteString($row['field7']).','.$this->quoteFloat($row['field8']).','.$this->quoteFloat($row['field9']).','.$this->quoteString($row['field10']).','.$this->quoteString($row['field11']).','.$this->quoteString($row['field12']).','.$this->quoteString($row['field13']).','.$this->quoteString($row['field14']).','.$this->quoteString($row['field15']).','.$this->quoteString($row['field16']).','.$this->quoteString($row['field17']).','.$this->quoteString($row['field18']).','.$this->quoteString($row['field19']).','.$this->quoteBit($row['field20']).')';
+        else        $sql .=',      ('.$this->quoteInt($row['field1']).','.$this->quoteInt($row['field2']).','.$this->quoteInt($row['field3']).','.$this->quoteInt($row['field4']).','.$this->quoteInt($row['field5']).','.$this->quoteInt($row['field6']).','.$this->quoteString($row['field7']).','.$this->quoteFloat($row['field8']).','.$this->quoteFloat($row['field9']).','.$this->quoteString($row['field10']).','.$this->quoteString($row['field11']).','.$this->quoteString($row['field12']).','.$this->quoteString($row['field13']).','.$this->quoteString($row['field14']).','.$this->quoteString($row['field15']).','.$this->quoteString($row['field16']).','.$this->quoteString($row['field17']).','.$this->quoteString($row['field18']).','.$this->quoteString($row['field19']).','.$this->quoteBit($row['field20']).')';
         $first = false;
       }
       $this->realQuery($sql);
@@ -324,15 +324,15 @@ class TestDataLayer extends DataLayer
    */
   public function tstTestBulkInsert02(?array $rows): void
   {
-    $this->realQuery('CALL tst_test_bulk_insert02()');
+    $this->realQuery('call tst_test_bulk_insert02()');
     if (is_array($rows) && !empty($rows))
     {
       $sql = "INSERT INTO `TST_TEMPO`(`tst_col1`,`tst_col4`,`tst_col5`)";
       $first = true;
       foreach($rows as $row)
       {
-        if ($first) $sql .=' values('.$this->quoteNum($row['field1']).','.$this->quoteNum($row['field4']).','.$this->quoteNum($row['field5']).')';
-        else        $sql .=',      ('.$this->quoteNum($row['field1']).','.$this->quoteNum($row['field4']).','.$this->quoteNum($row['field5']).')';
+        if ($first) $sql .=' values('.$this->quoteInt($row['field1']).','.$this->quoteInt($row['field4']).','.$this->quoteInt($row['field5']).')';
+        else        $sql .=',      ('.$this->quoteInt($row['field1']).','.$this->quoteInt($row['field4']).','.$this->quoteInt($row['field5']).')';
         $first = false;
       }
       $this->realQuery($sql);
@@ -352,7 +352,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstTestFunction(?int $pA, ?int $pB): ?int
   {
-    return $this->executeSingleton0('select tst_test_function('.$this->quoteNum($pA).','.$this->quoteNum($pB).')');
+    return $this->executeSingleton0('select tst_test_function('.$this->quoteInt($pA).','.$this->quoteInt($pB).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -366,7 +366,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstTestFunctionBool1(?int $pRet): bool
   {
-    return !empty($this->executeSingleton0('select tst_test_function_bool1('.$this->quoteNum($pRet).')'));
+    return !empty($this->executeSingleton0('select tst_test_function_bool1('.$this->quoteInt($pRet).')'));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -391,7 +391,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstTestIllegalQuery(): array
   {
-    return $this->executeRows('CALL tst_test_illegal_query()');
+    return $this->executeRows('call tst_test_illegal_query()');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -404,7 +404,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstTestListOfInt($pIds): array
   {
-    $result = $this->query('CALL tst_test_list_of_int('.$this->quoteListOfInt($pIds, ',', '\"', '\\').')');
+    $result = $this->query('call tst_test_list_of_int('.$this->quoteListOfInt($pIds, ',', '\"', '\\').')');
     $ret = [];
     while($row = $result->fetch_array(MYSQLI_ASSOC)) $ret[$row['tst_id']] = $row;
     $result->free();
@@ -421,7 +421,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstTestLog(): int
   {
-    return $this->executeLog('CALL tst_test_log()');
+    return $this->executeLog('call tst_test_log()');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -435,7 +435,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstTestMap1(?int $pCount): array
   {
-    $result = $this->query('CALL tst_test_map1('.$this->quoteNum($pCount).')');
+    $result = $this->query('call tst_test_map1('.$this->quoteInt($pCount).')');
     $ret = [];
     while($row = $result->fetch_array(MYSQLI_NUM)) $ret[$row[0]] = $row[1];
     $result->free();
@@ -457,7 +457,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstTestMap1WithLob(?int $pCount, ?string $pBlob)
   {
-    $query = 'CALL tst_test_map1_with_lob('.$this->quoteNum($pCount).',?)';
+    $query = 'call tst_test_map1_with_lob('.$this->quoteInt($pCount).',?)';
     $stmt  = $this->mysqli->prepare($query);
     if (!$stmt) $this->mySqlError('mysqli::prepare');
 
@@ -514,7 +514,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstTestMaxAllowedPacket(?string $pTmpBlob)
   {
-    $query = 'CALL tst_test_max_allowed_packet(?)';
+    $query = 'call tst_test_max_allowed_packet(?)';
     $stmt  = $this->mysqli->prepare($query);
     if (!$stmt) $this->mySqlError('mysqli::prepare');
 
@@ -579,7 +579,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstTestNoDocBlock(): array
   {
-    return $this->executeRow1('CALL tst_test_no_doc_block()');
+    return $this->executeRow1('call tst_test_no_doc_block()');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -593,7 +593,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstTestNone(?int $pCount): int
   {
-    return $this->executeNone('CALL tst_test_none('.$this->quoteNum($pCount).')');
+    return $this->executeNone('call tst_test_none('.$this->quoteInt($pCount).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -609,7 +609,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstTestNoneWithLob(?int $pCount, ?string $pBlob)
   {
-    $query = 'CALL tst_test_none_with_lob('.$this->quoteNum($pCount).',?)';
+    $query = 'call tst_test_none_with_lob('.$this->quoteInt($pCount).',?)';
     $stmt  = $this->mysqli->prepare($query);
     if (!$stmt) $this->mySqlError('mysqli::prepare');
 
@@ -656,16 +656,16 @@ class TestDataLayer extends DataLayer
   /**
    * Test for conversion of MySQL types to PHP types.
    *
-   * @param float $pPhpType1 Must be converted to PHP type float in the TestDataLayer.
-   *                         decimal(10,2)
-   * @param int   $pPhpType2 Must be converted to PHP type int in the TestDataLayer.
-   *                         decimal(10,0)
+   * @param string $pPhpType1 Must be converted to PHP type float in the TestDataLayer.
+   *                          decimal(10,2)
+   * @param int    $pPhpType2 Must be converted to PHP type int in the TestDataLayer.
+   *                          decimal(10,0)
    *
    * @return int
    */
-  public function tstTestParameterType(?float $pPhpType1, ?int $pPhpType2): int
+  public function tstTestParameterType(?string $pPhpType1, ?int $pPhpType2): int
   {
-    return $this->executeNone('CALL tst_test_parameter_type('.$this->quoteNum($pPhpType1).','.$this->quoteNum($pPhpType2).')');
+    return $this->executeNone('call tst_test_parameter_type('.$this->quoteString($pPhpType1).','.$this->quoteString($pPhpType2).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -679,7 +679,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstTestRow0a(?int $pCount): ?array
   {
-    return $this->executeRow0('CALL tst_test_row0a('.$this->quoteNum($pCount).')');
+    return $this->executeRow0('call tst_test_row0a('.$this->quoteInt($pCount).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -695,7 +695,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstTestRow0aWithLob(?int $pCount, ?string $pBlob)
   {
-    $query = 'CALL tst_test_row0a_with_lob('.$this->quoteNum($pCount).',?)';
+    $query = 'call tst_test_row0a_with_lob('.$this->quoteInt($pCount).',?)';
     $stmt  = $this->mysqli->prepare($query);
     if (!$stmt) $this->mySqlError('mysqli::prepare');
 
@@ -764,7 +764,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstTestRow1a(?int $pCount): array
   {
-    return $this->executeRow1('CALL tst_test_row1a('.$this->quoteNum($pCount).')');
+    return $this->executeRow1('call tst_test_row1a('.$this->quoteInt($pCount).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -780,7 +780,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstTestRow1aWithLob(?int $pCount, ?string $pBlob)
   {
-    $query = 'CALL tst_test_row1a_with_lob('.$this->quoteNum($pCount).',?)';
+    $query = 'call tst_test_row1a_with_lob('.$this->quoteInt($pCount).',?)';
     $stmt  = $this->mysqli->prepare($query);
     if (!$stmt) $this->mySqlError('mysqli::prepare');
 
@@ -849,7 +849,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstTestRows1(?int $pCount): array
   {
-    return $this->executeRows('CALL tst_test_rows1('.$this->quoteNum($pCount).')');
+    return $this->executeRows('call tst_test_rows1('.$this->quoteInt($pCount).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -865,7 +865,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstTestRows1WithLob(?int $pCount, ?string $pBlob)
   {
-    $query = 'CALL tst_test_rows1_with_lob('.$this->quoteNum($pCount).',?)';
+    $query = 'call tst_test_rows1_with_lob('.$this->quoteInt($pCount).',?)';
     $stmt  = $this->mysqli->prepare($query);
     if (!$stmt) $this->mySqlError('mysqli::prepare');
 
@@ -933,7 +933,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstTestRowsWithIndex1(?int $pCount): array
   {
-    $result = $this->query('CALL tst_test_rows_with_index1('.$this->quoteNum($pCount).')');
+    $result = $this->query('call tst_test_rows_with_index1('.$this->quoteInt($pCount).')');
     $ret = [];
     while($row = $result->fetch_array(MYSQLI_ASSOC)) $ret[$row['tst_c01']][$row['tst_c02']][] = $row;
     $result->free();
@@ -955,7 +955,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstTestRowsWithIndex1WithLob(?int $pCount, ?string $pBlob)
   {
-    $query = 'CALL tst_test_rows_with_index1_with_lob('.$this->quoteNum($pCount).',?)';
+    $query = 'call tst_test_rows_with_index1_with_lob('.$this->quoteInt($pCount).',?)';
     $stmt  = $this->mysqli->prepare($query);
     if (!$stmt) $this->mySqlError('mysqli::prepare');
 
@@ -1023,7 +1023,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstTestRowsWithKey1(?int $pCount): array
   {
-    $result = $this->query('CALL tst_test_rows_with_key1('.$this->quoteNum($pCount).')');
+    $result = $this->query('call tst_test_rows_with_key1('.$this->quoteInt($pCount).')');
     $ret = [];
     while($row = $result->fetch_array(MYSQLI_ASSOC)) $ret[$row['tst_c01']][$row['tst_c02']][$row['tst_c03']] = $row;
     $result->free();
@@ -1045,7 +1045,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstTestRowsWithKey1WithLob(?int $pCount, ?string $pBlob)
   {
-    $query = 'CALL tst_test_rows_with_key1_with_lob('.$this->quoteNum($pCount).',?)';
+    $query = 'call tst_test_rows_with_key1_with_lob('.$this->quoteInt($pCount).',?)';
     $stmt  = $this->mysqli->prepare($query);
     if (!$stmt) $this->mySqlError('mysqli::prepare');
 
@@ -1113,7 +1113,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstTestSingleton0a(?int $pCount): ?int
   {
-    return $this->executeSingleton0('CALL tst_test_singleton0a('.$this->quoteNum($pCount).')');
+    return $this->executeSingleton0('call tst_test_singleton0a('.$this->quoteInt($pCount).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -1129,7 +1129,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstTestSingleton0aWithLob(?int $pCount, ?string $pBlob)
   {
-    $query = 'CALL tst_test_singleton0a_with_lob('.$this->quoteNum($pCount).',?)';
+    $query = 'call tst_test_singleton0a_with_lob('.$this->quoteInt($pCount).',?)';
     $stmt  = $this->mysqli->prepare($query);
     if (!$stmt) $this->mySqlError('mysqli::prepare');
 
@@ -1200,7 +1200,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstTestSingleton0b(?int $pCount, ?int $pValue): bool
   {
-    return !empty($this->executeSingleton0('CALL tst_test_singleton0b('.$this->quoteNum($pCount).','.$this->quoteNum($pValue).')'));
+    return !empty($this->executeSingleton0('call tst_test_singleton0b('.$this->quoteInt($pCount).','.$this->quoteInt($pValue).')'));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -1218,7 +1218,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstTestSingleton0bWithLob(?int $pCount, ?int $pValue, ?string $pBlob)
   {
-    $query = 'CALL tst_test_singleton0b_with_lob('.$this->quoteNum($pCount).','.$this->quoteNum($pValue).',?)';
+    $query = 'call tst_test_singleton0b_with_lob('.$this->quoteInt($pCount).','.$this->quoteInt($pValue).',?)';
     $stmt  = $this->mysqli->prepare($query);
     if (!$stmt) $this->mySqlError('mysqli::prepare');
 
@@ -1287,7 +1287,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstTestSingleton1a(?int $pCount): int
   {
-    return $this->executeSingleton1('CALL tst_test_singleton1a('.$this->quoteNum($pCount).')');
+    return $this->executeSingleton1('call tst_test_singleton1a('.$this->quoteInt($pCount).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -1303,7 +1303,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstTestSingleton1aWithLob(?int $pCount, ?string $pBlob)
   {
-    $query = 'CALL tst_test_singleton1a_with_lob('.$this->quoteNum($pCount).',?)';
+    $query = 'call tst_test_singleton1a_with_lob('.$this->quoteInt($pCount).',?)';
     $stmt  = $this->mysqli->prepare($query);
     if (!$stmt) $this->mySqlError('mysqli::prepare');
 
@@ -1374,7 +1374,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstTestSingleton1b(?int $pCount, ?int $pValue): bool
   {
-    return !empty($this->executeSingleton1('CALL tst_test_singleton1b('.$this->quoteNum($pCount).','.$this->quoteNum($pValue).')'));
+    return !empty($this->executeSingleton1('call tst_test_singleton1b('.$this->quoteInt($pCount).','.$this->quoteInt($pValue).')'));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -1392,7 +1392,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstTestSingleton1bWithLob(?int $pCount, ?int $pValue, ?string $pBlob)
   {
-    $query = 'CALL tst_test_singleton1b_with_lob('.$this->quoteNum($pCount).','.$this->quoteNum($pValue).',?)';
+    $query = 'call tst_test_singleton1b_with_lob('.$this->quoteInt($pCount).','.$this->quoteInt($pValue).',?)';
     $stmt  = $this->mysqli->prepare($query);
     if (!$stmt) $this->mySqlError('mysqli::prepare');
 
@@ -1458,7 +1458,7 @@ class TestDataLayer extends DataLayer
    */
   public function tstTestTable(): int
   {
-    return $this->executeTable('CALL tst_test_table()');
+    return $this->executeTable('call tst_test_table()');
   }
 
   //--------------------------------------------------------------------------------------------------------------------

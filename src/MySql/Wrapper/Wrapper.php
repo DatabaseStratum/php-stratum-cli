@@ -224,7 +224,7 @@ abstract class Wrapper
     $this->generatePhpDoc();
     $this->codeStore->append('public static function '.$method_name.'('.$wrapper_args.')');
     $this->codeStore->append('{');
-    $this->codeStore->append('$query = \'CALL '.$this->routine['routine_name'].'('.$routine_args.')\';');
+    $this->codeStore->append('$query = \'call '.$this->routine['routine_name'].'('.$routine_args.')\';');
     $this->codeStore->append('$stmt  = self::$mysqli->prepare($query);');
     $this->codeStore->append('if (!$stmt) self::mySqlError(\'mysqli::prepare\');');
     $this->codeStore->append('');

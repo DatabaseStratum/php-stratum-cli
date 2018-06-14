@@ -33,7 +33,7 @@ class StaticDataLayerTest extends DataLayerTestCase
     self::assertSame($expected, $this->dataLayer->quoteFloat($value), var_export($value, true));
 
     $value    = null;
-    $expected = 'NULL';
+    $expected = 'null';
     self::assertSame($expected, $this->dataLayer->quoteFloat($value), var_export($value, true));
 
     $value    = false;
@@ -101,7 +101,7 @@ class StaticDataLayerTest extends DataLayerTestCase
     self::assertSame($expected, $this->dataLayer->quoteInt($value), var_export($value, true));
 
     $value    = null;
-    $expected = 'NULL';
+    $expected = 'null';
     self::assertSame($expected, $this->dataLayer->quoteInt($value), var_export($value, true));
 
     $value    = false;
@@ -169,15 +169,15 @@ class StaticDataLayerTest extends DataLayerTestCase
     self::assertSame($expected, $this->dataLayer->quoteString($value), var_export($value, true));
 
     $value    = '';
-    $expected = 'NULL';
+    $expected = 'null';
     self::assertSame($expected, $this->dataLayer->quoteString($value), var_export($value, true));
 
     $value    = null;
-    $expected = 'NULL';
+    $expected = 'null';
     self::assertSame($expected, $this->dataLayer->quoteString($value), var_export($value, true));
 
     $value    = false;
-    $expected = 'NULL';
+    $expected = 'null';
     self::assertSame($expected, $this->dataLayer->quoteString($value), var_export($value, true));
 
     $value    = true;

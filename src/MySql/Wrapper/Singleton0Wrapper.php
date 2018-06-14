@@ -41,11 +41,11 @@ class Singleton0Wrapper extends Wrapper
 
     if ($this->routine['return']=='bool')
     {
-      $this->codeStore->append('return !empty(self::executeSingleton0(\'CALL '.$this->routine['routine_name'].'('.$routine_args.')\'));');
+      $this->codeStore->append('return !empty(self::executeSingleton0(\'call '.$this->routine['routine_name'].'('.$routine_args.')\'));');
     }
     else
     {
-      $this->codeStore->append('return self::executeSingleton0(\'CALL '.$this->routine['routine_name'].'('.$routine_args.')\');');
+      $this->codeStore->append('return self::executeSingleton0(\'call '.$this->routine['routine_name'].'('.$routine_args.')\');');
     }
   }
 
