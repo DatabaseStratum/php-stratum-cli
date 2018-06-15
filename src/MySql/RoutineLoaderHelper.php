@@ -879,7 +879,21 @@ class RoutineLoaderHelper
 
     if (!($this->returnType=='mixed' || $this->returnType=='bool' || empty($diff)))
     {
-      throw new RoutineLoaderException("Return type must be 'mixed', 'bool', or a combination of int, float (or double), string, and null");
+      throw new RoutineLoaderException("Return type must be 'mixed', 'bool', or a combination of 'int', 'float', 'string', and 'null'");
+    }
+
+    // The following tests are applicable for singleton0 routines only.
+    if (!in_array($this->designationType, ['singleton0'])) return;
+
+    // Return mixed is OK.
+    if (in_array($this->returnType, ['bool', 'mixed'])) return;
+
+    // In all other cases return type mus contain null.
+    $parts = explode('|', $this->returnType);
+    $key   = array_search('null', $parts);
+    if ($key===false)
+    {
+      throw new RoutineLoaderException("Return type must be 'mixed', 'bool', or contain 'null' (with a combination of 'int', 'float', and 'string')");
     }
   }
 
