@@ -96,7 +96,6 @@ class StaticDataLayer
   protected static $queryLog = [];
 
   //--------------------------------------------------------------------------------------------------------------------
-
   /**
    * Starts a transaction.
    *
@@ -294,6 +293,62 @@ class StaticDataLayer
     } while ($continue);
 
     return $n;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Executes multiple queries and returns an array with the "result" of each query, i.e. the length of the returned
+   * array equals the number of queries. For SELECT, SHOW, DESCRIBE or EXPLAIN queries the "result" is the selected
+   * rows (i.e. an array of arrays), for other queries the "result" is the number of effected rows.
+   *
+   * @param string $queries The SQL statements.
+   *
+   * @return array
+   *
+   * @since 1.0.0
+   * @api
+   */
+  public static function executeMulti(string $queries): array
+  {
+    $ret = [];
+
+    self::multiQuery($queries);
+    do
+    {
+      $result = self::$mysqli->store_result();
+      if (self::$mysqli->errno) self::mySqlError('mysqli::store_result');
+      if ($result)
+      {
+        if (self::$haveFetchAll)
+        {
+          $ret[] = $result->fetch_all(MYSQLI_ASSOC);
+        }
+        else
+        {
+          $tmp = [];
+          while ($row = $result->fetch_assoc())
+          {
+            $tmp[] = $row;
+          }
+
+          $ret[] = $tmp;
+        }
+        $result->free();
+      }
+      else
+      {
+        $ret[] = self::$mysqli->affected_rows;
+      }
+
+      $continue = self::$mysqli->more_results();
+      if ($continue)
+      {
+        $tmp = self::$mysqli->next_result();
+        if ($tmp===false) self::mySqlError('mysqli::next_result');
+      }
+    } while ($continue);
+
+    return $ret;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -609,79 +664,6 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Executes multiple SQL statements.
-   *
-   * Wrapper around [multi_mysqli::query](http://php.net/manual/mysqli.multi-query.php), however on failure an exception
-   * is thrown.
-   *
-   * @param string $queries The SQL statements.
-   *
-   * @return void
-   */
-  public static function multiQuery(string $queries): void
-  {
-    if (self::$logQueries)
-    {
-      $time0 = microtime(true);
-
-      $tmp = self::$mysqli->multi_query($queries);
-      if ($tmp===false)
-      {
-        throw new DataLayerException(self::$mysqli->errno, self::$mysqli->error, $queries);
-      }
-
-      self::$queryLog[] = ['query' => $queries, 'time' => microtime(true) - $time0];
-    }
-    else
-    {
-      $tmp = self::$mysqli->multi_query($queries);
-      if ($tmp===false)
-      {
-        throw new DataLayerException(self::$mysqli->errno, self::$mysqli->error, $queries);
-      }
-    }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Executes a query (i.e. SELECT, SHOW, DESCRIBE or EXPLAIN) with a result set.
-   *
-   * Wrapper around [mysqli::query](http://php.net/manual/mysqli.query.php), however on failure an exception is thrown.
-   *
-   * For other SQL statements, see @realQuery.
-   *
-   * @param string $query The SQL statement.
-   *
-   * @return \mysqli_result
-   */
-  public static function query(string $query): \mysqli_result
-  {
-    if (self::$logQueries)
-    {
-      $time0 = microtime(true);
-
-      $ret = self::$mysqli->query($query);
-      if ($ret===false)
-      {
-        throw new DataLayerException(self::$mysqli->errno, self::$mysqli->error, $query);
-      }
-
-      self::$queryLog[] = ['query' => $query, 'time' => microtime(true) - $time0];
-    }
-    else
-    {
-      $ret = self::$mysqli->query($query);
-      if ($ret===false)
-      {
-        throw new DataLayerException(self::$mysqli->errno, self::$mysqli->error, $query);
-      }
-    }
-
-    return $ret;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
    * Returns a literal for a bit value that can be safely used in SQL statements.
    *
    * @param string|null $bits The bit value.
@@ -872,6 +854,41 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * Executes multiple SQL statements.
+   *
+   * Wrapper around [multi_mysqli::query](http://php.net/manual/mysqli.multi-query.php), however on failure an exception
+   * is thrown.
+   *
+   * @param string $queries The SQL statements.
+   *
+   * @return void
+   */
+  protected static function multiQuery(string $queries): void
+  {
+    if (self::$logQueries)
+    {
+      $time0 = microtime(true);
+
+      $tmp = self::$mysqli->multi_query($queries);
+      if ($tmp===false)
+      {
+        throw new DataLayerException(self::$mysqli->errno, self::$mysqli->error, $queries);
+      }
+
+      self::$queryLog[] = ['query' => $queries, 'time' => microtime(true) - $time0];
+    }
+    else
+    {
+      $tmp = self::$mysqli->multi_query($queries);
+      if ($tmp===false)
+      {
+        throw new DataLayerException(self::$mysqli->errno, self::$mysqli->error, $queries);
+      }
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Throws an exception with error information provided by MySQL/[mysqli](http://php.net/manual/en/class.mysqli.php).
    *
    * This method must called after a method of [mysqli](http://php.net/manual/en/class.mysqli.php) returns an
@@ -892,12 +909,50 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * Executes a query (i.e. SELECT, SHOW, DESCRIBE or EXPLAIN) with a result set.
+   *
+   * Wrapper around [mysqli::query](http://php.net/manual/mysqli.query.php), however on failure an exception is thrown.
+   *
+   * For other SQL statements, see @realQuery.
+   *
+   * @param string $query The SQL statement.
+   *
+   * @return \mysqli_result
+   */
+  protected static function query(string $query): \mysqli_result
+  {
+    if (self::$logQueries)
+    {
+      $time0 = microtime(true);
+
+      $ret = self::$mysqli->query($query);
+      if ($ret===false)
+      {
+        throw new DataLayerException(self::$mysqli->errno, self::$mysqli->error, $query);
+      }
+
+      self::$queryLog[] = ['query' => $query, 'time' => microtime(true) - $time0];
+    }
+    else
+    {
+      $ret = self::$mysqli->query($query);
+      if ($ret===false)
+      {
+        throw new DataLayerException(self::$mysqli->errno, self::$mysqli->error, $query);
+      }
+    }
+
+    return $ret;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Execute a query without a result set.
    *
    * Wrapper around [mysqli::real_query](http://php.net/manual/en/mysqli.real-query.php), however on failure an
    * exception is thrown.
    *
-   * Foor SELECT, SHOW, DESCRIBE or EXPLAIN queries, see @query.
+   * For SELECT, SHOW, DESCRIBE or EXPLAIN queries, see @query.
    *
    * @param string $query The SQL statement.
    */
