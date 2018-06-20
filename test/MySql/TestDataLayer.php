@@ -406,7 +406,7 @@ class TestDataLayer extends DataLayer
   {
     $result = $this->query('call tst_test_list_of_int('.$this->quoteListOfInt($pIds, ',', '\"', '\\').')');
     $ret = [];
-    while($row = $result->fetch_array(MYSQLI_ASSOC)) $ret[$row['tst_id']] = $row;
+    while (($row = $result->fetch_array(MYSQLI_ASSOC))) $ret[$row['tst_id']] = $row;
     $result->free();
     if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
@@ -437,7 +437,7 @@ class TestDataLayer extends DataLayer
   {
     $result = $this->query('call tst_test_map1('.$this->quoteInt($pCount).')');
     $ret = [];
-    while($row = $result->fetch_array(MYSQLI_NUM)) $ret[$row[0]] = $row[1];
+    while (($row = $result->fetch_array(MYSQLI_NUM))) $ret[$row[0]] = $row[1];
     $result->free();
     if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
@@ -494,7 +494,7 @@ class TestDataLayer extends DataLayer
 
     $result = $stmt->get_result();
     $ret = [];
-    while($row = $result->fetch_array(MYSQLI_NUM)) $ret[$row[0]] = $row[1];
+    while (($row = $result->fetch_array(MYSQLI_NUM))) $ret[$row[0]] = $row[1];
     $result->free();
 
     $stmt->close();
@@ -935,7 +935,7 @@ class TestDataLayer extends DataLayer
   {
     $result = $this->query('call tst_test_rows_with_index1('.$this->quoteInt($pCount).')');
     $ret = [];
-    while($row = $result->fetch_array(MYSQLI_ASSOC)) $ret[$row['tst_c01']][$row['tst_c02']][] = $row;
+    while (($row = $result->fetch_array(MYSQLI_ASSOC))) $ret[$row['tst_c01']][$row['tst_c02']][] = $row;
     $result->free();
     if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
@@ -1025,7 +1025,7 @@ class TestDataLayer extends DataLayer
   {
     $result = $this->query('call tst_test_rows_with_key1('.$this->quoteInt($pCount).')');
     $ret = [];
-    while($row = $result->fetch_array(MYSQLI_ASSOC)) $ret[$row['tst_c01']][$row['tst_c02']][$row['tst_c03']] = $row;
+    while (($row = $result->fetch_array(MYSQLI_ASSOC))) $ret[$row['tst_c01']][$row['tst_c02']][$row['tst_c03']] = $row;
     $result->free();
     if ($this->mysqli->more_results()) $this->mysqli->next_result();
 

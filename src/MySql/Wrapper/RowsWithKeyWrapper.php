@@ -42,7 +42,7 @@ class RowsWithKeyWrapper extends Wrapper
 
     $this->codeStore->append('$result = self::query(\'call '.$this->routine['routine_name'].'('.$routine_args.')\');');
     $this->codeStore->append('$ret = [];');
-    $this->codeStore->append('while($row = $result->fetch_array(MYSQLI_ASSOC)) $ret'.$key.' = $row;');
+    $this->codeStore->append('while (($row = $result->fetch_array(MYSQLI_ASSOC))) $ret'.$key.' = $row;');
     $this->codeStore->append('$result->free();');
     $this->codeStore->append('if (self::$mysqli->more_results()) self::$mysqli->next_result();');
     $this->codeStore->append('');
