@@ -291,7 +291,6 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
     }
 
     // Write class name.
-    $this->codeStore->appendSeparator();
     $this->codeStore->append('/**');
     $this->codeStore->append(' * The data layer.', false);
     $this->codeStore->append(' */', false);

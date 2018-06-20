@@ -5,7 +5,6 @@ namespace SetBased\Stratum\Test\MySql;
 use SetBased\Stratum\Exception\ResultException;
 use SetBased\Stratum\MySql\DataLayer;
 
-//----------------------------------------------------------------------------------------------------------------------
 /**
  * The data layer.
  */
