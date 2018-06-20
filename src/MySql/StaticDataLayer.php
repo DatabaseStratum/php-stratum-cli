@@ -124,7 +124,7 @@ class StaticDataLayer
     $fields = [];
     $out    = [];
 
-    while ($field = $data->fetch_field())
+    while (($field = $data->fetch_field()))
     {
       $fields[] = &$out[$field->name];
     }
@@ -235,7 +235,7 @@ class StaticDataLayer
     $bulkHandler->start();
 
     $result = self::$mysqli->use_result();
-    while ($row = $result->fetch_assoc())
+    while (($row = $result->fetch_assoc()))
     {
       $bulkHandler->row($row);
     }
@@ -270,7 +270,7 @@ class StaticDataLayer
       if ($result)
       {
         $fields = $result->fetch_fields();
-        while ($row = $result->fetch_row())
+        while (($row = $result->fetch_row()))
         {
           $line = '';
           foreach ($row as $i => $field)
@@ -326,7 +326,7 @@ class StaticDataLayer
         else
         {
           $tmp = [];
-          while ($row = $result->fetch_assoc())
+          while (($row = $result->fetch_assoc()))
           {
             $tmp[] = $row;
           }
@@ -452,7 +452,7 @@ class StaticDataLayer
     else
     {
       $ret = [];
-      while ($row = $result->fetch_assoc())
+      while (($row = $result->fetch_assoc()))
       {
         $ret[] = $row;
       }
@@ -559,7 +559,7 @@ class StaticDataLayer
         self::executeTableShowHeader($columns);
 
         // Show for all rows all columns.
-        while ($row = $result->fetch_row())
+        while (($row = $result->fetch_row()))
         {
           $row_count++;
 
