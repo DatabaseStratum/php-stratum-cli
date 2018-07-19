@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SetBased\Stratum\Test\MySql;
 
@@ -117,45 +118,32 @@ class QuoteTest extends DataLayerTestCase
     $tests = [];
 
     $tests[] = ['column' => 'int', 'value' => 1];
-    $tests[] = ['column' => 'int', 'value' => '1'];
     $tests[] = ['column' => 'smallint', 'value' => 1];
-    $tests[] = ['column' => 'smallint', 'value' => '1'];
     $tests[] = ['column' => 'tinyint', 'value' => 1];
-    $tests[] = ['column' => 'tinyint', 'value' => '1'];
     $tests[] = ['column' => 'mediumint', 'value' => 1];
-    $tests[] = ['column' => 'mediumint', 'value' => '1'];
     $tests[] = ['column' => 'bigint', 'value' => 1];
-    $tests[] = ['column' => 'bigint', 'value' => '1'];
 
-    $tests[] = ['column' => 'decimal', 'value' => 0.1];
     $tests[] = ['column' => 'decimal', 'value' => '0.1'];
     $tests[] = ['column' => 'float', 'value' => 0.1];
-    $tests[] = ['column' => 'float', 'value' => '0.1'];
     $tests[] = ['column' => 'double', 'value' => 0.1];
-    $tests[] = ['column' => 'double', 'value' => '0.1'];
 
-    $tests[] = ['column' => 'bit', 'value' => 1010];
     $tests[] = ['column' => 'bit', 'value' => '1010'];
 
-    $tests[] = ['column' => 'date', 'value' => '2000-01-01'];
-    $tests[] = ['column' => 'datetime', 'value' => '2000-01-01 10:00:00'];
-    $tests[] = ['column' => 'timestamp', 'value' => 2102101];
-    $tests[] = ['column' => 'time', 'value' => '10:00:00'];
+    $tests[] = ['column' => 'date', 'value' => date('Y-m-d')];
+    $tests[] = ['column' => 'datetime', 'value' => date('Y-m-d H:i:s')];
+    $tests[] = ['column' => 'timestamp', 'value' => date('Y-m-d H:i:s')];
+    $tests[] = ['column' => 'time', 'value' => date('H:i:s')];
     $tests[] = ['column' => 'year', 'value' => 2000];
-    $tests[] = ['column' => 'year', 'value' => '2000'];
 
-    $tests[] = ['column' => 'char', 'value' => 1234];
+    $tests[] = ['column' => 'char', 'value' => '1234'];
     $tests[] = ['column' => 'char', 'value' => 'abc'];
     $tests[] = ['column' => 'char', 'value' => "0xC8 ' --"];
 
-    $tests[] = ['column' => 'varchar', 'value' => 1234];
     $tests[] = ['column' => 'varchar', 'value' => 'abc'];
     $tests[] = ['column' => 'varchar', 'value' => "0xC8 ' --"];
 
-    $tests[] = ['column' => 'binary', 'value' => 1010];
     $tests[] = ['column' => 'binary', 'value' => '1010'];
     $tests[] = ['column' => 'binary', 'value' => "\xFF\x7F\x80\x5c\x00\x10"];
-    $tests[] = ['column' => 'varbinary', 'value' => 1010];
     $tests[] = ['column' => 'varbinary', 'value' => '1010'];
     $tests[] = ['column' => 'varbinary', 'value' => "\xFF\x7F\x80\x5c\x00\x10"];
 

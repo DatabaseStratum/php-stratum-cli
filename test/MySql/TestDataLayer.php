@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SetBased\Stratum\Test\MySql;
 
@@ -85,7 +86,7 @@ class TestDataLayer extends DataLayer
    *                         float
    * @param float  $pParam07 Test parameter 07.
    *                         double
-   * @param int    $pParam08 Test parameter 08.
+   * @param string $pParam08 Test parameter 08.
    *                         bit(8)
    * @param string $pParam09 Test parameter 09.
    *                         date
@@ -112,7 +113,7 @@ class TestDataLayer extends DataLayer
    *
    * @return int
    */
-  public function tstTest01(?int $pParam00, ?int $pParam01, ?int $pParam02, ?int $pParam03, ?int $pParam04, ?string $pParam05, ?float $pParam06, ?float $pParam07, ?int $pParam08, ?string $pParam09, ?string $pParam10, ?string $pParam11, ?string $pParam12, ?int $pParam13, ?string $pParam14, ?string $pParam15, ?string $pParam16, ?string $pParam17, ?string $pParam26, ?string $pParam27): int
+  public function tstTest01(?int $pParam00, ?int $pParam01, ?int $pParam02, ?int $pParam03, ?int $pParam04, ?string $pParam05, ?float $pParam06, ?float $pParam07, ?string $pParam08, ?string $pParam09, ?string $pParam10, ?string $pParam11, ?string $pParam12, ?int $pParam13, ?string $pParam14, ?string $pParam15, ?string $pParam16, ?string $pParam17, ?string $pParam26, ?string $pParam27): int
   {
     return $this->executeNone('call tst_test01('.$this->quoteInt($pParam00).','.$this->quoteInt($pParam01).','.$this->quoteInt($pParam02).','.$this->quoteInt($pParam03).','.$this->quoteInt($pParam04).','.$this->quoteString($pParam05).','.$this->quoteFloat($pParam06).','.$this->quoteFloat($pParam07).','.$this->quoteBit($pParam08).','.$this->quoteString($pParam09).','.$this->quoteString($pParam10).','.$this->quoteString($pParam11).','.$this->quoteString($pParam12).','.$this->quoteInt($pParam13).','.$this->quoteString($pParam14).','.$this->quoteString($pParam15).','.$this->quoteString($pParam16).','.$this->quoteString($pParam17).','.$this->quoteString($pParam26).','.$this->quoteString($pParam27).')');
   }
@@ -137,7 +138,7 @@ class TestDataLayer extends DataLayer
    *                         float
    * @param float  $pParam07 Test parameter 07.
    *                         double
-   * @param int    $pParam08 Test parameter 08.
+   * @param string $pParam08 Test parameter 08.
    *                         bit(8)
    * @param string $pParam09 Test parameter 09.
    *                         date
@@ -180,89 +181,26 @@ class TestDataLayer extends DataLayer
    *
    * @return int
    */
-  public function tstTest02(?int $pParam00, ?int $pParam01, ?int $pParam02, ?int $pParam03, ?int $pParam04, ?string $pParam05, ?float $pParam06, ?float $pParam07, ?int $pParam08, ?string $pParam09, ?string $pParam10, ?string $pParam11, ?string $pParam12, ?int $pParam13, ?string $pParam14, ?string $pParam15, ?string $pParam16, ?string $pParam17, ?string $pParam18, ?string $pParam19, ?string $pParam20, ?string $pParam21, ?string $pParam22, ?string $pParam23, ?string $pParam24, ?string $pParam25, ?string $pParam26, ?string $pParam27)
+  public function tstTest02(?int $pParam00, ?int $pParam01, ?int $pParam02, ?int $pParam03, ?int $pParam04, ?string $pParam05, ?float $pParam06, ?float $pParam07, ?string $pParam08, ?string $pParam09, ?string $pParam10, ?string $pParam11, ?string $pParam12, ?int $pParam13, ?string $pParam14, ?string $pParam15, ?string $pParam16, ?string $pParam17, ?string $pParam18, ?string $pParam19, ?string $pParam20, ?string $pParam21, ?string $pParam22, ?string $pParam23, ?string $pParam24, ?string $pParam25, ?string $pParam26, ?string $pParam27)
   {
     $query = 'call tst_test02('.$this->quoteInt($pParam00).','.$this->quoteInt($pParam01).','.$this->quoteInt($pParam02).','.$this->quoteInt($pParam03).','.$this->quoteInt($pParam04).','.$this->quoteString($pParam05).','.$this->quoteFloat($pParam06).','.$this->quoteFloat($pParam07).','.$this->quoteBit($pParam08).','.$this->quoteString($pParam09).','.$this->quoteString($pParam10).','.$this->quoteString($pParam11).','.$this->quoteString($pParam12).','.$this->quoteInt($pParam13).','.$this->quoteString($pParam14).','.$this->quoteString($pParam15).','.$this->quoteString($pParam16).','.$this->quoteString($pParam17).',?,?,?,?,?,?,?,?,'.$this->quoteString($pParam26).','.$this->quoteString($pParam27).')';
     $stmt  = $this->mysqli->prepare($query);
     if (!$stmt) $this->mySqlError('mysqli::prepare');
 
     $null = null;
-    $b = $stmt->bind_param('bbbbbbbb', $null,$null,$null,$null,$null,$null,$null,$null);
+    $b = $stmt->bind_param('bbbbbbbb', $null, $null, $null, $null, $null, $null, $null, $null);
     if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
 
     $this->getMaxAllowedPacket();
 
-    $n = strlen($pParam18);
-    $p = 0;
-    while ($p<$n)
-    {
-      $b = $stmt->send_long_data(0, substr($pParam18, $p, $this->chunkSize));
-      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
-      $p += $this->chunkSize;
-    }
-
-    $n = strlen($pParam19);
-    $p = 0;
-    while ($p<$n)
-    {
-      $b = $stmt->send_long_data(1, substr($pParam19, $p, $this->chunkSize));
-      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
-      $p += $this->chunkSize;
-    }
-
-    $n = strlen($pParam20);
-    $p = 0;
-    while ($p<$n)
-    {
-      $b = $stmt->send_long_data(2, substr($pParam20, $p, $this->chunkSize));
-      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
-      $p += $this->chunkSize;
-    }
-
-    $n = strlen($pParam21);
-    $p = 0;
-    while ($p<$n)
-    {
-      $b = $stmt->send_long_data(3, substr($pParam21, $p, $this->chunkSize));
-      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
-      $p += $this->chunkSize;
-    }
-
-    $n = strlen($pParam22);
-    $p = 0;
-    while ($p<$n)
-    {
-      $b = $stmt->send_long_data(4, substr($pParam22, $p, $this->chunkSize));
-      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
-      $p += $this->chunkSize;
-    }
-
-    $n = strlen($pParam23);
-    $p = 0;
-    while ($p<$n)
-    {
-      $b = $stmt->send_long_data(5, substr($pParam23, $p, $this->chunkSize));
-      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
-      $p += $this->chunkSize;
-    }
-
-    $n = strlen($pParam24);
-    $p = 0;
-    while ($p<$n)
-    {
-      $b = $stmt->send_long_data(6, substr($pParam24, $p, $this->chunkSize));
-      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
-      $p += $this->chunkSize;
-    }
-
-    $n = strlen($pParam25);
-    $p = 0;
-    while ($p<$n)
-    {
-      $b = $stmt->send_long_data(7, substr($pParam25, $p, $this->chunkSize));
-      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
-      $p += $this->chunkSize;
-    }
+    $this->sendLongData($stmt, 0, $pParam18);
+    $this->sendLongData($stmt, 1, $pParam19);
+    $this->sendLongData($stmt, 2, $pParam20);
+    $this->sendLongData($stmt, 3, $pParam21);
+    $this->sendLongData($stmt, 4, $pParam22);
+    $this->sendLongData($stmt, 5, $pParam23);
+    $this->sendLongData($stmt, 6, $pParam24);
+    $this->sendLongData($stmt, 7, $pParam25);
 
     if ($this->logQueries)
     {
@@ -272,7 +210,7 @@ class TestDataLayer extends DataLayer
       if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
       $this->queryLog[] = ['query' => $query,
-      'time'  => microtime(true) - $time0];
+                           'time'  => microtime(true) - $time0];
     }
     else
     {
@@ -466,14 +404,7 @@ class TestDataLayer extends DataLayer
 
     $this->getMaxAllowedPacket();
 
-    $n = strlen($pBlob);
-    $p = 0;
-    while ($p<$n)
-    {
-      $b = $stmt->send_long_data(0, substr($pBlob, $p, $this->chunkSize));
-      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
-      $p += $this->chunkSize;
-    }
+    $this->sendLongData($stmt, 0, $pBlob);
 
     if ($this->logQueries)
     {
@@ -483,7 +414,7 @@ class TestDataLayer extends DataLayer
       if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
       $this->queryLog[] = ['query' => $query,
-      'time'  => microtime(true) - $time0];
+                           'time'  => microtime(true) - $time0];
     }
     else
     {
@@ -523,14 +454,7 @@ class TestDataLayer extends DataLayer
 
     $this->getMaxAllowedPacket();
 
-    $n = strlen($pTmpBlob);
-    $p = 0;
-    while ($p<$n)
-    {
-      $b = $stmt->send_long_data(0, substr($pTmpBlob, $p, $this->chunkSize));
-      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
-      $p += $this->chunkSize;
-    }
+    $this->sendLongData($stmt, 0, $pTmpBlob);
 
     if ($this->logQueries)
     {
@@ -540,7 +464,7 @@ class TestDataLayer extends DataLayer
       if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
       $this->queryLog[] = ['query' => $query,
-      'time'  => microtime(true) - $time0];
+                           'time'  => microtime(true) - $time0];
     }
     else
     {
@@ -618,14 +542,7 @@ class TestDataLayer extends DataLayer
 
     $this->getMaxAllowedPacket();
 
-    $n = strlen($pBlob);
-    $p = 0;
-    while ($p<$n)
-    {
-      $b = $stmt->send_long_data(0, substr($pBlob, $p, $this->chunkSize));
-      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
-      $p += $this->chunkSize;
-    }
+    $this->sendLongData($stmt, 0, $pBlob);
 
     if ($this->logQueries)
     {
@@ -635,7 +552,7 @@ class TestDataLayer extends DataLayer
       if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
       $this->queryLog[] = ['query' => $query,
-      'time'  => microtime(true) - $time0];
+                           'time'  => microtime(true) - $time0];
     }
     else
     {
@@ -704,14 +621,7 @@ class TestDataLayer extends DataLayer
 
     $this->getMaxAllowedPacket();
 
-    $n = strlen($pBlob);
-    $p = 0;
-    while ($p<$n)
-    {
-      $b = $stmt->send_long_data(0, substr($pBlob, $p, $this->chunkSize));
-      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
-      $p += $this->chunkSize;
-    }
+    $this->sendLongData($stmt, 0, $pBlob);
 
     if ($this->logQueries)
     {
@@ -721,7 +631,7 @@ class TestDataLayer extends DataLayer
       if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
       $this->queryLog[] = ['query' => $query,
-      'time'  => microtime(true) - $time0];
+                           'time'  => microtime(true) - $time0];
     }
     else
     {
@@ -789,14 +699,7 @@ class TestDataLayer extends DataLayer
 
     $this->getMaxAllowedPacket();
 
-    $n = strlen($pBlob);
-    $p = 0;
-    while ($p<$n)
-    {
-      $b = $stmt->send_long_data(0, substr($pBlob, $p, $this->chunkSize));
-      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
-      $p += $this->chunkSize;
-    }
+    $this->sendLongData($stmt, 0, $pBlob);
 
     if ($this->logQueries)
     {
@@ -806,7 +709,7 @@ class TestDataLayer extends DataLayer
       if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
       $this->queryLog[] = ['query' => $query,
-      'time'  => microtime(true) - $time0];
+                           'time'  => microtime(true) - $time0];
     }
     else
     {
@@ -874,14 +777,7 @@ class TestDataLayer extends DataLayer
 
     $this->getMaxAllowedPacket();
 
-    $n = strlen($pBlob);
-    $p = 0;
-    while ($p<$n)
-    {
-      $b = $stmt->send_long_data(0, substr($pBlob, $p, $this->chunkSize));
-      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
-      $p += $this->chunkSize;
-    }
+    $this->sendLongData($stmt, 0, $pBlob);
 
     if ($this->logQueries)
     {
@@ -891,7 +787,7 @@ class TestDataLayer extends DataLayer
       if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
       $this->queryLog[] = ['query' => $query,
-      'time'  => microtime(true) - $time0];
+                           'time'  => microtime(true) - $time0];
     }
     else
     {
@@ -964,14 +860,7 @@ class TestDataLayer extends DataLayer
 
     $this->getMaxAllowedPacket();
 
-    $n = strlen($pBlob);
-    $p = 0;
-    while ($p<$n)
-    {
-      $b = $stmt->send_long_data(0, substr($pBlob, $p, $this->chunkSize));
-      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
-      $p += $this->chunkSize;
-    }
+    $this->sendLongData($stmt, 0, $pBlob);
 
     if ($this->logQueries)
     {
@@ -981,7 +870,7 @@ class TestDataLayer extends DataLayer
       if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
       $this->queryLog[] = ['query' => $query,
-      'time'  => microtime(true) - $time0];
+                           'time'  => microtime(true) - $time0];
     }
     else
     {
@@ -1054,14 +943,7 @@ class TestDataLayer extends DataLayer
 
     $this->getMaxAllowedPacket();
 
-    $n = strlen($pBlob);
-    $p = 0;
-    while ($p<$n)
-    {
-      $b = $stmt->send_long_data(0, substr($pBlob, $p, $this->chunkSize));
-      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
-      $p += $this->chunkSize;
-    }
+    $this->sendLongData($stmt, 0, $pBlob);
 
     if ($this->logQueries)
     {
@@ -1071,7 +953,7 @@ class TestDataLayer extends DataLayer
       if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
       $this->queryLog[] = ['query' => $query,
-      'time'  => microtime(true) - $time0];
+                           'time'  => microtime(true) - $time0];
     }
     else
     {
@@ -1138,14 +1020,7 @@ class TestDataLayer extends DataLayer
 
     $this->getMaxAllowedPacket();
 
-    $n = strlen($pBlob);
-    $p = 0;
-    while ($p<$n)
-    {
-      $b = $stmt->send_long_data(0, substr($pBlob, $p, $this->chunkSize));
-      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
-      $p += $this->chunkSize;
-    }
+    $this->sendLongData($stmt, 0, $pBlob);
 
     if ($this->logQueries)
     {
@@ -1155,7 +1030,7 @@ class TestDataLayer extends DataLayer
       if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
       $this->queryLog[] = ['query' => $query,
-      'time'  => microtime(true) - $time0];
+                           'time'  => microtime(true) - $time0];
     }
     else
     {
@@ -1227,14 +1102,7 @@ class TestDataLayer extends DataLayer
 
     $this->getMaxAllowedPacket();
 
-    $n = strlen($pBlob);
-    $p = 0;
-    while ($p<$n)
-    {
-      $b = $stmt->send_long_data(0, substr($pBlob, $p, $this->chunkSize));
-      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
-      $p += $this->chunkSize;
-    }
+    $this->sendLongData($stmt, 0, $pBlob);
 
     if ($this->logQueries)
     {
@@ -1244,7 +1112,7 @@ class TestDataLayer extends DataLayer
       if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
       $this->queryLog[] = ['query' => $query,
-      'time'  => microtime(true) - $time0];
+                           'time'  => microtime(true) - $time0];
     }
     else
     {
@@ -1312,14 +1180,7 @@ class TestDataLayer extends DataLayer
 
     $this->getMaxAllowedPacket();
 
-    $n = strlen($pBlob);
-    $p = 0;
-    while ($p<$n)
-    {
-      $b = $stmt->send_long_data(0, substr($pBlob, $p, $this->chunkSize));
-      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
-      $p += $this->chunkSize;
-    }
+    $this->sendLongData($stmt, 0, $pBlob);
 
     if ($this->logQueries)
     {
@@ -1329,7 +1190,7 @@ class TestDataLayer extends DataLayer
       if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
       $this->queryLog[] = ['query' => $query,
-      'time'  => microtime(true) - $time0];
+                           'time'  => microtime(true) - $time0];
     }
     else
     {
@@ -1401,14 +1262,7 @@ class TestDataLayer extends DataLayer
 
     $this->getMaxAllowedPacket();
 
-    $n = strlen($pBlob);
-    $p = 0;
-    while ($p<$n)
-    {
-      $b = $stmt->send_long_data(0, substr($pBlob, $p, $this->chunkSize));
-      if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
-      $p += $this->chunkSize;
-    }
+    $this->sendLongData($stmt, 0, $pBlob);
 
     if ($this->logQueries)
     {
@@ -1418,7 +1272,7 @@ class TestDataLayer extends DataLayer
       if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
       $this->queryLog[] = ['query' => $query,
-      'time'  => microtime(true) - $time0];
+                           'time'  => microtime(true) - $time0];
     }
     else
     {

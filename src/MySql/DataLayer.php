@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace SetBased\Stratum\MySql;
 
+use mysqli_stmt;
 use SetBased\Exception\FallenException;
 use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\BulkHandler;
@@ -104,7 +105,6 @@ class DataLayer
   protected $queryLog = [];
 
   //--------------------------------------------------------------------------------------------------------------------
-
   /**
    * Starts a transaction.
    *
@@ -983,6 +983,31 @@ class DataLayer
       if ($tmp===false)
       {
         throw new DataLayerException($this->mysqli->errno, $this->mysqli->error, $query);
+      }
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Send data in blocks to the MySQL server.
+   *
+   * Wrapper around [mysqli_stmt::send_long_data](http://php.net/manual/mysqli-stmt.send-long-data.php).
+   *
+   * @param mysqli_stmt $statement The prepared statement.
+   * @param int         $paramNr   The 0-indexed parameter number.
+   * @param string|null $data      The data.
+   */
+  protected function sendLongData(mysqli_stmt $statement, int $paramNr, ?string $data): void
+  {
+    if ($data!==null)
+    {
+      $n = strlen($data);
+      $p = 0;
+      while ($p<$n)
+      {
+        $b = $statement->send_long_data($paramNr, substr($data, $p, $this->chunkSize));
+        if (!$b) $this->mySqlError('mysqli_stmt::send_long_data');
+        $p += $this->chunkSize;
       }
     }
   }

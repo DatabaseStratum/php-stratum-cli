@@ -41,7 +41,6 @@ class DataTypeHelper
       case 'int':
       case 'bigint':
       case 'year':
-      case 'bit':
         $phpType = 'int';
         break;
 
@@ -54,6 +53,7 @@ class DataTypeHelper
         $phpType = 'float';
         break;
 
+      case 'bit':
       case 'varbinary':
       case 'binary':
       case 'char':

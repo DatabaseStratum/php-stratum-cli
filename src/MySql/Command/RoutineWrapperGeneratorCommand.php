@@ -64,6 +64,13 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
   private $parentClassName;
 
   /**
+   * If true wrapper must declare strict types.
+   *
+   * @var bool
+   */
+  private $strictTypes;
+
+  /**
    * The class name (including namespace) of the routine wrapper.
    *
    * @var string
@@ -188,15 +195,21 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
       $settings['wrapper']['lob_as_string'] = false;
     }
 
+    if (!isset($settings['wrapper']['strict_types']))
+    {
+      $settings['wrapper']['strict_types'] = true;
+    }
+
     $this->wrapperClassName = self::getSetting($settings, false, 'wrapper', 'wrapper_class');
     if ($this->wrapperClassName!==null)
     {
       $this->parentClassName  = self::getSetting($settings, true, 'wrapper', 'parent_class');
       $this->nameMangler      = self::getSetting($settings, true, 'wrapper', 'mangler_class');
       $this->wrapperFilename  = self::getSetting($settings, true, 'wrapper', 'wrapper_file');
-      $this->lobAsString      = (self::getSetting($settings, true, 'wrapper', 'lob_as_string')) ? true : false;
+      $this->lobAsString      = !empty(self::getSetting($settings, true, 'wrapper', 'lob_as_string'));
       $this->metadataFilename = self::getSetting($settings, true, 'loader', 'metadata');
       $this->wrapperClassType = self::getSetting($settings, true, 'wrapper', 'wrapper_type');
+      $this->strictTypes      = !empty(self::getSetting($settings, true, 'wrapper', 'strict_types'));
     }
   }
 
@@ -264,6 +277,14 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
 
     // Write PHP tag.
     $this->codeStore->append('<?php');
+
+    // Write strict types.
+    if ($this->strictTypes)
+    {
+      $this->codeStore->append('declare(strict_types=1);');
+    }
+
+    // Write name space of the wrapper class.
     if ($namespace!==null)
     {
       $this->codeStore->append('');

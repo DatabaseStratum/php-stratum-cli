@@ -216,7 +216,7 @@ abstract class Wrapper
       if ($binding=='b')
       {
         $bindings .= 'b';
-        if ($nulls) $nulls .= ',';
+        if ($nulls!=='') $nulls .= ', ';
         $nulls .= '$null';
       }
     }
@@ -236,25 +236,22 @@ abstract class Wrapper
     $this->codeStore->append('self::getMaxAllowedPacket();');
     $this->codeStore->append('');
 
-    $blob_argument_index = 0;
+    $blobArgumentIndex = 0;
     foreach ($this->routine['parameters'] as $parameter_info)
     {
       if (DataTypeHelper::getBindVariableType($parameter_info['data_type'], $this->lobAsStringFlag)=='b')
       {
         $mangledName = $this->nameMangler->getParameterName($parameter_info['parameter_name']);
 
-        $this->codeStore->append('$n = strlen($'.$mangledName.');');
-        $this->codeStore->append('$p = 0;');
-        $this->codeStore->append('while ($p<$n)');
-        $this->codeStore->append('{');
-        $this->codeStore->append('$b = $stmt->send_long_data('.$blob_argument_index.', substr($'.$mangledName.', $p, self::$chunkSize));');
-        $this->codeStore->append('if (!$b) self::mySqlError(\'mysqli_stmt::send_long_data\');');
-        $this->codeStore->append('$p += self::$chunkSize;');
-        $this->codeStore->append('}');
-        $this->codeStore->append('');
+        $this->codeStore->append('self::sendLongData($stmt, '.$blobArgumentIndex.', $'.$mangledName.');');
 
-        $blob_argument_index++;
+        $blobArgumentIndex++;
       }
+    }
+
+    if ($blobArgumentIndex>0)
+    {
+      $this->codeStore->append('');
     }
 
     $this->codeStore->append('if (self::$logQueries)');
@@ -265,7 +262,7 @@ abstract class Wrapper
     $this->codeStore->append('if (!$b) self::mySqlError(\'mysqli_stmt::execute\');');
     $this->codeStore->append('');
     $this->codeStore->append('self::$queryLog[] = [\'query\' => $query,');
-    $this->codeStore->append('                     \'time\'  => microtime(true) - $time0];');
+    $this->codeStore->append('                     \'time\'  => microtime(true) - $time0];', false);
     $this->codeStore->append('}');
     $this->codeStore->append('else');
     $this->codeStore->append('{');
@@ -281,7 +278,6 @@ abstract class Wrapper
     $this->codeStore->append('}');
     $this->codeStore->append('');
   }
-
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
