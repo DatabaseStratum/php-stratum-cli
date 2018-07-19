@@ -35,6 +35,13 @@ class StaticDataLayer
   public static $logQueries = false;
 
   /**
+   * The options to be set.
+   *
+   * @var array
+   */
+  public static $options = [MYSQLI_OPT_INT_AND_FLOAT_NATIVE => true];
+
+  /**
    * The SQL mode of the MySQL instance.
    *
    * @var string
@@ -179,24 +186,21 @@ class StaticDataLayer
       throw new RuntimeException($message);
     }
 
-    // Set the default character set.
-    if (self::$charSet)
+    // Set the options.
+    foreach (self::$options as $option => $value)
     {
-      $ret = self::$mysqli->set_charset(self::$charSet);
-      if (!$ret) self::mySqlError('mysqli::set_charset');
+      self::$mysqli->options($option, $value);
     }
+
+    // Set the default character set.
+    $ret = self::$mysqli->set_charset(self::$charSet);
+    if (!$ret) self::mySqlError('mysqli::set_charset');
 
     // Set the SQL mode.
-    if (self::$sqlMode)
-    {
-      self::executeNone("SET sql_mode = '".self::$sqlMode."'");
-    }
+    self::executeNone("set sql_mode = '".self::$sqlMode."'");
 
     // Set transaction isolation level.
-    if (self::$transactionIsolationLevel)
-    {
-      self::executeNone("SET SESSION tx_isolation = '".self::$transactionIsolationLevel."'");
-    }
+    self::executeNone("set session tx_isolation = '".self::$transactionIsolationLevel."'");
 
     // Set flag to use method mysqli_result::fetch_all if we are using MySQL native driver.
     self::$haveFetchAll = method_exists('mysqli_result', 'fetch_all');
@@ -211,7 +215,7 @@ class StaticDataLayer
    */
   public static function disconnect(): void
   {
-    if (self::$mysqli)
+    if (self::$mysqli!==null)
     {
       self::$mysqli->close();
       self::$mysqli = null;

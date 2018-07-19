@@ -711,10 +711,9 @@ information_schema.INNODB_SYS_COLUMNS.MTYPE     10
 information_schema.INNODB_SYS_COLUMNS.PRTYPE    10
 information_schema.INNODB_SYS_COLUMNS.LEN       10
 
-information_schema.ROCKSDB_COMPACTION_STATS.CF_NAME 193
-information_schema.ROCKSDB_COMPACTION_STATS.LEVEL   513
-information_schema.ROCKSDB_COMPACTION_STATS.TYPE    513
-information_schema.ROCKSDB_COMPACTION_STATS.VALUE     8
+information_schema.TokuDB_trx.trx_id              19
+information_schema.TokuDB_trx.trx_mysql_thread_id 19
+information_schema.TokuDB_trx.trx_time            19
 
 information_schema.INNODB_CMP_PER_INDEX_RESET.database_name   192
 information_schema.INNODB_CMP_PER_INDEX_RESET.table_name      192
@@ -787,11 +786,10 @@ information_schema.INNODB_SYS_FOREIGN.REF_NAME 193
 information_schema.INNODB_SYS_FOREIGN.N_COLS    10
 information_schema.INNODB_SYS_FOREIGN.TYPE      10
 
-information_schema.TokuDB_file_map.dictionary_name       256
-information_schema.TokuDB_file_map.internal_file_name    256
-information_schema.TokuDB_file_map.table_schema          256
-information_schema.TokuDB_file_map.table_name            256
-information_schema.TokuDB_file_map.table_dictionary_name 256
+information_schema.INNODB_MUTEXES.NAME        4000
+information_schema.INNODB_MUTEXES.CREATE_FILE 4000
+information_schema.INNODB_MUTEXES.CREATE_LINE   10
+information_schema.INNODB_MUTEXES.OS_WAITS      20
 
 information_schema.INNODB_FT_DEFAULT_STOPWORD.value 18
 
@@ -902,15 +900,21 @@ information_schema.INNODB_METRICS.COMMENT         193
 
 information_schema.INNODB_FT_DELETED.DOC_ID 20
 
-information_schema.ROCKSDB_DDL.TABLE_SCHEMA      193
-information_schema.ROCKSDB_DDL.TABLE_NAME        193
-information_schema.ROCKSDB_DDL.PARTITION_NAME    193
-information_schema.ROCKSDB_DDL.INDEX_NAME        193
-information_schema.ROCKSDB_DDL.COLUMN_FAMILY      10
-information_schema.ROCKSDB_DDL.INDEX_NUMBER       10
-information_schema.ROCKSDB_DDL.INDEX_TYPE          5
-information_schema.ROCKSDB_DDL.KV_FORMAT_VERSION   5
-information_schema.ROCKSDB_DDL.CF                193
+information_schema.ROCKSDB_TRX.TRANSACTION_ID            19
+information_schema.ROCKSDB_TRX.STATE                    193
+information_schema.ROCKSDB_TRX.NAME                     193
+information_schema.ROCKSDB_TRX.WRITE_COUNT               19
+information_schema.ROCKSDB_TRX.LOCK_COUNT                19
+information_schema.ROCKSDB_TRX.TIMEOUT_SEC               10
+information_schema.ROCKSDB_TRX.WAITING_KEY              513
+information_schema.ROCKSDB_TRX.WAITING_COLUMN_FAMILY_ID  10
+information_schema.ROCKSDB_TRX.IS_REPLICATION            10
+information_schema.ROCKSDB_TRX.SKIP_TRX_API              10
+information_schema.ROCKSDB_TRX.READ_ONLY                 10
+information_schema.ROCKSDB_TRX.HAS_DEADLOCK_DETECTION    10
+information_schema.ROCKSDB_TRX.NUM_ONGOING_BULKLOAD      10
+information_schema.ROCKSDB_TRX.THREAD_ID                 10
+information_schema.ROCKSDB_TRX.QUERY                    193
 
 information_schema.INNODB_BUFFER_POOL_STATS.POOL_ID                          20
 information_schema.INNODB_BUFFER_POOL_STATS.POOL_SIZE                        20
@@ -978,13 +982,22 @@ information_schema.INNODB_BUFFER_PAGE.IO_FIX                64
 information_schema.INNODB_BUFFER_PAGE.IS_OLD                 3
 information_schema.INNODB_BUFFER_PAGE.FREE_PAGE_CLOCK       20
 
+information_schema.ROCKSDB_DDL.TABLE_SCHEMA      193
+information_schema.ROCKSDB_DDL.TABLE_NAME        193
+information_schema.ROCKSDB_DDL.PARTITION_NAME    193
+information_schema.ROCKSDB_DDL.INDEX_NAME        193
+information_schema.ROCKSDB_DDL.COLUMN_FAMILY      10
+information_schema.ROCKSDB_DDL.INDEX_NUMBER       10
+information_schema.ROCKSDB_DDL.INDEX_TYPE          5
+information_schema.ROCKSDB_DDL.KV_FORMAT_VERSION   5
+information_schema.ROCKSDB_DDL.TTL_DURATION       19
+information_schema.ROCKSDB_DDL.INDEX_FLAGS        19
+information_schema.ROCKSDB_DDL.CF                193
+information_schema.ROCKSDB_DDL.AUTO_INCREMENT     20
+
 information_schema.ROCKSDB_GLOBAL_INFO.TYPE  513
 information_schema.ROCKSDB_GLOBAL_INFO.NAME  513
 information_schema.ROCKSDB_GLOBAL_INFO.VALUE 513
-
-information_schema.TokuDB_trx.trx_id              19
-information_schema.TokuDB_trx.trx_mysql_thread_id 19
-information_schema.TokuDB_trx.trx_time            19
 
 information_schema.INNODB_FT_INDEX_TABLE.WORD         337
 information_schema.INNODB_FT_INDEX_TABLE.FIRST_DOC_ID  20
@@ -993,36 +1006,35 @@ information_schema.INNODB_FT_INDEX_TABLE.DOC_COUNT     20
 information_schema.INNODB_FT_INDEX_TABLE.DOC_ID        20
 information_schema.INNODB_FT_INDEX_TABLE.POSITION      20
 
-information_schema.ROCKSDB_TRX.TRANSACTION_ID            19
-information_schema.ROCKSDB_TRX.STATE                    193
-information_schema.ROCKSDB_TRX.NAME                     193
-information_schema.ROCKSDB_TRX.WRITE_COUNT               19
-information_schema.ROCKSDB_TRX.LOCK_COUNT                19
-information_schema.ROCKSDB_TRX.TIMEOUT_SEC               10
-information_schema.ROCKSDB_TRX.WAITING_KEY              513
-information_schema.ROCKSDB_TRX.WAITING_COLUMN_FAMILY_ID  10
-information_schema.ROCKSDB_TRX.IS_REPLICATION            10
-information_schema.ROCKSDB_TRX.SKIP_TRX_API              10
-information_schema.ROCKSDB_TRX.READ_ONLY                 10
-information_schema.ROCKSDB_TRX.HAS_DEADLOCK_DETECTION    10
-information_schema.ROCKSDB_TRX.NUM_ONGOING_BULKLOAD      10
-information_schema.ROCKSDB_TRX.THREAD_ID                 10
-information_schema.ROCKSDB_TRX.QUERY                    193
+information_schema.ROCKSDB_COMPACTION_STATS.CF_NAME 193
+information_schema.ROCKSDB_COMPACTION_STATS.LEVEL   513
+information_schema.ROCKSDB_COMPACTION_STATS.TYPE    513
+information_schema.ROCKSDB_COMPACTION_STATS.VALUE     8
 
 information_schema.user_variables.VARIABLE_NAME        64
 information_schema.user_variables.VARIABLE_VALUE     2048
 information_schema.user_variables.VARIABLE_TYPE        64
 information_schema.user_variables.CHARACTER_SET_NAME   32
 
-information_schema.INNODB_MUTEXES.NAME        4000
-information_schema.INNODB_MUTEXES.CREATE_FILE 4000
-information_schema.INNODB_MUTEXES.CREATE_LINE   10
-information_schema.INNODB_MUTEXES.OS_WAITS      20
+information_schema.ROCKSDB_DEADLOCK.DEADLOCK_ID     19
+information_schema.ROCKSDB_DEADLOCK.TRANSACTION_ID  19
+information_schema.ROCKSDB_DEADLOCK.CF_NAME        193
+information_schema.ROCKSDB_DEADLOCK.WAITING_KEY    513
+information_schema.ROCKSDB_DEADLOCK.LOCK_TYPE      193
+information_schema.ROCKSDB_DEADLOCK.INDEX_NAME     193
+information_schema.ROCKSDB_DEADLOCK.TABLE_NAME     193
+information_schema.ROCKSDB_DEADLOCK.ROLLED_BACK     19
 
 information_schema.INNODB_SYS_FOREIGN_COLS.ID           193
 information_schema.INNODB_SYS_FOREIGN_COLS.FOR_COL_NAME 193
 information_schema.INNODB_SYS_FOREIGN_COLS.REF_COL_NAME 193
 information_schema.INNODB_SYS_FOREIGN_COLS.POS           10
+
+information_schema.TokuDB_file_map.dictionary_name       256
+information_schema.TokuDB_file_map.internal_file_name    256
+information_schema.TokuDB_file_map.table_schema          256
+information_schema.TokuDB_file_map.table_name            256
+information_schema.TokuDB_file_map.table_dictionary_name 256
 
 test.TST_FOO1.tst_c00         10
 test.TST_FOO1.tst_c01          5

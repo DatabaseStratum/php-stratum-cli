@@ -35,6 +35,13 @@ class DataLayer
   public $logQueries = false;
 
   /**
+   * The options to be set.
+   *
+   * @var array
+   */
+  public $options = [MYSQLI_OPT_INT_AND_FLOAT_NATIVE => true];
+
+  /**
    * The SQL mode of the MySQL instance.
    *
    * @var string
@@ -96,6 +103,7 @@ class DataLayer
   protected $queryLog = [];
 
   //--------------------------------------------------------------------------------------------------------------------
+
   /**
    * Starts a transaction.
    *
@@ -179,24 +187,21 @@ class DataLayer
       throw new RuntimeException($message);
     }
 
-    // Set the default character set.
-    if ($this->charSet)
+
+    foreach ($this->options as $option => $value)
     {
-      $ret = $this->mysqli->set_charset($this->charSet);
-      if (!$ret) $this->mySqlError('mysqli::set_charset');
+      $this->mysqli->options($option, $value);
     }
+
+    // Set the default character set.
+    $ret = $this->mysqli->set_charset($this->charSet);
+    if (!$ret) $this->mySqlError('mysqli::set_charset');
 
     // Set the SQL mode.
-    if ($this->sqlMode)
-    {
-      $this->executeNone("SET sql_mode = '".$this->sqlMode."'");
-    }
+    $this->executeNone("set sql_mode = '".$this->sqlMode."'");
 
     // Set transaction isolation level.
-    if ($this->transactionIsolationLevel)
-    {
-      $this->executeNone("SET SESSION tx_isolation = '".$this->transactionIsolationLevel."'");
-    }
+    $this->executeNone("set session tx_isolation = '".$this->transactionIsolationLevel."'");
 
     // Set flag to use method mysqli_result::fetch_all if we are using MySQL native driver.
     $this->haveFetchAll = method_exists('mysqli_result', 'fetch_all');
@@ -211,7 +216,7 @@ class DataLayer
    */
   public function disconnect(): void
   {
-    if ($this->mysqli)
+    if ($this->mysqli!==null)
     {
       $this->mysqli->close();
       $this->mysqli = null;
