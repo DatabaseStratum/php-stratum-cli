@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SetBased\Stratum\MySql\Command;
 
@@ -423,8 +424,8 @@ class ConstantsCommand extends MySqlCommand
 
     foreach ($this->constants as $constant => $value)
     {
-      $width1 = max(strlen($constant), $width1);
-      $width2 = max(strlen($value), $width2);
+      $width1 = max(mb_strlen($constant), $width1);
+      $width2 = max(mb_strlen((string)$value), $width2);
     }
 
     $line_format = sprintf('  const %%-%ds = %%%dd;', $width1, $width2);
@@ -486,8 +487,8 @@ class ConstantsCommand extends MySqlCommand
       $width2 = 0;
       foreach ($table as $column)
       {
-        $width1 = max(strlen($column['column_name']), $width1);
-        $width2 = max(strlen($column['length']), $width2);
+        $width1 = max(mb_strlen($column['column_name']), $width1);
+        $width2 = max(mb_strlen((string)$column['length']), $width2);
       }
 
       foreach ($table as $column)

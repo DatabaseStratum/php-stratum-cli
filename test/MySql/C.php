@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace SetBased\Stratum\Test\MySql;
 
 /**
@@ -11,9 +12,9 @@ class C
    *
    * Below this doc block constants will be inserted by PhpStratum.
    */
+}
   const TST_ID_BUNNY    = 3;
   const TST_ID_CAT      = 4;
   const TST_ID_EGGS     = 2;
   const TST_ID_ELEPHANT = 5;
   const TST_ID_SPAM     = 1;
-}

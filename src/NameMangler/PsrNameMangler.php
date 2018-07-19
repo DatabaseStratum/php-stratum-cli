@@ -1,8 +1,8 @@
 <?php
+declare(strict_types=1);
 
 namespace SetBased\Stratum\NameMangler;
 
-//----------------------------------------------------------------------------------------------------------------------
 /**
  * A name mangler for stored routines and parameters names creating method and parameter names that confirm to
  * the PSR-1 Basic Coding Standard.

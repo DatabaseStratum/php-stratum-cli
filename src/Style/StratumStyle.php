@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SetBased\Stratum\Style;
 
@@ -7,7 +8,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-//----------------------------------------------------------------------------------------------------------------------
 /**
  * Output decorator helpers based on Symfony Style Guide.
  */

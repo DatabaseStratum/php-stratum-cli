@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SetBased\Stratum\Command;
 
@@ -21,7 +22,6 @@ class BaseCommand extends Command
   protected $io;
 
   //--------------------------------------------------------------------------------------------------------------------
-
   /**
    * Returns the value of a setting.
    *
@@ -31,12 +31,12 @@ class BaseCommand extends Command
    * @param string $sectionName The name of the section of the requested setting.
    * @param string $settingName The name of the setting of the requested setting.
    *
-   * @return null|string
+   * @return mixed
    */
   protected static function getSetting(array $settings,
                                        bool $mandatory,
                                        string $sectionName,
-                                       string $settingName): ?string
+                                       string $settingName)
   {
     // Test if the section exists.
     if (!array_key_exists($sectionName, $settings))

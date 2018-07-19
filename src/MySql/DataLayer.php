@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SetBased\Stratum\MySql;
 
@@ -187,7 +188,7 @@ class DataLayer
       throw new RuntimeException($message);
     }
 
-
+    // Set the options.
     foreach ($this->options as $option => $value)
     {
       $this->mysqli->options($option, $value);
@@ -557,7 +558,7 @@ class DataLayer
         {
           $columns[$str_num]['header'] = $column->name;
           $columns[$str_num]['type']   = $column->type;
-          $columns[$str_num]['length'] = max(4, $column->max_length, strlen($column->name));
+          $columns[$str_num]['length'] = max(4, $column->max_length, mb_strlen($column->name));
         }
 
         // Show the table header.
@@ -617,7 +618,7 @@ class DataLayer
       $this->chunkSize = (int)min($this->maxAllowedPacket - 8, 1024 * 1024);
     }
 
-    return $this->maxAllowedPacket;
+    return (int)$this->maxAllowedPacket;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -1017,15 +1018,15 @@ class DataLayer
     foreach ($columns as $column)
     {
       $separator .= str_repeat('-', $column['length'] + 2).'+';
-      $spaces    = ($column['length'] + 2) - strlen($column['header']);
+      $spaces    = ($column['length'] + 2) - mb_strlen((string)$column['header']);
 
-      $l_spaces = $spaces / 2;
-      $r_spaces = ($spaces / 2) + ($spaces % 2);
+      $spacesLeft  = (int)floor($spaces / 2);
+      $spacesRight = (int)ceil($spaces / 2);
 
-      $l_spaces = ($l_spaces>0) ? str_repeat(' ', $l_spaces) : '';
-      $r_spaces = ($r_spaces>0) ? str_repeat(' ', $r_spaces) : '';
+      $fillerLeft  = ($spacesLeft>0) ? str_repeat(' ', $spacesLeft) : '';
+      $fillerRight = ($spacesRight>0) ? str_repeat(' ', $spacesRight) : '';
 
-      $header .= $l_spaces.$column['header'].$r_spaces.'|';
+      $header .= $fillerLeft.$column['header'].$fillerRight.'|';
     }
 
     echo "\n", $separator, "\n";
@@ -1042,7 +1043,7 @@ class DataLayer
    */
   private function executeTableShowTableColumn(array $column, $value): void
   {
-    $spaces = str_repeat(' ', $column['length'] - strlen($value));
+    $spaces = str_repeat(' ', $column['length'] - mb_strlen((string)$value));
 
     switch ($column['type'])
     {

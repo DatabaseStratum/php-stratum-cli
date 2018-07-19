@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SetBased\Stratum\Test\MySql;
 
@@ -13,7 +14,7 @@ class MaxAllowedPacketTest extends DataLayerTestCase
   /**
    * Generate test for the data Lob type different size.
    */
-  public function crc32WithStoredRoutine($size)
+  public function crc32WithStoredRoutine(int $size)
   {
     $data  = '';
     $chars = 'abdefhiknrstyzABDEFGHKNQRSTYZ1234567890';
@@ -21,7 +22,7 @@ class MaxAllowedPacketTest extends DataLayerTestCase
     {
       $data .= substr($chars, rand(0, strlen($chars)), 1);
     }
-    $data = substr(str_repeat($data, $size / 1024 + 1024), 0, $size);
+    $data = substr(str_repeat($data, (int)($size / 1024 + 1024)), 0, $size);
 
     $crc32_php = sprintf("%u", crc32($data));
 
@@ -36,7 +37,7 @@ class MaxAllowedPacketTest extends DataLayerTestCase
    */
   public function test1()
   {
-    $this->crc32WithStoredRoutine(0.5 * $this->dataLayer->getMaxAllowedPacket());
+    $this->crc32WithStoredRoutine((int)(0.5 * $this->dataLayer->getMaxAllowedPacket()));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -67,7 +68,7 @@ class MaxAllowedPacketTest extends DataLayerTestCase
    */
   public function xtest3()
   {
-    $this->crc32WithStoredRoutine(1.05 * $this->dataLayer->getMaxAllowedPacket());
+    $this->crc32WithStoredRoutine((int)(1.05 * $this->dataLayer->getMaxAllowedPacket()));
   }
 
   //--------------------------------------------------------------------------------------------------------------------

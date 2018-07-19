@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SetBased\Stratum\MySql\Wrapper;
 
@@ -174,7 +175,7 @@ abstract class Wrapper
     {
       foreach ($parameters as $parameter_info)
       {
-        $hasBlob |= DataTypeHelper::isBlobParameter($parameter_info['data_type']);
+        $hasBlob = $hasBlob || DataTypeHelper::isBlobParameter($parameter_info['data_type']);
       }
     }
 
@@ -488,8 +489,8 @@ abstract class Wrapper
       $max_type_length = 0;
       foreach ($parameters as $parameter)
       {
-        $max_name_length = max($max_name_length, strlen($parameter['php_name']));
-        $max_type_length = max($max_type_length, strlen($parameter['php_type']));
+        $max_name_length = max($max_name_length, mb_strlen($parameter['php_name']));
+        $max_type_length = max($max_type_length, mb_strlen($parameter['php_type']));
       }
 
       $this->codeStore->append(' *', false);
@@ -497,7 +498,7 @@ abstract class Wrapper
       // Generate phpDoc for the parameters of the wrapper method.
       foreach ($parameters as $parameter)
       {
-        $format = sprintf(' * %%-%ds %%-%ds %%-%ds %%s', strlen('@param'), $max_type_length, $max_name_length);
+        $format = sprintf(' * %%-%ds %%-%ds %%-%ds %%s', mb_strlen('@param'), $max_type_length, $max_name_length);
 
         $lines = explode("\n", $parameter['description']);
         if (!empty($lines))
