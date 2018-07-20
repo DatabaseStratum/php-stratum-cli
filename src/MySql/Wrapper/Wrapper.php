@@ -496,7 +496,7 @@ abstract class Wrapper
       {
         $format = sprintf(' * %%-%ds %%-%ds %%-%ds %%s', mb_strlen('@param'), $max_type_length, $max_name_length);
 
-        $lines = explode("\n", $parameter['description']);
+        $lines = explode(PHP_EOL, $parameter['description'] ?? '');
         if (!empty($lines))
         {
           $line = array_shift($lines);
