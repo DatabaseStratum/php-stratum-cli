@@ -350,7 +350,7 @@ class ConstantsCommand extends MySqlCommand
       $handle = fopen($this->constantsFilename, 'r');
 
       $line_number = 0;
-      while ($line = fgets($handle))
+      while (($line = fgets($handle)))
       {
         $line_number++;
         if ($line!="\n")
