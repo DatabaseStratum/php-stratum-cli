@@ -70,54 +70,64 @@ class TestDataLayer extends DataLayer
   /**
    * Test for all possible types of parameters excluding LOB's.
    *
-   * @param int|null              $pTstInt       Parameter of type int.
-   *                                             int(11)
-   * @param int|null              $pTstSmallint  Parameter of type smallint.
-   *                                             smallint(6)
-   * @param int|null              $pTstTinyint   Parameter of type tinyint.
-   *                                             tinyint(4)
-   * @param int|null              $pTstMediumint Parameter of type mediumint.
-   *                                             mediumint(9)
-   * @param int|null              $pTstBigint    Parameter of type bigint.
-   *                                             bigint(20)
-   * @param int|float|string|null $pTstDecimal   Parameter of type decimal.
-   *                                             decimal(10,2)
-   * @param int|float|string|null $pTstDecimal0  Parameter of type decimal with 0 scale.
-   *                                             decimal(65,0)
-   * @param float|null            $pTstFloat     Parameter of type float.
-   *                                             float
-   * @param float|null            $pTstDouble    Parameter of type double.
-   *                                             double
-   * @param string|null           $pTstBit       Parameter of type bit.
-   *                                             bit(8)
-   * @param string|null           $pTstDate      Parameter of type date.
-   *                                             date
-   * @param string|null           $pTstDatetime  Parameter of type datetime.
-   *                                             datetime
-   * @param string|null           $pTstTimestamp Parameter of type timestamp.
-   *                                             timestamp
-   * @param string|null           $pTstTime      Parameter of type time.
-   *                                             time
-   * @param int|null              $pTstYear      Parameter of type year.
-   *                                             year(4)
-   * @param string|null           $pTstChar      Parameter of type char.
-   *                                             char(10) character set utf8 collation utf8_general_ci
-   * @param string|null           $pTstVarchar   Parameter of type varchar.
-   *                                             varchar(10) character set utf8 collation utf8_general_ci
-   * @param string|null           $pTstBinary    Parameter of type binary.
-   *                                             binary(10)
-   * @param string|null           $pTstVarbinary Parameter of type varbinary.
-   *                                             varbinary(10)
-   * @param string|null           $pTstEnum      Parameter of type enum.
-   *                                             enum('a','b') character set utf8 collation utf8_general_ci
-   * @param string|null           $pTstSet       Parameter of type set.
-   *                                             set('a','b') character set utf8 collation utf8_general_ci
+   * @param int|null              $pTstInt               Parameter of type int.
+   *                                                     int(11)
+   * @param int|null              $pTstSmallint          Parameter of type smallint.
+   *                                                     smallint(6)
+   * @param int|null              $pTstTinyint           Parameter of type tinyint.
+   *                                                     tinyint(4)
+   * @param int|null              $pTstMediumint         Parameter of type mediumint.
+   *                                                     mediumint(9)
+   * @param int|null              $pTstBigint            Parameter of type bigint.
+   *                                                     bigint(20)
+   * @param int|null              $pTstIntUnsigned       Parameter of type int unsigned.
+   *                                                     int(10) unsigned
+   * @param int|null              $pTstSmallintUnsigned  Parameter of type smallint unsigned.
+   *                                                     smallint(5) unsigned
+   * @param int|null              $pTstTinyintUnsigned   Parameter of type tinyint unsigned.
+   *                                                     tinyint(3) unsigned
+   * @param int|null              $pTstMediumintUnsigned Parameter of type mediumint unsigned.
+   *                                                     mediumint(8) unsigned
+   * @param int|null              $pTstBigintUnsigned    Parameter of type bigint unsigned.
+   *                                                     bigint(20) unsigned
+   * @param int|float|string|null $pTstDecimal           Parameter of type decimal.
+   *                                                     decimal(10,2)
+   * @param int|float|string|null $pTstDecimal0          Parameter of type decimal with 0 scale.
+   *                                                     decimal(65,0)
+   * @param float|null            $pTstFloat             Parameter of type float.
+   *                                                     float
+   * @param float|null            $pTstDouble            Parameter of type double.
+   *                                                     double
+   * @param string|null           $pTstBit               Parameter of type bit.
+   *                                                     bit(8)
+   * @param string|null           $pTstDate              Parameter of type date.
+   *                                                     date
+   * @param string|null           $pTstDatetime          Parameter of type datetime.
+   *                                                     datetime
+   * @param string|null           $pTstTimestamp         Parameter of type timestamp.
+   *                                                     timestamp
+   * @param string|null           $pTstTime              Parameter of type time.
+   *                                                     time
+   * @param int|null              $pTstYear              Parameter of type year.
+   *                                                     year(4)
+   * @param string|null           $pTstChar              Parameter of type char.
+   *                                                     char(10) character set utf8 collation utf8_general_ci
+   * @param string|null           $pTstVarchar           Parameter of type varchar.
+   *                                                     varchar(10) character set utf8 collation utf8_general_ci
+   * @param string|null           $pTstBinary            Parameter of type binary.
+   *                                                     binary(10)
+   * @param string|null           $pTstVarbinary         Parameter of type varbinary.
+   *                                                     varbinary(10)
+   * @param string|null           $pTstEnum              Parameter of type enum.
+   *                                                     enum('a','b') character set utf8 collation utf8_general_ci
+   * @param string|null           $pTstSet               Parameter of type set.
+   *                                                     set('a','b') character set utf8 collation utf8_general_ci
    *
    * @return int
    */
-  public function tstTest01(?int $pTstInt, ?int $pTstSmallint, ?int $pTstTinyint, ?int $pTstMediumint, ?int $pTstBigint, $pTstDecimal, $pTstDecimal0, ?float $pTstFloat, ?float $pTstDouble, ?string $pTstBit, ?string $pTstDate, ?string $pTstDatetime, ?string $pTstTimestamp, ?string $pTstTime, ?int $pTstYear, ?string $pTstChar, ?string $pTstVarchar, ?string $pTstBinary, ?string $pTstVarbinary, ?string $pTstEnum, ?string $pTstSet): int
+  public function tstTest01(?int $pTstInt, ?int $pTstSmallint, ?int $pTstTinyint, ?int $pTstMediumint, ?int $pTstBigint, ?int $pTstIntUnsigned, ?int $pTstSmallintUnsigned, ?int $pTstTinyintUnsigned, ?int $pTstMediumintUnsigned, ?int $pTstBigintUnsigned, $pTstDecimal, $pTstDecimal0, ?float $pTstFloat, ?float $pTstDouble, ?string $pTstBit, ?string $pTstDate, ?string $pTstDatetime, ?string $pTstTimestamp, ?string $pTstTime, ?int $pTstYear, ?string $pTstChar, ?string $pTstVarchar, ?string $pTstBinary, ?string $pTstVarbinary, ?string $pTstEnum, ?string $pTstSet): int
   {
-    return $this->executeNone('call tst_test01('.$this->quoteInt($pTstInt).','.$this->quoteInt($pTstSmallint).','.$this->quoteInt($pTstTinyint).','.$this->quoteInt($pTstMediumint).','.$this->quoteInt($pTstBigint).','.$this->quoteDecimal($pTstDecimal).','.$this->quoteDecimal($pTstDecimal0).','.$this->quoteFloat($pTstFloat).','.$this->quoteFloat($pTstDouble).','.$this->quoteBit($pTstBit).','.$this->quoteString($pTstDate).','.$this->quoteString($pTstDatetime).','.$this->quoteString($pTstTimestamp).','.$this->quoteString($pTstTime).','.$this->quoteInt($pTstYear).','.$this->quoteString($pTstChar).','.$this->quoteString($pTstVarchar).','.$this->quoteBinary($pTstBinary).','.$this->quoteBinary($pTstVarbinary).','.$this->quoteString($pTstEnum).','.$this->quoteString($pTstSet).')');
+    return $this->executeNone('call tst_test01('.$this->quoteInt($pTstInt).','.$this->quoteInt($pTstSmallint).','.$this->quoteInt($pTstTinyint).','.$this->quoteInt($pTstMediumint).','.$this->quoteInt($pTstBigint).','.$this->quoteInt($pTstIntUnsigned).','.$this->quoteInt($pTstSmallintUnsigned).','.$this->quoteInt($pTstTinyintUnsigned).','.$this->quoteInt($pTstMediumintUnsigned).','.$this->quoteInt($pTstBigintUnsigned).','.$this->quoteDecimal($pTstDecimal).','.$this->quoteDecimal($pTstDecimal0).','.$this->quoteFloat($pTstFloat).','.$this->quoteFloat($pTstDouble).','.$this->quoteBit($pTstBit).','.$this->quoteString($pTstDate).','.$this->quoteString($pTstDatetime).','.$this->quoteString($pTstTimestamp).','.$this->quoteString($pTstTime).','.$this->quoteInt($pTstYear).','.$this->quoteString($pTstChar).','.$this->quoteString($pTstVarchar).','.$this->quoteBinary($pTstBinary).','.$this->quoteBinary($pTstVarbinary).','.$this->quoteString($pTstEnum).','.$this->quoteString($pTstSet).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -243,12 +253,12 @@ class TestDataLayer extends DataLayer
     $this->realQuery('call tst_test_bulk_insert01()');
     if (is_array($rows) && !empty($rows))
     {
-      $sql = "INSERT INTO `TST_TEMPO`(`tst_int`,`tst_smallint`,`tst_mediumint`,`tst_tinyint`,`tst_bigint`,`tst_year`,`tst_decimal`,`tst_decimal0`,`tst_float`,`tst_double`,`tst_binary`,`tst_varbinary`,`tst_char`,`tst_varchar`,`tst_time`,`tst_timestamp`,`tst_date`,`tst_datetime`,`tst_enum`,`tst_set`,`tst_bit`)";
+      $sql = "INSERT INTO `TST_TEMPO`(`tst_int`,`tst_smallint`,`tst_mediumint`,`tst_tinyint`,`tst_bigint`,`tst_int_unsigned`,`tst_smallint_unsigned`,`tst_mediumint_unsigned`,`tst_tinyint_unsigned`,`tst_bigint_unsigned`,`tst_year`,`tst_decimal`,`tst_decimal0`,`tst_float`,`tst_double`,`tst_binary`,`tst_varbinary`,`tst_char`,`tst_varchar`,`tst_time`,`tst_timestamp`,`tst_date`,`tst_datetime`,`tst_enum`,`tst_set`,`tst_bit`)";
       $first = true;
       foreach($rows as $row)
       {
-        if ($first) $sql .=' values('.$this->quoteInt($row['field_int']).','.$this->quoteInt($row['field_smallint']).','.$this->quoteInt($row['field_mediumint']).','.$this->quoteInt($row['field_tinyint']).','.$this->quoteInt($row['field_bigint']).','.$this->quoteInt($row['field_year']).','.$this->quoteDecimal($row['field_decimal']).','.$this->quoteDecimal($row['field_decimal0']).','.$this->quoteFloat($row['field_float']).','.$this->quoteFloat($row['field_double']).','.$this->quoteBinary($row['field_binary']).','.$this->quoteBinary($row['field_varbinary']).','.$this->quoteString($row['field_char']).','.$this->quoteString($row['field_varchar']).','.$this->quoteString($row['field_time']).','.$this->quoteString($row['field_timestamp']).','.$this->quoteString($row['field_date']).','.$this->quoteString($row['field_datetime']).','.$this->quoteString($row['field_enum']).','.$this->quoteString($row['field_set']).','.$this->quoteBit($row['field_bit']).')';
-        else        $sql .=',      ('.$this->quoteInt($row['field_int']).','.$this->quoteInt($row['field_smallint']).','.$this->quoteInt($row['field_mediumint']).','.$this->quoteInt($row['field_tinyint']).','.$this->quoteInt($row['field_bigint']).','.$this->quoteInt($row['field_year']).','.$this->quoteDecimal($row['field_decimal']).','.$this->quoteDecimal($row['field_decimal0']).','.$this->quoteFloat($row['field_float']).','.$this->quoteFloat($row['field_double']).','.$this->quoteBinary($row['field_binary']).','.$this->quoteBinary($row['field_varbinary']).','.$this->quoteString($row['field_char']).','.$this->quoteString($row['field_varchar']).','.$this->quoteString($row['field_time']).','.$this->quoteString($row['field_timestamp']).','.$this->quoteString($row['field_date']).','.$this->quoteString($row['field_datetime']).','.$this->quoteString($row['field_enum']).','.$this->quoteString($row['field_set']).','.$this->quoteBit($row['field_bit']).')';
+        if ($first) $sql .=' values('.$this->quoteInt($row['field_int']).','.$this->quoteInt($row['field_smallint']).','.$this->quoteInt($row['field_mediumint']).','.$this->quoteInt($row['field_tinyint']).','.$this->quoteInt($row['field_bigint']).','.$this->quoteInt($row['field_int_unsigned']).','.$this->quoteInt($row['field_smallint_unsigned']).','.$this->quoteInt($row['field_mediumint_unsigned']).','.$this->quoteInt($row['field_tinyint_unsigned']).','.$this->quoteInt($row['field_bigint_unsigned']).','.$this->quoteInt($row['field_year']).','.$this->quoteDecimal($row['field_decimal']).','.$this->quoteDecimal($row['field_decimal0']).','.$this->quoteFloat($row['field_float']).','.$this->quoteFloat($row['field_double']).','.$this->quoteBinary($row['field_binary']).','.$this->quoteBinary($row['field_varbinary']).','.$this->quoteString($row['field_char']).','.$this->quoteString($row['field_varchar']).','.$this->quoteString($row['field_time']).','.$this->quoteString($row['field_timestamp']).','.$this->quoteString($row['field_date']).','.$this->quoteString($row['field_datetime']).','.$this->quoteString($row['field_enum']).','.$this->quoteString($row['field_set']).','.$this->quoteBit($row['field_bit']).')';
+        else        $sql .=',      ('.$this->quoteInt($row['field_int']).','.$this->quoteInt($row['field_smallint']).','.$this->quoteInt($row['field_mediumint']).','.$this->quoteInt($row['field_tinyint']).','.$this->quoteInt($row['field_bigint']).','.$this->quoteInt($row['field_int_unsigned']).','.$this->quoteInt($row['field_smallint_unsigned']).','.$this->quoteInt($row['field_mediumint_unsigned']).','.$this->quoteInt($row['field_tinyint_unsigned']).','.$this->quoteInt($row['field_bigint_unsigned']).','.$this->quoteInt($row['field_year']).','.$this->quoteDecimal($row['field_decimal']).','.$this->quoteDecimal($row['field_decimal0']).','.$this->quoteFloat($row['field_float']).','.$this->quoteFloat($row['field_double']).','.$this->quoteBinary($row['field_binary']).','.$this->quoteBinary($row['field_varbinary']).','.$this->quoteString($row['field_char']).','.$this->quoteString($row['field_varchar']).','.$this->quoteString($row['field_time']).','.$this->quoteString($row['field_timestamp']).','.$this->quoteString($row['field_date']).','.$this->quoteString($row['field_datetime']).','.$this->quoteString($row['field_enum']).','.$this->quoteString($row['field_set']).','.$this->quoteBit($row['field_bit']).')';
         $first = false;
       }
       $this->realQuery($sql);
