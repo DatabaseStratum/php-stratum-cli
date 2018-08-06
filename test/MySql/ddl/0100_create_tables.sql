@@ -1,34 +1,39 @@
 -- ---------------------------------------------------------------------------------------------------------------------
 drop table if exists TST_FOO1;
 
-create table TST_FOO1( tst_int        int
-,                      tst_smallint   smallint
-,                      tst_tinyint    tinyint
-,                      tst_mediumint  mediumint
-,                      tst_bigint     bigint
-,                      tst_decimal    decimal(10,2)
-,                      tst_decimal0   decimal(65)
-,                      tst_float      float
-,                      tst_double     double
-,                      tst_bit        bit(8)
-,                      tst_date       date
-,                      tst_datetime   datetime
-,                      tst_timestamp  timestamp
-,                      tst_time       time
-,                      tst_year       year
-,                      tst_char       char(10)
-,                      tst_varchar    varchar(10)
-,                      tst_binary     binary(10)
-,                      tst_varbinary  varbinary(10)
-,                      tst_tinyblob   tinyblob
-,                      tst_blob       blob
-,                      tst_mediumblob mediumblob
-,                      tst_longblob   longblob
-,                      tst_tinytext   tinytext
-,                      tst_text       text
-,                      tst_mediumtext mediumtext
-,                      tst_longtext   longtext
-,                      tst_enum       enum('a','b')
+create table TST_FOO1( tst_int                int
+,                      tst_smallint           smallint
+,                      tst_tinyint            tinyint
+,                      tst_mediumint          mediumint
+,                      tst_bigint             bigint
+,                      tst_int_unsigned       int unsigned
+,                      tst_smallint_unsigned  smallint unsigned
+,                      tst_tinyint_unsigned   tinyint unsigned
+,                      tst_mediumint_unsigned mediumint unsigned
+,                      tst_bigint_unsigned    bigint unsigned
+,                      tst_decimal            decimal(10,2)
+,                      tst_decimal0           decimal(65)
+,                      tst_float              float
+,                      tst_double             double
+,                      tst_bit                bit(8)
+,                      tst_date               date
+,                      tst_datetime           datetime
+,                      tst_timestamp          timestamp
+,                      tst_time               time
+,                      tst_year               year
+,                      tst_char               char(10)
+,                      tst_varchar            varchar(10)
+,                      tst_binary             binary(10)
+,                      tst_varbinary          varbinary(10)
+,                      tst_tinyblob           tinyblob
+,                      tst_blob               blob
+,                      tst_mediumblob         mediumblob
+,                      tst_longblob           longblob
+,                      tst_tinytext           tinytext
+,                      tst_text               text
+,                      tst_mediumtext         mediumtext
+,                      tst_longtext           longtext
+,                      tst_enum               enum('a','b')
 ,                      tst_set        set('a','b') )
 engine=myisam
 ;

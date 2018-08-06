@@ -258,7 +258,7 @@ class RoutineLoaderHelper
         case 'mediumint':
         case 'int':
         case 'bigint':
-          preg_match('/^\((\d+)\)$/', $parts1[2], $parts2);
+          preg_match('/^\((\d+)\)/', $parts1[2], $parts2);
           $tmp['numeric_precision'] = (int)$parts2[1];
           $tmp['numeric_scale']     = 0;
           break;

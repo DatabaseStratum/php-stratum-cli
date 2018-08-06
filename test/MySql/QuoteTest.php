@@ -20,6 +20,11 @@ class QuoteTest extends DataLayerTestCase
                                   ($column=='tinyint') ? $value : null,
                                   ($column=='mediumint') ? $value : null,
                                   ($column=='bigint') ? $value : null,
+                                  ($column=='int_unsigned') ? $value : null,
+                                  ($column=='smallint_unsigned') ? $value : null,
+                                  ($column=='tinyint_unsigned') ? $value : null,
+                                  ($column=='mediumint_unsigned') ? $value : null,
+                                  ($column=='bigint_unsigned') ? $value : null,
                                   ($column=='decimal') ? $value : null,
                                   ($column=='decimal0') ? $value : null,
                                   ($column=='float') ? $value : null,
@@ -56,6 +61,11 @@ class QuoteTest extends DataLayerTestCase
                                      ($column=='tinyint') ? $value : null,
                                      ($column=='mediumint') ? $value : null,
                                      ($column=='bigint') ? $value : null,
+                                     ($column=='int_unsigned') ? $value : null,
+                                     ($column=='smallint_unsigned') ? $value : null,
+                                     ($column=='tinyint_unsigned') ? $value : null,
+                                     ($column=='mediumint_unsigned') ? $value : null,
+                                     ($column=='bigint_unsigned') ? $value : null,
                                      ($column=='decimal') ? $value : null,
                                      ($column=='decimal0') ? $value : null,
                                      ($column=='float') ? $value : null,
@@ -88,6 +98,12 @@ class QuoteTest extends DataLayerTestCase
     $tests[] = ['column' => 'tinyint', 'value' => 'abc'];
     $tests[] = ['column' => 'mediumint', 'value' => 'abc'];
     $tests[] = ['column' => 'bigint', 'value' => 'abc'];
+
+    $tests[] = ['column' => 'int_unsigned', 'value' => 'abc'];
+    $tests[] = ['column' => 'smallint_unsigned', 'value' => 'abc'];
+    $tests[] = ['column' => 'tinyint_unsigned', 'value' => 'abc'];
+    $tests[] = ['column' => 'mediumint_unsigned', 'value' => 'abc'];
+    $tests[] = ['column' => 'bigint_unsigned', 'value' => 'abc'];
 
     $tests[] = ['column' => 'decimal', 'value' => 'abc'];
     $tests[] = ['column' => 'float', 'value' => 'abc'];
@@ -124,6 +140,12 @@ class QuoteTest extends DataLayerTestCase
     $tests[] = ['column' => 'tinyint', 'value' => 1];
     $tests[] = ['column' => 'mediumint', 'value' => 1];
     $tests[] = ['column' => 'bigint', 'value' => 1];
+
+    $tests[] = ['column' => 'int_unsigned', 'value' => 1];
+    $tests[] = ['column' => 'smallint_unsigned', 'value' => 1];
+    $tests[] = ['column' => 'tinyint_unsigned', 'value' => 1];
+    $tests[] = ['column' => 'mediumint_unsigned', 'value' => 1];
+    $tests[] = ['column' => 'bigint_unsigned', 'value' => 1];
 
     $tests[] = ['column' => 'decimal', 'value' => '0.1'];
     $tests[] = ['column' => 'decimal0', 'value' => 1];
