@@ -177,11 +177,14 @@ class DataTypeHelper
         $ret = "'.self::quoteFloat(".$expression.").'";
         break;
 
-      case 'binary':
       case 'char':
-      case 'varbinary':
       case 'varchar':
         $ret = "'.self::quoteString(".$expression.").'";
+        break;
+
+      case 'binary':
+      case 'varbinary':
+        $ret = "'.self::quoteBinary(".$expression.").'";
         break;
 
       case 'decimal':
@@ -208,11 +211,14 @@ class DataTypeHelper
       case 'text':
       case 'mediumtext':
       case 'longtext':
+        $ret = ($lobAsString) ? $ret = "'.self::quoteString(".$expression.").'" : '?';
+        break;
+
       case 'tinyblob':
       case 'blob':
       case 'mediumblob':
       case 'longblob':
-        $ret = ($lobAsString) ? $ret = "'.self::quoteString(".$expression.").'" : '?';
+        $ret = ($lobAsString) ? $ret = "'.self::quoteBinary(".$expression.").'" : '?';
         break;
 
       case 'list_of_int':

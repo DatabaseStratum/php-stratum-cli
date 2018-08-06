@@ -670,6 +670,21 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * Returns a hexadecimal literal for a binary value that can be safely used in SQL statements.
+   *
+   * @param string|null $value The binary value.
+   *
+   * @return string
+   */
+  public static function quoteBinary(?string $value): string
+  {
+    if ($value===null || $value==='') return 'null';
+
+    return '0x'.bin2hex($value);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Returns a literal for a bit value that can be safely used in SQL statements.
    *
    * @param string|null $bits The bit value.
