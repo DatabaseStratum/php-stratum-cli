@@ -21,6 +21,7 @@ class QuoteTest extends DataLayerTestCase
                                   ($column=='mediumint') ? $value : null,
                                   ($column=='bigint') ? $value : null,
                                   ($column=='decimal') ? $value : null,
+                                  ($column=='decimal0') ? $value : null,
                                   ($column=='float') ? $value : null,
                                   ($column=='double') ? $value : null,
                                   ($column=='bit') ? $value : null,
@@ -56,6 +57,7 @@ class QuoteTest extends DataLayerTestCase
                                      ($column=='mediumint') ? $value : null,
                                      ($column=='bigint') ? $value : null,
                                      ($column=='decimal') ? $value : null,
+                                     ($column=='decimal0') ? $value : null,
                                      ($column=='float') ? $value : null,
                                      ($column=='double') ? $value : null,
                                      ($column=='bit') ? $value : null,
@@ -124,6 +126,7 @@ class QuoteTest extends DataLayerTestCase
     $tests[] = ['column' => 'bigint', 'value' => 1];
 
     $tests[] = ['column' => 'decimal', 'value' => '0.1'];
+    $tests[] = ['column' => 'decimal0', 'value' => 1];
     $tests[] = ['column' => 'float', 'value' => 0.1];
     $tests[] = ['column' => 'double', 'value' => 0.1];
 

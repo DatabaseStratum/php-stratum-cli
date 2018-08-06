@@ -19,8 +19,8 @@ class ParameterTypeTest extends DataLayerTestCase
 
     $doc_block = $reflection_method->getDocComment();
 
-    $this->assertContains('@param string $pPhpType1', $doc_block);
-    $this->assertContains('@param int    $pPhpType2', $doc_block);
+    $this->assertContains('@param int|float|string|null $pPhpType1', $doc_block);
+    $this->assertContains('@param int|float|string|null $pPhpType2', $doc_block);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

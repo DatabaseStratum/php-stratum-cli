@@ -1,34 +1,35 @@
 -- ---------------------------------------------------------------------------------------------------------------------
 drop table if exists TST_FOO1;
 
-create table TST_FOO1( tst_c00 int
-,                      tst_c01 smallint
-,                      tst_c02 tinyint
-,                      tst_c03 mediumint
-,                      tst_c04 bigint
-,                      tst_c05 decimal(10,2)     
-,                      tst_c06 float
-,                      tst_c07 double
-,                      tst_c08 bit(8)
-,                      tst_c09 date
-,                      tst_c10 datetime
-,                      tst_c11 timestamp
-,                      tst_c12 time
-,                      tst_c13 year
-,                      tst_c14 char(10)
-,                      tst_c15 varchar(10)
-,                      tst_c16 binary(10)
-,                      tst_c17 varbinary(10)
-,                      tst_c18 tinyblob
-,                      tst_c19 blob
-,                      tst_c20 mediumblob
-,                      tst_c21 longblob
-,                      tst_c22 tinytext
-,                      tst_c23 text
-,                      tst_c24 mediumtext
-,                      tst_c25 longtext
-,                      tst_c26 enum('a','b')
-,                      tst_c27 set('a','b') )
+create table TST_FOO1( tst_int        int
+,                      tst_smallint   smallint
+,                      tst_tinyint    tinyint
+,                      tst_mediumint  mediumint
+,                      tst_bigint     bigint
+,                      tst_decimal    decimal(10,2)
+,                      tst_decimal0   decimal(65)
+,                      tst_float      float
+,                      tst_double     double
+,                      tst_bit        bit(8)
+,                      tst_date       date
+,                      tst_datetime   datetime
+,                      tst_timestamp  timestamp
+,                      tst_time       time
+,                      tst_year       year
+,                      tst_char       char(10)
+,                      tst_varchar    varchar(10)
+,                      tst_binary     binary(10)
+,                      tst_varbinary  varbinary(10)
+,                      tst_tinyblob   tinyblob
+,                      tst_blob       blob
+,                      tst_mediumblob mediumblob
+,                      tst_longblob   longblob
+,                      tst_tinytext   tinytext
+,                      tst_text       text
+,                      tst_mediumtext mediumtext
+,                      tst_longtext   longtext
+,                      tst_enum       enum('a','b')
+,                      tst_set        set('a','b') )
 engine=myisam
 ;
 
@@ -69,12 +70,12 @@ values( 1
 drop table if exists TST_TABLE;
 
 create table TST_TABLE( tst_c00 varchar(20)
-,                      tst_c01 int(11)
-,                      tst_c02 double
-,                      tst_c03 decimal (10, 5)
-,                      tst_c04 datetime
-,                      t       int(11)
-,                      s       int(11) )
+,                       tst_c01 int(11)
+,                       tst_c02 double
+,                       tst_c03 decimal(10, 5)
+,                       tst_c04 datetime
+,                       t       int(11)
+,                       s       int(11) )
 engine=myisam
 ;
 
@@ -104,8 +105,8 @@ values( 'Hello'
 -- ---------------------------------------------------------------------------------------------------------------------
 drop table if exists TST_LABEL;
 
-create table TST_LABEL( tst_id   int unsigned not null auto_increment
-,                       tst_test varchar(40)
+create table TST_LABEL( tst_id    int unsigned not null auto_increment
+,                       tst_test  varchar(40)
 ,                       tst_label varchar(20)
 ,  primary key(tst_id)
 ) engine=myisam

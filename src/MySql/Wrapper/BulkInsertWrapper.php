@@ -60,8 +60,8 @@ class BulkInsertWrapper extends Wrapper
   protected function writeResultHandler(): void
   {
     // Validate number of column names and number of column types are equal.
-    $n1 = count($this->routine['columns']);
-    $n2 = count($this->routine['column_types']);
+    $n1 = count($this->routine['bulk_insert_keys']);
+    $n2 = count($this->routine['bulk_insert_columns']);
     if ($n1!=$n2)
     {
       throw new LogicException("Number of fields %d and number of columns %d don't match.", $n1, $n2);
@@ -72,23 +72,23 @@ class BulkInsertWrapper extends Wrapper
 
     $columns = '';
     $fields  = '';
-    foreach ($this->routine['columns'] as $i => $field)
+    foreach ($this->routine['bulk_insert_keys'] as $i => $key)
     {
-      if ($field!='_')
+      if ($key!='_')
       {
         if ($columns) $columns .= ',';
-        $columns .= '`'.$this->routine['fields'][$i].'`';
+        $columns .= '`'.$this->routine['bulk_insert_columns'][$i]['column_name'].'`';
 
         if ($fields) $fields .= ',';
-        $fields .= DataTypeHelper::escapePhpExpression(['data_type' => $this->routine['column_types'][$i]],
-                                                       '$row[\''.$field.'\']',
+        $fields .= DataTypeHelper::escapePhpExpression($this->routine['bulk_insert_columns'][$i],
+                                                       '$row[\''.$key.'\']',
                                                        true);
       }
     }
 
     $this->codeStore->append('if (is_array($rows) && !empty($rows))');
     $this->codeStore->append('{');
-    $this->codeStore->append('$sql = "INSERT INTO `'.$this->routine['table_name'].'`('.$columns.')";');
+    $this->codeStore->append('$sql = "INSERT INTO `'.$this->routine['bulk_insert_table_name'].'`('.$columns.')";');
     $this->codeStore->append('$first = true;');
     $this->codeStore->append('foreach($rows as $row)');
     $this->codeStore->append('{');

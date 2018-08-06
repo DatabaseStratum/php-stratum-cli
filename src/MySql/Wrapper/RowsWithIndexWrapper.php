@@ -36,7 +36,7 @@ class RowsWithIndexWrapper extends Wrapper
     $routine_args = $this->getRoutineArgs();
 
     $index = '';
-    foreach ($this->routine['columns'] as $column)
+    foreach ($this->routine['index_columns'] as $column)
     {
       $index .= '[$row[\''.$column.'\']]';
     }
@@ -57,7 +57,7 @@ class RowsWithIndexWrapper extends Wrapper
   protected function writeRoutineFunctionLobFetchData(): void
   {
     $index = '';
-    foreach ($this->routine['columns'] as $column)
+    foreach ($this->routine['index_columns'] as $column)
     {
       $index .= '[$new[\''.$column.'\']]';
     }

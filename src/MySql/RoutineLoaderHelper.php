@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace SetBased\Stratum\MySql;
 
+use SetBased\Exception\FallenException;
 use SetBased\Stratum\Exception\RoutineLoaderException;
 use SetBased\Stratum\MySql\Helper\DataTypeHelper;
 use SetBased\Stratum\MySql\MetadataDataLayer as MetaDataLayer;
@@ -18,6 +19,27 @@ class RoutineLoaderHelper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * The metadata of the table columns of the table for bulk insert.
+   *
+   * @var array[]
+   */
+  private $bulkInsertColumns;
+
+  /**
+   * The keys in the nested array for bulk inserting data.
+   *
+   * @var array[]
+   */
+  private $bulkInsertKeys;
+
+  /**
+   * The name of table for bulk insert.
+   *
+   * @var string
+   */
+  private $bulkInsertTableName;
+
+  /**
    * The default character set under which the stored routine will be loaded and run.
    *
    * @var string
@@ -30,20 +52,6 @@ class RoutineLoaderHelper
    * @var string
    */
   private $collate;
-
-  /**
-   * The key or index columns (depending on the designation type) of the stored routine.
-   *
-   * @var string[]
-   */
-  private $columns;
-
-  /**
-   * The column types of columns of the table for bulk insert of the stored routine.
-   *
-   * @var string[]
-   */
-  private $columnsTypes;
 
   /**
    * The designation type of the stored routine.
@@ -74,18 +82,18 @@ class RoutineLoaderHelper
   private $extendedParameters;
 
   /**
-   * The keys in the PHP array for bulk insert.
-   *
-   * @var string[]
-   */
-  private $fields;
-
-  /**
    * The last modification time of the source file.
    *
    * @var int
    */
   private $filemtime;
+
+  /**
+   * The key or index columns (depending on the designation type) of the stored routine.
+   *
+   * @var string[]
+   */
+  private $indexColumns;
 
   /**
    * The Output decorator
@@ -185,13 +193,6 @@ class RoutineLoaderHelper
    */
   private $sqlMode;
 
-  /**
-   * If designation type is bulk_insert the table name for bulk insert.
-   *
-   * @var string
-   */
-  private $tableName;
-
   //--------------------------------------------------------------------------------------------------------------------
 
   /**
@@ -226,6 +227,103 @@ class RoutineLoaderHelper
     $this->sqlMode                 = $sqlMode;
     $this->characterSet            = $characterSet;
     $this->collate                 = $collate;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Extract column metadata from the rows returend by the SQL statement 'describe table'.
+   *
+   * @param array $description The description of the table.
+   *
+   * @return array
+   */
+  private static function extractColumnsFromTableDescription(array $description): array
+  {
+    $ret = [];
+
+    foreach ($description as $column)
+    {
+      preg_match('/^(\w+)(.*)?$/', $column['Type'], $parts1);
+
+      $tmp = ['column_name'       => $column['Field'],
+              'data_type'         => $parts1[1],
+              'numeric_precision' => null,
+              'numeric_scale'     => null,
+              'dtd_identifier'    => $column['Type']];
+
+      switch ($parts1[1])
+      {
+        case 'tinyint':
+        case 'smallint':
+        case 'mediumint':
+        case 'int':
+        case 'bigint':
+          preg_match('/^\((\d+)\)$/', $parts1[2], $parts2);
+          $tmp['numeric_precision'] = (int)$parts2[1];
+          $tmp['numeric_scale']     = 0;
+          break;
+
+        case 'year':
+          // Nothing to do.
+          break;
+
+        case 'float':
+          $tmp['numeric_precision'] = 12;
+          break;
+
+        case 'double':
+          $tmp['numeric_precision'] = 22;
+          break;
+
+        case 'binary':
+        case 'char':
+        case 'varbinary':
+        case 'varchar':
+          // Nothing to do.
+          break;
+
+        case 'decimal':
+          preg_match('/^\((\d+),(\d+)\)$/', $parts1[2], $parts2);
+          $tmp['numeric_precision'] = (int)$parts2[1];
+          $tmp['numeric_scale']     = (int)$parts2[2];;
+          break;
+
+        case 'time':
+        case 'timestamp':
+        case 'date':
+        case 'datetime':
+          // Nothing to do.
+          break;
+
+        case 'enum':
+        case 'set':
+          // Nothing to do.
+          break;
+
+        case 'bit':
+          preg_match('/^\((\d+)\)$/', $parts1[2], $parts2);
+          $tmp['numeric_precision'] = (int)$parts2[1];
+          break;
+
+        case 'tinytext':
+        case 'text':
+        case 'mediumtext':
+        case 'longtext':
+        case 'tinyblob':
+        case 'blob':
+        case 'mediumblob':
+        case 'longblob':
+          // Nothing to do.
+          break;
+
+        default:
+          throw new FallenException('data type', $parts1[1]);
+      }
+
+      $ret[] = $tmp;
+    }
+
+    return $ret;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -285,7 +383,7 @@ class RoutineLoaderHelper
     if ($this->designationType!='bulk_insert') return;
 
     // Check if table is a temporary table or a non-temporary table.
-    $table_is_non_temporary = MetaDataLayer::checkTableExists($this->tableName);
+    $table_is_non_temporary = MetaDataLayer::checkTableExists($this->bulkInsertTableName);
 
     // Create temporary table if table is non-temporary table.
     if (!$table_is_non_temporary)
@@ -294,34 +392,23 @@ class RoutineLoaderHelper
     }
 
     // Get information about the columns of the table.
-    $columns = MetaDataLayer::describeTable($this->tableName);
+    $description = MetaDataLayer::describeTable($this->bulkInsertTableName);
 
     // Drop temporary table if table is non-temporary.
     if (!$table_is_non_temporary)
     {
-      MetaDataLayer::dropTemporaryTable($this->tableName);
+      MetaDataLayer::dropTemporaryTable($this->bulkInsertTableName);
     }
 
     // Check number of columns in the table match the number of fields given in the designation type.
-    $n1 = count($this->columns);
-    $n2 = count($columns);
+    $n1 = count($this->bulkInsertKeys);
+    $n2 = count($description);
     if ($n1!=$n2)
     {
       throw new RoutineLoaderException("Number of fields %d and number of columns %d don't match.", $n1, $n2);
     }
 
-    // Fill arrays with column names and column types.
-    $tmp_column_types = [];
-    $tmp_fields       = [];
-    foreach ($columns as $column)
-    {
-      preg_match('(\\w+)', $column['Type'], $type);
-      $tmp_column_types[] = $type['0'];
-      $tmp_fields[]       = $column['Field'];
-    }
-
-    $this->columnsTypes = $tmp_column_types;
-    $this->fields       = $tmp_fields;
+    $this->bulkInsertColumns = self::extractColumnsFromTableDescription($description);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -353,13 +440,13 @@ class RoutineLoaderHelper
               {
                 throw new RoutineLoaderException('Error: Expected: -- type: bulk_insert <table_name> <columns>');
               }
-              $this->tableName = $info[1];
-              $this->columns   = explode(',', $info[2]);
+              $this->bulkInsertTableName = $info[1];
+              $this->bulkInsertKeys      = explode(',', $info[2]);
               break;
 
             case 'rows_with_key':
             case 'rows_with_index':
-              $this->columns = explode(',', $matches[2]);
+              $this->indexColumns = explode(',', $matches[2]);
               break;
 
             default:
@@ -432,7 +519,7 @@ class RoutineLoaderHelper
     foreach ($this->parameters as $parameter_info)
     {
       $parameters[] = ['parameter_name'       => $parameter_info['parameter_name'],
-                       'php_type'             => DataTypeHelper::columnTypeToPhpTypeHinting($parameter_info),
+                       'php_type'             => DataTypeHelper::columnTypeToPhpTypeHinting($parameter_info).'|null',
                        'data_type_descriptor' => $parameter_info['data_type_descriptor'],
                        'description'          => $this->getParameterDocDescription($parameter_info['parameter_name'])];
     }
@@ -785,18 +872,18 @@ class RoutineLoaderHelper
    */
   private function updateMetadata(): void
   {
-    $this->phpStratumMetadata['routine_name'] = $this->routineName;
-    $this->phpStratumMetadata['designation']  = $this->designationType;
-    $this->phpStratumMetadata['return']       = $this->returnType;
-    $this->phpStratumMetadata['table_name']   = $this->tableName;
-    $this->phpStratumMetadata['parameters']   = $this->parameters;
-    $this->phpStratumMetadata['columns']      = $this->columns;
-    $this->phpStratumMetadata['fields']       = $this->fields;
-    $this->phpStratumMetadata['column_types'] = $this->columnsTypes;
-    $this->phpStratumMetadata['timestamp']    = $this->filemtime;
-    $this->phpStratumMetadata['replace']      = $this->replace;
-    $this->phpStratumMetadata['phpdoc']       = $this->docBlockPartsWrapper;
-    $this->phpStratumMetadata['spec_params']  = $this->extendedParameters;
+    $this->phpStratumMetadata['routine_name']           = $this->routineName;
+    $this->phpStratumMetadata['designation']            = $this->designationType;
+    $this->phpStratumMetadata['return']                 = $this->returnType;
+    $this->phpStratumMetadata['parameters']             = $this->parameters;
+    $this->phpStratumMetadata['timestamp']              = $this->filemtime;
+    $this->phpStratumMetadata['replace']                = $this->replace;
+    $this->phpStratumMetadata['phpdoc']                 = $this->docBlockPartsWrapper;
+    $this->phpStratumMetadata['spec_params']            = $this->extendedParameters;
+    $this->phpStratumMetadata['index_columns']          = $this->indexColumns;
+    $this->phpStratumMetadata['bulk_insert_table_name'] = $this->bulkInsertTableName;
+    $this->phpStratumMetadata['bulk_insert_columns']    = $this->bulkInsertColumns;
+    $this->phpStratumMetadata['bulk_insert_keys']       = $this->bulkInsertKeys;
   }
 
   //--------------------------------------------------------------------------------------------------------------------

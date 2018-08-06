@@ -212,7 +212,7 @@ abstract class Wrapper
     $nulls    = '';
     foreach ($this->routine['parameters'] as $parameter_info)
     {
-      $binding = DataTypeHelper::getBindVariableType($parameter_info['data_type'], $this->lobAsStringFlag);
+      $binding = DataTypeHelper::getBindVariableType($parameter_info, $this->lobAsStringFlag);
       if ($binding=='b')
       {
         $bindings .= 'b';
@@ -239,7 +239,7 @@ abstract class Wrapper
     $blobArgumentIndex = 0;
     foreach ($this->routine['parameters'] as $parameter_info)
     {
-      if (DataTypeHelper::getBindVariableType($parameter_info['data_type'], $this->lobAsStringFlag)=='b')
+      if (DataTypeHelper::getBindVariableType($parameter_info, $this->lobAsStringFlag)=='b')
       {
         $mangledName = $this->nameMangler->getParameterName($parameter_info['parameter_name']);
 
@@ -374,10 +374,11 @@ abstract class Wrapper
     {
       if ($ret!='') $ret .= ', ';
 
-      $declaration = DataTypeHelper::columnTypeToPhpTypeDeclaration($parameter);
+      $dataType    = DataTypeHelper::columnTypeToPhpTypeHinting($parameter);
+      $declaration = DataTypeHelper::phpTypeHintingToPhpTypeDeclaration($dataType.'|null');
       if ($declaration!=='')
       {
-        $ret .= '?'.$declaration.' ';
+        $ret .= $declaration.' ';
       }
 
       $ret .= '$'.$this->nameMangler->getParameterName($parameter['parameter_name']);

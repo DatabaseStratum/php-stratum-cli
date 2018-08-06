@@ -241,6 +241,7 @@ and   table_name   = %s', self::$dl->quoteString($tableName));
   ,      data_type
   ,      character_maximum_length
   ,      numeric_precision
+  ,      numeric_scale
   from   information_schema.COLUMNS
   where  table_schema = database()
   and    table_name  rlike '^[a-zA-Z0-9_]*$'
@@ -258,6 +259,7 @@ union all
   ,      data_type
   ,      character_maximum_length
   ,      numeric_precision
+  ,      numeric_scale
   from   information_schema.COLUMNS
   where  table_name  rlike '^[a-zA-Z0-9_]*$'
   and    column_name rlike '^[a-zA-Z0-9_]*$'

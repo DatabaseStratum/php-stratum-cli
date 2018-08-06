@@ -36,7 +36,7 @@ class RowsWithKeyWrapper extends Wrapper
     $routine_args = $this->getRoutineArgs();
 
     $key = '';
-    foreach ($this->routine['columns'] as $column)
+    foreach ($this->routine['index_columns'] as $column)
     {
       $key .= '[$row[\''.$column.'\']]';
     }
@@ -57,7 +57,7 @@ class RowsWithKeyWrapper extends Wrapper
   protected function writeRoutineFunctionLobFetchData(): void
   {
     $key = '';
-    foreach ($this->routine['columns'] as $column)
+    foreach ($this->routine['index_columns'] as $column)
     {
       $key .= '[$new[\''.$column.'\']]';
     }

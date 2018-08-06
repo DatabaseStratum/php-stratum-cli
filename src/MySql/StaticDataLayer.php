@@ -688,6 +688,23 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * Returns a literal for a decimal value that can be safely used in SQL statements.
+   *
+   * @param float|int|string|null $value The value.
+   *
+   * @return string
+   */
+  public static function quoteDecimal($value): string
+  {
+    if ($value===null || $value==='') return 'null';
+
+    if (is_int($value) || is_float($value)) return (string)$value;
+
+    return "'".self::$mysqli->real_escape_string($value)."'";
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Returns a literal for a float value that can be safely used in SQL statements.
    *
    * @param float|null $value The float value.

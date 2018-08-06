@@ -70,120 +70,124 @@ class TestDataLayer extends DataLayer
   /**
    * Test for all possible types of parameters excluding LOB's.
    *
-   * @param int    $pParam00 Test parameter 00.
-   *                         int(11)
-   * @param int    $pParam01 Test parameter 01.
-   *                         smallint(6)
-   * @param int    $pParam02 Test parameter 02.
-   *                         tinyint(4)
-   * @param int    $pParam03 Test parameter 03.
-   *                         mediumint(9)
-   * @param int    $pParam04 Test parameter 04.
-   *                         bigint(20)
-   * @param string $pParam05 Test parameter 05.
-   *                         decimal(10,2)
-   * @param float  $pParam06 Test parameter 06.
-   *                         float
-   * @param float  $pParam07 Test parameter 07.
-   *                         double
-   * @param string $pParam08 Test parameter 08.
-   *                         bit(8)
-   * @param string $pParam09 Test parameter 09.
-   *                         date
-   * @param string $pParam10 Test parameter 10.
-   *                         datetime
-   * @param string $pParam11 Test parameter 11.
-   *                         timestamp
-   * @param string $pParam12 Test parameter 12.
-   *                         time
-   * @param int    $pParam13 Test parameter 13.
-   *                         year(4)
-   * @param string $pParam14 Test parameter 14.
-   *                         char(10) character set utf8 collation utf8_general_ci
-   * @param string $pParam15 Test parameter 15.
-   *                         varchar(10) character set utf8 collation utf8_general_ci
-   * @param string $pParam16 Test parameter 16.
-   *                         binary(10)
-   * @param string $pParam17 Test parameter 17.
-   *                         varbinary(10)
-   * @param string $pParam26 Test parameter 26.
-   *                         enum('a','b') character set utf8 collation utf8_general_ci
-   * @param string $pParam27 Test parameter 27.
-   *                         set('a','b') character set utf8 collation utf8_general_ci
+   * @param int|null              $pTstInt       Parameter of type int.
+   *                                             int(11)
+   * @param int|null              $pTstSmallint  Parameter of type smallint.
+   *                                             smallint(6)
+   * @param int|null              $pTstTinyint   Parameter of type tinyint.
+   *                                             tinyint(4)
+   * @param int|null              $pTstMediumint Parameter of type mediumint.
+   *                                             mediumint(9)
+   * @param int|null              $pTstBigint    Parameter of type bigint.
+   *                                             bigint(20)
+   * @param int|float|string|null $pTstDecimal   Parameter of type decimal.
+   *                                             decimal(10,2)
+   * @param int|float|string|null $pTstDecimal0  Parameter of type decimal with 0 scale.
+   *                                             decimal(65,0)
+   * @param float|null            $pTstFloat     Parameter of type float.
+   *                                             float
+   * @param float|null            $pTstDouble    Parameter of type double.
+   *                                             double
+   * @param string|null           $pTstBit       Parameter of type bit.
+   *                                             bit(8)
+   * @param string|null           $pTstDate      Parameter of type date.
+   *                                             date
+   * @param string|null           $pTstDatetime  Parameter of type datetime.
+   *                                             datetime
+   * @param string|null           $pTstTimestamp Parameter of type timestamp.
+   *                                             timestamp
+   * @param string|null           $pTstTime      Parameter of type time.
+   *                                             time
+   * @param int|null              $pTstYear      Parameter of type year.
+   *                                             year(4)
+   * @param string|null           $pTstChar      Parameter of type char.
+   *                                             char(10) character set utf8 collation utf8_general_ci
+   * @param string|null           $pTstVarchar   Parameter of type varchar.
+   *                                             varchar(10) character set utf8 collation utf8_general_ci
+   * @param string|null           $pTstBinary    Parameter of type binary.
+   *                                             binary(10)
+   * @param string|null           $pTstVarbinary Parameter of type varbinary.
+   *                                             varbinary(10)
+   * @param string|null           $pTstEnum      Parameter of type enum.
+   *                                             enum('a','b') character set utf8 collation utf8_general_ci
+   * @param string|null           $pTstSet       Parameter of type set.
+   *                                             set('a','b') character set utf8 collation utf8_general_ci
    *
    * @return int
    */
-  public function tstTest01(?int $pParam00, ?int $pParam01, ?int $pParam02, ?int $pParam03, ?int $pParam04, ?string $pParam05, ?float $pParam06, ?float $pParam07, ?string $pParam08, ?string $pParam09, ?string $pParam10, ?string $pParam11, ?string $pParam12, ?int $pParam13, ?string $pParam14, ?string $pParam15, ?string $pParam16, ?string $pParam17, ?string $pParam26, ?string $pParam27): int
+  public function tstTest01(?int $pTstInt, ?int $pTstSmallint, ?int $pTstTinyint, ?int $pTstMediumint, ?int $pTstBigint, $pTstDecimal, $pTstDecimal0, ?float $pTstFloat, ?float $pTstDouble, ?string $pTstBit, ?string $pTstDate, ?string $pTstDatetime, ?string $pTstTimestamp, ?string $pTstTime, ?int $pTstYear, ?string $pTstChar, ?string $pTstVarchar, ?string $pTstBinary, ?string $pTstVarbinary, ?string $pTstEnum, ?string $pTstSet): int
   {
-    return $this->executeNone('call tst_test01('.$this->quoteInt($pParam00).','.$this->quoteInt($pParam01).','.$this->quoteInt($pParam02).','.$this->quoteInt($pParam03).','.$this->quoteInt($pParam04).','.$this->quoteString($pParam05).','.$this->quoteFloat($pParam06).','.$this->quoteFloat($pParam07).','.$this->quoteBit($pParam08).','.$this->quoteString($pParam09).','.$this->quoteString($pParam10).','.$this->quoteString($pParam11).','.$this->quoteString($pParam12).','.$this->quoteInt($pParam13).','.$this->quoteString($pParam14).','.$this->quoteString($pParam15).','.$this->quoteString($pParam16).','.$this->quoteString($pParam17).','.$this->quoteString($pParam26).','.$this->quoteString($pParam27).')');
+    return $this->executeNone('call tst_test01('.$this->quoteInt($pTstInt).','.$this->quoteInt($pTstSmallint).','.$this->quoteInt($pTstTinyint).','.$this->quoteInt($pTstMediumint).','.$this->quoteInt($pTstBigint).','.$this->quoteDecimal($pTstDecimal).','.$this->quoteDecimal($pTstDecimal0).','.$this->quoteFloat($pTstFloat).','.$this->quoteFloat($pTstDouble).','.$this->quoteBit($pTstBit).','.$this->quoteString($pTstDate).','.$this->quoteString($pTstDatetime).','.$this->quoteString($pTstTimestamp).','.$this->quoteString($pTstTime).','.$this->quoteInt($pTstYear).','.$this->quoteString($pTstChar).','.$this->quoteString($pTstVarchar).','.$this->quoteString($pTstBinary).','.$this->quoteString($pTstVarbinary).','.$this->quoteString($pTstEnum).','.$this->quoteString($pTstSet).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for all possible types of parameters including LOB's.
    *
-   * @param int    $pParam00 Test parameter 00.
-   *                         int(11)
-   * @param int    $pParam01 Test parameter 01.
-   *                         smallint(6)
-   * @param int    $pParam02 Test parameter 02.
-   *                         tinyint(4)
-   * @param int    $pParam03 Test parameter 03.
-   *                         mediumint(9)
-   * @param int    $pParam04 Test parameter 04.
-   *                         bigint(20)
-   * @param string $pParam05 Test parameter 05.
-   *                         decimal(10,2)
-   * @param float  $pParam06 Test parameter 06.
-   *                         float
-   * @param float  $pParam07 Test parameter 07.
-   *                         double
-   * @param string $pParam08 Test parameter 08.
-   *                         bit(8)
-   * @param string $pParam09 Test parameter 09.
-   *                         date
-   * @param string $pParam10 Test parameter 10.
-   *                         datetime
-   * @param string $pParam11 Test parameter 11.
-   *                         timestamp
-   * @param string $pParam12 Test parameter 12.
-   *                         time
-   * @param int    $pParam13 Test parameter 13.
-   *                         year(4)
-   * @param string $pParam14 Test parameter 14.
-   *                         char(10) character set utf8 collation utf8_general_ci
-   * @param string $pParam15 Test parameter 15.
-   *                         varchar(10) character set utf8 collation utf8_general_ci
-   * @param string $pParam16 Test parameter 16.
-   *                         binary(10)
-   * @param string $pParam17 Test parameter 17.
-   *                         varbinary(10)
-   * @param string $pParam18 Test parameter 18.
-   *                         tinyblob
-   * @param string $pParam19 Test parameter 19.
-   *                         blob
-   * @param string $pParam20 Test parameter 20.
-   *                         mediumblob
-   * @param string $pParam21 Test parameter 21.
-   *                         longblob
-   * @param string $pParam22 Test parameter 22.
-   *                         tinytext character set utf8 collation utf8_general_ci
-   * @param string $pParam23 Test parameter 23.
-   *                         text character set utf8 collation utf8_general_ci
-   * @param string $pParam24 Test parameter 24.
-   *                         mediumtext character set utf8 collation utf8_general_ci
-   * @param string $pParam25 Test parameter 25.
-   *                         longtext character set utf8 collation utf8_general_ci
-   * @param string $pParam26 Test parameter 26.
-   *                         enum('a','b') character set utf8 collation utf8_general_ci
-   * @param string $pParam27 Test parameter 27.
-   *                         set('a','b') character set utf8 collation utf8_general_ci
+   * @param int|null              $pTstInt        Parameter of type int.
+   *                                              int(11)
+   * @param int|null              $pTstSmallint   Parameter of type smallint.
+   *                                              smallint(6)
+   * @param int|null              $pTstTinyint    Parameter of type tinyint.
+   *                                              tinyint(4)
+   * @param int|null              $pTstMediumint  Parameter of type mediumint.
+   *                                              mediumint(9)
+   * @param int|null              $pTstBigint     Parameter of type bigint.
+   *                                              bigint(20)
+   * @param int|float|string|null $pTstDecimal    Parameter of type decimal.
+   *                                              decimal(10,2)
+   * @param int|float|string|null $pTstDecimal0   Parameter of type decimal with 0 scale.
+   *                                              decimal(65,0)
+   * @param float|null            $pTstFloat      Parameter of type float.
+   *                                              float
+   * @param float|null            $pTstDouble     Parameter of type double.
+   *                                              double
+   * @param string|null           $pTstBit        Parameter of type bit.
+   *                                              bit(8)
+   * @param string|null           $pTstDate       Parameter of type date.
+   *                                              date
+   * @param string|null           $pTstDatetime   Parameter of type datetime.
+   *                                              datetime
+   * @param string|null           $pTstTimestamp  Parameter of type timestamp.
+   *                                              timestamp
+   * @param string|null           $pTstTime       Parameter of type time.
+   *                                              time
+   * @param int|null              $pTstYear       Parameter of type year.
+   *                                              year(4)
+   * @param string|null           $pTstChar       Parameter of type char.
+   *                                              char(10) character set utf8 collation utf8_general_ci
+   * @param string|null           $pTstVarchar    Parameter of type varchar.
+   *                                              varchar(10) character set utf8 collation utf8_general_ci
+   * @param string|null           $pTstBinary     Parameter of type binary.
+   *                                              binary(10)
+   * @param string|null           $pTstVarbinary  Parameter of type varbinary.
+   *                                              varbinary(10)
+   * @param string|null           $pTstTinyblob   Parameter of type tinyblob.
+   *                                              tinyblob
+   * @param string|null           $pTstBlob       Parameter of type blob.
+   *                                              blob
+   * @param string|null           $pTstMediumblob Parameter of type mediumblob.
+   *                                              mediumblob
+   * @param string|null           $pTstLongblob   Parameter of type longblob.
+   *                                              longblob
+   * @param string|null           $pTstTinytext   Parameter of type tinytext.
+   *                                              tinytext character set utf8 collation utf8_general_ci
+   * @param string|null           $pTstText       Parameter of type text.
+   *                                              text character set utf8 collation utf8_general_ci
+   * @param string|null           $pTstMediumtext Parameter of type mediumtext.
+   *                                              mediumtext character set utf8 collation utf8_general_ci
+   * @param string|null           $pTstLongtext   Parameter of type longtext.
+   *                                              longtext character set utf8 collation utf8_general_ci
+   * @param string|null           $pTstEnum       Parameter of type enum.
+   *                                              enum('a','b') character set utf8 collation utf8_general_ci
+   * @param string|null           $pTstSet        Parameter of type set.
+   *                                              set('a','b') character set utf8 collation utf8_general_ci
    *
    * @return int
    */
-  public function tstTest02(?int $pParam00, ?int $pParam01, ?int $pParam02, ?int $pParam03, ?int $pParam04, ?string $pParam05, ?float $pParam06, ?float $pParam07, ?string $pParam08, ?string $pParam09, ?string $pParam10, ?string $pParam11, ?string $pParam12, ?int $pParam13, ?string $pParam14, ?string $pParam15, ?string $pParam16, ?string $pParam17, ?string $pParam18, ?string $pParam19, ?string $pParam20, ?string $pParam21, ?string $pParam22, ?string $pParam23, ?string $pParam24, ?string $pParam25, ?string $pParam26, ?string $pParam27)
+  public function tstTest02(?int $pTstInt, ?int $pTstSmallint, ?int $pTstTinyint, ?int $pTstMediumint, ?int $pTstBigint, $pTstDecimal, $pTstDecimal0, ?float $pTstFloat, ?float $pTstDouble, ?string $pTstBit, ?string $pTstDate, ?string $pTstDatetime, ?string $pTstTimestamp, ?string $pTstTime, ?int $pTstYear, ?string $pTstChar, ?string $pTstVarchar, ?string $pTstBinary, ?string $pTstVarbinary, ?string $pTstTinyblob, ?string $pTstBlob, ?string $pTstMediumblob, ?string $pTstLongblob, ?string $pTstTinytext, ?string $pTstText, ?string $pTstMediumtext, ?string $pTstLongtext, ?string $pTstEnum, ?string $pTstSet)
   {
-    $query = 'call tst_test02('.$this->quoteInt($pParam00).','.$this->quoteInt($pParam01).','.$this->quoteInt($pParam02).','.$this->quoteInt($pParam03).','.$this->quoteInt($pParam04).','.$this->quoteString($pParam05).','.$this->quoteFloat($pParam06).','.$this->quoteFloat($pParam07).','.$this->quoteBit($pParam08).','.$this->quoteString($pParam09).','.$this->quoteString($pParam10).','.$this->quoteString($pParam11).','.$this->quoteString($pParam12).','.$this->quoteInt($pParam13).','.$this->quoteString($pParam14).','.$this->quoteString($pParam15).','.$this->quoteString($pParam16).','.$this->quoteString($pParam17).',?,?,?,?,?,?,?,?,'.$this->quoteString($pParam26).','.$this->quoteString($pParam27).')';
+    $query = 'call tst_test02('.$this->quoteInt($pTstInt).','.$this->quoteInt($pTstSmallint).','.$this->quoteInt($pTstTinyint).','.$this->quoteInt($pTstMediumint).','.$this->quoteInt($pTstBigint).','.$this->quoteDecimal($pTstDecimal).','.$this->quoteDecimal($pTstDecimal0).','.$this->quoteFloat($pTstFloat).','.$this->quoteFloat($pTstDouble).','.$this->quoteBit($pTstBit).','.$this->quoteString($pTstDate).','.$this->quoteString($pTstDatetime).','.$this->quoteString($pTstTimestamp).','.$this->quoteString($pTstTime).','.$this->quoteInt($pTstYear).','.$this->quoteString($pTstChar).','.$this->quoteString($pTstVarchar).','.$this->quoteString($pTstBinary).','.$this->quoteString($pTstVarbinary).',?,?,?,?,?,?,?,?,'.$this->quoteString($pTstEnum).','.$this->quoteString($pTstSet).')';
     $stmt  = $this->mysqli->prepare($query);
     if (!$stmt) $this->mySqlError('mysqli::prepare');
 
@@ -193,14 +197,14 @@ class TestDataLayer extends DataLayer
 
     $this->getMaxAllowedPacket();
 
-    $this->sendLongData($stmt, 0, $pParam18);
-    $this->sendLongData($stmt, 1, $pParam19);
-    $this->sendLongData($stmt, 2, $pParam20);
-    $this->sendLongData($stmt, 3, $pParam21);
-    $this->sendLongData($stmt, 4, $pParam22);
-    $this->sendLongData($stmt, 5, $pParam23);
-    $this->sendLongData($stmt, 6, $pParam24);
-    $this->sendLongData($stmt, 7, $pParam25);
+    $this->sendLongData($stmt, 0, $pTstTinyblob);
+    $this->sendLongData($stmt, 1, $pTstBlob);
+    $this->sendLongData($stmt, 2, $pTstMediumblob);
+    $this->sendLongData($stmt, 3, $pTstLongblob);
+    $this->sendLongData($stmt, 4, $pTstTinytext);
+    $this->sendLongData($stmt, 5, $pTstText);
+    $this->sendLongData($stmt, 6, $pTstMediumtext);
+    $this->sendLongData($stmt, 7, $pTstLongtext);
 
     if ($this->logQueries)
     {
@@ -239,12 +243,12 @@ class TestDataLayer extends DataLayer
     $this->realQuery('call tst_test_bulk_insert01()');
     if (is_array($rows) && !empty($rows))
     {
-      $sql = "INSERT INTO `TST_TEMPO`(`tst_col1`,`tst_col2`,`tst_col3`,`tst_col4`,`tst_col5`,`tst_col6`,`tst_col7`,`tst_col8`,`tst_col9`,`tst_col10`,`tst_col11`,`tst_col12`,`tst_col13`,`tst_col14`,`tst_col15`,`tst_col16`,`tst_col17`,`tst_col18`,`tst_col19`,`tst_col20`)";
+      $sql = "INSERT INTO `TST_TEMPO`(`tst_int`,`tst_smallint`,`tst_mediumint`,`tst_tinyint`,`tst_bigint`,`tst_year`,`tst_decimal`,`tst_decimal0`,`tst_float`,`tst_double`,`tst_binary`,`tst_varbinary`,`tst_char`,`tst_varchar`,`tst_time`,`tst_timestamp`,`tst_date`,`tst_datetime`,`tst_enum`,`tst_set`,`tst_bit`)";
       $first = true;
       foreach($rows as $row)
       {
-        if ($first) $sql .=' values('.$this->quoteInt($row['field1']).','.$this->quoteInt($row['field2']).','.$this->quoteInt($row['field3']).','.$this->quoteInt($row['field4']).','.$this->quoteInt($row['field5']).','.$this->quoteInt($row['field6']).','.$this->quoteString($row['field7']).','.$this->quoteFloat($row['field8']).','.$this->quoteFloat($row['field9']).','.$this->quoteString($row['field10']).','.$this->quoteString($row['field11']).','.$this->quoteString($row['field12']).','.$this->quoteString($row['field13']).','.$this->quoteString($row['field14']).','.$this->quoteString($row['field15']).','.$this->quoteString($row['field16']).','.$this->quoteString($row['field17']).','.$this->quoteString($row['field18']).','.$this->quoteString($row['field19']).','.$this->quoteBit($row['field20']).')';
-        else        $sql .=',      ('.$this->quoteInt($row['field1']).','.$this->quoteInt($row['field2']).','.$this->quoteInt($row['field3']).','.$this->quoteInt($row['field4']).','.$this->quoteInt($row['field5']).','.$this->quoteInt($row['field6']).','.$this->quoteString($row['field7']).','.$this->quoteFloat($row['field8']).','.$this->quoteFloat($row['field9']).','.$this->quoteString($row['field10']).','.$this->quoteString($row['field11']).','.$this->quoteString($row['field12']).','.$this->quoteString($row['field13']).','.$this->quoteString($row['field14']).','.$this->quoteString($row['field15']).','.$this->quoteString($row['field16']).','.$this->quoteString($row['field17']).','.$this->quoteString($row['field18']).','.$this->quoteString($row['field19']).','.$this->quoteBit($row['field20']).')';
+        if ($first) $sql .=' values('.$this->quoteInt($row['field_int']).','.$this->quoteInt($row['field_smallint']).','.$this->quoteInt($row['field_mediumint']).','.$this->quoteInt($row['field_tinyint']).','.$this->quoteInt($row['field_bigint']).','.$this->quoteInt($row['field_year']).','.$this->quoteDecimal($row['field_decimal']).','.$this->quoteDecimal($row['field_decimal0']).','.$this->quoteFloat($row['field_float']).','.$this->quoteFloat($row['field_double']).','.$this->quoteString($row['field_binary']).','.$this->quoteString($row['field_varbinary']).','.$this->quoteString($row['field_char']).','.$this->quoteString($row['field_varchar']).','.$this->quoteString($row['field_time']).','.$this->quoteString($row['field_timestamp']).','.$this->quoteString($row['field_date']).','.$this->quoteString($row['field_datetime']).','.$this->quoteString($row['field_enum']).','.$this->quoteString($row['field_set']).','.$this->quoteBit($row['field_bit']).')';
+        else        $sql .=',      ('.$this->quoteInt($row['field_int']).','.$this->quoteInt($row['field_smallint']).','.$this->quoteInt($row['field_mediumint']).','.$this->quoteInt($row['field_tinyint']).','.$this->quoteInt($row['field_bigint']).','.$this->quoteInt($row['field_year']).','.$this->quoteDecimal($row['field_decimal']).','.$this->quoteDecimal($row['field_decimal0']).','.$this->quoteFloat($row['field_float']).','.$this->quoteFloat($row['field_double']).','.$this->quoteString($row['field_binary']).','.$this->quoteString($row['field_varbinary']).','.$this->quoteString($row['field_char']).','.$this->quoteString($row['field_varchar']).','.$this->quoteString($row['field_time']).','.$this->quoteString($row['field_timestamp']).','.$this->quoteString($row['field_date']).','.$this->quoteString($row['field_datetime']).','.$this->quoteString($row['field_enum']).','.$this->quoteString($row['field_set']).','.$this->quoteBit($row['field_bit']).')';
         $first = false;
       }
       $this->realQuery($sql);
@@ -280,10 +284,10 @@ class TestDataLayer extends DataLayer
   /**
    * Test for stored function wrapper.
    *
-   * @param int $pA Parameter A.
-   *                int(11)
-   * @param int $pB Parameter B.
-   *                int(11)
+   * @param int|null $pA Parameter A.
+   *                     int(11)
+   * @param int|null $pB Parameter B.
+   *                     int(11)
    *
    * @return int|null
    */
@@ -296,8 +300,8 @@ class TestDataLayer extends DataLayer
   /**
    * Test for stored function with return type bool wrapper.
    *
-   * @param int $pRet The return value.
-   *                  int(11)
+   * @param int|null $pRet The return value.
+   *                       int(11)
    *
    * @return bool
    */
@@ -310,8 +314,8 @@ class TestDataLayer extends DataLayer
   /**
    * Test for stored function with return type bool wrapper.
    *
-   * @param string $pRet The return value.
-   *                     varchar(8) character set utf8 collation utf8_general_ci
+   * @param string|null $pRet The return value.
+   *                          varchar(8) character set utf8 collation utf8_general_ci
    *
    * @return bool
    */
@@ -334,8 +338,8 @@ class TestDataLayer extends DataLayer
   //--------------------------------------------------------------------------------------------------------------------
   /**
    *
-   * @param string|int[] $pIds The id's in CSV format.
-   *                           varchar(255) character set utf8 collation utf8_general_ci
+   * @param string|int[]|null $pIds The id's in CSV format.
+   *                                varchar(255) character set utf8 collation utf8_general_ci
    *
    * @return array[]
    */
@@ -365,8 +369,8 @@ class TestDataLayer extends DataLayer
   /**
    * Test for designation type map.
    *
-   * @param int $pCount Number of rows selected.
-   *                    int(11)
+   * @param int|null $pCount Number of rows selected.
+   *                         int(11)
    *
    * @return array
    */
@@ -385,10 +389,10 @@ class TestDataLayer extends DataLayer
   /**
    * Test for designation type rows_with_key with BLOB.
    *
-   * @param int    $pCount Number of rows selected.
-   *                       int(11)
-   * @param string $pBlob  The BLOB.
-   *                       blob
+   * @param int|null    $pCount Number of rows selected.
+   *                            int(11)
+   * @param string|null $pBlob  The BLOB.
+   *                            blob
    *
    * @return array
    */
@@ -437,8 +441,8 @@ class TestDataLayer extends DataLayer
   /**
    * Test for sending data larger than max_allowed_packet.
    *
-   * @param string $pTmpBlob The BLOB larger than max_allowed_packet.
-   *                         longblob
+   * @param string|null $pTmpBlob The BLOB larger than max_allowed_packet.
+   *                              longblob
    *
    * @return int
    */
@@ -509,8 +513,8 @@ class TestDataLayer extends DataLayer
   /**
    * Test for designation type none.
    *
-   * @param int $pCount The number of iterations.
-   *                    bigint(20)
+   * @param int|null $pCount The number of iterations.
+   *                         bigint(20)
    *
    * @return int
    */
@@ -523,10 +527,10 @@ class TestDataLayer extends DataLayer
   /**
    * Test for designation type none with BLOB.
    *
-   * @param int    $pCount The number of iterations.
-   *                       bigint(20)
-   * @param string $pBlob  The BLOB.
-   *                       blob
+   * @param int|null    $pCount The number of iterations.
+   *                            bigint(20)
+   * @param string|null $pBlob  The BLOB.
+   *                            blob
    *
    * @return int
    */
@@ -572,24 +576,24 @@ class TestDataLayer extends DataLayer
   /**
    * Test for conversion of MySQL types to PHP types.
    *
-   * @param string $pPhpType1 Must be converted to PHP type float in the TestDataLayer.
-   *                          decimal(10,2)
-   * @param int    $pPhpType2 Must be converted to PHP type int in the TestDataLayer.
-   *                          decimal(10,0)
+   * @param int|float|string|null $pPhpType1 Must be converted to PHP type string in the TestDataLayer.
+   *                                         decimal(10,2)
+   * @param int|float|string|null $pPhpType2 Must be converted to PHP type string in the TestDataLayer.
+   *                                         decimal(65,0)
    *
    * @return int
    */
-  public function tstTestParameterType(?string $pPhpType1, ?int $pPhpType2): int
+  public function tstTestParameterType($pPhpType1, $pPhpType2): int
   {
-    return $this->executeNone('call tst_test_parameter_type('.$this->quoteString($pPhpType1).','.$this->quoteString($pPhpType2).')');
+    return $this->executeNone('call tst_test_parameter_type('.$this->quoteDecimal($pPhpType1).','.$this->quoteDecimal($pPhpType2).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for designation type row0.
    *
-   * @param int $pCount The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test.
-   *                    int(11)
+   * @param int|null $pCount The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test.
+   *                         int(11)
    *
    * @return array|null
    */
@@ -602,10 +606,10 @@ class TestDataLayer extends DataLayer
   /**
    * Test for designation type row0 with BLOB.
    *
-   * @param int    $pCount The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test.
-   *                       int(11)
-   * @param string $pBlob  The BLOB.
-   *                       blob
+   * @param int|null    $pCount The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test.
+   *                            int(11)
+   * @param string|null $pBlob  The BLOB.
+   *                            blob
    *
    * @return array|null
    */
@@ -666,8 +670,8 @@ class TestDataLayer extends DataLayer
   /**
    * Test for designation type row1.
    *
-   * @param int $pCount The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
-   *                    int(11)
+   * @param int|null $pCount The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
+   *                         int(11)
    *
    * @return array
    */
@@ -680,10 +684,10 @@ class TestDataLayer extends DataLayer
   /**
    * Test for designation type row1 with BLOB.
    *
-   * @param int    $pCount The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
-   *                       int(11)
-   * @param string $pBlob  The BLOB.
-   *                       blob
+   * @param int|null    $pCount The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
+   *                            int(11)
+   * @param string|null $pBlob  The BLOB.
+   *                            blob
    *
    * @return array
    */
@@ -744,8 +748,8 @@ class TestDataLayer extends DataLayer
   /**
    * Test for designation type row1.
    *
-   * @param int $pCount The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
-   *                    int(11)
+   * @param int|null $pCount The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
+   *                         int(11)
    *
    * @return array[]
    */
@@ -758,10 +762,10 @@ class TestDataLayer extends DataLayer
   /**
    * Test for designation type rows.
    *
-   * @param int    $pCount The number of rows selected.
-   *                       int(11)
-   * @param string $pBlob  The BLOB.
-   *                       blob
+   * @param int|null    $pCount The number of rows selected.
+   *                            int(11)
+   * @param string|null $pBlob  The BLOB.
+   *                            blob
    *
    * @return array[]
    */
@@ -821,8 +825,8 @@ class TestDataLayer extends DataLayer
   /**
    * Test for designation type rows_with_index.
    *
-   * @param int $pCount The number of rows selected.
-   *                    int(11)
+   * @param int|null $pCount The number of rows selected.
+   *                         int(11)
    *
    * @return array[]
    */
@@ -841,10 +845,10 @@ class TestDataLayer extends DataLayer
   /**
    * Test for designation type rows_with_index with BLOB..
    *
-   * @param int    $pCount The number of rows selected.
-   *                       int(11)
-   * @param string $pBlob  The BLOB.
-   *                       blob
+   * @param int|null    $pCount The number of rows selected.
+   *                            int(11)
+   * @param string|null $pBlob  The BLOB.
+   *                            blob
    *
    * @return array[]
    */
@@ -904,8 +908,8 @@ class TestDataLayer extends DataLayer
   /**
    * Test for designation type rows_with_key.
    *
-   * @param int $pCount Number of rows selected.
-   *                    int(11)
+   * @param int|null $pCount Number of rows selected.
+   *                         int(11)
    *
    * @return array[]
    */
@@ -924,10 +928,10 @@ class TestDataLayer extends DataLayer
   /**
    * Test for designation type rows_with_key with BLOB.
    *
-   * @param int    $pCount The number of rows selected.
-   *                       int(11)
-   * @param string $pBlob  The BLOB.
-   *                       blob
+   * @param int|null    $pCount The number of rows selected.
+   *                            int(11)
+   * @param string|null $pBlob  The BLOB.
+   *                            blob
    *
    * @return array[]
    */
@@ -987,8 +991,8 @@ class TestDataLayer extends DataLayer
   /**
    * Test for designation type singleton0.
    *
-   * @param int $pCount The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test.
-   *                    int(11)
+   * @param int|null $pCount The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test.
+   *                         int(11)
    *
    * @return int|null
    */
@@ -1001,10 +1005,10 @@ class TestDataLayer extends DataLayer
   /**
    * Test for designation type singleton0 with BLOB..
    *
-   * @param int    $pCount The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test.
-   *                       int(11)
-   * @param string $pBlob  The BLOB.
-   *                       blob
+   * @param int|null    $pCount The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test.
+   *                            int(11)
+   * @param string|null $pBlob  The BLOB.
+   *                            blob
    *
    * @return int|null
    */
@@ -1065,10 +1069,10 @@ class TestDataLayer extends DataLayer
   /**
    * Test for designation type singleton0 with return type bool.
    *
-   * @param int $pCount The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test.
-   *                    int(11)
-   * @param int $pValue The selected value.
-   *                    int(11)
+   * @param int|null $pCount The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test.
+   *                         int(11)
+   * @param int|null $pValue The selected value.
+   *                         int(11)
    *
    * @return bool
    */
@@ -1081,12 +1085,12 @@ class TestDataLayer extends DataLayer
   /**
    * Test for designation type singleton0 with BLOB..
    *
-   * @param int    $pCount The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test.
-   *                       int(11)
-   * @param int    $pValue The selected value.
-   *                       int(11)
-   * @param string $pBlob  The BLOB.
-   *                       blob
+   * @param int|null    $pCount The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test.
+   *                            int(11)
+   * @param int|null    $pValue The selected value.
+   *                            int(11)
+   * @param string|null $pBlob  The BLOB.
+   *                            blob
    *
    * @return bool
    */
@@ -1147,8 +1151,8 @@ class TestDataLayer extends DataLayer
   /**
    * Test for designation type singleton1.
    *
-   * @param int $pCount The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
-   *                    int(11)
+   * @param int|null $pCount The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
+   *                         int(11)
    *
    * @return int
    */
@@ -1161,10 +1165,10 @@ class TestDataLayer extends DataLayer
   /**
    * Test for designation type singleton1 with BLOB.
    *
-   * @param int    $pCount The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
-   *                       int(11)
-   * @param string $pBlob  The BLOB.
-   *                       blob
+   * @param int|null    $pCount The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
+   *                            int(11)
+   * @param string|null $pBlob  The BLOB.
+   *                            blob
    *
    * @return int
    */
@@ -1225,10 +1229,10 @@ class TestDataLayer extends DataLayer
   /**
    * Test for designation type singleton1 with return type bool.
    *
-   * @param int $pCount The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
-   *                    int(11)
-   * @param int $pValue The selected value.
-   *                    int(11)
+   * @param int|null $pCount The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
+   *                         int(11)
+   * @param int|null $pValue The selected value.
+   *                         int(11)
    *
    * @return bool
    */
@@ -1241,12 +1245,12 @@ class TestDataLayer extends DataLayer
   /**
    * Test for designation type singleton1 with BLOB.
    *
-   * @param int    $pCount The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
-   *                       int(11)
-   * @param int    $pValue The selected value.
-   *                       int(11)
-   * @param string $pBlob  The BLOB.
-   *                       blob
+   * @param int|null    $pCount The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
+   *                            int(11)
+   * @param int|null    $pValue The selected value.
+   *                            int(11)
+   * @param string|null $pBlob  The BLOB.
+   *                            blob
    *
    * @return bool
    */

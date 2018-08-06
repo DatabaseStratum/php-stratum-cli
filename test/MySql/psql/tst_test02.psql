@@ -1,121 +1,125 @@
 /**
  * Test for all possible types of parameters including LOB's.
  *
- * @param p_param00 Test parameter 00.
- * @param p_param01 Test parameter 01.
- * @param p_param02 Test parameter 02.
- * @param p_param03 Test parameter 03.
- * @param p_param04 Test parameter 04.
- * @param p_param05 Test parameter 05.
- * @param p_param06 Test parameter 06.
- * @param p_param07 Test parameter 07.
- * @param p_param08 Test parameter 08.
- * @param p_param09 Test parameter 09.
- * @param p_param10 Test parameter 10.
- * @param p_param11 Test parameter 11.
- * @param p_param12 Test parameter 12.
- * @param p_param13 Test parameter 13.
- * @param p_param14 Test parameter 14.
- * @param p_param15 Test parameter 15.
- * @param p_param16 Test parameter 16.
- * @param p_param17 Test parameter 17.
- * @param p_param18 Test parameter 18.
- * @param p_param19 Test parameter 19.
- * @param p_param20 Test parameter 20.
- * @param p_param21 Test parameter 21.
- * @param p_param22 Test parameter 22.
- * @param p_param23 Test parameter 23.
- * @param p_param24 Test parameter 24.
- * @param p_param25 Test parameter 25.
- * @param p_param26 Test parameter 26.
- * @param p_param27 Test parameter 27.
+ * @param p_tst_int        Parameter of type int.
+ * @param p_tst_smallint   Parameter of type smallint.
+ * @param p_tst_tinyint    Parameter of type tinyint.
+ * @param p_tst_mediumint  Parameter of type mediumint.
+ * @param p_tst_bigint     Parameter of type bigint.
+ * @param p_tst_decimal    Parameter of type decimal.
+ * @param p_tst_decimal0   Parameter of type decimal with 0 scale.
+ * @param p_tst_float      Parameter of type float.
+ * @param p_tst_double     Parameter of type double.
+ * @param p_tst_bit        Parameter of type bit.
+ * @param p_tst_date       Parameter of type date.
+ * @param p_tst_datetime   Parameter of type datetime.
+ * @param p_tst_timestamp  Parameter of type timestamp.
+ * @param p_tst_time       Parameter of type time.
+ * @param p_tst_year       Parameter of type year.
+ * @param p_tst_char       Parameter of type char.
+ * @param p_tst_varchar    Parameter of type varchar.
+ * @param p_tst_binary     Parameter of type binary.
+ * @param p_tst_varbinary  Parameter of type varbinary.
+ * @param p_tst_tinyblob   Parameter of type tinyblob.
+ * @param p_tst_blob       Parameter of type blob.
+ * @param p_tst_mediumblob Parameter of type mediumblob.
+ * @param p_tst_longblob   Parameter of type longblob.
+ * @param p_tst_tinytext   Parameter of type tinytext.
+ * @param p_tst_text       Parameter of type text.
+ * @param p_tst_mediumtext Parameter of type mediumtext.
+ * @param p_tst_longtext   Parameter of type longtext.
+ * @param p_tst_enum       Parameter of type enum.
+ * @param p_tst_set        Parameter of type set.
  */
-create procedure tst_test02( p_param00 @tst_foo1.tst_c00%type@,
-                             p_param01 @tst_foo1.tst_c01%type@,
-                             p_param02 @tst_foo1.tst_c02%type@,
-                             p_param03 @tst_foo1.tst_c03%type@,
-                             p_param04 @tst_foo1.tst_c04%type@,
-                             p_param05 @tst_foo1.tst_c05%type@,
-                             p_param06 @tst_foo1.tst_c06%type@,
-                             p_param07 @tst_foo1.tst_c07%type@,
-                             p_param08 @tst_foo1.tst_c08%type@,
-                             p_param09 @tst_foo1.tst_c09%type@,
-                             p_param10 @tst_foo1.tst_c10%type@,
-                             p_param11 @tst_foo1.tst_c11%type@,
-                             p_param12 @tst_foo1.tst_c12%type@,
-                             p_param13 @tst_foo1.tst_c13%type@,
-                             p_param14 @tst_foo1.tst_c14%type@,
-                             p_param15 @tst_foo1.tst_c15%type@,
-                             p_param16 @tst_foo1.tst_c16%type@,
-                             p_param17 @tst_foo1.tst_c17%type@,
-                             p_param18 @tst_foo1.tst_c18%type@,
-                             p_param19 @tst_foo1.tst_c19%type@,
-                             p_param20 @tst_foo1.tst_c20%type@,
-                             p_param21 @tst_foo1.tst_c21%type@,
-                             p_param22 @tst_foo1.tst_c22%type@,
-                             p_param23 @tst_foo1.tst_c23%type@,
-                             p_param24 @tst_foo1.tst_c24%type@,
-                             p_param25 @tst_foo1.tst_c25%type@,
-                             p_param26 @tst_foo1.tst_c26%type@,
-                             p_param27 @tst_foo1.tst_c27%type@ )
+create procedure tst_test02( p_tst_int        @tst_foo1.tst_int%type@,
+                             p_tst_smallint   @tst_foo1.tst_smallint%type@,
+                             p_tst_tinyint    @tst_foo1.tst_tinyint%type@,
+                             p_tst_mediumint  @tst_foo1.tst_mediumint%type@,
+                             p_tst_bigint     @tst_foo1.tst_bigint%type@,
+                             p_tst_decimal    @tst_foo1.tst_decimal%type@,
+                             p_tst_decimal0   @tst_foo1.tst_decimal0%type@,
+                             p_tst_float      @tst_foo1.tst_float%type@,
+                             p_tst_double     @tst_foo1.tst_double%type@,
+                             p_tst_bit        @tst_foo1.tst_bit%type@,
+                             p_tst_date       @tst_foo1.tst_date%type@,
+                             p_tst_datetime   @tst_foo1.tst_datetime%type@,
+                             p_tst_timestamp  @tst_foo1.tst_timestamp%type@,
+                             p_tst_time       @tst_foo1.tst_time%type@,
+                             p_tst_year       @tst_foo1.tst_year%type@,
+                             p_tst_char       @tst_foo1.tst_char%type@,
+                             p_tst_varchar    @tst_foo1.tst_varchar%type@,
+                             p_tst_binary     @tst_foo1.tst_binary%type@,
+                             p_tst_varbinary  @tst_foo1.tst_varbinary%type@,                             
+                             p_tst_tinyblob   @tst_foo1.tst_tinyblob%type@,
+                             p_tst_blob       @tst_foo1.tst_blob%type@,
+                             p_tst_mediumblob @tst_foo1.tst_mediumblob%type@,
+                             p_tst_longblob   @tst_foo1.tst_longblob%type@,
+                             p_tst_tinytext   @tst_foo1.tst_tinytext%type@,
+                             p_tst_text       @tst_foo1.tst_text%type@,
+                             p_tst_mediumtext @tst_foo1.tst_mediumtext%type@,
+                             p_tst_longtext   @tst_foo1.tst_longtext%type@,                             
+                             p_tst_enum       @tst_foo1.tst_enum%type@,
+                             p_tst_set        @tst_foo1.tst_set%type@ )
 reads sql data
 -- type: none
 begin
-  insert into TST_FOO1( tst_c00
-  ,                     tst_c01
-  ,                     tst_c02
-  ,                     tst_c03
-  ,                     tst_c04
-  ,                     tst_c05
-  ,                     tst_c06
-  ,                     tst_c07
-  ,                     tst_c08
-  ,                     tst_c09
-  ,                     tst_c10
-  ,                     tst_c11
-  ,                     tst_c12
-  ,                     tst_c13
-  ,                     tst_c14
-  ,                     tst_c15
-  ,                     tst_c16
-  ,                     tst_c17  
-  ,                     tst_c18
-  ,                     tst_c19
-  ,                     tst_c20
-  ,                     tst_c21
-  ,                     tst_c22
-  ,                     tst_c23
-  ,                     tst_c24
-  ,                     tst_c25
-  ,                     tst_c26
-  ,                     tst_c27 )
-  values( p_param00
-  ,       p_param01
-  ,       p_param02
-  ,       p_param03
-  ,       p_param04
-  ,       p_param05
-  ,       p_param06
-  ,       p_param07
-  ,       p_param08
-  ,       p_param09
-  ,       p_param10
-  ,       p_param11
-  ,       p_param12
-  ,       p_param13
-  ,       p_param14
-  ,       p_param15
-  ,       p_param16 
-  ,       p_param17 
-  ,       p_param18
-  ,       p_param19
-  ,       p_param20
-  ,       p_param21
-  ,       p_param22
-  ,       p_param23
-  ,       p_param24
-  ,       p_param25
-  ,       p_param26 
-  ,       p_param27 )
+  insert into TST_FOO1( tst_int      
+  ,                     tst_smallint 
+  ,                     tst_tinyint  
+  ,                     tst_mediumint
+  ,                     tst_bigint   
+  ,                     tst_decimal  
+  ,                     tst_decimal0 
+  ,                     tst_float    
+  ,                     tst_double   
+  ,                     tst_bit      
+  ,                     tst_date     
+  ,                     tst_datetime 
+  ,                     tst_timestamp
+  ,                     tst_time     
+  ,                     tst_year     
+  ,                     tst_char     
+  ,                     tst_varchar  
+  ,                     tst_binary   
+  ,                     tst_varbinary
+  ,                     tst_tinyblob
+  ,                     tst_blob
+  ,                     tst_mediumblob
+  ,                     tst_longblob
+  ,                     tst_tinytext
+  ,                     tst_text
+  ,                     tst_mediumtext
+  ,                     tst_longtext
+  ,                     tst_enum
+  ,                     tst_set )
+  values( p_tst_int      
+  ,       p_tst_smallint 
+  ,       p_tst_tinyint  
+  ,       p_tst_mediumint
+  ,       p_tst_bigint   
+  ,       p_tst_decimal  
+  ,       p_tst_decimal0 
+  ,       p_tst_float    
+  ,       p_tst_double   
+  ,       p_tst_bit      
+  ,       p_tst_date     
+  ,       p_tst_datetime 
+  ,       p_tst_timestamp
+  ,       p_tst_time     
+  ,       p_tst_year     
+  ,       p_tst_char     
+  ,       p_tst_varchar  
+  ,       p_tst_binary   
+  ,       p_tst_varbinary
+  ,       p_tst_tinyblob
+  ,       p_tst_blob
+  ,       p_tst_mediumblob
+  ,       p_tst_longblob
+  ,       p_tst_tinytext
+  ,       p_tst_text
+  ,       p_tst_mediumtext
+  ,       p_tst_longtext
+  ,       p_tst_enum
+  ,       p_tst_set )
   ;
 end

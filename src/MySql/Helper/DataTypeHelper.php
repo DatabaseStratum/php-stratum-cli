@@ -12,19 +12,6 @@ class DataTypeHelper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns the corresponding PHP type declaration of a MySQL column type.
-   *
-   * @param string[] $dataTypeInfo Metadata of the MySQL data type.
-   *
-   * @return string
-   */
-  public static function columnTypeToPhpTypeDeclaration(array $dataTypeInfo): string
-  {
-    return static::phpTypeHintingToPhpTypeDeclaration(static::columnTypeToPhpTypeHinting($dataTypeInfo));
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
    * Returns the corresponding PHP type hinting of a MySQL column type.
    *
    * @param string[] $dataTypeInfo Metadata of the MySQL data type.
@@ -45,7 +32,7 @@ class DataTypeHelper
         break;
 
       case 'decimal':
-        $phpType = ($dataTypeInfo['numeric_scale']=='0') ? 'int' : 'string';
+        $phpType = 'int|float|string';
         break;
 
       case 'float':
@@ -103,10 +90,14 @@ class DataTypeHelper
       case 'mediumint':
       case 'int':
       case 'bigint':
-      case 'decimal':
       case 'float':
       case 'double':
         $ret = $dataTypeInfo['numeric_precision'];
+        break;
+
+      case 'decimal':
+        $ret = $dataTypeInfo['numeric_precision'];
+        if ($dataTypeInfo['numeric_scale']>0) $ret += 1;
         break;
 
       case 'char':
@@ -188,10 +179,13 @@ class DataTypeHelper
 
       case 'binary':
       case 'char':
-      case 'decimal':
       case 'varbinary':
       case 'varchar':
         $ret = "'.self::quoteString(".$expression.").'";
+        break;
+
+      case 'decimal':
+        $ret = "'.self::quoteDecimal(".$expression.").'";
         break;
 
       case 'time':
@@ -241,15 +235,15 @@ class DataTypeHelper
    *
    * @see http://php.net/manual/en/mysqli-stmt.bind-param.php
    *
-   * @param string $dataType    The MySQL data type.
-   * @param bool   $lobAsString A flag indication LOBs must be treated as strings.
+   * @param array $dataTypeInfo Metadata of the column on which the field is based.
+   * @param bool  $lobAsString  A flag indication LOBs must be treated as strings.
    *
    * @return string
    */
-  public static function getBindVariableType(string $dataType, bool $lobAsString): string
+  public static function getBindVariableType(array $dataTypeInfo, bool $lobAsString): string
   {
     $ret = '';
-    switch ($dataType)
+    switch ($dataTypeInfo['data_type'])
     {
       case 'tinyint':
       case 'smallint':
@@ -259,12 +253,12 @@ class DataTypeHelper
       case 'year':
         $ret = 'i';
         break;
+
       case 'float':
       case 'double':
         $ret = 'd';
         break;
 
-      case 'decimal':
       case 'time':
       case 'timestamp':
       case 'binary':
@@ -276,6 +270,10 @@ class DataTypeHelper
       case 'date':
       case 'datetime':
       case 'varbinary':
+        $ret = 's';
+        break;
+
+      case 'decimal':
         $ret = 's';
         break;
 
@@ -295,7 +293,7 @@ class DataTypeHelper
         break;
 
       default:
-        throw new FallenException('parameter type', $dataType);
+        throw new FallenException('parameter type', $dataTypeInfo['data_type']);
     }
 
     return $ret;
