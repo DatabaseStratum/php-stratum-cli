@@ -18,6 +18,8 @@
   },
   "require": {
     "php": ">=7.1.0",
+    "ext-json": "*",
+    "ext-mysqli": "*",
     "setbased/exception": "^1.0.0",
     "setbased/helper-code-store-mysql": "^2.0.0",
     "setbased/helper-code-store-php": "^2.0.0",
