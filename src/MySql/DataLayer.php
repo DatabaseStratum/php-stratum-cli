@@ -282,7 +282,7 @@ class DataLayer
           foreach ($row as $i => $field)
           {
             if ($i>0) $line .= ' ';
-            $line .= str_pad($field, $fields[$i]->max_length);
+            $line .= str_pad((string)$field, $fields[$i]->max_length);
           }
           echo date('Y-m-d H:i:s'), ' ', $line, "\n";
           $n++;

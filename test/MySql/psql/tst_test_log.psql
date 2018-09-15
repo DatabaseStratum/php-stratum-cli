@@ -5,7 +5,7 @@ create procedure tst_test_log()
 reads sql data
 -- type: log
 begin
- select 'Hello, world';
+ select 'Hello, world', 1;
 
- select 'Hello, world';
+ select 'Hello, world', 2;
 end
