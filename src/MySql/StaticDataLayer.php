@@ -857,8 +857,7 @@ class StaticDataLayer
    *
    * @return int|string|null
    *
-   * @since 1.0.0
-   * @api
+   * @deprecated
    */
   public static function searchInRowSet(string $columnName, $value, array $rowSet)
   {
