@@ -28,6 +28,7 @@ class StratumConfig implements Config
   public function __construct(string $path)
   {
     $this->config = new \Noodlehaus\Config($path);
+    $this->config->set('stratum.config_path', $path);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
