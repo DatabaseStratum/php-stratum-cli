@@ -5,7 +5,7 @@ namespace SetBased\Stratum\Command;
 
 use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\Helper\NonStatic;
-use SetBased\Stratum\Style\StratumStyle;
+use SetBased\Stratum\StratumStyle;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,7 +18,7 @@ class NonStaticCommand extends Command
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * The output decorator
+   * The output decorator.
    *
    * @var StratumStyle
    */
@@ -31,7 +31,7 @@ class NonStaticCommand extends Command
    * @param string $sourceName The filename with the static class.
    * @param string $targetName The filename where the non static class must be written.
    */
-  public static function staticToStatic(string $sourceName, string $targetName): void
+  public static function staticToNonStatic(string $sourceName, string $targetName): void
   {
     $source      = file_get_contents($sourceName);
     $sourceClass = basename($sourceName, '.php');
@@ -75,7 +75,7 @@ class NonStaticCommand extends Command
       throw new RuntimeException('Source and target files is the same file');
     }
 
-    self::staticToStatic($sourceFilename, $targetFilename);
+    self::staticToNonStatic($sourceFilename, $targetFilename);
 
     return 0;
   }

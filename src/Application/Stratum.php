@@ -3,17 +3,17 @@ declare(strict_types=1);
 
 namespace SetBased\Stratum\Application;
 
+use SetBased\Stratum\Command\ConstantsCommand;
 use SetBased\Stratum\Command\CrudCommand;
 use SetBased\Stratum\Command\NonStaticCommand;
+use SetBased\Stratum\Command\RoutineLoaderCommand;
+use SetBased\Stratum\Command\RoutineWrapperGeneratorCommand;
 use SetBased\Stratum\Command\StratumCommand;
-use SetBased\Stratum\MySql\Command\ConstantsCommand;
-use SetBased\Stratum\MySql\Command\RoutineLoaderCommand;
-use SetBased\Stratum\MySql\Command\RoutineWrapperGeneratorCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 
 /**
- * The PhpStratum program.
+ * The PhpStratum application.
  */
 class Stratum extends Application
 {
@@ -23,14 +23,14 @@ class Stratum extends Application
    */
   public function __construct()
   {
-    parent::__construct('stratum', '0.9.72');
+    parent::__construct('stratum', 'dev-master');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Gets the default commands that should always be available.
    *
-   * @return Command[] An array of default Command instances
+   * @return Command[]
    */
   protected function getDefaultCommands()
   {

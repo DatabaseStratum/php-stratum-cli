@@ -1,35 +1,28 @@
 {
   "name": "setbased/php-stratum",
-  "description": "A stored procedure and function loader, wrapper generator for MySQL in PHP.",
+  "description": "PhpStratum: A stored procedure and function loader and wrapper generator for various RDBMS",
   "keywords": [
-    "MySQL",
+    "PhpStratum",
     "Stored Routines",
     "Stored Procedures",
     "Stored Functions",
-    "Wrapper",
     "Loader",
-    "PHP"
+    "Wrapper"
   ],
   "type": "tool",
   "license": "MIT",
+  "require": {
+    "php": ">=7.1.0",
+    "hassankhan/config": "^2.0",
+    "setbased/php-affirm": "^0.2.0",
+    "symfony/console": "^3.0.0 || ^4.0.0",
+    "setbased/php-stratum-backend": "dev-master",
+    "setbased/helper-cast": "^1.2.0"
+  },
   "require-dev": {
     "phpunit/phpunit": "^6.0.0",
     "setbased/phing-extensions": "^2.0.1"
   },
-  "require": {
-    "php": ">=7.1.0",
-    "ext-json": "*",
-    "ext-mysqli": "*",
-    "setbased/exception": "^1.0.0",
-    "setbased/helper-code-store-mysql": "^2.0.0",
-    "setbased/helper-code-store-php": "^2.0.0",
-    "setbased/php-affirm": "^0.2.0",
-    "symfony/console": "^3.0.0 || ^4.0.0",
-    "zendframework/zend-code": "^3.0.0"
-  },
-  "bin": [
-    "bin/stratum"
-  ],
   "autoload": {
     "psr-4": {
       "SetBased\\Stratum\\": "src/"
@@ -38,11 +31,11 @@
   "autoload-dev": {
     "psr-4": {
       "SetBased\\Stratum\\Test\\": "test/"
-    },
-    "classmap": [
-      "test/MySql/C.php"
-    ]
+    }
   },
+  "bin": [
+    "bin/stratum"
+  ],
   "config": {
     "bin-dir": "bin/"
   }

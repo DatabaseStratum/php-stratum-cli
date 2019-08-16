@@ -4,16 +4,6 @@ php:
   - '7.2'
   - '7.3'
 
-sudo: true
-
-addons:
-  mariadb: 10.2
-
-before_install:
-  - mysql --version
-  - mysql -u root -e "set global binlog_format = 'row';"
-  - mysql -u root -e "set global log_bin_trust_function_creators = 1;"
-
 install:
   - rm -f composer.lock
   - composer self-update

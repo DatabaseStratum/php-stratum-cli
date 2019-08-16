@@ -1,6 +1,0 @@
-create procedure tst_test_no_doc_block()
-reads sql data
--- type: row1
-begin
-  select 'This SP is a test for sources without a DocBlock';
-end

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="php-mysql-data-layer" default="build" basedir=".">
+<project name="php-stratum" default="build" basedir=".">
     <taskdef name="readSemanticVersion" classname="vendor.setbased.phing-extensions.src.Task.ReadSemanticVersionTask"/>
     <property name="VERSION" value="0.0.0"/>
 
@@ -30,9 +30,6 @@
             </filterchain>
         </reflexive>
 
-        <!-- Generate non static base data layer. -->
-        <exec command="./bin/stratum non-static src/MySql/StaticDataLayer.php DataLayer.php" passthru="true" checkreturn="true"/>
-
         <gitcommit repository="." message="Release: ${VERSION}" allFiles="true"/>
         <gitpush repository="."/>
         <gittag repository="." name="${VERSION}"/>
@@ -41,21 +38,6 @@
 
     <!-- Runs all unit tests -->
     <target name="unit">
-        <exec command="bin/stratum non-static src/MySql/StaticDataLayer.php src/MySql/DataLayer.php" passthru="true" checkreturn="true"/>
-        <exec command="cat test/MySql/ddl/0010_create_database.sql | mysql -v -u root"      passthru="true" checkreturn="true"/>
-        <exec command="cat test/MySql/ddl/0020_create_user.sql     | mysql -v -u root"      passthru="true" checkreturn="true"/>
-        <exec command="cat test/MySql/ddl/0100_create_tables.sql   | mysql -v -u root test" passthru="true" checkreturn="true"/>
-        <delete file="test/MySql/etc/routines.json" quiet="true"/>
-        <!-- Rename folder for \MagicConstantTest::test5 -->
-        <move file="test/MySql/psql/rename" tofile="test/MySql/psql/ test_escape ' &quot; @ $ ! ." overwrite="true" haltonerror="false"/>
-        <!-- Run unit test with static data layer. -->
-        <exec command="ln -fs stratum-static.cfg test/MySql/etc/stratum.cfg" passthru="true" checkreturn="true"/>
         <exec command="bin/phpunit" passthru="true" checkreturn="true"/>
-        <!-- Run unit test with non static data layer. -->
-        <delete file="test/MySql/etc/routines.json"/>
-        <exec command="ln -fs stratum-non-static.cfg test/MySql/etc/stratum.cfg" passthru="true" checkreturn="true"/>
-        <exec command="bin/phpunit" passthru="true" checkreturn="true"/>
-        <!-- Rename folder back for \MagicConstantTest::test5 -->
-        <move file="test/MySql/psql/ test_escape ' &quot; @ $ ! ." tofile="test/MySql/psql/rename" overwrite="true"/>
     </target>
 </project>

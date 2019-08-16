@@ -9,75 +9,44 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * The PhpStratum command.
+ * Command for loading stored routines into a MySQL instance from pseudo SQL files.
  */
-class StratumCommand extends BaseCommand
+class RoutineLoaderCommand extends BaseCommand
 {
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * The output decorator
-   *
-   * @var StratumStyle
-   */
-  protected $io;
-
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * @inheritdoc
    */
   protected function configure()
   {
-    $this->setName('stratum')
-         ->setDescription('Runs the constants, loader, and wrapper commands')
+    $this->setName('loader')
+         ->setDescription('Generates the routine wrapper class')
          ->addArgument('config file', InputArgument::REQUIRED, 'The stratum configuration file')
          ->addArgument('sources', InputArgument::OPTIONAL | InputArgument::IS_ARRAY, 'Sources with stored routines');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Executes the actual PhpStratum program. Returns 0 is everything went fine. Otherwise, returns non-zero.
-   *
-   * @param InputInterface  $input  An InputInterface instance
-   * @param OutputInterface $output An OutputInterface instance
-   *
-   * @return int
+   * @inheritdoc
    */
   protected function execute(InputInterface $input, OutputInterface $output)
   {
-    $ret  = -1;
-
     $this->createStyle($input, $output);
     $this->readConfigFile($input);
 
+    $this->io->title('Loader');
+
     $factory = $this->createBackendFactory();
-
-    $worker  = $factory->createConstantWorker($this->config, $this->io);
-    if ($worker!==null)
-    {
-      $ret = $worker->execute();
-
-      if ($ret!==0) return $ret;
-    }
-
     $worker  = $factory->createRoutineLoaderWorker($this->config, $this->io);
-    if ($worker!==null)
-    {
-      $ret = $worker->execute();
 
-      if ($ret!==0) return $ret;
+    if ($worker===null)
+    {
+      $this->io->error('This command is not implemented by the backend');
+
+      return -1;
     }
 
-    $worker  = $factory->createRoutineWrapperGeneratorWorker($this->config, $this->io);
-    if ($worker!==null)
-    {
-      $ret = $worker->execute();
-
-      if ($ret!==0) return $ret;
-    }
-
-    $this->io->writeln('');
-
-    return $ret;
+    return $worker->execute();
   }
 
   //--------------------------------------------------------------------------------------------------------------------

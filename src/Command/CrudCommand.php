@@ -4,13 +4,6 @@ declare(strict_types=1);
 namespace SetBased\Stratum\Command;
 
 use SetBased\Exception\FallenException;
-use SetBased\Stratum\MySql\Helper\Crud\DeleteRoutine;
-use SetBased\Stratum\MySql\Helper\Crud\InsertRoutine;
-use SetBased\Stratum\MySql\Helper\Crud\SelectRoutine;
-use SetBased\Stratum\MySql\Helper\Crud\UpdateRoutine;
-use SetBased\Stratum\MySql\MetadataDataLayer;
-use SetBased\Stratum\MySql\StaticDataLayer;
-use SetBased\Stratum\Style\StratumStyle;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Helper\SymfonyQuestionHelper;
 use Symfony\Component\Console\Helper\Table;
@@ -27,13 +20,6 @@ use Symfony\Component\Console\Question\Question;
 class CrudCommand extends BaseCommand
 {
   //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * The output decorator
-   *
-   * @var StratumStyle
-   */
-  protected $io;
-
   /**
    * Database name.
    *
@@ -70,7 +56,6 @@ class CrudCommand extends BaseCommand
   private $sourceDirectory;
 
   //--------------------------------------------------------------------------------------------------------------------
-
   /**
    * @inheritdoc
    */
@@ -88,11 +73,13 @@ class CrudCommand extends BaseCommand
    */
   protected function execute(InputInterface $input, OutputInterface $output)
   {
-    $this->io = new StratumStyle($input, $output);
-
     $this->input  = $input;
     $this->output = $output;
 
+    $this->createStyle($input, $output);
+    $this->readConfigFile($input);
+
+    /*
     $configFileName = $input->getArgument('config file');
     $settings       = $this->readConfigFile($configFileName);
 
@@ -114,6 +101,7 @@ class CrudCommand extends BaseCommand
     $this->startAsking($tableList);
 
     MetadataDataLayer::disconnect();
+    */
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -248,21 +236,6 @@ class CrudCommand extends BaseCommand
       $table->setRows($array);
       $table->render();
     }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Reads configuration parameters from the configuration file.
-   *
-   * @param string $configFilename
-   *
-   * @return array
-   */
-  private function readConfigFile(string $configFilename): array
-  {
-    $settings = parse_ini_file($configFilename, true);
-
-    return $settings;
   }
 
   //--------------------------------------------------------------------------------------------------------------------

@@ -1,11 +1,3 @@
-tools:
-    php_analyzer:
-        config:
-            metrics_coupling:
-                stable_code:
-                    namespace_prefixes:
-                        - SetBased\Stratum\MySql\Wrapper
-
 build:
     environment:
         mysql: 5.7
@@ -15,11 +7,6 @@ build:
             - composer install --no-interaction
 
     tests:
-        before:
-            - mysql --version
-            - mysql -u root -e "set global binlog_format = 'row';"
-            - mysql -u root -e "set global log_bin_trust_function_creators = 1;"
-
         override:
             -
                 command: './bin/phing unit'

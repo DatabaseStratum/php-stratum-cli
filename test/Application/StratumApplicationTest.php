@@ -20,9 +20,9 @@ class StratumApplicationTest extends TestCase
 
     $tester = new ApplicationTester($application);
     $tester->run(['command'     => 'stratum',
-                  'config file' => 'test/MySql/etc/stratum.cfg']);
+                  'config file' => 'test/etc/null.ini']);
 
-    self::assertSame(0, $tester->getStatusCode(), $tester->getDisplay());
+    self::assertSame(-1, $tester->getStatusCode(), $tester->getDisplay());
   }
 
   //--------------------------------------------------------------------------------------------------------------------

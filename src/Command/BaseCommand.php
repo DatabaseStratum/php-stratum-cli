@@ -3,10 +3,13 @@ declare(strict_types=1);
 
 namespace SetBased\Stratum\Command;
 
-use SetBased\Exception\RuntimeException;
-use SetBased\Stratum\Style\StratumStyle;
+use SetBased\Stratum\Backend;
+use SetBased\Stratum\Helper\StratumConfig;
+use SetBased\Stratum\StratumStyle;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Formatter\OutputFormatter;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Base command for other commands of PhpStratum.
@@ -14,6 +17,13 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
 class BaseCommand extends Command
 {
   //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * The configuration object.
+   *
+   * @var StratumConfig
+   */
+  protected $config;
+
   /**
    * The Output decorator.
    *
@@ -23,50 +33,38 @@ class BaseCommand extends Command
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns the value of a setting.
+   * Returns the Backend Factory as specified in the PhpStratum configuration file.
    *
-   * @param array  $settings    The settings as returned by parse_ini_file.
-   * @param bool   $mandatory   If set and setting $settingName is not found in section $sectionName an exception
-   *                            will be thrown.
-   * @param string $sectionName The name of the section of the requested setting.
-   * @param string $settingName The name of the setting of the requested setting.
-   *
-   * @return mixed
+   * @return Backend
    */
-  protected static function getSetting(array $settings,
-                                       bool $mandatory,
-                                       string $sectionName,
-                                       string $settingName)
+  protected function createBackendFactory(): Backend
   {
-    // Test if the section exists.
-    if (!array_key_exists($sectionName, $settings))
-    {
-      if ($mandatory)
-      {
-        throw new RuntimeException("Section '%s' not found in configuration file.", $sectionName);
-      }
-      else
-      {
-        return null;
-      }
-    }
+    $class = $this->config->manString('stratum.backend');
 
-    // Test if the setting in the section exists.
-    if (!array_key_exists($settingName, $settings[$sectionName]))
-    {
-      if ($mandatory)
-      {
-        throw new RuntimeException("Setting '%s' not found in section '%s' configuration file.",
-                                   $settingName,
-                                   $sectionName);
-      }
-      else
-      {
-        return null;
-      }
-    }
+    return new $class();
+  }
 
-    return $settings[$sectionName][$settingName];
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Creates the PhpStratum Styl object.
+   *
+   * @param InputInterface  $input  The input object.
+   * @param OutputInterface $output The output object.
+   */
+  protected function createStyle(InputInterface $input, OutputInterface $output): void
+  {
+    $this->io = new StratumStyle($input, $output);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Reads the PhpStratum configuration file.
+   *
+   * @param InputInterface $input The input object.
+   */
+  protected function readConfigFile(InputInterface $input): void
+  {
+    $this->config = new StratumConfig($input->getArgument('config file'));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
