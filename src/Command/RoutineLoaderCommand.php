@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace SetBased\Stratum\Command;
 
-use SetBased\Stratum\StratumStyle;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -38,6 +37,7 @@ class RoutineLoaderCommand extends BaseCommand
 
     $factory = $this->createBackendFactory();
     $worker  = $factory->createRoutineLoaderWorker($this->config, $this->io);
+    $sources = $input->getArgument('sources');
 
     if ($worker===null)
     {
@@ -46,7 +46,7 @@ class RoutineLoaderCommand extends BaseCommand
       return -1;
     }
 
-    return $worker->execute();
+    return $worker->execute($sources);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
