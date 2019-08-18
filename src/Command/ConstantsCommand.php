@@ -38,7 +38,7 @@ class ConstantsCommand extends BaseCommand
     if ($worker===null)
     {
       $this->io->title('Constants');
-      $this->io->error('This command is not implemented by the backend');
+      $this->io->error('Constants command is not implemented by the backend');
 
       return -1;
     }

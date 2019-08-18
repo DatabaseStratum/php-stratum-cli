@@ -33,15 +33,14 @@ class RoutineLoaderCommand extends BaseCommand
     $this->createStyle($input, $output);
     $this->readConfigFile($input);
 
-    $this->io->title('Loader');
-
     $factory = $this->createBackendFactory();
     $worker  = $factory->createRoutineLoaderWorker($this->config, $this->io);
     $sources = $input->getArgument('sources');
 
     if ($worker===null)
     {
-      $this->io->error('This command is not implemented by the backend');
+      $this->io->title('Loader');
+      $this->io->error('Loader command is not implemented by the backend');
 
       return -1;
     }

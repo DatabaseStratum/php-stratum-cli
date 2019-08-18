@@ -36,11 +36,10 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
     $factory = $this->createBackendFactory();
     $worker  = $factory->createRoutineWrapperGeneratorWorker($this->config, $this->io);
 
-    $this->io->title('Wrapper');
-
     if ($worker===null)
     {
-      $this->io->error('This command is not implemented by the backend');
+      $this->io->title('Wrapper');
+      $this->io->error('Wrapper command is not implemented by the backend');
 
       return -1;
     }

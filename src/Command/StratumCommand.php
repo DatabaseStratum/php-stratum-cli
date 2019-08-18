@@ -9,7 +9,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * The PhpStratum command.
+ * The stratum command: combination of constants, loader, and wrapper commands.
  */
 class StratumCommand extends BaseCommand
 {
