@@ -14,7 +14,7 @@ class NonStatic
    *
    * @param string      $source      The source code of the static class.
    * @param string|null $sourceClass The name of the static class.
-   * @param string|null $targetClass The name og the non static class.
+   * @param string|null $targetClass The name of the non static class.
    *
    * @return string
    */

@@ -44,14 +44,14 @@ class StratumCommand extends BaseCommand
    */
   protected function execute(InputInterface $input, OutputInterface $output)
   {
-    $ret  = -1;
+    $ret = -1;
 
     $this->createStyle($input, $output);
     $this->readConfigFile($input);
 
     $factory = $this->createBackendFactory();
 
-    $worker  = $factory->createConstantWorker($this->config, $this->io);
+    $worker = $factory->createConstantWorker($this->config, $this->io);
     if ($worker!==null)
     {
       $ret = $worker->execute();
@@ -59,7 +59,7 @@ class StratumCommand extends BaseCommand
       if ($ret!==0) return $ret;
     }
 
-    $worker  = $factory->createRoutineLoaderWorker($this->config, $this->io);
+    $worker = $factory->createRoutineLoaderWorker($this->config, $this->io);
     if ($worker!==null)
     {
       $ret = $worker->execute();
@@ -67,7 +67,7 @@ class StratumCommand extends BaseCommand
       if ($ret!==0) return $ret;
     }
 
-    $worker  = $factory->createRoutineWrapperGeneratorWorker($this->config, $this->io);
+    $worker = $factory->createRoutineWrapperGeneratorWorker($this->config, $this->io);
     if ($worker!==null)
     {
       $ret = $worker->execute();
