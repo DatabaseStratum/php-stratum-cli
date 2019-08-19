@@ -11,7 +11,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * A command to make a non static class from a static class.
+ * Command to make a non static class from a static class.
  */
 class NonStaticCommand extends BaseCommand
 {

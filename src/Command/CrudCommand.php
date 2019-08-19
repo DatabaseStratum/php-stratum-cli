@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace SetBased\Stratum\Command;
 
+use SetBased\Stratum\CrudWorker;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Helper\SymfonyQuestionHelper;
@@ -15,7 +16,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 
 /**
- * Base class for commands which needs to connect to a MySQL instance.
+ * Command for creating template stored routines for CRUD operations on a table.
  */
 class CrudCommand extends BaseCommand
 {
@@ -41,19 +42,21 @@ class CrudCommand extends BaseCommand
    */
   private $output;
 
-  //--------------------------------------------------------------------------------------------------------------------
   /**
-   * @var \SetBased\Stratum\CrudWorker|null
+   * The worker for the CRUD command.
+   *
+   * @var CrudWorker|null
    */
   private $worker;
 
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * @inheritdoc
    */
   protected function configure()
   {
     $this->setName('crud')
-         ->setDescription('This is an interactive command for generating stored routines for CRUD operations')
+         ->setDescription('An interactive command for generating stored routines for CRUD operations')
          ->addArgument('config file', InputArgument::REQUIRED, 'The audit configuration file')
          ->addOption('tables', 't', InputOption::VALUE_NONE, 'Show all tables');
   }
