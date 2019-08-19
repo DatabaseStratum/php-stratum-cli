@@ -9,14 +9,14 @@
     "Loader",
     "Wrapper"
   ],
-  "type": "tool",
+  "type": "library",
   "license": "MIT",
   "require": {
     "php": ">=7.1.0",
-    "hassankhan/config": "^2.0",
+    "hassankhan/config": "^2.0.0",
     "setbased/php-affirm": "^0.2.0",
     "symfony/console": "^3.0.0 || ^4.0.0",
-    "setbased/php-stratum-backend": "dev-master",
+    "setbased/php-stratum-backend": "^4.0.0",
     "setbased/helper-cast": "^1.2.0"
   },
   "require-dev": {
