@@ -6,7 +6,6 @@ namespace SetBased\Stratum\Command;
 use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\Helper\NonStatic;
 use SetBased\Stratum\StratumStyle;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -14,7 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * A command to make a non static class from a static class.
  */
-class NonStaticCommand extends Command
+class NonStaticCommand extends BaseCommand
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -31,15 +30,14 @@ class NonStaticCommand extends Command
    * @param string $sourceName The filename with the static class.
    * @param string $targetName The filename where the non static class must be written.
    */
-  public static function staticToNonStatic(string $sourceName, string $targetName): void
+  public function staticToNonStatic(string $sourceName, string $targetName): void
   {
     $source      = file_get_contents($sourceName);
     $sourceClass = basename($sourceName, '.php');
     $targetClass = basename($targetName, '.php');
 
     $source = NonStatic::nonStatic($source, $sourceClass, $targetClass);
-
-    file_put_contents($targetName, $source);
+    $this->writeTwoPhases($targetName, $source);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -75,7 +73,7 @@ class NonStaticCommand extends Command
       throw new RuntimeException('Source and target files is the same file');
     }
 
-    self::staticToNonStatic($sourceFilename, $targetFilename);
+    $this->staticToNonStatic($sourceFilename, $targetFilename);
 
     return 0;
   }

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace SetBased\Stratum\Command;
 
-use SetBased\Exception\FallenException;
+use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Helper\SymfonyQuestionHelper;
 use Symfony\Component\Console\Helper\Table;
@@ -21,48 +21,39 @@ class CrudCommand extends BaseCommand
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Database name.
-   *
-   * @var string
-   */
-  private $dataSchema;
-
-  /**
-   * Helper for questions.
+   * Helper object for questions.
    *
    * @var SymfonyQuestionHelper
    */
   private $helper;
 
   /**
-   * InputInterface.
+   * The input object..
    *
    * @var InputInterface
    */
   private $input;
 
   /**
-   * OutputInterface.
+   * The output object.
    *
    * @var OutputInterface
    */
   private $output;
 
-  /**
-   * Source directory.
-   *
-   * @var string
-   */
-  private $sourceDirectory;
-
   //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * @var \SetBased\Stratum\CrudWorker|null
+   */
+  private $worker;
+
   /**
    * @inheritdoc
    */
   protected function configure()
   {
     $this->setName('crud')
-         ->setDescription('This is an interactive command for generating stored procedures for CRUD operations.')
+         ->setDescription('This is an interactive command for generating stored routines for CRUD operations')
          ->addArgument('config file', InputArgument::REQUIRED, 'The audit configuration file')
          ->addOption('tables', 't', InputOption::VALUE_NONE, 'Show all tables');
   }
@@ -75,166 +66,122 @@ class CrudCommand extends BaseCommand
   {
     $this->input  = $input;
     $this->output = $output;
+    $this->helper = new QuestionHelper();
 
     $this->createStyle($input, $output);
     $this->readConfigFile($input);
 
-    /*
-    $configFileName = $input->getArgument('config file');
-    $settings       = $this->readConfigFile($configFileName);
+    $factory      = $this->createBackendFactory();
+    $this->worker = $factory->createCrudWorker($this->config, $this->io);
 
-    $this->sourceDirectory = $this->getSetting($settings, true, 'loader', 'source_directory');
-    $host                  = $this->getSetting($settings, true, 'database', 'host');
-    $user                  = $this->getSetting($settings, true, 'database', 'user');
-    $password              = $this->getSetting($settings, true, 'database', 'password');
-    $this->dataSchema      = $this->getSetting($settings, true, 'database', 'database');
+    if ($this->worker===null)
+    {
+      $this->io->error('CRUD command is not implemented by the backend');
 
-    MetadataDataLayer::connect($host, $user, $password, $this->dataSchema);
-    MetadataDataLayer::setIo($this->io);
+      return -1;
+    }
 
-    $tableList = MetadataDataLayer::getTablesNames($this->dataSchema);
+    $tables     = $this->worker->tables();
+    $operations = $this->worker->operations();
 
-    $this->helper = new QuestionHelper();
+    $table = $this->askTableName($tables);
+    $dir   = $this->askDirectory($this->config->manString('crud.source_directory', 'lib/psql'));
+    $this->generateRoutines($table, $operations, $dir);
 
-    $this->printAllTables($tableList);
+    return 0;
+  }
 
-    $this->startAsking($tableList);
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Asks the user where the stored routines must stored.
+   *
+   * @param string $default The default directory.
+   *
+   * @return string
+   */
+  private function askDirectory(string $default): string
+  {
+    while (true)
+    {
+      $text     = sprintf('Enter source directory for stored routines [<fso>%s</fso>]: ',
+                          OutputFormatter::escape($default));
+      $question = new Question($text, $default);
+      $dir      = $this->helper->ask($this->input, $this->output, $question);
 
-    MetadataDataLayer::disconnect();
-    */
+      if (is_dir($dir))
+      {
+        return $dir;
+      }
+
+      $this->io->logNote("Path '%s' is not a directory", $dir);
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Asks the user for which table CRUD stored routines must be created.
+   *
+   * @param array $tables The names of all tables in the database.
+   *
+   * @return string
+   */
+  private function askTableName(array $tables): string
+  {
+    $this->showTables($tables);
+
+    while (true)
+    {
+      $question = new Question('Please enter <note>table name</note>: ');
+      $table    = $this->helper->ask($this->input, $this->output, $question);
+
+      if (in_array($table, $tables))
+      {
+        return $table;
+      }
+
+      $this->io->logNote("Table '%s' not exist.", $table);
+    }
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Asking function for create or not stored procedure.
    *
-   * @param string $spType    Stored procedure type {insert|update|delete|select}.
-   * @param string $tableName The table name.
+   * @param string $table     The name of the table for which a stored routine must be generated.
+   * @param string $operation The operation for which a stored routines must be generated.
+   * @param string $dir       The target directory for the generated stored routines.
    */
-  private function askForCreateSP(string $spType, string $tableName): void
+  private function generateRoutine(string $table, string $operation, string $dir): void
   {
-    $question = sprintf('Create SP for <dbo>%s</dbo> ? (default Yes): ', $spType);
+    $question = sprintf('Create stored routine for <dbo>%s</dbo>? [Yes]: ', $operation);
     $question = new ConfirmationQuestion($question, true);
     if ($this->helper->ask($this->input, $this->output, $question))
     {
-      $defaultSpName = strtolower(sprintf('%s_%s', $tableName, $spType));
-      $fileName      = sprintf('%s/%s.psql', $this->sourceDirectory, $defaultSpName);
+      $defaultRoutineName = strtolower(sprintf('%s_%s', $table, $operation));
 
-      $question = new Question(sprintf('Please enter filename (%s): ', $fileName), $fileName);
-      $spName   = $this->helper->ask($this->input, $this->output, $question);
+      $question    = new Question(sprintf('Please enter routine name [<dbo>%s</dbo>]: ',
+                                          OutputFormatter::escape($defaultRoutineName)),
+                                  $defaultRoutineName);
+      $routineName = $this->helper->ask($this->input, $this->output, $question);
+      $filename    = sprintf('%s/%s.psql', $dir, $routineName);
 
-      if ($spName!==$fileName)
+      if (file_exists($filename))
       {
-        $spName   = strtolower($spName);
-        $fileName = sprintf('%s/%s.psql', $this->sourceDirectory, $spName);
-      }
-      else
-      {
-        $spName = $defaultSpName;
-      }
-
-      if (file_exists($fileName))
-      {
-        $this->io->writeln(sprintf('File <fso>%s</fso> already exists', $fileName));
-        $question = 'Overwrite it ? (default No): ';
+        $this->io->writeln(sprintf('File <fso>%s</fso> already exists', $filename));
+        $question = 'Overwrite it? [No]: ';
         $question = new ConfirmationQuestion($question, false);
-        if ($this->helper->ask($this->input, $this->output, $question))
-        {
-          $code = $this->generateSP($tableName, $spType, $spName);
-          $this->writeTwoPhases($fileName, $code);
-        }
+        $write    = $this->helper->ask($this->input, $this->output, $question);
       }
       else
       {
-        $code = $this->generateSP($tableName, $spType, $spName);
-        $this->writeTwoPhases($fileName, $code);
+        $write = true;
       }
-    }
-  }
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Generate code for stored routine.
-   *
-   * @param string $tableName The table name.
-   * @param string $spType    Stored routine type {insert|update|delete|select}.
-   * @param string $spName    Stored routine name.
-   *
-   * @return string
-   */
-  private function generateSP(string $tableName, string $spType, string $spName): string
-  {
-    switch ($spType)
-    {
-      case 'UPDATE':
-        $routine = new UpdateRoutine($this->input,
-                                     $this->output,
-                                     $this->helper,
-                                     $spType,
-                                     $spName,
-                                     $tableName,
-                                     $this->dataSchema);
-        break;
-
-      case 'DELETE':
-        $routine = new DeleteRoutine($this->input,
-                                     $this->output,
-                                     $this->helper,
-                                     $spType, $spName,
-                                     $tableName,
-                                     $this->dataSchema);
-        break;
-
-      case 'SELECT':
-        $routine = new SelectRoutine($this->input,
-                                     $this->output,
-                                     $this->helper,
-                                     $spType, $spName,
-                                     $tableName,
-                                     $this->dataSchema);
-        break;
-
-      case 'INSERT':
-        $routine = new InsertRoutine($this->input,
-                                     $this->output,
-                                     $this->helper,
-                                     $spType,
-                                     $spName,
-                                     $tableName,
-                                     $this->dataSchema);
-        break;
-
-      default:
-        throw new FallenException("Unknown type '%s'", $spType);
-    }
-
-    return $routine->getCode();
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Check option -t for show all tables.
-   *
-   * @param array[] $tableList All existing tables from data schema.
-   */
-  private function printAllTables(array $tableList): void
-  {
-    if ($this->input->getOption('tables'))
-    {
-      $tableData = array_chunk($tableList, 4);
-      $array     = [];
-      foreach ($tableData as $parts)
+      if ($write)
       {
-        $partsArray = [];
-        foreach ($parts as $part)
-        {
-          $partsArray[] = $part['table_name'];
-        }
-        $array[] = $partsArray;
+        $code = $this->worker->generateRoutine($table, $operation, $routineName);
+        $this->writeTwoPhases($filename, $code);
       }
-      $table = new Table($this->output);
-      $table->setRows($array);
-      $table->render();
     }
   }
 
@@ -242,24 +189,32 @@ class CrudCommand extends BaseCommand
   /**
    * Main function for asking.
    *
-   * @param array[] $tableList All existing tables from data schema.
+   * @param string   $table      The name of the table for which stored routines must be generated.
+   * @param string[] $operations The operations for which  stored routines must be generated.
+   * @param string   $dir        The target directory for the generated stored routines.
    */
-  private function startAsking(array $tableList): void
+  private function generateRoutines(string $table, array $operations, string $dir): void
   {
-    $question  = new Question('Please enter <note>TABLE NAME</note>: ');
-    $tableName = $this->helper->ask($this->input, $this->output, $question);
-
-    $key = StaticDataLayer::searchInRowSet('table_name', $tableName, $tableList);
-    if (!isset($key))
+    foreach ($operations as $operation)
     {
-      $this->io->logNote("Table '%s' not exist.", $tableName);
+      $this->generateRoutine($table, $operation, $dir);
     }
-    else
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Check option -t for show all tables.
+   *
+   * @param array $tables The names of all tables in the database.
+   */
+  private function showTables(array $tables): void
+  {
+    if ($this->input->getOption('tables'))
     {
-      $this->askForCreateSP('INSERT', $tableName);
-      $this->askForCreateSP('UPDATE', $tableName);
-      $this->askForCreateSP('DELETE', $tableName);
-      $this->askForCreateSP('SELECT', $tableName);
+      $tableData = array_chunk($tables, 3);
+      $table     = new Table($this->output);
+      $table->setRows($tableData);
+      $table->render();
     }
   }
 
