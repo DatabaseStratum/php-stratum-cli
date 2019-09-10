@@ -1,11 +1,10 @@
-/.idea
+/.idea/
+/.phpunit.result.cache
 /bin/phing
 /bin/phpunit
 /build/
 /composer.lock
 /doc/
 /test/coverage.xml
-/test/MySql/etc/routines.json
-/test/MySql/etc/stratum.cfg
 /test/report/
 /vendor/

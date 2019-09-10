@@ -13,7 +13,7 @@ use Symfony\Component\Console\Tester\ApplicationTester;
 class StratumApplicationTest extends TestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
-  public function testExecute()
+  public function testExecute(): void
   {
     $application = new Stratum();
     $application->setAutoExit(false);
