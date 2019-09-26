@@ -1,9 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace SetBased\Stratum\Command;
+namespace SetBased\Stratum\Frontend\Command;
 
-use SetBased\Stratum\StratumStyle;
+
+use SetBased\Stratum\Backend\StratumStyle;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

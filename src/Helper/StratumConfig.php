@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace SetBased\Stratum\Helper;
+namespace SetBased\Stratum\Frontend\Helper;
 
 use SetBased\Abc\Helper\Cast;
-use SetBased\Stratum\Config;
+use SetBased\Stratum\Backend\Config;
 
 /**
  * The concrete configuration class.

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace SetBased\Stratum\Helper;
+namespace SetBased\Stratum\Frontend\Helper;
 
 /**
  * Helper class for generating code for a non static class based on a static class.

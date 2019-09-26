@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace SetBased\Stratum\Application;
+namespace SetBased\Stratum\Frontend\Application;
 
-use SetBased\Stratum\Command\ConstantsCommand;
-use SetBased\Stratum\Command\CrudCommand;
-use SetBased\Stratum\Command\NonStaticCommand;
-use SetBased\Stratum\Command\RoutineLoaderCommand;
-use SetBased\Stratum\Command\RoutineWrapperGeneratorCommand;
-use SetBased\Stratum\Command\StratumCommand;
+use SetBased\Stratum\Frontend\Command\ConstantsCommand;
+use SetBased\Stratum\Frontend\Command\CrudCommand;
+use SetBased\Stratum\Frontend\Command\NonStaticCommand;
+use SetBased\Stratum\Frontend\Command\RoutineLoaderCommand;
+use SetBased\Stratum\Frontend\Command\RoutineWrapperGeneratorCommand;
+use SetBased\Stratum\Frontend\Command\StratumCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 

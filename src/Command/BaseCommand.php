@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace SetBased\Stratum\Command;
+namespace SetBased\Stratum\Frontend\Command;
 
-use SetBased\Stratum\Backend;
-use SetBased\Stratum\Helper\StratumConfig;
-use SetBased\Stratum\StratumStyle;
+use SetBased\Stratum\Backend\Backend;
+use SetBased\Stratum\Backend\StratumStyle;
+use SetBased\Stratum\Frontend\Helper\StratumConfig;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Input\InputInterface;

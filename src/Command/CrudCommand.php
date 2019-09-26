@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace SetBased\Stratum\Command;
+namespace SetBased\Stratum\Frontend\Command;
 
-use SetBased\Stratum\CrudWorker;
+use SetBased\Stratum\Backend\CrudWorker;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Helper\SymfonyQuestionHelper;
@@ -50,6 +50,7 @@ class CrudCommand extends BaseCommand
   private $worker;
 
   //--------------------------------------------------------------------------------------------------------------------
+
   /**
    * @inheritdoc
    */

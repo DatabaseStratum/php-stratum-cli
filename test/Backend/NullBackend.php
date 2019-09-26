@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace SetBased\Stratum\Test\Backend;
+namespace SetBased\Stratum\Frontend\Test\Backend;
 
-use SetBased\Stratum\Backend;
+use SetBased\Stratum\Backend\Backend;
 
 /**
  * Backend without implementations.

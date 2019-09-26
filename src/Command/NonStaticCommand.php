@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace SetBased\Stratum\Command;
+namespace SetBased\Stratum\Frontend\Command;
 
 use SetBased\Exception\RuntimeException;
-use SetBased\Stratum\Helper\NonStatic;
-use SetBased\Stratum\StratumStyle;
+use SetBased\Stratum\Backend\StratumStyle;
+use SetBased\Stratum\Frontend\Helper\NonStatic;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

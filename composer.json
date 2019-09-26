@@ -16,7 +16,7 @@
     "hassankhan/config": "^2.0.0",
     "setbased/error-handler": "^1.0.0",
     "setbased/helper-cast": "^1.2.0",
-    "setbased/php-stratum-backend": "^4.0.0",
+    "setbased/php-stratum-backend": "^5.0.0",
     "symfony/console": "^3.0.0 || ^4.0.0"
   },
   "require-dev": {
@@ -25,12 +25,12 @@
   },
   "autoload": {
     "psr-4": {
-      "SetBased\\Stratum\\": "src/"
+      "SetBased\\Stratum\\Frontend\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "SetBased\\Stratum\\Test\\": "test/"
+      "SetBased\\Stratum\\Frontend\\Test\\": "test/"
     }
   },
   "bin": [

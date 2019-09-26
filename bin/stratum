@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use SetBased\ErrorHandler\ErrorHandler;
-use SetBased\Stratum\Application\Stratum;
+use SetBased\Stratum\Frontend\Application\Stratum;
 
 //----------------------------------------------------------------------------------------------------------------------
 $files = [__DIR__.'/../vendor/autoload.php',
