@@ -1,15 +1,14 @@
 build:
-    environment:
-        mysql: 5.7
+  environment:
+    mysql: 5.7
 
-    dependencies:
-        override:
-            - composer install --no-interaction
+  dependencies:
+    override:
+      - composer install --no-interaction
 
-    tests:
-        override:
-            -
-                command: './bin/phing unit'
-                coverage:
-                    file: 'test/coverage.xml'
-                    format: 'php-clover'
+  tests:
+    override:
+      - command: './bin/phing unit'
+        coverage:
+          file:   'test/coverage.xml'
+          format: 'php-clover'
