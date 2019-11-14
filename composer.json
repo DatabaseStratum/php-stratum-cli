@@ -15,7 +15,7 @@
     "php": ">=7.1.0",
     "hassankhan/config": "^2.0.0",
     "setbased/error-handler": "^1.1.0",
-    "setbased/helper-cast": "^1.2.0",
+    "setbased/helper-cast": "^2.0.0",
     "setbased/php-stratum-backend": "^5.0.0",
     "symfony/console": "^4.0.0"
   },

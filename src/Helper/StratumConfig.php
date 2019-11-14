@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace SetBased\Stratum\Frontend\Helper;
 
-use SetBased\Abc\Helper\Cast;
+use SetBased\Helper\Cast;
 use SetBased\Stratum\Backend\Config;
 
 /**
