@@ -9,18 +9,17 @@
     "Loader",
     "Wrapper"
   ],
-  "type": "library",
   "license": "MIT",
   "require": {
     "php": ">=7.1.0",
-    "hassankhan/config": "^2.0.0",
-    "setbased/error-handler": "^1.1.0",
-    "setbased/helper-cast": "^2.0.0",
-    "setbased/php-stratum-backend": "^5.0.0",
-    "symfony/console": "^4.0.0"
+    "hassankhan/config": "^2.0",
+    "setbased/error-handler": "^1.1",
+    "setbased/helper-cast": "^2.0",
+    "setbased/php-stratum-backend": "^5.0",
+    "symfony/console": "^4.0 || ^5.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "^7.0.0 || ^8.0.0",
+    "phpunit/phpunit": "^7.0 || ^8.0",
     "setbased/phing-extensions": "^2.0.1"
   },
   "autoload": {
