@@ -5,7 +5,6 @@ namespace SetBased\Stratum\Frontend\Application;
 
 use SetBased\Stratum\Frontend\Command\ConstantsCommand;
 use SetBased\Stratum\Frontend\Command\CrudCommand;
-use SetBased\Stratum\Frontend\Command\NonStaticCommand;
 use SetBased\Stratum\Frontend\Command\RoutineLoaderCommand;
 use SetBased\Stratum\Frontend\Command\RoutineWrapperGeneratorCommand;
 use SetBased\Stratum\Frontend\Command\StratumCommand;
@@ -39,7 +38,6 @@ class Stratum extends Application
 
     $defaultCommands[] = new ConstantsCommand();
     $defaultCommands[] = new CrudCommand();
-    $defaultCommands[] = new NonStaticCommand();
     $defaultCommands[] = new RoutineLoaderCommand();
     $defaultCommands[] = new RoutineWrapperGeneratorCommand();
     $defaultCommands[] = new StratumCommand();
