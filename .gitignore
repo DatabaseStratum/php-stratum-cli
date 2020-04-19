@@ -2,9 +2,8 @@
 /.phpunit.result.cache
 /bin/phing
 /bin/phpunit
-/build/
 /composer.lock
-/doc/
+/docs/_build/
 /test/coverage.xml
 /test/report/
 /vendor/

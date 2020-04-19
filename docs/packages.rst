@@ -1,0 +1,51 @@
+.. _package-overview:
+
+Package Overview
+================
+
+In this chapter we discuss how the packages of PhpStratum are organized.
+
+The packages of PhpStratum are organized such that coupling between your application and the components of PhpStratum is kept at a minimum. Currently, the following PhpStratum packages are available:
+
++------------------------------------+-----------------------------------------------------------+
+| Package                            |  Repository                                               |
++====================================+===========================================================+
+| `setbased/php-stratum`_            | https://github.com/DatabaseStratum/php-stratum            |
++------------------------------------+-----------------------------------------------------------+
+| `setbased/php-stratum-mysql`_      | https://github.com/DatabaseStratum/php-stratum-mysql      |
++------------------------------------+-----------------------------------------------------------+
+| `setbased/php-stratum-sqlite-pdo`_ | https://github.com/DatabaseStratum/php-stratum-sqlite-pdo |
++------------------------------------+-----------------------------------------------------------+
+| `setbased/php-stratum-middle`_     | https://github.com/DatabaseStratum/php-stratum-middle     |
++------------------------------------+-----------------------------------------------------------+
+| `setbased/php-stratum-backend`_    | https://github.com/DatabaseStratum/php-stratum-backend    |
++------------------------------------+-----------------------------------------------------------+
+| `setbased/php-stratum-common`_     | https://github.com/DatabaseStratum/php-stratum-common     |
++------------------------------------+-----------------------------------------------------------+
+
+.. _setbased/php-stratum-backend: https://packagist.org/packages/setbased/php-stratum-backend
+.. _setbased/php-stratum-middle: https://packagist.org/packages/setbased/php-stratum-middle
+.. _setbased/php-stratum-common: https://packagist.org/packages/setbased/php-stratum-common
+.. _setbased/php-stratum-sqlite-pdo: https://packagist.org/packages/setbased/php-stratum-sqlite-pdo
+.. _setbased/php-stratum-mysql: https://packagist.org/packages/setbased/php-stratum-mysql
+.. _setbased/php-stratum: https://packagist.org/packages/setbased/php-stratum
+
+We discuss each package briefly bellow:
+
+  setbased/php-stratum
+    This package is the frontend of PhpStratum. It provides the CLI of PhpStratum. The CLI is documented in the documentation of each backend package.
+
+  setbased/php-stratum-mysql
+    This package is the MySql backend of PhpStratum. The full documentation of the MySql backend is available at https://phpstratum-mysql.readthedocs.io/.
+
+  setbased/php-stratum-sqlite-pdo
+    This package is the SQLite backend using PDO of PhpStratum. The full documentation of the SQLite backend using PDO is available at https://phpstratum-sqlite-pdo.readthedocs.io/.
+
+  setbased/php-stratum-middle
+    This package is the glue between your application and the backend package.
+
+  etbased/php-stratum-backend
+    This package is the glue between the frontend package and the backend packages of PhpStratum. You should not use this package directly unless you are developing a backend package.
+
+  setbased/php-stratum-common
+    This package contains code the is common between the backend packages of PhpStratum. You should not use this package directly unless you are developing a backend package.
