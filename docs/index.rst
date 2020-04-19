@@ -3,8 +3,8 @@ Welcome to PhpStratum's documentation!
 
 PhpStratum is a set of PHP packages for loading stored procedures into your application's database and invoking those stored procedures conveniently from your application using automatically generated wrappers. PhpStratum is available for various database management system.
 
-Documentation
--------------
+Further Reading
+---------------
 
 You can continue reading this documentation, reading a broader documentation about the concepts of `Stratum Projects`_ in other programming languages than PHP, jump to the documentation of PhpStratum for `MySql and MariaDB`_ or jump to the documentation of PhpStratum for `SQLite`_.
 

@@ -1,6 +1,6 @@
 # PhpStratum
 
-A stored procedure loader and wrapper class generator.
+The frontend of PhpStratum.
 
 <table>
 <thead>
@@ -32,6 +32,13 @@ A stored procedure loader and wrapper class generator.
 </tr>
 </tbody>
 </table>
+
+PhpStratum is a set of PHP packages for loading stored procedures into your application's database and invoking those stored procedures conveniently from your application using automatically generated wrappers. PhpStratum is available for various database management system.
+
+Documentation
+=============
+
+The documentation of PhpStratum is available at [phpstratum.readthedocs.io](https://phpstratum.readthedocs.io). 
 
 License
 =======

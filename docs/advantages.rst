@@ -1,5 +1,5 @@
-Advantages
-==========
+Advantages of PhpStratum
+========================
 
 In this chapter we discuss the advantages of using PhpStratum project (we will not discuss the advantages of using store procedures) over manually coding software for invoking stored procedures from your application.
 
