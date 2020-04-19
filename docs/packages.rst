@@ -36,7 +36,7 @@ We discuss each package briefly bellow:
     This package is the frontend of PhpStratum. It provides the CLI of PhpStratum. The CLI is documented in the documentation of each backend package.
 
   setbased/php-stratum-mysql
-    This package is the MySql backend of PhpStratum. The full documentation of the MySql backend is available at https://phpstratum-mysql.readthedocs.io/.
+    This package is the MySql and MariaDB backend of PhpStratum. The full documentation of the MySql and MariaDB backend is available at https://phpstratum-mysql.readthedocs.io/.
 
   setbased/php-stratum-sqlite-pdo
     This package is the SQLite backend using PDO of PhpStratum. The full documentation of the SQLite backend using PDO is available at https://phpstratum-sqlite-pdo.readthedocs.io/.
