@@ -44,7 +44,7 @@ We discuss each package briefly bellow:
   setbased/php-stratum-middle
     This package is the glue between your application and the backend package.
 
-  etbased/php-stratum-backend
+  setbased/php-stratum-backend
     This package is the glue between the frontend package and the backend packages of PhpStratum. You should not use this package directly unless you are developing a backend package.
 
   setbased/php-stratum-common
