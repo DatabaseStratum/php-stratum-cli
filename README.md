@@ -1,4 +1,4 @@
-# PhpStratum
+# PhpStratum: Command Line Interface 
 
 The frontend of PhpStratum.
 
@@ -23,17 +23,20 @@ The frontend of PhpStratum.
 <td>
 <a href="https://packagist.org/packages/setbased/php-stratum"><img src="https://poser.pugx.org/setbased/php-stratum/v/stable" alt="Latest Stable Version"/></a><br/>
 </td>
-<td><a href="https://travis-ci.org/SetBased/php-stratum"><img src="https://travis-ci.org/SetBased/php-stratum.svg?branch=master" alt="Build Status"/></a><br/>
-<a href="https://scrutinizer-ci.com/g/SetBased/php-stratum/?branch=master"><img src="https://scrutinizer-ci.com/g/SetBased/php-stratum/badges/coverage.png?b=master" alt="Code Coverage"/></a><br/>
+<td><a href="https://travis-ci.org/github/DatabaseStratum/php-stratum-cli"><img src="https://travis-ci.org/DatabaseStratum/php-stratum-cli.svg?branch=master" alt="Build Status"/></a><br/>
+<a href="https://scrutinizer-ci.com/g/DatabaseStratum/php-stratum-cli/"><img src="https://scrutinizer-ci.com/g/DatabaseStratum/php-stratum-cli/badges/coverage.png?b=master"/></a><br/>
 </td>
 <td>
-<a href="https://scrutinizer-ci.com/g/SetBased/php-stratum/?branch=master"><img src="https://scrutinizer-ci.com/g/SetBased/php-stratum/badges/quality-score.png?b=master" alt="Scrutinizer Code Quality"/></a>
+<a href="https://scrutinizer-ci.com/g/DatabaseStratum/php-stratum-cli/"><img src="https://scrutinizer-ci.com/g/DatabaseStratum/php-stratum-cli/badges/quality-score.png?b=master" alt="Scrutinizer Code Quality"/></a>
 </td>
 </tr>
 </tbody>
 </table>
 
-PhpStratum is a set of PHP packages for loading stored procedures into your application's database and invoking those stored procedures conveniently from your application using automatically generated wrappers. PhpStratum is available for various database management system.
+PhpStratum is a set of PHP packages for loading stored procedures into your application's database and invoking those stored procedures conveniently from your application using an automatically generated wrapper class. PhpStratum is available for the following database management systems:
+
+* [MySQL and MariaDB](https://github.com/DatabaseStratum/php-stratum-mysql)
+* [SQLite](https://github.com/DatabaseStratum/php-stratum-sqlite-pdo)
 
 Documentation
 =============
