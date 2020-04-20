@@ -25,11 +25,6 @@ You have the following options for further reading:
 .. _MySQL and MariaDB: https://phpstratum-mysql.readthedocs.io/
 .. _SQLite: https://phpstratum-sqlite-pdo.readthedocs.io/
 
-.. toctree::
-
-   advantages
-   packages
-
 .. _package-overview:
 
 Package Overview
