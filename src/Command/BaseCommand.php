@@ -83,7 +83,7 @@ class BaseCommand extends Command
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Creates the PhpStratum Styl object.
+   * Creates the PhpStratum Style object.
    *
    * @param InputInterface  $input  The input object.
    * @param OutputInterface $output The output object.
