@@ -22,14 +22,14 @@ class BaseCommand extends Command
    *
    * @var StratumConfig
    */
-  protected $config;
+  protected StratumConfig $config;
 
   /**
    * The Output decorator.
    *
    * @var StratumStyle
    */
-  protected $io;
+  protected StratumStyle $io;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**

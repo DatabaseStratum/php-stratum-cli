@@ -24,30 +24,30 @@ class CrudCommand extends BaseCommand
   /**
    * Helper object for questions.
    *
-   * @var SymfonyQuestionHelper
+   * @var QuestionHelper
    */
-  private $helper;
+  private QuestionHelper $helper;
 
   /**
    * The input object..
    *
    * @var InputInterface
    */
-  private $input;
+  private InputInterface $input;
 
   /**
    * The output object.
    *
    * @var OutputInterface
    */
-  private $output;
+  private OutputInterface $output;
 
   /**
    * The worker for the CRUD command.
    *
    * @var CrudWorker|null
    */
-  private $worker;
+  private ?CrudWorker $worker;
 
   //--------------------------------------------------------------------------------------------------------------------
 

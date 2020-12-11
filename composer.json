@@ -11,7 +11,7 @@
   ],
   "license": "MIT",
   "require": {
-    "php": ">=7.3",
+    "php": ">=7.4",
     "hassankhan/config": "^2.2.0",
     "setbased/error-handler": "^1.2",
     "setbased/helper-cast": "^2.1.1",

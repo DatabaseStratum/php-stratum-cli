@@ -20,7 +20,7 @@ class StratumCommand extends BaseCommand
    *
    * @var StratumStyle
    */
-  protected $io;
+  protected StratumStyle $io;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**

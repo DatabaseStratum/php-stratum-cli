@@ -17,7 +17,7 @@ class StratumConfig implements Config
    *
    * @var \Noodlehaus\Config
    */
-  private $config;
+  private \Noodlehaus\Config $config;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
