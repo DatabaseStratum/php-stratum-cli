@@ -23,8 +23,10 @@ The frontend of PhpStratum.
 <td>
 <a href="https://packagist.org/packages/setbased/php-stratum"><img src="https://poser.pugx.org/setbased/php-stratum/v/stable" alt="Latest Stable Version"/></a><br/>
 </td>
+<td>
 <a href="https://github.com/DatabaseStratum/php-stratum-cli/actions/workflows/unit.yml"><img src="https://github.com/DatabaseStratum/php-stratum-cli/actions/workflows/unit.yml/badge.svg" alt="Build Status"/></a><br/>
 <a href="https://codecov.io/gh/DatabaseStratum/php-stratum-cli"><img src="https://codecov.io/gh/DatabaseStratum/php-stratum-cli/branch/master/graph/badge.svg" alt="Code Coverage"/></a>
+</td>
 <td>
 <a href="https://scrutinizer-ci.com/g/DatabaseStratum/php-stratum-cli/"><img src="https://scrutinizer-ci.com/g/DatabaseStratum/php-stratum-cli/badges/quality-score.png?b=master" alt="Scrutinizer Code Quality"/></a>
 </td>
