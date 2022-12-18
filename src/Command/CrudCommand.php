@@ -6,7 +6,6 @@ namespace SetBased\Stratum\Frontend\Command;
 use SetBased\Stratum\Backend\CrudWorker;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Helper\QuestionHelper;
-use Symfony\Component\Console\Helper\SymfonyQuestionHelper;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -45,16 +44,16 @@ class CrudCommand extends BaseCommand
   /**
    * The worker for the CRUD command.
    *
-   * @var CrudWorker|null
+   * @var CrudWorker
    */
-  private ?CrudWorker $worker;
+  private CrudWorker $worker;
 
   //--------------------------------------------------------------------------------------------------------------------
 
   /**
    * @inheritdoc
    */
-  protected function configure()
+  protected function configure(): void
   {
     $this->setName('crud')
          ->setDescription('An interactive command for generating stored routines for CRUD operations')
@@ -66,7 +65,7 @@ class CrudCommand extends BaseCommand
   /**
    * @inheritdoc
    */
-  protected function execute(InputInterface $input, OutputInterface $output)
+  protected function execute(InputInterface $input, OutputInterface $output): int
   {
     $this->input  = $input;
     $this->output = $output;
@@ -75,18 +74,19 @@ class CrudCommand extends BaseCommand
     $this->createStyle($input, $output);
     $this->readConfigFile($input);
 
-    $factory      = $this->createBackendFactory();
-    $this->worker = $factory->createCrudWorker($this->config, $this->io);
+    $factory = $this->createBackendFactory();
+    $worker  = $factory->createCrudWorker($this->config, $this->io);
 
-    if ($this->worker===null)
+    if ($worker===null)
     {
       $this->io->error('CRUD command is not implemented by the backend');
 
       return -1;
     }
 
-    $tables     = $this->worker->tables();
-    $operations = $this->worker->operations();
+    $this->worker = $worker;
+    $tables       = $this->worker->tables();
+    $operations   = $this->worker->operations();
 
     $table = $this->askTableName($tables);
     $dir   = $this->askDirectory($this->config->manString('crud.source_directory', 'lib/psql'));
@@ -97,7 +97,7 @@ class CrudCommand extends BaseCommand
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Asks the user where the stored routines must stored.
+   * Asks the user where the stored routines must be stored.
    *
    * @param string $default The default directory.
    *
@@ -125,7 +125,7 @@ class CrudCommand extends BaseCommand
   /**
    * Asks the user for which table CRUD stored routines must be created.
    *
-   * @param array $tables The names of all tables in the database.
+   * @param string[] $tables The names of all tables in the database.
    *
    * @return string
    */
@@ -209,7 +209,7 @@ class CrudCommand extends BaseCommand
   /**
    * Check option -t for show all tables.
    *
-   * @param array $tables The names of all tables in the database.
+   * @param string[] $tables The names of all tables in the database.
    */
   private function showTables(array $tables): void
   {

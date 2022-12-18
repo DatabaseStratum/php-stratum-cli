@@ -16,7 +16,7 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
   /**
    * @inheritdoc
    */
-  protected function configure()
+  protected function configure(): void
   {
     $this->setName('wrapper')
          ->setDescription('Generates a class with wrapper methods for calling stored routines')
@@ -27,7 +27,7 @@ class RoutineWrapperGeneratorCommand extends BaseCommand
   /**
    * @inheritdoc
    */
-  protected function execute(InputInterface $input, OutputInterface $output)
+  protected function execute(InputInterface $input, OutputInterface $output): int
   {
     $this->createStyle($input, $output);
     $this->readConfigFile($input);

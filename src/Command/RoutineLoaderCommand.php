@@ -16,7 +16,7 @@ class RoutineLoaderCommand extends BaseCommand
   /**
    * @inheritdoc
    */
-  protected function configure()
+  protected function configure(): void
   {
     $this->setName('loader')
          ->setDescription('Generates the routine wrapper class')
@@ -28,7 +28,7 @@ class RoutineLoaderCommand extends BaseCommand
   /**
    * @inheritdoc
    */
-  protected function execute(InputInterface $input, OutputInterface $output)
+  protected function execute(InputInterface $input, OutputInterface $output): int
   {
     $this->createStyle($input, $output);
     $this->readConfigFile($input);

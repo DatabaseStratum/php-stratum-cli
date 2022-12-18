@@ -26,7 +26,7 @@ class StratumCommand extends BaseCommand
   /**
    * @inheritdoc
    */
-  protected function configure()
+  protected function configure(): void
   {
     $this->setName('stratum')
          ->setDescription('Runs the constants, loader, and wrapper commands')
@@ -43,7 +43,7 @@ class StratumCommand extends BaseCommand
    *
    * @return int
    */
-  protected function execute(InputInterface $input, OutputInterface $output)
+  protected function execute(InputInterface $input, OutputInterface $output): int
   {
     $ret = -1;
 
