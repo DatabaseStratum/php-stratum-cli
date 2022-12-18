@@ -19,6 +19,7 @@
     "symfony/console": "^5.4.16 || ^6.2.2"
   },
   "require-dev": {
+    "phpstan/phpstan": "^1.9",
     "phpunit/phpunit": "^9.5.27",
     "setbased/phing-extensions": "^2.1.0"
   },

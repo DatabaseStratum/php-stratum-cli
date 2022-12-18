@@ -3,10 +3,6 @@
     <taskdef name="ReadSemanticVersion" classname="vendor.setbased.phing-extensions.src.Task.ReadSemanticVersionTask"/>
     <property name="VERSION" value="0.0.0"/>
 
-    <target name="build">
-        <echo message="noting to do."/>
-    </target>
-
     <!-- Run composer update and executes various other updates -->
     <target name="update">
         <exec executable="composer" checkreturn="true" passthru="true">
@@ -24,6 +20,21 @@
             <arg value="outdated"/>
             <arg value="--direct"/>
         </exec>
+    </target>
+
+    <!-- Runs code inspection -->
+    <target name="inspection">
+        <exec executable="bin/phpstan" checkreturn="true" passthru="true">
+            <arg value="--ansi"/>
+            <arg value="analyse"/>
+            <arg value="src"/>
+            <arg value="--level=8"/>
+        </exec>
+    </target>
+
+    <!-- Runs all unit tests -->
+    <target name="unit">
+        <exec executable="bin/phpunit" passthru="true" checkreturn="true"/>
     </target>
 
     <!-- Creates a new version/release. -->
@@ -50,8 +61,5 @@
         <gitpush repository="." refspec="${VERSION}" quiet="false"/>
     </target>
 
-    <!-- Runs all unit tests -->
-    <target name="unit">
-        <exec executable="bin/phpunit" passthru="true" checkreturn="true"/>
-    </target>
+    <target name="build" depends="update,inspection,unit"/>
 </project>
