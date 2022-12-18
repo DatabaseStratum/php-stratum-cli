@@ -31,7 +31,7 @@ class Stratum extends Application
    *
    * @return Command[]
    */
-  protected function getDefaultCommands()
+  protected function getDefaultCommands(): array
   {
     // Keep the core default commands to have the HelpCommand which is used when using the --help option
     $defaultCommands = parent::getDefaultCommands();

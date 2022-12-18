@@ -12,14 +12,14 @@
   "license": "MIT",
   "require": {
     "php": ">=7.4",
-    "hassankhan/config": "^2.2.0",
-    "setbased/error-handler": "^1.2",
+    "hassankhan/config": "^3.0.1",
+    "setbased/error-handler": "^1.2.0",
     "setbased/helper-cast": "^2.1.1",
-    "setbased/php-stratum-backend": "^5.3",
-    "symfony/console": "^5.2.0"
+    "setbased/php-stratum-backend": "^5.4.0",
+    "symfony/console": "^5.4.16 || ^6.2.2"
   },
   "require-dev": {
-    "phpunit/phpunit": "^9.5.0",
+    "phpunit/phpunit": "^9.5.27",
     "setbased/phing-extensions": "^2.1.0"
   },
   "autoload": {
