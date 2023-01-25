@@ -44,18 +44,18 @@ class StratumConfig implements Config
   /**
    * @inheritDoc
    */
-  public function manFiniteFloat(string $key, ?float $default = null): float
+  public function manFloat(string $key, ?float $default = null): float
   {
-    return Cast::toManFiniteFloat($this->config->get($key, $default));
+    return Cast::toManFloat($this->config->get($key, $default));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * @inheritDoc
    */
-  public function manFloat(string $key, ?float $default = null): float
+  public function manFloatInclusive(string $key, ?float $default = null): float
   {
-    return Cast::toManFloat($this->config->get($key, $default));
+    return Cast::toManFloatInclusive($this->config->get($key, $default));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -89,18 +89,18 @@ class StratumConfig implements Config
   /**
    * @inheritDoc
    */
-  public function optFiniteFloat(string $key, ?float $default = null): ?float
+  public function optFloat(string $key, ?float $default = null): ?float
   {
-    return Cast::toOptFiniteFloat($this->config->get($key, $default));
+    return Cast::toOptFloat($this->config->get($key, $default));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * @inheritDoc
    */
-  public function optFloat(string $key, ?float $default = null): ?float
+  public function optFloatInclusive(string $key, ?float $default = null): ?float
   {
-    return Cast::toOptFloat($this->config->get($key, $default));
+    return Cast::toOptFloatInclusive($this->config->get($key, $default));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
