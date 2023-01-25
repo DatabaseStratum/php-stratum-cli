@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="php-stratum" default="build" basedir=".">
-    <taskdef name="ReadSemanticVersion" classname="vendor.setbased.phing-extensions.src.Task.ReadSemanticVersionTask"/>
+    <taskdef name="ReadSemanticVersion" classname="\SetBased\Phing\Task\ReadSemanticVersionTask"/>
     <property name="VERSION" value="0.0.0"/>
 
     <!-- Run composer update and executes various other updates -->
