@@ -28,7 +28,7 @@ class CrudCommand extends BaseCommand
   private QuestionHelper $helper;
 
   /**
-   * The input object..
+   * The input object.
    *
    * @var InputInterface
    */
