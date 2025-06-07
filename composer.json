@@ -16,7 +16,7 @@
     "setbased/error-handler": "^1.3.0",
     "setbased/helper-cast": "^3.0.1",
     "setbased/php-stratum-backend": "^6.2.0",
-    "symfony/console": "^6.4.0|^7.3.0"
+    "symfony/console": "^6.0|^7.0"
   },
   "require-dev": {
     "phing/phing": "^3.0.1",
