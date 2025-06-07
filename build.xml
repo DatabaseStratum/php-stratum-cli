@@ -58,19 +58,19 @@
             <arg value="commit"/>
             <arg value="-a"/>
             <arg value="-m"/>
-            <arg value="Release: ${BUILD_NUMBER}"/>
+            <arg value="Release: ${VERSION}"/>
         </exec>
         <exec executable="git" checkreturn="true" passthru="true">
             <arg value="push"/>
         </exec>
         <exec executable="git" checkreturn="true" passthru="true">
             <arg value="tag"/>
-            <arg value="${BUILD_NUMBER}"/>
+            <arg value="${VERSION}"/>
         </exec>
         <exec executable="git" checkreturn="true" passthru="true">
             <arg value="push"/>
             <arg value="origin"/>
-            <arg value="${BUILD_NUMBER}"/>
+            <arg value="${VERSION}"/>
         </exec>
     </target>
 
